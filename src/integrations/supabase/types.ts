@@ -47,6 +47,72 @@ export type Database = {
         }
         Relationships: []
       }
+      tutor_applications: {
+        Row: {
+          about_teaching: string | null
+          availability: string
+          bio: string
+          certifications: string | null
+          country: string | null
+          created_at: string
+          education: string | null
+          email: string
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id: string
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          phone: string | null
+          status: string
+          subjects: string[]
+          timezone: string | null
+        }
+        Insert: {
+          about_teaching?: string | null
+          availability: string
+          bio: string
+          certifications?: string | null
+          country?: string | null
+          created_at?: string
+          education?: string | null
+          email: string
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id?: string
+          last_name: string
+          native_language?: string | null
+          other_languages?: string | null
+          phone?: string | null
+          status?: string
+          subjects?: string[]
+          timezone?: string | null
+        }
+        Update: {
+          about_teaching?: string | null
+          availability?: string
+          bio?: string
+          certifications?: string | null
+          country?: string | null
+          created_at?: string
+          education?: string | null
+          email?: string
+          experience?: string
+          first_name?: string
+          hourly_rate?: number
+          id?: string
+          last_name?: string
+          native_language?: string | null
+          other_languages?: string | null
+          phone?: string | null
+          status?: string
+          subjects?: string[]
+          timezone?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
