@@ -347,6 +347,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.apply.successTitle": "Application Submitted!",
     "tutor.apply.successDesc": "Thank you for applying! Our team will review your application and get back to you within 48 hours.",
     "tutor.apply.backHome": "Back to Home",
+
+    // Tutor Apply - Video
+    "tutor.apply.videoLabel": "Introduction Video",
+    "tutor.apply.videoDesc": "Record a 1-minute video about yourself and your teaching style. This is optional but highly encouraged — tutors with intro videos get up to 3x more bookings!",
+    "tutor.apply.videoPlaceholder": "Paste a YouTube or Google Drive link to your video",
+    "tutor.apply.videoTip": "Tip: Keep it short (under 2 min), speak clearly, and show your personality!",
   },
   ka: {
     // Nav
