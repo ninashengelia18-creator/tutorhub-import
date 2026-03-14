@@ -52,8 +52,8 @@
     --warning: 38 92% 50%;
     --info: 210 79% 46%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(158, 64%, 40%), hsl(170, 60%, 45%));
-    --gradient-cta: linear-gradient(135deg, hsl(158, 64%, 40%), hsl(145, 70%, 35%));
+    --gradient-hero: linear-gradient(135deg, hsl(350, 72%, 52%), hsl(10, 80%, 58%));
+    --gradient-cta: linear-gradient(135deg, hsl(350, 72%, 52%), hsl(340, 75%, 45%));
     --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
     --shadow-card-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     --shadow-elevated: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
