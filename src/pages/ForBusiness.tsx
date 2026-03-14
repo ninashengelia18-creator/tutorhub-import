@@ -51,7 +51,14 @@ export default function ForBusiness() {
       return;
     }
     setSubmitting(true);
-    const { error } = await supabase.from("business_inquiries").insert([parsed.data]);
+    const { error } = await supabase.from("business_inquiries").insert([{
+      company_name: parsed.data.company_name,
+      contact_name: parsed.data.contact_name,
+      email: parsed.data.email,
+      phone: parsed.data.phone || null,
+      team_size: parsed.data.team_size || null,
+      message: parsed.data.message || null,
+    }]);
     setSubmitting(false);
     if (error) {
       toast({ title: t("biz.form.error"), variant: "destructive" });
