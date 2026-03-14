@@ -16,6 +16,7 @@ import Messages from "./pages/Messages.tsx";
 import FAQ from "./pages/FAQ.tsx";
 import ForBusiness from "./pages/ForBusiness.tsx";
 import BecomeTutor from "./pages/BecomeTutor.tsx";
+import TutorApply from "./pages/TutorApply.tsx";
 
 const queryClient = new QueryClient();
 
