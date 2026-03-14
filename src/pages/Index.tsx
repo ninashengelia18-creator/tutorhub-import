@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Star, Landmark, BookOpen, Languages, Code, Music, Palette, Calculator, ChevronRight, Users, Briefcase, Shield } from "lucide-react";
+import { ArrowRight, Star, Landmark, BookOpen, Languages, Code, Music, GraduationCap, Calculator, ChevronRight, Users, Briefcase, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
