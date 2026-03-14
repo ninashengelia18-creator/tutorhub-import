@@ -5,10 +5,10 @@ import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 
 const tutorData: Record<string, any> = {
-  "1": { name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 35, avatar: "NB", languages: ["Georgian", "English"], bio: "With over 10 years of experience teaching mathematics, I specialize in making complex concepts accessible and engaging. From algebra to calculus, I tailor each lesson to your learning style and goals.", experience: "10+ years", students: 340, lessons: 2800 },
-  "2": { name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 40, avatar: "GK", languages: ["Georgian", "Russian"], bio: "PhD in Physics from Tbilisi State University. I believe physics should be intuitive, not intimidating. My students consistently improve their grades and develop a genuine curiosity for science.", experience: "8 years", students: 210, lessons: 1900 },
-  "3": { name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 30, avatar: "AM", languages: ["English", "Georgian"], bio: "IELTS & TOEFL specialist with a Cambridge CELTA certification. I help students achieve their target scores with structured preparation and real exam practice.", experience: "12 years", students: 520, lessons: 4100 },
-  "4": { name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 45, avatar: "LT", languages: ["English", "Georgian"], bio: "Full-stack developer with experience at top tech companies. I teach Python, JavaScript, React, and data science. Project-based learning approach.", experience: "6 years", students: 280, lessons: 2200 },
+  "1": { name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 85, avatar: "NB", languages: ["Georgian", "English"], bio: "With over 10 years of experience teaching mathematics, I specialize in making complex concepts accessible and engaging. From algebra to calculus, I tailor each lesson to your learning style and goals.", experience: "10+ years", students: 340, lessons: 2800 },
+  "2": { name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 100, avatar: "GK", languages: ["Georgian", "Russian"], bio: "PhD in Physics from Tbilisi State University. I believe physics should be intuitive, not intimidating. My students consistently improve their grades and develop a genuine curiosity for science.", experience: "8 years", students: 210, lessons: 1900 },
+  "3": { name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 75, avatar: "AM", languages: ["English", "Georgian"], bio: "IELTS & TOEFL specialist with a Cambridge CELTA certification. I help students achieve their target scores with structured preparation and real exam practice.", experience: "12 years", students: 520, lessons: 4100 },
+  "4": { name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 110, avatar: "LT", languages: ["English", "Georgian"], bio: "Full-stack developer with experience at top tech companies. I teach Python, JavaScript, React, and data science. Project-based learning approach.", experience: "6 years", students: 280, lessons: 2200 },
 };
 
 const timeSlots = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "18:00", "19:00"];
@@ -123,7 +123,7 @@ export default function TutorProfile() {
           >
             <div className="sticky top-20 rounded-xl border bg-card p-5 card-shadow space-y-5">
               <div className="text-center pb-4 border-b">
-                <p className="text-3xl font-bold tabular-nums">${tutor.price}<span className="text-sm font-normal text-muted-foreground">/hr</span></p>
+                <p className="text-3xl font-bold tabular-nums">₾{tutor.price}<span className="text-sm font-normal text-muted-foreground">/hr</span></p>
               </div>
 
               <div>

@@ -6,9 +6,8 @@ import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 
 const paymentMethods = [
-  { id: "payge", name: "PayGe (TBC)", description: "Pay with TBC Bank via PayGe", icon: "🏦" },
-  { id: "bog", name: "BOG Pay", description: "Pay with Bank of Georgia", icon: "🏛️" },
-  { id: "card", name: "Credit / Debit Card", description: "Visa, Mastercard", icon: "💳" },
+  { id: "payge", name: "TBC PayGe", description: "გადაიხადეთ TBC ბანკით", icon: "🏦" },
+  { id: "bog", name: "BOG Pay", description: "გადაიხადეთ საქართველოს ბანკით", icon: "🏛️" },
 ];
 
 export default function Booking() {
@@ -89,15 +88,15 @@ export default function Booking() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Lesson (60 min)</span>
-                <span className="font-medium tabular-nums">$35.00</span>
+                <span className="font-medium tabular-nums">₾85.00</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Platform fee</span>
-                <span className="font-medium tabular-nums">$2.50</span>
+                <span className="font-medium tabular-nums">₾6.00</span>
               </div>
               <div className="flex justify-between pt-2 border-t font-semibold">
                 <span>Total</span>
-                <span className="tabular-nums">$37.50</span>
+                <span className="tabular-nums">₾91.00</span>
               </div>
             </div>
           </div>

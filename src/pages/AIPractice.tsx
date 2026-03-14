@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Brain, BookOpen, Target, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
+import { Brain, BookOpen, Target, CheckCircle, ArrowRight, Sparkles, Briefcase, Plane, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -12,9 +12,11 @@ const dailyExercises = [
 ];
 
 const scenarios = [
-  { id: 1, title: "Job Interview Prep", description: "Practice answering common interview questions in English", subject: "English", duration: "15 min" },
-  { id: 2, title: "Math Problem Solving", description: "Work through word problems step by step with AI guidance", subject: "Mathematics", duration: "20 min" },
-  { id: 3, title: "Code Review", description: "Get feedback on your code and learn best practices", subject: "Programming", duration: "25 min" },
+  { id: 1, title: "Job Interview Prep", description: "Practice answering common interview questions in English with AI feedback", subject: "English", duration: "15 min", icon: Briefcase },
+  { id: 2, title: "Travel Conversations", description: "Practice ordering food, asking directions, and booking hotels in a foreign language", subject: "Languages", duration: "10 min", icon: Plane },
+  { id: 3, title: "Business Presentation", description: "Rehearse pitching ideas, negotiating deals, and leading meetings in English", subject: "Business English", duration: "20 min", icon: Building2 },
+  { id: 4, title: "Math Problem Solving", description: "Work through word problems step by step with AI guidance", subject: "Mathematics", duration: "20 min", icon: Brain },
+  { id: 5, title: "Code Review", description: "Get feedback on your code and learn best practices", subject: "Programming", duration: "25 min", icon: Sparkles },
 ];
 
 export default function AIPractice() {
@@ -101,15 +103,18 @@ export default function AIPractice() {
             <BookOpen className="h-5 w-5 text-primary" />
             Scenario Practice
           </h2>
-          <div className="grid sm:grid-cols-3 gap-3">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {scenarios.map((scenario) => (
               <div
                 key={scenario.id}
                 className="rounded-xl border bg-card p-4 card-shadow hover:card-shadow-hover hover:border-primary/30 transition-all cursor-pointer group"
               >
+                <div className="h-9 w-9 rounded-lg bg-primary-light flex items-center justify-center mb-3">
+                  <scenario.icon className="h-4.5 w-4.5 text-primary" />
+                </div>
                 <p className="text-xs text-primary font-medium mb-1">{scenario.subject}</p>
                 <h3 className="font-semibold text-sm mb-1 group-hover:text-primary transition-colors">{scenario.title}</h3>
-                <p className="text-xs text-muted-foreground mb-3">{scenario.description}</p>
+                <p className="text-xs text-muted-foreground mb-3 leading-relaxed">{scenario.description}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground tabular-nums">{scenario.duration}</span>
                   <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />

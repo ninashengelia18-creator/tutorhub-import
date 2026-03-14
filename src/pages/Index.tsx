@@ -9,10 +9,10 @@ import heroImage from "@/assets/hero-tutor.jpg";
 const subjects = ["Mathematics", "English", "Physics", "Chemistry", "Georgian", "Russian", "Programming", "Music"];
 
 const featuredTutors = [
-  { id: 1, name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 35, avatar: "NB", language: "Georgian, English" },
-  { id: 2, name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 40, avatar: "GK", language: "Georgian, Russian" },
-  { id: 3, name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 30, avatar: "AM", language: "English, Georgian" },
-  { id: 4, name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 45, avatar: "LT", language: "English, Georgian" },
+  { id: 1, name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 85, avatar: "NB", language: "Georgian, English" },
+  { id: 2, name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 100, avatar: "GK", language: "Georgian, Russian" },
+  { id: 3, name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 75, avatar: "AM", language: "English, Georgian" },
+  { id: 4, name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 110, avatar: "LT", language: "English, Georgian" },
 ];
 
 const stats = [
@@ -177,7 +177,7 @@ const Index = () => {
                 </div>
                 <p className="text-xs text-muted-foreground mb-3">{tutor.language}</p>
                 <div className="flex items-center justify-between pt-3 border-t">
-                  <span className="text-lg font-bold tabular-nums">${tutor.price}<span className="text-xs font-normal text-muted-foreground">/hr</span></span>
+                  <span className="text-lg font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">/hr</span></span>
                   <Button size="sm" variant="outline" className="text-xs h-7 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground">
                     Book Trial
                   </Button>
