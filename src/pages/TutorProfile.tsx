@@ -120,9 +120,10 @@ With 12 years of experience, I've guided over 500 students to their language goa
     origin: "Georgia",
     rating: 4.9,
     reviewCount: 164,
-    price: 110,
+    price: 35,
     lessonLength: "50-min",
     avatar: "LT",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
     languages: [
       { name: "English", level: "Upper-Intermediate B2" },
       { name: "Georgian", level: "Native" },
