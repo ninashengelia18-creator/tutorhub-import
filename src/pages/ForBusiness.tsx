@@ -51,7 +51,7 @@ export default function ForBusiness() {
       return;
     }
     setSubmitting(true);
-    const { error } = await supabase.from("business_inquiries").insert(parsed.data);
+    const { error } = await supabase.from("business_inquiries").insert([parsed.data]);
     setSubmitting(false);
     if (error) {
       toast({ title: t("biz.form.error"), variant: "destructive" });
