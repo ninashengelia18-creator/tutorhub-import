@@ -419,6 +419,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "biz.contactTitle": "მზად ხართ გუნდის უნარების ტრანსფორმაციისთვის?",
     "biz.contactSub": "მიიღეთ მორგებული სასწავლო გეგმა თქვენი ორგანიზაციისთვის.",
     "biz.contactBtn": "დაწყება",
+    "biz.form.company": "კომპანიის სახელი",
+    "biz.form.name": "საკონტაქტო პირი",
+    "biz.form.email": "ელ. ფოსტა",
+    "biz.form.phone": "ტელეფონი",
+    "biz.form.teamSize": "გუნდის ზომა",
+    "biz.form.teamSizePlaceholder": "მაგ. 10-50 თანამშრომელი",
+    "biz.form.message": "შეტყობინება",
+    "biz.form.messagePlaceholder": "მოგვიყევით თქვენი სასწავლო საჭიროებების შესახებ...",
+    "biz.form.submit": "მოთხოვნის გაგზავნა",
+    "biz.form.success": "მოთხოვნა წარმატებით გაიგზავნა! მალე დაგიკავშირდებით.",
+    "biz.form.error": "რაღაც შეცდომა მოხდა. სცადეთ ხელახლა.",
 
     // Become a Tutor
     "tutor.title": "გახდი რეპეტიტორი",
