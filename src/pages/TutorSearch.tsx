@@ -27,7 +27,7 @@ const availabilityOptions = ["Any", "Morning", "Afternoon", "Evening"];
 export default function TutorSearch() {
   const [search, setSearch] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("All");
-  const [priceRange, setPriceRange] = useState([0, 200]);
+  const [priceRange, setPriceRange] = useState([0, 50]);
   const [selectedRating, setSelectedRating] = useState("Any");
   const [selectedAvailability, setSelectedAvailability] = useState("Any");
   const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false);
