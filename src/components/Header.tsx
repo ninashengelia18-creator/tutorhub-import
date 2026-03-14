@@ -99,8 +99,8 @@ export function Header() {
                     onClick={() => setLang(l)}
                     className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
                       lang === l
-                        ? "bg-background text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
+                        ? "bg-primary-foreground text-primary shadow-sm"
+                        : "text-primary-foreground/70 hover:text-primary-foreground"
                     }`}
                   >
                     {langLabels[l]}
