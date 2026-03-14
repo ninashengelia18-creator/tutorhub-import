@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Globe, Mail, User } from "lucide-react";
+import { MessageCircle, X, Send, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-type Language = "en" | "ka" | "ru";
+type ChatLang = "en" | "ka" | "ru";
 
-const translations: Record<Language, {
+const chatTranslations: Record<ChatLang, {
   title: string;
   placeholder: string;
   greeting: string;
@@ -13,6 +14,7 @@ const translations: Record<Language, {
   escalateLabel: string;
   escalateMsg: string;
   typing: string;
+  defaultReply: string;
 }> = {
   en: {
     title: "Support Chat",
@@ -21,12 +23,13 @@ const translations: Record<Language, {
     quickQuestions: [
       "How do I book a lesson?",
       "What payment methods?",
-      "How does AI Practice work?",
+      "How do I find a tutor?",
       "Can I get a refund?",
     ],
     escalateLabel: "Talk to a human",
     escalateMsg: "For personalized help, email us at support@learneazy.ge — we reply within 2 hours!",
     typing: "Typing",
+    defaultReply: "Thanks for your message! For the best assistance, please email us at support@learneazy.ge or choose one of the quick questions above. We're happy to help! 😊",
   },
   ka: {
     title: "მხარდაჭერა",
@@ -35,12 +38,13 @@ const translations: Record<Language, {
     quickQuestions: [
       "როგორ დავჯავშნო გაკვეთილი?",
       "რა გადახდის მეთოდებია?",
-      "როგორ მუშაობს AI პრაქტიკა?",
+      "როგორ ვიპოვო რეპეტიტორი?",
       "შემიძლია თანხის დაბრუნება?",
     ],
     escalateLabel: "ადამიანთან საუბარი",
     escalateMsg: "პერსონალიზებული დახმარებისთვის მოგვწერეთ support@learneazy.ge — ვპასუხობთ 2 საათში!",
     typing: "წერს",
+    defaultReply: "მადლობა შეტყობინებისთვის! საუკეთესო დახმარებისთვის მოგვწერეთ support@learneazy.ge ან აირჩიეთ ერთ-ერთი სწრაფი კითხვა. სიამოვნებით დაგეხმარებით! 😊",
   },
   ru: {
     title: "Поддержка",
@@ -49,37 +53,36 @@ const translations: Record<Language, {
     quickQuestions: [
       "Как забронировать урок?",
       "Какие способы оплаты?",
-      "Как работает AI практика?",
+      "Как найти репетитора?",
       "Могу ли я вернуть деньги?",
     ],
     escalateLabel: "Связаться с человеком",
     escalateMsg: "Для персональной помощи напишите нам на support@learneazy.ge — ответим в течение 2 часов!",
     typing: "Печатает",
+    defaultReply: "Спасибо за сообщение! Для лучшей помощи напишите нам на support@learneazy.ge или выберите один из быстрых вопросов. Будем рады помочь! 😊",
   },
 };
 
-const faqAnswers: Record<Language, Record<string, string>> = {
+const faqAnswers: Record<ChatLang, Record<string, string>> = {
   en: {
     "How do I book a lesson?": "Go to the tutor's profile, pick a time slot, and click 'Book Trial Lesson'. You can pay with TBC PayGe or BOG Pay.",
     "What payment methods?": "We accept TBC PayGe and Bank of Georgia (BOG) Pay. All prices are in Georgian Lari (₾).",
-    "How does AI Practice work?": "AI Practice gives you daily exercises tailored to your learning goals, plus scenario-based conversations for real-world practice.",
+    "How do I find a tutor?": "Click 'Find Tutors' in the menu to browse tutors by subject, price, rating, and availability. You can also use the search bar!",
     "Can I get a refund?": "Yes! If you're not satisfied, request a refund within 24 hours of your lesson. Our team will review it promptly.",
   },
   ka: {
     "როგორ დავჯავშნო გაკვეთილი?": "გადადით რეპეტიტორის პროფილზე, აირჩიეთ დრო და დააჭირეთ 'საცდელი გაკვეთილის დაჯავშნას'. გადაიხადეთ TBC PayGe ან BOG Pay-ით.",
     "რა გადახდის მეთოდებია?": "ვიღებთ TBC PayGe და საქართველოს ბანკის (BOG) Pay გადახდებს. ყველა ფასი ქართულ ლარშია (₾).",
-    "როგორ მუშაობს AI პრაქტიკა?": "AI პრაქტიკა გთავაზობთ ყოველდღიურ სავარჯიშოებს და სცენარზე დაფუძნებულ საუბრებს რეალური პრაქტიკისთვის.",
+    "როგორ ვიპოვო რეპეტიტორი?": "დააჭირეთ 'რეპეტიტორები' მენიუში და მოძებნეთ საგნის, ფასის, რეიტინგისა და ხელმისაწვდომობის მიხედვით. შეგიძლიათ საძიებო ზოლიც გამოიყენოთ!",
     "შემიძლია თანხის დაბრუნება?": "დიახ! თუ კმაყოფილი არ ხართ, მოითხოვეთ თანხის დაბრუნება გაკვეთილიდან 24 საათში.",
   },
   ru: {
     "Как забронировать урок?": "Перейдите в профиль репетитора, выберите время и нажмите 'Забронировать пробный урок'. Оплата через TBC PayGe или BOG Pay.",
     "Какие способы оплаты?": "Мы принимаем TBC PayGe и Bank of Georgia (BOG) Pay. Все цены указаны в грузинских лари (₾).",
-    "Как работает AI практика?": "AI практика предлагает ежедневные упражнения и сценарные разговоры для практики в реальных ситуациях.",
+    "Как найти репетитора?": "Нажмите 'Репетиторы' в меню и ищите по предмету, цене, рейтингу и доступности. Также можете использовать строку поиска!",
     "Могу ли я вернуть деньги?": "Да! Если вы недовольны, запросите возврат в течение 24 часов после урока.",
   },
 };
-
-const langLabels: Record<Language, string> = { en: "EN", ka: "KA", ru: "RU" };
 
 function TypingIndicator({ label }: { label: string }) {
   return (
@@ -101,13 +104,14 @@ function TypingIndicator({ label }: { label: string }) {
 
 export function SupportChatWidget() {
   const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState<Language>("en");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{ text: string; fromUser: boolean }[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { lang } = useLanguage();
 
-  const t = translations[lang];
+  const chatLang = lang as ChatLang;
+  const t = chatTranslations[chatLang];
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -115,10 +119,15 @@ export function SupportChatWidget() {
     }
   }, [messages, isTyping]);
 
+  // Reset messages when language changes
+  useEffect(() => {
+    setMessages([]);
+  }, [lang]);
+
   const simulateReply = (userMsg: string) => {
     setIsTyping(true);
-    const answers = faqAnswers[lang];
-    const answer = answers[userMsg] || t.greeting;
+    const answers = faqAnswers[chatLang];
+    const answer = answers[userMsg] || t.defaultReply;
     setTimeout(() => {
       setIsTyping(false);
       setMessages((prev) => [...prev, { text: answer, fromUser: false }]);
@@ -163,26 +172,9 @@ export function SupportChatWidget() {
             {/* Header */}
             <div className="hero-gradient px-4 py-3 flex items-center justify-between">
               <span className="font-semibold text-primary-foreground text-sm">{t.title}</span>
-              <div className="flex items-center gap-2">
-                <div className="flex gap-0.5 bg-background/20 rounded-md p-0.5">
-                  {(Object.keys(langLabels) as Language[]).map((l) => (
-                    <button
-                      key={l}
-                      onClick={() => setLang(l)}
-                      className={`px-1.5 py-0.5 rounded text-xs font-medium transition-colors ${
-                        lang === l
-                          ? "bg-background text-foreground"
-                          : "text-primary-foreground/80 hover:text-primary-foreground"
-                      }`}
-                    >
-                      {langLabels[l]}
-                    </button>
-                  ))}
-                </div>
-                <button onClick={() => setOpen(false)}>
-                  <X className="h-4 w-4 text-primary-foreground" />
-                </button>
-              </div>
+              <button onClick={() => setOpen(false)}>
+                <X className="h-4 w-4 text-primary-foreground" />
+              </button>
             </div>
 
             {/* Messages */}

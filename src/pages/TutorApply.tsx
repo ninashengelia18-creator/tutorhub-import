@@ -290,10 +290,10 @@ export default function TutorApply() {
 
                 {/* Video introduction */}
                 <div className="space-y-2">
-                  <Label>Introduction Video</Label>
-                  <p className="text-xs text-muted-foreground">Record a 1-minute video about yourself and your teaching style. This is optional but highly encouraged — tutors with intro videos get up to 3x more bookings!</p>
-                  <Input type="url" placeholder="Paste a YouTube or Google Drive link to your video" className="mt-1" />
-                  <p className="text-xs text-muted-foreground italic">Tip: Keep it short (under 2 min), speak clearly, and show your personality!</p>
+                  <Label>{t("tutor.apply.videoLabel")}</Label>
+                  <p className="text-xs text-muted-foreground">{t("tutor.apply.videoDesc")}</p>
+                  <Input type="url" placeholder={t("tutor.apply.videoPlaceholder")} className="mt-1" />
+                  <p className="text-xs text-muted-foreground italic">{t("tutor.apply.videoTip")}</p>
                 </div>
 
                 <div className="space-y-2">
