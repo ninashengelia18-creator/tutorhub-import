@@ -54,7 +54,7 @@ export function Footer() {
     { label: "Learn Spanish online", href: "/search" },
     { label: "Learn French online", href: "/search" },
     { label: "Learn German online", href: "/search" },
-    { label: "Learn Japanese online", href: "/search" },
+    { label: "Learn Georgian online", href: "/search" },
     { label: "Learn Italian online", href: "/search" },
     { label: "Learn another language", href: "/search" },
   ];
