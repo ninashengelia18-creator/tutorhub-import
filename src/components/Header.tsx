@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
-import logo from "@/assets/learneazy-logo.jpg";
+import logo from "@/assets/learneazy-logo.png";
 
 const langLabels: Record<Language, string> = { en: "EN", ka: "ქარ", ru: "РУ" };
 
