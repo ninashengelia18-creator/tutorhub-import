@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import logo from "@/assets/learneazy-logo.jpg";
+import logo from "@/assets/learneazy-logo.png";
 
 export function Footer() {
   const { t } = useLanguage();
