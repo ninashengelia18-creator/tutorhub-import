@@ -54,14 +54,14 @@ export const translations: Record<Language, Record<string, string>> = {
     "home.subj.business": "Business tutors",
     "home.progressBadge": "Verified Results Platform",
     "home.progressTitle": "Real progress, measured and proven",
-    "home.progressDesc": "TutorHub tracks your learning journey so you can see exactly how far you've come. Our data-driven approach ensures every lesson moves you forward.",
+    "home.progressDesc": "LearnEazy tracks your learning journey so you can see exactly how far you've come. Our data-driven approach ensures every lesson moves you forward.",
     "home.progressFeat1Title": "Trackable Milestones",
     "home.progressFeat1Desc": "Set goals, track completion, and celebrate breakthroughs with detailed progress dashboards.",
     "home.progressFeat2Title": "Personalized Learning Paths",
     "home.progressFeat2Desc": "AI-powered recommendations adapt your curriculum based on strengths and areas to improve.",
     "home.progressFeat3Title": "Outcome Guarantee",
     "home.progressFeat3Desc": "If you don't see measurable improvement, we'll match you with a new tutor — free of charge.",
-    "home.howTitle": "How TutorHub works:",
+    "home.howTitle": "How LearnEazy works:",
     "home.how1.title": "Find your tutor.",
     "home.how1.desc": "We'll connect you with a tutor who motivates, challenges, and supports you — from first lesson to mastery.",
     "home.how2.title": "Start learning.",
@@ -71,18 +71,18 @@ export const translations: Record<Language, Record<string, string>> = {
     "home.guaranteeTitle": "Lessons you'll love. Guaranteed.",
     "home.guaranteeDesc": "Try another tutor for free if you're not satisfied.",
     "home.becomeTutorTitle": "Become a tutor",
-    "home.becomeTutorDesc": "Earn money sharing your expert knowledge with students. Sign up to start tutoring online with TutorHub.",
+    "home.becomeTutorDesc": "Earn money sharing your expert knowledge with students. Sign up to start tutoring online with LearnEazy.",
     "home.tutorBenefit1": "Find new students",
     "home.tutorBenefit2": "Grow your business",
     "home.tutorBenefit3": "Get paid securely",
     "home.becomeTutorBtn": "Become a tutor",
     "home.howPlatformWorks": "How our platform works",
     "home.corpTitle": "Language training for business",
-    "home.corpDesc": "TutorHub corporate training is designed for teams and businesses offering personalized language learning with online tutors.",
+    "home.corpDesc": "LearnEazy corporate training is designed for teams and businesses offering personalized language learning with online tutors.",
     "home.corpCta": "Book a demo",
 
     // How it works (legacy)
-    "how.title": "How TutorHub Works",
+    "how.title": "How LearnEazy Works",
     "how.subtitle": "Start learning in 3 simple steps",
     "how.step1.title": "Find Your Tutor",
     "how.step1.desc": "Browse expert tutors by subject, price, and availability.",
@@ -93,7 +93,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // CTA
     "cta.title": "Ready to start learning?",
-    "cta.subtitle": "Join thousands of students already learning with TutorHub. Your first trial lesson is free.",
+    "cta.subtitle": "Join thousands of students already learning with LearnEazy. Your first trial lesson is free.",
     "cta.button": "Find a Tutor",
 
     // Footer
@@ -194,11 +194,11 @@ export const translations: Record<Language, Record<string, string>> = {
     "msg.typePlaceholder": "Type a message...",
 
     // For Business
-    "biz.title": "TutorHub for Business",
+    "biz.title": "LearnEazy for Business",
     "biz.subtitle": "Upskill your team with personalized tutoring and AI-powered learning tools.",
     "biz.cta": "Request a Demo",
     "biz.ctaSub": "Free consultation · No commitment",
-    "biz.whyTitle": "Why Companies Choose TutorHub",
+    "biz.whyTitle": "Why Companies Choose LearnEazy",
     "biz.feat1.title": "Tailored Training Programs",
     "biz.feat1.desc": "Custom curricula designed around your team's skill gaps and business objectives. From language training to technical upskilling.",
     "biz.feat2.title": "Progress Tracking & Analytics",
@@ -243,7 +243,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.subtitle": "Share your expertise, set your own schedule, and earn on your terms.",
     "tutor.cta": "Create a tutor profile now",
     "tutor.ctaSub": "Free to join · Start earning in days",
-    "tutor.whyTitle": "Why Teach on TutorHub?",
+    "tutor.whyTitle": "Why Teach on LearnEazy?",
     "tutor.feat1.title": "Set your own rate",
     "tutor.feat1.desc": "Choose your hourly rate and change it anytime. On average, English tutors charge $15-25 per hour.",
     "tutor.feat2.title": "Teach anytime, anywhere",
@@ -279,32 +279,32 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.readyBtn": "Create a tutor profile now",
     "tutor.heroHeadline": "Make a living by teaching the largest community of learners worldwide",
     "tutor.teachStudentsTitle": "Teach students from over 180 countries",
-    "tutor.teachStudentsDesc": "TutorHub tutors teach 800,000+ students globally. Join us and you'll have everything you need to teach successfully.",
+    "tutor.teachStudentsDesc": "LearnEazy tutors teach 800,000+ students globally. Join us and you'll have everything you need to teach successfully.",
     "tutor.pf1": "Steady stream of new students",
     "tutor.pf2": "Smart calendar",
     "tutor.pf3": "Interactive classroom",
     "tutor.pf4": "Convenient payment methods",
     "tutor.pf5": "Professional development webinars",
     "tutor.pf6": "Supportive tutor community",
-    "tutor.testimonialQuote": "TutorHub allowed me to make a living without leaving home!",
+    "tutor.testimonialQuote": "LearnEazy allowed me to make a living without leaving home!",
     "tutor.testimonialAuthor": "Krista A. · English tutor",
     "tutor.faqTitle": "Frequently asked questions",
-    "tutor.faq1.q": "What kind of tutors does TutorHub look for?",
+    "tutor.faq1.q": "What kind of tutors does LearnEazy look for?",
     "tutor.faq1.a": "No specific certification or teaching experience is required! We welcome tutors who:\n\n• Enjoy sharing knowledge and making a difference in students' lives\n• Have outstanding communication skills\n• Are willing to provide a personalized learning experience to international students",
     "tutor.faq2.q": "What subject can I teach?",
-    "tutor.faq2.a": "We have over 100 subjects on TutorHub, including languages, school and university subjects, hobbies and art.",
-    "tutor.faq3.q": "How do I become an online tutor at TutorHub?",
-    "tutor.faq3.a": "1. Provide some basic information about yourself\n2. Upload your headshot photo\n3. Describe your strengths as a tutor\n4. Record a short video introduction (up to 2 mins long)\n5. Choose your availability\n\nYou'll see tips and examples at each step of the registration process to help you create a great tutor profile. When you complete registration, our Tutor Success team will review your profile within 5 business days. Once your profile is approved, students from around the world will see it on TutorHub and will be able to book lessons with you.",
+    "tutor.faq2.a": "We have over 100 subjects on LearnEazy, including languages, school and university subjects, hobbies and art.",
+    "tutor.faq3.q": "How do I become an online tutor at LearnEazy?",
+    "tutor.faq3.a": "1. Provide some basic information about yourself\n2. Upload your headshot photo\n3. Describe your strengths as a tutor\n4. Record a short video introduction (up to 2 mins long)\n5. Choose your availability\n\nYou'll see tips and examples at each step of the registration process to help you create a great tutor profile. When you complete registration, our Tutor Success team will review your profile within 5 business days. Once your profile is approved, students from around the world will see it on LearnEazy and will be able to book lessons with you.",
     "tutor.faq4.q": "How can I get my profile approved quickly?",
     "tutor.faq4.a": "Sometimes, we don't approve tutor profiles at the first attempt because the profile photo, video or description doesn't meet our requirements. Make sure you use a real photo of yourself, take the time to record a short video and describe your strengths as a tutor in the description. A surefire way to get approved is to follow the tips given at each step of the registration process.\n\nAlso, be sure to avoid mentioning any contact details, lesson prices or misleading information in your profile description and video.",
-    "tutor.faq5.q": "Why should I teach on TutorHub?",
-    "tutor.faq5.a": "Because it's easy and flexible! If you teach with TutorHub, you:\n\n• Earn by sharing what you know\n• Get a steady stream of new students looking to learn online\n• Manage your lessons and connect with students easily\n• Teach whenever and wherever you want\n• Use safe payment methods\n• Get support from our friendly team through professional development webinars, live chat and email\n• Join a community of expert tutors who are always there for you\n\n...and more to come! We're constantly improving the platform and teaching tools for our tutors based on their needs.",
-    "tutor.faq6.q": "What computer equipment do I need to teach on TutorHub?",
-    "tutor.faq6.a": "You will need a laptop or a desktop computer, a stable internet connection, a webcam, and a microphone for conducting lessons in the TutorHub virtual classroom.",
-    "tutor.faq7.q": "Is it free to create a tutor profile on TutorHub?",
-    "tutor.faq7.a": "Yes. It is free to create a tutor profile, get exposure to students, and use TutorHub's tools and materials. We only charge a commission for the lessons that you have taught.",
-    "tutor.faq8.q": "How much can I earn on TutorHub?",
-    "tutor.faq8.a": "Most popular tutors on TutorHub earn up to $550 a week. Your earnings depend on the hourly rate you set, the number of lessons you teach and how many students continue learning with you after the trial lesson. A tip for newly registered tutors: start with a lower hourly rate to get first students faster. You can change your rate anytime.",
+    "tutor.faq5.q": "Why should I teach on LearnEazy?",
+    "tutor.faq5.a": "Because it's easy and flexible! If you teach with LearnEazy, you:\n\n• Earn by sharing what you know\n• Get a steady stream of new students looking to learn online\n• Manage your lessons and connect with students easily\n• Teach whenever and wherever you want\n• Use safe payment methods\n• Get support from our friendly team through professional development webinars, live chat and email\n• Join a community of expert tutors who are always there for you\n\n...and more to come! We're constantly improving the platform and teaching tools for our tutors based on their needs.",
+    "tutor.faq6.q": "What computer equipment do I need to teach on LearnEazy?",
+    "tutor.faq6.a": "You will need a laptop or a desktop computer, a stable internet connection, a webcam, and a microphone for conducting lessons in the LearnEazy virtual classroom.",
+    "tutor.faq7.q": "Is it free to create a tutor profile on LearnEazy?",
+    "tutor.faq7.a": "Yes. It is free to create a tutor profile, get exposure to students, and use LearnEazy's tools and materials. We only charge a commission for the lessons that you have taught.",
+    "tutor.faq8.q": "How much can I earn on LearnEazy?",
+    "tutor.faq8.a": "Most popular tutors on LearnEazy earn up to $550 a week. Your earnings depend on the hourly rate you set, the number of lessons you teach and how many students continue learning with you after the trial lesson. A tip for newly registered tutors: start with a lower hourly rate to get first students faster. You can change your rate anytime.",
     // Tutor Application Portal
     "tutor.apply.step": "Step",
     "tutor.apply.step1Title": "Personal Information",
@@ -381,7 +381,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "featured.bookTrial": "საცდელი",
 
     // How it works
-    "how.title": "როგორ მუშაობს TutorHub",
+    "how.title": "როგორ მუშაობს LearnEazy",
     "how.subtitle": "დაიწყეთ სწავლა 3 მარტივი ნაბიჯით",
     "how.step1.title": "იპოვეთ რეპეტიტორი",
     "how.step1.desc": "მოძებნეთ რეპეტიტორები საგნის, ფასის და ხელმისაწვდომობის მიხედვით.",
@@ -392,7 +392,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // CTA
     "cta.title": "მზად ხართ სწავლის დასაწყებად?",
-    "cta.subtitle": "შეუერთდით ათასობით სტუდენტს, რომლებიც უკვე სწავლობენ TutorHub-ით. პირველი საცდელი გაკვეთილი უფასოა.",
+    "cta.subtitle": "შეუერთდით ათასობით სტუდენტს, რომლებიც უკვე სწავლობენ LearnEazy-ით. პირველი საცდელი გაკვეთილი უფასოა.",
     "cta.button": "რეპეტიტორის პოვნა",
 
     // Footer
@@ -493,11 +493,11 @@ export const translations: Record<Language, Record<string, string>> = {
     "msg.typePlaceholder": "დაწერეთ შეტყობინება...",
 
     // For Business
-    "biz.title": "TutorHub ბიზნესისთვის",
+    "biz.title": "LearnEazy ბიზნესისთვის",
     "biz.subtitle": "გაზარდეთ თქვენი გუნდის კვალიფიკაცია პერსონალიზებული რეპეტიტორობით და AI სასწავლო ხელსაწყოებით.",
     "biz.cta": "მოითხოვეთ დემო",
     "biz.ctaSub": "უფასო კონსულტაცია · ვალდებულების გარეშე",
-    "biz.whyTitle": "რატომ ირჩევენ კომპანიები TutorHub-ს",
+    "biz.whyTitle": "რატომ ირჩევენ კომპანიები LearnEazy-ს",
     "biz.feat1.title": "მორგებული სასწავლო პროგრამები",
     "biz.feat1.desc": "თქვენი გუნდის საჭიროებებზე მორგებული კურიკულუმი. ენების სწავლებიდან ტექნიკურ უნარებამდე.",
     "biz.feat2.title": "პროგრესის თვალყურის დევნება",
@@ -542,9 +542,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.subtitle": "გაუზიარეთ გამოცდილება, დააწესეთ საკუთარი განრიგი და იშოვეთ თქვენი პირობებით.",
     "tutor.cta": "გააკეთეთ განაცხადი",
     "tutor.ctaSub": "უფასო გაწევრიანება · დაიწყეთ შემოსავალი 48 საათში",
-    "tutor.whyTitle": "რატომ ასწავლოთ TutorHub-ზე?",
+    "tutor.whyTitle": "რატომ ასწავლოთ LearnEazy-ზე?",
     "tutor.feat1.title": "დააწესეთ საკუთარი ტარიფები",
-    "tutor.feat1.desc": "თქვენ წყვეტთ რამდენი მოითხოვოთ. TutorHub იღებს მცირე საკომისიოს.",
+    "tutor.feat1.desc": "თქვენ წყვეტთ რამდენი მოითხოვოთ. LearnEazy იღებს მცირე საკომისიოს.",
     "tutor.feat2.title": "მოქნილი განრიგი",
     "tutor.feat2.desc": "ასწავლეთ როცა მოგწონთ. დააწესეთ ხელმისაწვდომობა და მიიღეთ ჯავშნები.",
     "tutor.feat3.title": "AI საკლასო ოთახი",
@@ -578,25 +578,25 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.readyBtn": "დაიწყეთ განაცხადი",
     "tutor.heroHeadline": "იშოვეთ საცხოვრებელი მსოფლიოს უდიდესი მოსწავლეების საზოგადოების სწავლებით",
     "tutor.teachStudentsTitle": "ასწავლეთ სტუდენტებს 180+ ქვეყნიდან",
-    "tutor.teachStudentsDesc": "TutorHub-ის რეპეტიტორები ასწავლიან 800,000+ სტუდენტს მთელ მსოფლიოში.",
+    "tutor.teachStudentsDesc": "LearnEazy-ის რეპეტიტორები ასწავლიან 800,000+ სტუდენტს მთელ მსოფლიოში.",
     "tutor.pf1": "სტუდენტების მუდმივი ნაკადი",
     "tutor.pf2": "ჭკვიანი კალენდარი",
     "tutor.pf3": "ინტერაქტიული საკლასო ოთახი",
     "tutor.pf4": "მოსახერხებელი გადახდის მეთოდები",
     "tutor.pf5": "პროფესიული განვითარების ვებინარები",
     "tutor.pf6": "მხარდამჭერი რეპეტიტორების საზოგადოება",
-    "tutor.testimonialQuote": "TutorHub-მა მომცა საშუალება ვიშოვო სახლიდან გაუსვლელად!",
+    "tutor.testimonialQuote": "LearnEazy-მა მომცა საშუალება ვიშოვო სახლიდან გაუსვლელად!",
     "tutor.testimonialAuthor": "ნინო ს. · ინგლისურის რეპეტიტორი",
     "tutor.faqTitle": "ხშირად დასმული კითხვები",
-    "tutor.faq1.q": "რა ტიპის რეპეტიტორებს ეძებს TutorHub?",
+    "tutor.faq1.q": "რა ტიპის რეპეტიტორებს ეძებს LearnEazy?",
     "tutor.faq1.a": "კონკრეტული სერთიფიკატი ან სასწავლო გამოცდილება არ არის საჭირო! მივესალმებით რეპეტიტორებს, რომლებსაც სიამოვნებთ ცოდნის გაზიარება.",
     "tutor.faq2.q": "რა საგანი შემიძლია ვასწავლო?",
-    "tutor.faq2.a": "TutorHub-ზე 100-ზე მეტი საგანია, მათ შორის ენები, სასკოლო და საუნივერსიტეტო საგნები.",
+    "tutor.faq2.a": "LearnEazy-ზე 100-ზე მეტი საგანია, მათ შორის ენები, სასკოლო და საუნივერსიტეტო საგნები.",
     "tutor.faq3.q": "როგორ გავხდე ონლაინ რეპეტიტორი?",
     "tutor.faq3.a": "1. მიუთითეთ ძირითადი ინფორმაცია\n2. ატვირთეთ ფოტო\n3. აღწერეთ თქვენი ძლიერი მხარეები\n4. ჩაწერეთ მოკლე ვიდეო\n5. აირჩიეთ ხელმისაწვდომობა",
     "tutor.faq4.q": "როგორ დავამტკიცო პროფილი სწრაფად?",
     "tutor.faq4.a": "გამოიყენეთ რეალური ფოტო, ჩაწერეთ მოკლე ვიდეო და აღწერეთ თქვენი ძლიერი მხარეები.",
-    "tutor.faq5.q": "რატომ უნდა ვასწავლო TutorHub-ზე?",
+    "tutor.faq5.q": "რატომ უნდა ვასწავლო LearnEazy-ზე?",
     "tutor.faq5.a": "რადგან ეს მარტივი და მოქნილია! იშოვეთ ცოდნის გაზიარებით, მიიღეთ სტუდენტების ნაკადი, ასწავლეთ სადაც და როცა გინდათ.",
     "tutor.faq6.q": "უფასოა თუ არა პროფილის შექმნა?",
     "tutor.faq6.a": "დიახ. პროფილის შექმნა, სტუდენტებზე წვდომა და ინსტრუმენტების გამოყენება უფასოა. ჩვენ ვიღებთ მცირე საკომისიოს მხოლოდ ჩატარებული გაკვეთილებიდან.",
@@ -677,7 +677,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "featured.bookTrial": "Пробный",
 
     // How it works
-    "how.title": "Как работает TutorHub",
+    "how.title": "Как работает LearnEazy",
     "how.subtitle": "Начните обучение в 3 простых шага",
     "how.step1.title": "Найдите репетитора",
     "how.step1.desc": "Ищите репетиторов по предмету, цене и доступности.",
@@ -688,7 +688,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // CTA
     "cta.title": "Готовы начать обучение?",
-    "cta.subtitle": "Присоединяйтесь к тысячам студентов, которые уже учатся с TutorHub. Первый пробный урок бесплатный.",
+    "cta.subtitle": "Присоединяйтесь к тысячам студентов, которые уже учатся с LearnEazy. Первый пробный урок бесплатный.",
     "cta.button": "Найти репетитора",
 
     // Footer
@@ -789,11 +789,11 @@ export const translations: Record<Language, Record<string, string>> = {
     "msg.typePlaceholder": "Введите сообщение...",
 
     // For Business
-    "biz.title": "TutorHub для бизнеса",
+    "biz.title": "LearnEazy для бизнеса",
     "biz.subtitle": "Повышайте квалификацию команды с персонализированным обучением и AI-инструментами.",
     "biz.cta": "Запросить демо",
     "biz.ctaSub": "Бесплатная консультация · Без обязательств",
-    "biz.whyTitle": "Почему компании выбирают TutorHub",
+    "biz.whyTitle": "Почему компании выбирают LearnEazy",
     "biz.feat1.title": "Индивидуальные программы",
     "biz.feat1.desc": "Учебные планы, разработанные под потребности вашей команды. От языков до технических навыков.",
     "biz.feat2.title": "Отслеживание прогресса",
@@ -838,9 +838,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.subtitle": "Делитесь опытом, устанавливайте свой график и зарабатывайте на своих условиях.",
     "tutor.cta": "Подать заявку",
     "tutor.ctaSub": "Бесплатная регистрация · Начните зарабатывать за 48 часов",
-    "tutor.whyTitle": "Почему преподавать на TutorHub?",
+    "tutor.whyTitle": "Почему преподавать на LearnEazy?",
     "tutor.feat1.title": "Устанавливайте свои ставки",
-    "tutor.feat1.desc": "Вы решаете, сколько брать. TutorHub берёт небольшую комиссию.",
+    "tutor.feat1.desc": "Вы решаете, сколько брать. LearnEazy берёт небольшую комиссию.",
     "tutor.feat2.title": "Гибкий график",
     "tutor.feat2.desc": "Преподавайте когда удобно. Установите доступность и принимайте бронирования.",
     "tutor.feat3.title": "AI-класс",
@@ -874,25 +874,25 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.readyBtn": "Начать заявку",
     "tutor.heroHeadline": "Зарабатывайте, обучая крупнейшее сообщество учеников по всему миру",
     "tutor.teachStudentsTitle": "Обучайте студентов из 180+ стран",
-    "tutor.teachStudentsDesc": "Репетиторы TutorHub обучают 800,000+ студентов по всему миру.",
+    "tutor.teachStudentsDesc": "Репетиторы LearnEazy обучают 800,000+ студентов по всему миру.",
     "tutor.pf1": "Постоянный поток новых студентов",
     "tutor.pf2": "Умный календарь",
     "tutor.pf3": "Интерактивный класс",
     "tutor.pf4": "Удобные способы оплаты",
     "tutor.pf5": "Вебинары профессионального развития",
     "tutor.pf6": "Поддерживающее сообщество репетиторов",
-    "tutor.testimonialQuote": "TutorHub позволил мне зарабатывать не выходя из дома!",
+    "tutor.testimonialQuote": "LearnEazy позволил мне зарабатывать не выходя из дома!",
     "tutor.testimonialAuthor": "Нино С. · Репетитор английского",
     "tutor.faqTitle": "Часто задаваемые вопросы",
-    "tutor.faq1.q": "Каких репетиторов ищет TutorHub?",
+    "tutor.faq1.q": "Каких репетиторов ищет LearnEazy?",
     "tutor.faq1.a": "Конкретный сертификат или опыт преподавания не требуется! Мы приветствуем репетиторов, которые любят делиться знаниями и имеют отличные коммуникативные навыки.",
     "tutor.faq2.q": "Какой предмет я могу преподавать?",
-    "tutor.faq2.a": "На TutorHub более 100 предметов, включая языки, школьные и университетские предметы, хобби и искусство.",
-    "tutor.faq3.q": "Как стать онлайн-репетитором на TutorHub?",
+    "tutor.faq2.a": "На LearnEazy более 100 предметов, включая языки, школьные и университетские предметы, хобби и искусство.",
+    "tutor.faq3.q": "Как стать онлайн-репетитором на LearnEazy?",
     "tutor.faq3.a": "1. Укажите основную информацию о себе\n2. Загрузите фото\n3. Опишите свои сильные стороны\n4. Запишите короткое видео\n5. Выберите доступность",
     "tutor.faq4.q": "Как быстро подтвердить профиль?",
     "tutor.faq4.a": "Используйте настоящее фото, запишите короткое видео и опишите свои сильные стороны как репетитора.",
-    "tutor.faq5.q": "Почему стоит преподавать на TutorHub?",
+    "tutor.faq5.q": "Почему стоит преподавать на LearnEazy?",
     "tutor.faq5.a": "Потому что это просто и гибко! Зарабатывайте, делясь знаниями, получайте поток студентов, преподавайте когда и где хотите.",
     "tutor.faq6.q": "Бесплатно ли создание профиля?",
     "tutor.faq6.a": "Да. Создание профиля, доступ к студентам и инструментам бесплатно. Мы берём небольшую комиссию только за проведённые уроки.",
@@ -943,13 +943,13 @@ export const translations: Record<Language, Record<string, string>> = {
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Language>(() => {
-    const saved = localStorage.getItem("tutorhub-lang");
+    const saved = localStorage.getItem("learneazy-lang");
     return (saved as Language) || "en";
   });
 
   const handleSetLang = (newLang: Language) => {
     setLang(newLang);
-    localStorage.setItem("tutorhub-lang", newLang);
+    localStorage.setItem("learneazy-lang", newLang);
   };
 
   const t = (key: string): string => {

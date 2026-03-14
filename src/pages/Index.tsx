@@ -165,7 +165,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* How TutorHub Works — 3 steps */}
+      {/* How LearnEazy Works — 3 steps */}
       <section className="container py-16">
         <motion.h2
           initial={{ opacity: 0 }}

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import logo from "@/assets/logo.jpg";
+import logo from "@/assets/learneazy-logo.jpg";
 
 export function Footer() {
   const { t } = useLanguage();
@@ -8,11 +8,11 @@ export function Footer() {
   const aboutLinks = [
     { label: "Who we are", href: "/about" },
     { label: "How it works", href: "/how-it-works" },
-    { label: "TutorHub reviews", href: "/reviews" },
-    { label: "TutorHub app", href: "/app" },
+    { label: "LearnEazy reviews", href: "/reviews" },
+    { label: "LearnEazy app", href: "/app" },
     { label: "Proven progress platform", href: "/ai-practice" },
     { label: "Community guidelines", href: "/guidelines" },
-    { label: "Work at TutorHub!", href: "/careers" },
+    { label: "Work at LearnEazy!", href: "/careers" },
     { label: "Status", href: "/status" },
     { label: "Research and Studies", href: "/research" },
     { label: "Media kit", href: "/media" },
@@ -20,14 +20,14 @@ export function Footer() {
   ];
 
   const studentLinks = [
-    { label: "TutorHub Blog", href: "/blog" },
+    { label: "LearnEazy Blog", href: "/blog" },
     { label: "Questions and Answers", href: "/faq" },
     { label: "Student discount", href: "/student-discount" },
     { label: "Refer a friend", href: "/referral" },
     { label: "Test your English for free", href: "/english-test" },
     { label: "Test your vocab", href: "/vocab-test" },
-    { label: "TutorHub discounts", href: "/discounts" },
-    { label: "TutorHub Subscription", href: "/subscription" },
+    { label: "LearnEazy discounts", href: "/discounts" },
+    { label: "LearnEazy Subscription", href: "/subscription" },
   ];
 
   const tutorLinks = [
@@ -130,7 +130,7 @@ export function Footer() {
                 Georgia, Tbilisi
               </p>
               <div className="flex gap-4 mt-3">
-                <span className="text-sm font-medium text-foreground">TutorHub social</span>
+                <span className="text-sm font-medium text-foreground">LearnEazy social</span>
               </div>
               <div className="flex gap-4 mt-2">
                 {["Facebook", "Instagram", "Youtube", "LinkedIn", "TikTok"].map((s) => (
@@ -163,8 +163,8 @@ export function Footer() {
       <div className="border-t">
         <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src={logo} alt="TutorHub" className="h-8 w-auto" />
-            <span className="text-sm text-muted-foreground">© 2012-{new Date().getFullYear()} TutorHub Inc.</span>
+            <img src={logo} alt="LearnEazy" className="h-8 w-auto" />
+            <span className="text-sm text-muted-foreground">© 2012-{new Date().getFullYear()} LearnEazy Inc.</span>
           </div>
           <div className="flex gap-4 text-sm text-muted-foreground">
             <Link to="/legal" className="hover:text-primary transition-colors">Legal Center</Link>

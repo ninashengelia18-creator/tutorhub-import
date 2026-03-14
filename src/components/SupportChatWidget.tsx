@@ -25,7 +25,7 @@ const translations: Record<Language, {
       "Can I get a refund?",
     ],
     escalateLabel: "Talk to a human",
-    escalateMsg: "For personalized help, email us at support@tutorhub.ge — we reply within 2 hours!",
+    escalateMsg: "For personalized help, email us at support@learneazy.ge — we reply within 2 hours!",
     typing: "Typing",
   },
   ka: {
@@ -39,7 +39,7 @@ const translations: Record<Language, {
       "შემიძლია თანხის დაბრუნება?",
     ],
     escalateLabel: "ადამიანთან საუბარი",
-    escalateMsg: "პერსონალიზებული დახმარებისთვის მოგვწერეთ support@tutorhub.ge — ვპასუხობთ 2 საათში!",
+    escalateMsg: "პერსონალიზებული დახმარებისთვის მოგვწერეთ support@learneazy.ge — ვპასუხობთ 2 საათში!",
     typing: "წერს",
   },
   ru: {
@@ -53,7 +53,7 @@ const translations: Record<Language, {
       "Могу ли я вернуть деньги?",
     ],
     escalateLabel: "Связаться с человеком",
-    escalateMsg: "Для персональной помощи напишите нам на support@tutorhub.ge — ответим в течение 2 часов!",
+    escalateMsg: "Для персональной помощи напишите нам на support@learneazy.ge — ответим в течение 2 часов!",
     typing: "Печатает",
   },
 };
@@ -229,7 +229,7 @@ export function SupportChatWidget() {
                 className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-muted/50 transition-colors"
               >
                 <Mail className="h-3.5 w-3.5" />
-                {t.escalateLabel} — support@tutorhub.ge
+                {t.escalateLabel} — support@learneazy.ge
               </button>
               <div className="border-t p-2 flex gap-2">
                 <input

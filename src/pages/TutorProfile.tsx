@@ -39,7 +39,7 @@ Together, we will explore the beauty of mathematics. I am dedicated to your grow
     lessonRating: { overall: 4.9, reassurance: 5.0, clarity: 4.9, progress: 4.8, preparation: 5.0 },
     ratingReviewCount: 42,
     resume: [
-      { period: "2014 — Present", org: "TutorHub", role: "Senior Mathematics Tutor" },
+      { period: "2014 — Present", org: "LearnEazy", role: "Senior Mathematics Tutor" },
       { period: "2010 — 2014", org: "Tbilisi State University", role: "Teaching Assistant" },
     ],
     specialties: ["Algebra", "Calculus", "Exam Prep"],
@@ -105,7 +105,7 @@ With 12 years of experience, I've guided over 500 students to their language goa
     lessonRating: { overall: 5.0, reassurance: 5.0, clarity: 5.0, progress: 5.0, preparation: 5.0 },
     ratingReviewCount: 85,
     resume: [
-      { period: "2012 — Present", org: "TutorHub", role: "Senior English Tutor" },
+      { period: "2012 — Present", org: "LearnEazy", role: "Senior English Tutor" },
       { period: "2010 — 2012", org: "British Council", role: "English Instructor" },
     ],
     specialties: ["IELTS Prep", "TOEFL Prep", "Business English", "Conversational English"],
