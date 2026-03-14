@@ -25,8 +25,10 @@ const ratings = ["Any", "4.5+", "4.7+", "4.9+"];
 const availabilityOptions = ["Any", "Morning", "Afternoon", "Evening"];
 
 export default function TutorSearch() {
+  const [searchParams] = useSearchParams();
+  const initialSubject = searchParams.get("subject") || "All";
   const [search, setSearch] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("All");
+  const [selectedSubject, setSelectedSubject] = useState(initialSubject);
   const [priceRange, setPriceRange] = useState([0, 50]);
   const [selectedRating, setSelectedRating] = useState("Any");
   const [selectedAvailability, setSelectedAvailability] = useState("Any");
