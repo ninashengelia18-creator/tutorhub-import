@@ -105,7 +105,7 @@ export default function TutorSearch() {
 
               <div className="mb-6">
                 <h4 className="text-sm font-semibold mb-3">{t("search.pricePerHour")}</h4>
-                <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={200} step={5} className="mb-2" />
+                <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={50} step={5} className="mb-2" />
                 <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
                   <span>₾{priceRange[0]}</span>
                   <span>₾{priceRange[1]}</span>
