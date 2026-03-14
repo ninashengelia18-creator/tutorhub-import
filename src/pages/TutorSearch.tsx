@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const allTutors = [
   { id: 1, name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 85, avatar: "NB", languages: ["Georgian", "English"], bio: "10+ years teaching mathematics. Specializing in calculus and algebra.", nativeSpeaker: true, availability: "morning" },
@@ -31,16 +32,17 @@ export default function TutorSearch() {
   const [selectedAvailability, setSelectedAvailability] = useState("Any");
   const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const { t } = useLanguage();
 
-  const filtered = allTutors.filter((t) => {
-    if (selectedSubject !== "All" && t.subject !== selectedSubject) return false;
-    if (search && !t.name.toLowerCase().includes(search.toLowerCase()) && !t.subject.toLowerCase().includes(search.toLowerCase())) return false;
-    if (t.price < priceRange[0] || t.price > priceRange[1]) return false;
-    if (selectedRating === "4.5+" && t.rating < 4.5) return false;
-    if (selectedRating === "4.7+" && t.rating < 4.7) return false;
-    if (selectedRating === "4.9+" && t.rating < 4.9) return false;
-    if (selectedAvailability !== "Any" && t.availability !== selectedAvailability.toLowerCase()) return false;
-    if (nativeSpeakerOnly && !t.nativeSpeaker) return false;
+  const filtered = allTutors.filter((tutor) => {
+    if (selectedSubject !== "All" && tutor.subject !== selectedSubject) return false;
+    if (search && !tutor.name.toLowerCase().includes(search.toLowerCase()) && !tutor.subject.toLowerCase().includes(search.toLowerCase())) return false;
+    if (tutor.price < priceRange[0] || tutor.price > priceRange[1]) return false;
+    if (selectedRating === "4.5+" && tutor.rating < 4.5) return false;
+    if (selectedRating === "4.7+" && tutor.rating < 4.7) return false;
+    if (selectedRating === "4.9+" && tutor.rating < 4.9) return false;
+    if (selectedAvailability !== "Any" && tutor.availability !== selectedAvailability.toLowerCase()) return false;
+    if (nativeSpeakerOnly && !tutor.nativeSpeaker) return false;
     return true;
   });
 
@@ -66,14 +68,13 @@ export default function TutorSearch() {
   return (
     <Layout>
       <div className="container py-8">
-        {/* Search header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="flex-1 flex items-center gap-2 rounded-lg border bg-card px-3 py-2">
             <Search className="h-4 w-4 text-muted-foreground" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search tutors by name or subject..."
+              placeholder={t("search.placeholder")}
               className="flex-1 bg-transparent outline-none text-sm"
             />
             {search && (
@@ -89,67 +90,47 @@ export default function TutorSearch() {
             onClick={() => setShowFilters(!showFilters)}
           >
             <SlidersHorizontal className="h-4 w-4 mr-1" />
-            Filters
+            {t("search.filters")}
           </Button>
         </div>
 
         <div className="flex gap-6">
-          {/* Sidebar filters */}
           <aside className={`w-56 shrink-0 ${showFilters ? "block" : "hidden"} md:block`}>
             <div className="sticky top-20 rounded-xl border bg-card p-4">
               <div className="flex items-center gap-2 mb-4">
                 <Filter className="h-4 w-4 text-primary" />
-                <h3 className="font-semibold text-sm">Filters</h3>
+                <h3 className="font-semibold text-sm">{t("search.filters")}</h3>
               </div>
-              <FilterSection title="Subject" options={subjects} value={selectedSubject} onChange={setSelectedSubject} />
+              <FilterSection title={t("search.subject")} options={subjects} value={selectedSubject} onChange={setSelectedSubject} />
 
-              {/* Price range slider */}
               <div className="mb-6">
-                <h4 className="text-sm font-semibold mb-3">Price per hour (₾)</h4>
-                <Slider
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                  min={0}
-                  max={200}
-                  step={5}
-                  className="mb-2"
-                />
+                <h4 className="text-sm font-semibold mb-3">{t("search.pricePerHour")}</h4>
+                <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={200} step={5} className="mb-2" />
                 <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
                   <span>₾{priceRange[0]}</span>
                   <span>₾{priceRange[1]}</span>
                 </div>
               </div>
 
-              <FilterSection title="Rating" options={ratings} value={selectedRating} onChange={setSelectedRating} />
-              <FilterSection title="Availability" options={availabilityOptions} value={selectedAvailability} onChange={setSelectedAvailability} />
+              <FilterSection title={t("search.rating")} options={ratings} value={selectedRating} onChange={setSelectedRating} />
+              <FilterSection title={t("search.availability")} options={availabilityOptions} value={selectedAvailability} onChange={setSelectedAvailability} />
 
-              {/* Native speaker toggle */}
               <div className="mb-4 pt-2 border-t">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="native-toggle" className="text-sm font-semibold">Native Speaker</Label>
-                  <Switch
-                    id="native-toggle"
-                    checked={nativeSpeakerOnly}
-                    onCheckedChange={setNativeSpeakerOnly}
-                  />
+                  <Label htmlFor="native-toggle" className="text-sm font-semibold">{t("search.nativeSpeaker")}</Label>
+                  <Switch id="native-toggle" checked={nativeSpeakerOnly} onCheckedChange={setNativeSpeakerOnly} />
                 </div>
               </div>
             </div>
           </aside>
 
-          {/* Results */}
           <div className="flex-1">
             <p className="text-sm text-muted-foreground mb-4">
-              {filtered.length} tutor{filtered.length !== 1 ? "s" : ""} found
+              {filtered.length} {filtered.length !== 1 ? t("search.tutors") : t("search.tutor")} {t("search.found")}
             </p>
             <div className="space-y-3">
               {filtered.map((tutor, i) => (
-                <motion.div
-                  key={tutor.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
+                <motion.div key={tutor.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                   <Link
                     to={`/tutor/${tutor.id}`}
                     className="flex gap-4 rounded-xl border bg-card p-4 card-shadow hover:card-shadow-hover hover:border-primary/30 transition-all group"
@@ -174,11 +155,9 @@ export default function TutorSearch() {
                           <span className="text-sm font-medium tabular-nums">{tutor.rating}</span>
                           <span className="text-xs text-muted-foreground">({tutor.reviews})</span>
                         </div>
-                        <span className="text-xs text-muted-foreground">
-                          {tutor.languages.join(" · ")}
-                        </span>
+                        <span className="text-xs text-muted-foreground">{tutor.languages.join(" · ")}</span>
                         {tutor.nativeSpeaker && (
-                          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">Native</span>
+                          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">{t("search.native")}</span>
                         )}
                       </div>
                     </div>
@@ -187,8 +166,8 @@ export default function TutorSearch() {
               ))}
               {filtered.length === 0 && (
                 <div className="text-center py-12 text-muted-foreground">
-                  <p className="text-lg font-medium">No tutors found</p>
-                  <p className="text-sm mt-1">Try adjusting your filters</p>
+                  <p className="text-lg font-medium">{t("search.noResults")}</p>
+                  <p className="text-sm mt-1">{t("search.adjustFilters")}</p>
                 </div>
               )}
             </div>

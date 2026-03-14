@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Star, Users, BookOpen, ArrowRight, CheckCircle } from "lucide-react";
+import { Search, Star, BookOpen, ArrowRight, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 import heroImage from "@/assets/hero-tutor.jpg";
 
 const subjects = ["Mathematics", "English", "Physics", "Chemistry", "Georgian", "Russian", "Programming", "Music"];
@@ -16,10 +17,10 @@ const featuredTutors = [
 ];
 
 const stats = [
-  { value: "5,000+", label: "Expert Tutors" },
-  { value: "50,000+", label: "Lessons Completed" },
-  { value: "4.8", label: "Average Rating" },
-  { value: "30+", label: "Subjects" },
+  { value: "5,000+", labelKey: "stats.tutors" },
+  { value: "50,000+", labelKey: "stats.lessons" },
+  { value: "4.8", labelKey: "stats.rating" },
+  { value: "30+", labelKey: "stats.subjects" },
 ];
 
 const fadeUp = {
@@ -30,6 +31,7 @@ const fadeUp = {
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useLanguage();
 
   return (
     <Layout>
@@ -41,14 +43,14 @@ const Index = () => {
             <motion.div {...fadeUp} className="space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full bg-primary-light px-4 py-1.5 text-sm font-medium text-accent-foreground">
                 <span className="h-2 w-2 rounded-full bg-primary animate-pulse-dot" />
-                Trusted by 50,000+ students
+                {t("hero.badge")}
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-balance leading-[1.1]">
-                Find the perfect
-                <span className="block text-primary"> tutor for you</span>
+                {t("hero.title1")}
+                <span className="block text-primary"> {t("hero.title2")}</span>
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-md">
-                Connect with expert tutors in any subject. Personalized 1-on-1 lessons that fit your schedule and learning goals.
+                {t("hero.subtitle")}
               </p>
 
               {/* Search bar */}
@@ -57,12 +59,12 @@ const Index = () => {
                 <input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="What do you want to learn?"
+                  placeholder={t("hero.searchPlaceholder")}
                   className="flex-1 bg-transparent outline-none text-sm placeholder:text-muted-foreground py-2"
                 />
                 <Button className="hero-gradient text-primary-foreground border-0" asChild>
                   <Link to={`/search${searchQuery ? `?q=${searchQuery}` : ""}`}>
-                    Search
+                    {t("hero.search")}
                   </Link>
                 </Button>
               </div>
@@ -96,11 +98,11 @@ const Index = () => {
                 <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-card/90 backdrop-blur-sm border p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-semibold text-sm">Next Lesson</p>
-                      <p className="text-xs text-muted-foreground">Mathematics with Nino B.</p>
+                      <p className="font-semibold text-sm">{t("hero.nextLesson")}</p>
+                      <p className="text-xs text-muted-foreground">{t("hero.nextLessonDesc")}</p>
                     </div>
                     <Button size="sm" className="hero-gradient text-primary-foreground border-0">
-                      Join Now
+                      {t("hero.joinNow")}
                     </Button>
                   </div>
                 </div>
@@ -116,7 +118,7 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-4">
             {stats.map((stat, i) => (
               <motion.div
-                key={stat.label}
+                key={stat.labelKey}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -124,7 +126,7 @@ const Index = () => {
                 className="py-8 text-center border-r last:border-r-0"
               >
                 <p className="text-2xl md:text-3xl font-bold text-primary tabular-nums">{stat.value}</p>
-                <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t(stat.labelKey)}</p>
               </motion.div>
             ))}
           </div>
@@ -140,11 +142,11 @@ const Index = () => {
           className="flex items-end justify-between mb-8"
         >
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold">Featured Tutors</h2>
-            <p className="text-muted-foreground mt-1">Top-rated educators ready to help you succeed</p>
+            <h2 className="text-2xl md:text-3xl font-bold">{t("featured.title")}</h2>
+            <p className="text-muted-foreground mt-1">{t("featured.subtitle")}</p>
           </div>
           <Button variant="ghost" className="text-primary" asChild>
-            <Link to="/search">View all <ArrowRight className="ml-1 h-4 w-4" /></Link>
+            <Link to="/search">{t("featured.viewAll")} <ArrowRight className="ml-1 h-4 w-4" /></Link>
           </Button>
         </motion.div>
 
@@ -179,7 +181,7 @@ const Index = () => {
                 <div className="flex items-center justify-between pt-3 border-t">
                   <span className="text-lg font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">/hr</span></span>
                   <Button size="sm" variant="outline" className="text-xs h-7 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground">
-                    Book Trial
+                    {t("featured.bookTrial")}
                   </Button>
                 </div>
               </Link>
@@ -192,17 +194,17 @@ const Index = () => {
       <section className="bg-muted/30 py-16">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold">How TutorHub Works</h2>
-            <p className="text-muted-foreground mt-2">Start learning in 3 simple steps</p>
+            <h2 className="text-2xl md:text-3xl font-bold">{t("how.title")}</h2>
+            <p className="text-muted-foreground mt-2">{t("how.subtitle")}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: Search, title: "Find Your Tutor", desc: "Browse expert tutors by subject, price, and availability." },
-              { icon: BookOpen, title: "Book a Lesson", desc: "Choose a time that works for you and book with one click." },
-              { icon: CheckCircle, title: "Start Learning", desc: "Join your AI-powered classroom and achieve your goals." },
+              { icon: Search, titleKey: "how.step1.title", descKey: "how.step1.desc" },
+              { icon: BookOpen, titleKey: "how.step2.title", descKey: "how.step2.desc" },
+              { icon: CheckCircle, titleKey: "how.step3.title", descKey: "how.step3.desc" },
             ].map((step, i) => (
               <motion.div
-                key={step.title}
+                key={step.titleKey}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -212,8 +214,8 @@ const Index = () => {
                 <div className="mx-auto h-14 w-14 rounded-xl hero-gradient flex items-center justify-center mb-4">
                   <step.icon className="h-6 w-6 text-primary-foreground" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">{step.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+                <h3 className="font-semibold text-lg mb-2">{t(step.titleKey)}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{t(step.descKey)}</p>
               </motion.div>
             ))}
           </div>
@@ -224,13 +226,13 @@ const Index = () => {
       <section className="container py-16">
         <div className="rounded-2xl hero-gradient p-8 md:p-12 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3">
-            Ready to start learning?
+            {t("cta.title")}
           </h2>
           <p className="text-primary-foreground/80 mb-6 max-w-md mx-auto">
-            Join thousands of students already learning with TutorHub. Your first trial lesson is free.
+            {t("cta.subtitle")}
           </p>
           <Button size="lg" variant="secondary" className="font-semibold" asChild>
-            <Link to="/search">Find a Tutor <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            <Link to="/search">{t("cta.button")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
           </Button>
         </div>
       </section>

@@ -1,25 +1,28 @@
 import { Link } from "react-router-dom";
 import { GraduationCap } from "lucide-react";
-
-const footerLinks = {
-  Platform: [
-    { label: "Find Tutors", href: "/search" },
-    { label: "AI Practice", href: "/ai-practice" },
-    { label: "Become a Tutor", href: "/become-tutor" },
-  ],
-  Support: [
-    { label: "FAQ", href: "/faq" },
-    { label: "Contact", href: "/contact" },
-    { label: "Privacy Policy", href: "/privacy" },
-  ],
-  Company: [
-    { label: "About", href: "/about" },
-    { label: "Blog", href: "/blog" },
-    { label: "Careers", href: "/careers" },
-  ],
-};
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Footer() {
+  const { t } = useLanguage();
+
+  const footerLinks = {
+    [t("footer.platform")]: [
+      { label: t("footer.findTutors"), href: "/search" },
+      { label: t("footer.aiPractice"), href: "/ai-practice" },
+      { label: t("footer.becomeTutor"), href: "/become-tutor" },
+    ],
+    [t("footer.support")]: [
+      { label: t("footer.faq"), href: "/faq" },
+      { label: t("footer.contact"), href: "/contact" },
+      { label: t("footer.privacy"), href: "/privacy" },
+    ],
+    [t("footer.company")]: [
+      { label: t("footer.about"), href: "/about" },
+      { label: t("footer.blog"), href: "/blog" },
+      { label: t("footer.careers"), href: "/careers" },
+    ],
+  };
+
   return (
     <footer className="border-t bg-muted/30">
       <div className="container py-12">
@@ -32,7 +35,7 @@ export function Footer() {
               <span>TutorHub</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Connect with expert tutors worldwide. Learn any subject, any language, at your own pace.
+              {t("footer.desc")}
             </p>
           </div>
           {Object.entries(footerLinks).map(([title, links]) => (
@@ -54,7 +57,7 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-10 pt-6 border-t text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} TutorHub. All rights reserved.
+          © {new Date().getFullYear()} TutorHub. {t("footer.rights")}
         </div>
       </div>
     </footer>
