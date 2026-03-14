@@ -22,7 +22,7 @@ const subjectCards = [
   { icon: Code, nameKey: "home.subj.programming", count: "740", href: "/search?subject=Programming" },
   { icon: BookOpen, nameKey: "home.subj.physics", count: "520", href: "/search?subject=Physics" },
   { icon: Music, nameKey: "home.subj.music", count: "310", href: "/search?subject=Music" },
-  { icon: Palette, nameKey: "home.subj.exam", count: "280", href: "/search?subject=Exam" },
+  { icon: GraduationCap, nameKey: "home.subj.exam", count: "280", href: "/search?subject=Exam" },
   { icon: Briefcase, nameKey: "home.subj.business", count: "640", href: "/search?subject=Business" },
 ];
 
