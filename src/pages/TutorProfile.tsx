@@ -86,9 +86,10 @@ I use real-world examples and visual demonstrations to make abstract concepts co
     origin: "Georgia",
     rating: 5.0,
     reviewCount: 215,
-    price: 75,
+    price: 20,
     lessonLength: "50-min",
     avatar: "AM",
+    photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face",
     languages: [
       { name: "English", level: "Native" },
       { name: "Georgian", level: "Native" },
