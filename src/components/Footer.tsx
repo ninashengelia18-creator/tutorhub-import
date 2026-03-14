@@ -83,15 +83,6 @@ export function Footer() {
     { label: "Math Tutors", href: "/search" },
   ];
 
-  const nearYouLinks = [
-    { label: "Tutors in NYC", href: "/search" },
-    { label: "Tutors in Los Angeles", href: "/search" },
-    { label: "Tutors in Toronto", href: "/search" },
-    { label: "Tutors in London", href: "/search" },
-    { label: "Tutors in Singapore", href: "/search" },
-    { label: "Tutors abroad", href: "/search" },
-    { label: "Tutors by city", href: "/search" },
-  ];
 
   const renderLinkColumn = (title: string, links: { label: string; href: string }[]) => (
     <div>
