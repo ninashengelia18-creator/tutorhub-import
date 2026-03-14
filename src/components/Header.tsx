@@ -34,10 +34,10 @@ export function Header() {
             <Link
               key={link.href}
               to={link.href}
-              className={`text-sm font-bold transition-colors hover:text-primary/80 ${
+              className={`text-sm font-bold transition-colors hover:text-foreground/70 ${
                 location.pathname === link.href
-                  ? "text-primary"
-                  : "text-primary"
+                  ? "text-foreground"
+                  : "text-foreground"
               }`}
             >
               {t(link.labelKey)}
