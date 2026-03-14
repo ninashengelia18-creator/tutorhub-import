@@ -54,7 +54,7 @@ export function Footer() {
     { label: "Learn Spanish online", href: "/search" },
     { label: "Learn French online", href: "/search" },
     { label: "Learn German online", href: "/search" },
-    { label: "Learn Japanese online", href: "/search" },
+    { label: "Learn Georgian online", href: "/search" },
     { label: "Learn Italian online", href: "/search" },
     { label: "Learn another language", href: "/search" },
   ];
@@ -66,7 +66,7 @@ export function Footer() {
     { label: "Online French classes", href: "/search" },
     { label: "Online German classes", href: "/search" },
     { label: "Online Chinese classes", href: "/search" },
-    { label: "Online Japanese classes", href: "/search" },
+    { label: "Online Georgian classes", href: "/search" },
     { label: "Online Turkish classes", href: "/search" },
     { label: "Online Portuguese classes", href: "/search" },
   ];
@@ -77,21 +77,12 @@ export function Footer() {
     { label: "French Tutors", href: "/search" },
     { label: "German Tutors", href: "/search" },
     { label: "Arabic Tutors", href: "/search" },
-    { label: "Japanese tutors", href: "/search" },
-    { label: "Chinese tutors", href: "/search" },
-    { label: "Portuguese tutors", href: "/search" },
+    { label: "Georgian Tutors", href: "/search" },
+    { label: "Chinese Tutors", href: "/search" },
+    { label: "Portuguese Tutors", href: "/search" },
     { label: "Math Tutors", href: "/search" },
   ];
 
-  const nearYouLinks = [
-    { label: "Tutors in NYC", href: "/search" },
-    { label: "Tutors in Los Angeles", href: "/search" },
-    { label: "Tutors in Toronto", href: "/search" },
-    { label: "Tutors in London", href: "/search" },
-    { label: "Tutors in Singapore", href: "/search" },
-    { label: "Tutors abroad", href: "/search" },
-    { label: "Tutors by city", href: "/search" },
-  ];
 
   const renderLinkColumn = (title: string, links: { label: string; href: string }[]) => (
     <div>
@@ -157,14 +148,13 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom link sections: Learn / Classes / Tutors / Near you */}
+      {/* Bottom link sections: Learn / Classes / Tutors */}
       <div className="border-t">
         <div className="container py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {renderLinkColumn("LEARN", learnLinks)}
             {renderLinkColumn("ONLINE LANGUAGE CLASSES AND COURSES", classLinks)}
             {renderLinkColumn("1-ON-1 TUTORS", tutorTypeLinks)}
-            {renderLinkColumn("TUTORS NEAR YOU", nearYouLinks)}
           </div>
         </div>
       </div>
