@@ -24,11 +24,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <GraduationCap className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <span className="text-foreground">TutorHub</span>
+        <Link to="/" className="flex items-center gap-1">
+          <img src={logo} alt="TutorHub" className="h-10 w-auto" />
         </Link>
 
         {/* Desktop nav */}
