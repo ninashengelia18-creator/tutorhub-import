@@ -1,121 +1,80 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Star, BookOpen, ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, Star, Landmark, BookOpen, Languages, Code, Music, Palette, Calculator, ChevronRight, Users, Briefcase, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import heroImage from "@/assets/hero-tutor.jpg";
 
-const subjects = ["Mathematics", "English", "Physics", "Chemistry", "Georgian", "Russian", "Programming", "Music"];
-
-const featuredTutors = [
-  { id: 1, name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 85, avatar: "NB", language: "Georgian, English" },
-  { id: 2, name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 100, avatar: "GK", language: "Georgian, Russian" },
-  { id: 3, name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 75, avatar: "AM", language: "English, Georgian" },
-  { id: 4, name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 110, avatar: "LT", language: "English, Georgian" },
-];
-
 const stats = [
   { value: "5,000+", labelKey: "stats.tutors" },
-  { value: "50,000+", labelKey: "stats.lessons" },
-  { value: "4.8", labelKey: "stats.rating" },
-  { value: "30+", labelKey: "stats.subjects" },
+  { value: "50,000+", labelKey: "stats.reviews" },
+  { value: "120+", labelKey: "stats.subjects" },
+  { value: "30+", labelKey: "stats.nationalities" },
+  { value: "4.8", labelKey: "stats.appRating", isStar: true },
 ];
 
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-};
+const subjectCards = [
+  { icon: Languages, nameKey: "home.subj.english", count: "2,450", href: "/search?subject=English" },
+  { icon: Languages, nameKey: "home.subj.georgian", count: "860", href: "/search?subject=Georgian" },
+  { icon: Languages, nameKey: "home.subj.russian", count: "1,120", href: "/search?subject=Russian" },
+  { icon: Calculator, nameKey: "home.subj.math", count: "980", href: "/search?subject=Mathematics" },
+  { icon: Code, nameKey: "home.subj.programming", count: "740", href: "/search?subject=Programming" },
+  { icon: BookOpen, nameKey: "home.subj.physics", count: "520", href: "/search?subject=Physics" },
+  { icon: Music, nameKey: "home.subj.music", count: "310", href: "/search?subject=Music" },
+  { icon: Palette, nameKey: "home.subj.art", count: "280", href: "/search?subject=Art" },
+  { icon: Briefcase, nameKey: "home.subj.business", count: "640", href: "/search?subject=Business" },
+];
+
+const howSteps = [
+  { num: 1, titleKey: "home.how1.title", descKey: "home.how1.desc" },
+  { num: 2, titleKey: "home.how2.title", descKey: "home.how2.desc" },
+  { num: 3, titleKey: "home.how3.title", descKey: "home.how3.desc" },
+];
 
 const Index = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const { t } = useLanguage();
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
-        <div className="container relative py-16 md:py-24">
+      {/* Hero — Preply style: left text, right image, pink-ish bg */}
+      <section className="relative bg-[hsl(var(--primary-light))]">
+        <div className="container py-16 md:py-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div {...fadeUp} className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary-light px-4 py-1.5 text-sm font-medium text-accent-foreground">
-                <span className="h-2 w-2 rounded-full bg-primary animate-pulse-dot" />
-                {t("hero.badge")}
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-balance leading-[1.1]">
-                {t("hero.title1")}
-                <span className="block text-primary"> {t("hero.title2")}</span>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-8"
+            >
+              <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold leading-[1.1] tracking-tight">
+                {t("home.heroTitle")}
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-md">
-                {t("hero.subtitle")}
-              </p>
-
-              {/* Search bar */}
-              <div className="flex items-center gap-2 rounded-xl border bg-card p-2 card-shadow max-w-lg">
-                <Search className="h-5 w-5 text-muted-foreground ml-2" />
-                <input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={t("hero.searchPlaceholder")}
-                  className="flex-1 bg-transparent outline-none text-sm placeholder:text-muted-foreground py-2"
-                />
-                <Button className="hero-gradient text-primary-foreground border-0" asChild>
-                  <Link to={`/search${searchQuery ? `?q=${searchQuery}` : ""}`}>
-                    {t("hero.search")}
-                  </Link>
-                </Button>
-              </div>
-
-              {/* Subject tags */}
-              <div className="flex flex-wrap gap-2">
-                {subjects.slice(0, 5).map((s) => (
-                  <Link
-                    key={s}
-                    to={`/search?subject=${s}`}
-                    className="rounded-full border bg-background px-3 py-1 text-xs font-medium text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-                  >
-                    {s}
-                  </Link>
-                ))}
-              </div>
+              <Button size="lg" className="bg-foreground text-background hover:bg-foreground/90 font-semibold text-base px-8 rounded-xl" asChild>
+                <Link to="/search">{t("home.heroCta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
               className="hidden md:block"
             >
-              <div className="relative rounded-2xl overflow-hidden card-shadow-hover">
-                <img
-                  src={heroImage}
-                  alt="Tutor teaching student online"
-                  className="w-full h-auto object-cover rounded-2xl"
-                />
-                <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-card/90 backdrop-blur-sm border p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-sm">{t("hero.nextLesson")}</p>
-                      <p className="text-xs text-muted-foreground">{t("hero.nextLessonDesc")}</p>
-                    </div>
-                    <Button size="sm" className="hero-gradient text-primary-foreground border-0">
-                      {t("hero.joinNow")}
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              <img
+                src={heroImage}
+                alt="Students learning online"
+                className="rounded-2xl w-full object-cover shadow-lg"
+              />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-y bg-muted/30">
+      {/* Stats bar */}
+      <section className="border-y bg-background">
         <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4">
+          <div className="grid grid-cols-2 md:grid-cols-5">
             {stats.map((stat, i) => (
               <motion.div
                 key={stat.labelKey}
@@ -125,7 +84,16 @@ const Index = () => {
                 transition={{ delay: i * 0.1 }}
                 className="py-8 text-center border-r last:border-r-0"
               >
-                <p className="text-2xl md:text-3xl font-bold text-primary tabular-nums">{stat.value}</p>
+                <div className="flex items-center justify-center gap-1">
+                  <p className="text-2xl md:text-3xl font-bold tabular-nums">{stat.value}</p>
+                  {stat.isStar && (
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, j) => (
+                        <Star key={j} className="h-4 w-4 fill-warning text-warning" />
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground mt-1">{t(stat.labelKey)}</p>
               </motion.div>
             ))}
@@ -133,102 +101,151 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Tutors */}
+      {/* Subject cards grid */}
       <section className="container py-16">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="flex items-end justify-between mb-8"
-        >
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold">{t("featured.title")}</h2>
-            <p className="text-muted-foreground mt-1">{t("featured.subtitle")}</p>
-          </div>
-          <Button variant="ghost" className="text-primary" asChild>
-            <Link to="/search">{t("featured.viewAll")} <ArrowRight className="ml-1 h-4 w-4" /></Link>
-          </Button>
-        </motion.div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {featuredTutors.map((tutor, i) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {subjectCards.map((card, i) => (
             <motion.div
-              key={tutor.id}
+              key={card.nameKey}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ delay: i * 0.05 }}
             >
               <Link
-                to={`/tutor/${tutor.id}`}
-                className="block rounded-xl border bg-card p-4 card-shadow hover:card-shadow-hover hover:border-primary/30 transition-all duration-300 group"
+                to={card.href}
+                className="flex items-center gap-4 rounded-xl border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all group"
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-12 w-12 rounded-lg bg-primary-light flex items-center justify-center text-primary font-bold text-sm">
-                    {tutor.avatar}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">{tutor.name}</h3>
-                    <p className="text-xs text-muted-foreground">{tutor.subject}</p>
-                  </div>
+                <card.icon className="h-6 w-6 text-muted-foreground shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{t(card.nameKey)}</h3>
+                  <p className="text-sm text-muted-foreground">{card.count} {t("home.teachers")}</p>
                 </div>
-                <div className="flex items-center gap-1 mb-2">
-                  <Star className="h-3.5 w-3.5 fill-warning text-warning" />
-                  <span className="text-sm font-medium tabular-nums">{tutor.rating}</span>
-                  <span className="text-xs text-muted-foreground">({tutor.reviews} reviews)</span>
-                </div>
-                <p className="text-xs text-muted-foreground mb-3">{tutor.language}</p>
-                <div className="flex items-center justify-between pt-3 border-t">
-                  <span className="text-lg font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">/hr</span></span>
-                  <Button size="sm" variant="outline" className="text-xs h-7 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground">
-                    {t("featured.bookTrial")}
-                  </Button>
-                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </Link>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* How it works */}
+      {/* Progress section */}
       <section className="bg-muted/30 py-16">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold">{t("how.title")}</h2>
-            <p className="text-muted-foreground mt-2">{t("how.subtitle")}</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: Search, titleKey: "how.step1.title", descKey: "how.step1.desc" },
-              { icon: BookOpen, titleKey: "how.step2.title", descKey: "how.step2.desc" },
-              { icon: CheckCircle, titleKey: "how.step3.title", descKey: "how.step3.desc" },
-            ].map((step, i) => (
-              <motion.div
-                key={step.titleKey}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="text-center"
-              >
-                <div className="mx-auto h-14 w-14 rounded-xl hero-gradient flex items-center justify-center mb-4">
-                  <step.icon className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{t(step.titleKey)}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{t(step.descKey)}</p>
-              </motion.div>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center max-w-2xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("home.progressTitle")}</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">{t("home.progressDesc")}</p>
+          </motion.div>
         </div>
       </section>
 
-      {/* CTA */}
+      {/* How TutorHub Works — 3 steps */}
       <section className="container py-16">
-        <div className="rounded-2xl hero-gradient p-8 md:p-12 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3">
+        <motion.h2
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-4xl font-bold mb-12"
+        >
+          {t("home.howTitle")}
+        </motion.h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {howSteps.map((step, i) => (
+            <motion.div
+              key={step.num}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.15 }}
+              className="space-y-4"
+            >
+              <div className="h-12 w-12 rounded-full bg-foreground text-background flex items-center justify-center font-bold text-lg">
+                {step.num}
+              </div>
+              <h3 className="text-xl font-bold">{t(step.titleKey)}</h3>
+              <p className="text-muted-foreground leading-relaxed">{t(step.descKey)}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Guarantee */}
+      <section className="container py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="rounded-2xl bg-muted/50 p-8 md:p-12 text-center"
+        >
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">{t("home.guaranteeTitle")}</h2>
+          <p className="text-muted-foreground max-w-md mx-auto">{t("home.guaranteeDesc")}</p>
+        </motion.div>
+      </section>
+
+      {/* Become a tutor CTA */}
+      <section className="container py-16">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold">{t("home.becomeTutorTitle")}</h2>
+            <p className="text-muted-foreground leading-relaxed">{t("home.becomeTutorDesc")}</p>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3">
+                <Users className="h-5 w-5 text-primary shrink-0" />
+                <span className="font-medium">{t("home.tutorBenefit1")}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Briefcase className="h-5 w-5 text-primary shrink-0" />
+                <span className="font-medium">{t("home.tutorBenefit2")}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Shield className="h-5 w-5 text-primary shrink-0" />
+                <span className="font-medium">{t("home.tutorBenefit3")}</span>
+              </li>
+            </ul>
+            <div className="flex gap-3 flex-wrap">
+              <Button size="lg" className="hero-gradient text-primary-foreground border-0 font-semibold" asChild>
+                <Link to="/become-tutor">{t("home.becomeTutorBtn")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link to="/become-tutor">{t("home.howPlatformWorks")}</Link>
+              </Button>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="hidden md:block"
+          >
+            <div className="rounded-2xl hero-gradient p-8 md:p-10 text-primary-foreground">
+              <h3 className="text-2xl font-bold mb-4">{t("home.corpTitle")}</h3>
+              <p className="text-primary-foreground/80 leading-relaxed mb-6">{t("home.corpDesc")}</p>
+              <Button variant="secondary" className="font-semibold" asChild>
+                <Link to="/for-business">{t("home.corpCta")}</Link>
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="container py-16">
+        <div className="rounded-2xl bg-foreground p-8 md:p-12 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-background mb-3">
             {t("cta.title")}
           </h2>
-          <p className="text-primary-foreground/80 mb-6 max-w-md mx-auto">
+          <p className="text-background/70 mb-6 max-w-md mx-auto">
             {t("cta.subtitle")}
           </p>
           <Button size="lg" variant="secondary" className="font-semibold" asChild>
