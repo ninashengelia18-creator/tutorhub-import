@@ -111,7 +111,7 @@ export function Header() {
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="py-2 text-sm font-bold text-primary hover:text-primary/80"
+                  className="py-2 text-sm font-bold text-foreground hover:text-foreground/70"
                   onClick={() => setMobileOpen(false)}
                 >
                   {t(link.labelKey)}
