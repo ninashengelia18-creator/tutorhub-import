@@ -115,12 +115,6 @@ export default function TutorSearch() {
               <FilterSection title={t("search.rating")} options={ratings} value={selectedRating} onChange={setSelectedRating} />
               <FilterSection title={t("search.availability")} options={availabilityOptions} value={selectedAvailability} onChange={setSelectedAvailability} />
 
-              <div className="mb-4 pt-2 border-t">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="native-toggle" className="text-sm font-semibold">{t("search.nativeSpeaker")}</Label>
-                  <Switch id="native-toggle" checked={nativeSpeakerOnly} onCheckedChange={setNativeSpeakerOnly} />
-                </div>
-              </div>
             </div>
           </aside>
 
