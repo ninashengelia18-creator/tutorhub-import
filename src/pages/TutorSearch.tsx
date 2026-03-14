@@ -148,9 +148,6 @@ export default function TutorSearch() {
                           <span className="text-xs text-muted-foreground">({tutor.reviews})</span>
                         </div>
                         <span className="text-xs text-muted-foreground">{tutor.languages.join(" · ")}</span>
-                        {tutor.nativeSpeaker && (
-                          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">{t("search.native")}</span>
-                        )}
                       </div>
                     </div>
                   </Link>
