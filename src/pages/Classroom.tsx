@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 
-const initialMessages = [
-  { role: "system" as const, content: "Welcome to the classroom! Your lesson with Nino B. starts now." },
-  { role: "tutor" as const, content: "Hi there! Today we'll review quadratic equations. Let's start with the basics — do you remember the quadratic formula?" },
+type ChatMessage = { role: "system" | "tutor" | "student"; content: string };
+
+const initialMessages: ChatMessage[] = [
+  { role: "system", content: "Welcome to the classroom! Your lesson with Nino B. starts now." },
+  { role: "tutor", content: "Hi there! Today we'll review quadratic equations. Let's start with the basics — do you remember the quadratic formula?" },
 ];
 
 export default function Classroom() {
