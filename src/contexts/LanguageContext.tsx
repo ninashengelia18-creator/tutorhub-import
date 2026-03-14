@@ -51,7 +51,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "home.subj.programming": "Programming tutors",
     "home.subj.physics": "Physics tutors",
     "home.subj.music": "Music tutors",
-    "home.subj.art": "Art tutors",
+    "home.subj.exam": "Exam tutors",
     "home.subj.business": "Business tutors",
     "home.progressBadge": "Verified Results Platform",
     "home.progressTitle": "Real progress, measured and proven",
