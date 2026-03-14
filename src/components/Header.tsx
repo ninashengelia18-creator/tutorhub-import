@@ -92,7 +92,7 @@ export function Header() {
           >
             <div className="container py-4 flex flex-col gap-3">
               {/* Mobile language switcher */}
-              <div className="flex items-center gap-1 bg-muted rounded-md p-0.5 self-start">
+              <div className="flex items-center gap-1 bg-primary-foreground/10 rounded-md p-0.5 self-start">
                 {(Object.keys(langLabels) as Language[]).map((l) => (
                   <button
                     key={l}
