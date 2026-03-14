@@ -42,7 +42,7 @@ export default function TutorSearch() {
     if (selectedRating === "4.7+" && tutor.rating < 4.7) return false;
     if (selectedRating === "4.9+" && tutor.rating < 4.9) return false;
     if (selectedAvailability !== "Any" && tutor.availability !== selectedAvailability.toLowerCase()) return false;
-    if (nativeSpeakerOnly && !tutor.nativeSpeaker) return false;
+    
     return true;
   });
 
