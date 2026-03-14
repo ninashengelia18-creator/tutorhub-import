@@ -136,8 +136,6 @@ export default function TutorSearch() {
                     className="flex gap-4 rounded-xl border bg-card p-4 card-shadow hover:card-shadow-hover hover:border-primary/30 transition-all group"
                   >
                     <img src={tutor.photo} alt={tutor.name} className="h-16 w-16 rounded-lg object-cover shrink-0" />
-
-                    </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
                         <div>
