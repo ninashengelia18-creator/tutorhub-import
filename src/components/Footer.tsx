@@ -77,9 +77,9 @@ export function Footer() {
     { label: "French Tutors", href: "/search" },
     { label: "German Tutors", href: "/search" },
     { label: "Arabic Tutors", href: "/search" },
-    { label: "Japanese tutors", href: "/search" },
-    { label: "Chinese tutors", href: "/search" },
-    { label: "Portuguese tutors", href: "/search" },
+    { label: "Georgian Tutors", href: "/search" },
+    { label: "Chinese Tutors", href: "/search" },
+    { label: "Portuguese Tutors", href: "/search" },
     { label: "Math Tutors", href: "/search" },
   ];
 
