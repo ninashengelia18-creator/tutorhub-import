@@ -52,9 +52,10 @@ Together, we will explore the beauty of mathematics. I am dedicated to your grow
     origin: "Georgia",
     rating: 4.8,
     reviewCount: 98,
-    price: 100,
+    price: 30,
     lessonLength: "50-min",
     avatar: "GK",
+    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face",
     languages: [
       { name: "Georgian", level: "Native" },
       { name: "Russian", level: "Native" },
