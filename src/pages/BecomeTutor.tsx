@@ -1,170 +1,195 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, DollarSign, Clock, Brain, Star, Shield, Users, FileText, CheckCircle, ArrowRight, UserPlus, BadgeCheck, BookOpen } from "lucide-react";
+import { DollarSign, Clock, TrendingUp, Users, Calendar, Monitor, CreditCard, Headphones, MessageSquareQuote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-};
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import tutorHeroImg from "@/assets/tutor-hero.jpg";
 
 export default function BecomeTutor() {
   const { t } = useLanguage();
 
-  const features = [
+  const steps = [
+    { num: 1, titleKey: "tutor.step1.title", descKey: "tutor.step1.desc" },
+    { num: 2, titleKey: "tutor.step2.title", descKey: "tutor.step2.desc" },
+    { num: 3, titleKey: "tutor.step3.title", descKey: "tutor.step3.desc" },
+  ];
+
+  const benefits = [
     { icon: DollarSign, titleKey: "tutor.feat1.title", descKey: "tutor.feat1.desc" },
     { icon: Clock, titleKey: "tutor.feat2.title", descKey: "tutor.feat2.desc" },
-    { icon: Brain, titleKey: "tutor.feat3.title", descKey: "tutor.feat3.desc" },
-    { icon: Star, titleKey: "tutor.feat4.title", descKey: "tutor.feat4.desc" },
-    { icon: Shield, titleKey: "tutor.feat5.title", descKey: "tutor.feat5.desc" },
-    { icon: Users, titleKey: "tutor.feat6.title", descKey: "tutor.feat6.desc" },
+    { icon: TrendingUp, titleKey: "tutor.feat3.title", descKey: "tutor.feat3.desc" },
   ];
 
-  const stats = [
-    { value: "5,000+", labelKey: "tutor.stat1" },
-    { value: "₾2,400", labelKey: "tutor.stat2" },
-    { value: "96%", labelKey: "tutor.stat3" },
-    { value: "30+", labelKey: "tutor.stat4" },
+  const platformFeatures = [
+    { icon: Users, key: "tutor.pf1" },
+    { icon: Calendar, key: "tutor.pf2" },
+    { icon: Monitor, key: "tutor.pf3" },
+    { icon: CreditCard, key: "tutor.pf4" },
+    { icon: TrendingUp, key: "tutor.pf5" },
+    { icon: Headphones, key: "tutor.pf6" },
   ];
 
-  const steps = [
-    { icon: FileText, titleKey: "tutor.step1.title", descKey: "tutor.step1.desc" },
-    { icon: BadgeCheck, titleKey: "tutor.step2.title", descKey: "tutor.step2.desc" },
-    { icon: BookOpen, titleKey: "tutor.step3.title", descKey: "tutor.step3.desc" },
-  ];
-
-  const requirements = [
-    "tutor.req1", "tutor.req2", "tutor.req3", "tutor.req4", "tutor.req5",
+  const faqs = [
+    { qKey: "tutor.faq1.q", aKey: "tutor.faq1.a" },
+    { qKey: "tutor.faq2.q", aKey: "tutor.faq2.a" },
+    { qKey: "tutor.faq3.q", aKey: "tutor.faq3.a" },
+    { qKey: "tutor.faq4.q", aKey: "tutor.faq4.a" },
+    { qKey: "tutor.faq5.q", aKey: "tutor.faq5.a" },
+    { qKey: "tutor.faq6.q", aKey: "tutor.faq6.a" },
+    { qKey: "tutor.faq7.q", aKey: "tutor.faq7.a" },
   ];
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
-        <div className="container relative py-20 md:py-28 text-center max-w-3xl mx-auto">
-          <motion.div {...fadeUp} className="space-y-6">
-            <div className="mx-auto h-14 w-14 rounded-2xl hero-gradient flex items-center justify-center">
-              <GraduationCap className="h-7 w-7 text-primary-foreground" />
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-balance leading-[1.1]">
-              {t("tutor.title")}
+      {/* Hero — Preply-style split layout */}
+      <section className="container py-16 md:py-24">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-8"
+          >
+            <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold leading-[1.1] tracking-tight">
+              {t("tutor.heroHeadline")}
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto">
-              {t("tutor.subtitle")}
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button size="lg" className="hero-gradient text-primary-foreground border-0 font-semibold">
-                {t("tutor.cta")} <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+
+            {/* Steps timeline */}
+            <div className="space-y-6">
+              {steps.map((step, i) => (
+                <div key={step.num} className="flex items-start gap-4">
+                  <div className="relative flex flex-col items-center">
+                    <div className="h-10 w-10 rounded-full bg-foreground text-background flex items-center justify-center font-bold text-sm shrink-0">
+                      {step.num}
+                    </div>
+                    {i < steps.length - 1 && (
+                      <div className="w-0.5 h-8 bg-border mt-1" />
+                    )}
+                  </div>
+                  <div className="pt-1.5">
+                    <h3 className="font-bold text-lg">{t(step.titleKey)}</h3>
+                    <p className="text-sm text-muted-foreground">{t(step.descKey)}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <p className="text-xs text-muted-foreground">{t("tutor.ctaSub")}</p>
+
+            <Button size="lg" className="hero-gradient text-primary-foreground border-0 font-semibold text-base px-8" asChild>
+              <Link to="/tutor-apply">{t("tutor.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative"
+          >
+            <img
+              src={tutorHeroImg}
+              alt="Online tutor teaching"
+              className="rounded-2xl w-full object-cover shadow-lg"
+            />
           </motion.div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-y bg-muted/30">
-        <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={stat.labelKey}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="py-8 text-center border-r last:border-r-0"
-              >
-                <p className="text-2xl md:text-3xl font-bold text-primary tabular-nums">{stat.value}</p>
-                <p className="text-sm text-muted-foreground mt-1">{t(stat.labelKey)}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Teach */}
+      {/* Benefits — 3 columns */}
       <section className="container py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold">{t("tutor.whyTitle")}</h2>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feat, i) => (
+        <div className="grid md:grid-cols-3 gap-10">
+          {benefits.map((b, i) => (
             <motion.div
-              key={feat.titleKey}
+              key={b.titleKey}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="rounded-xl border bg-card p-6 card-shadow hover:card-shadow-hover transition-all"
+              transition={{ delay: i * 0.1 }}
             >
-              <div className="h-10 w-10 rounded-lg bg-primary-light flex items-center justify-center mb-4">
-                <feat.icon className="h-5 w-5 text-primary" />
-              </div>
-              <h3 className="font-semibold text-base mb-2">{t(feat.titleKey)}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{t(feat.descKey)}</p>
+              <h3 className="text-xl md:text-2xl font-bold mb-3">{t(b.titleKey)}</h3>
+              <p className="text-muted-foreground leading-relaxed">{t(b.descKey)}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* How it Works */}
-      <section className="bg-muted/30 py-16">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold">{t("tutor.howTitle")}</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {steps.map((step, i) => (
-              <motion.div
-                key={step.titleKey}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="text-center"
-              >
-                <div className="mx-auto h-14 w-14 rounded-xl hero-gradient flex items-center justify-center mb-4">
-                  <step.icon className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <div className="text-xs font-bold text-primary mb-2">
-                  {String(i + 1).padStart(2, "0")}
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{t(step.titleKey)}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{t(step.descKey)}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Requirements */}
+      {/* Teach students — split with features list */}
       <section className="container py-16">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">{t("tutor.reqTitle")}</h2>
-          <div className="rounded-xl border bg-card p-6 card-shadow space-y-4">
-            {requirements.map((reqKey, i) => (
-              <motion.div
-                key={reqKey}
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="flex items-center gap-3"
-              >
-                <CheckCircle className="h-5 w-5 text-success shrink-0" />
-                <p className="text-sm font-medium">{t(reqKey)}</p>
-              </motion.div>
-            ))}
-          </div>
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+              {t("tutor.teachStudentsTitle")}
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              {t("tutor.teachStudentsDesc")}
+            </p>
+            <ul className="space-y-3">
+              {platformFeatures.map((pf) => (
+                <li key={pf.key} className="flex items-center gap-3">
+                  <pf.icon className="h-5 w-5 text-primary shrink-0" />
+                  <span className="font-medium">{t(pf.key)}</span>
+                </li>
+              ))}
+            </ul>
+            <Button size="lg" className="hero-gradient text-primary-foreground border-0 font-semibold" asChild>
+              <Link to="/tutor-apply">{t("tutor.cta")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="rounded-2xl bg-muted/50 p-8 md:p-10">
+              <div className="flex items-start gap-4 mb-6">
+                <MessageSquareQuote className="h-8 w-8 text-primary shrink-0 mt-1" />
+              </div>
+              <blockquote className="text-lg font-medium leading-relaxed mb-4 italic">
+                "{t("tutor.testimonialQuote")}"
+              </blockquote>
+              <p className="text-sm text-muted-foreground font-semibold">{t("tutor.testimonialAuthor")}</p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* CTA */}
+      {/* FAQ */}
+      <section className="container py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-3xl mx-auto"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-8">{t("tutor.faqTitle")}</h2>
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, i) => (
+              <AccordionItem key={i} value={`faq-${i}`}>
+                <AccordionTrigger className="text-left font-semibold text-base">
+                  {t(faq.qKey)}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                  {t(faq.aKey)}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
+      </section>
+
+      {/* Bottom CTA */}
       <section className="container py-16">
         <div className="rounded-2xl hero-gradient p-8 md:p-12 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3">
@@ -173,8 +198,8 @@ export default function BecomeTutor() {
           <p className="text-primary-foreground/80 mb-6 max-w-md mx-auto">
             {t("tutor.readySub")}
           </p>
-          <Button size="lg" variant="secondary" className="font-semibold">
-            {t("tutor.readyBtn")} <ArrowRight className="ml-2 h-4 w-4" />
+          <Button size="lg" variant="secondary" className="font-semibold" asChild>
+            <Link to="/tutor-apply">{t("tutor.readyBtn")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
           </Button>
         </div>
       </section>
