@@ -118,12 +118,12 @@ export function Header() {
                   {t(link.labelKey)}
                 </Link>
               ))}
-              <div className="flex gap-3 pt-2 border-t">
-                <Button variant="ghost" size="sm" className="flex-1" asChild>
+              <div className="flex gap-3 pt-2 border-t border-primary-foreground/20">
+                <Button variant="ghost" size="sm" className="flex-1 text-primary-foreground hover:bg-primary-foreground/10" asChild>
                   <Link to="/login">{t("nav.login")}</Link>
                 </Button>
-                <Button size="sm" className="flex-1 hero-gradient text-primary-foreground border-0" asChild>
-                  <Link to="/signup">{t("nav.signup")}</Link>
+                <Button size="sm" className="flex-1 bg-primary-foreground text-primary hover:bg-primary-foreground/90 border-0" asChild>
+                  <Link to="/search">{t("nav.signup")}</Link>
                 </Button>
               </div>
             </div>
