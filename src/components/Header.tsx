@@ -13,7 +13,6 @@ const navLinks = [
   { labelKey: "nav.findTutors", href: "/search" },
   { labelKey: "nav.forBusiness", href: "/for-business" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
-  { labelKey: "nav.provenProgress", href: "/ai-practice" },
   { labelKey: "nav.faq", href: "/faq" },
 ];
 
