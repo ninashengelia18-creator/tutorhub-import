@@ -50,8 +50,8 @@ const faqData: Record<Language, { category: string; questions: { q: string; a: s
     {
       category: "Technical & Support",
       questions: [
-        { q: "What devices are supported?", a: "TutorHub works on any modern browser — Chrome, Firefox, Safari, Edge — on desktop, tablet, and mobile." },
-        { q: "In what languages is support available?", a: "Support is available in English, Georgian (ქართული), and Russian (Русский). Use the chat widget or email support@tutorhub.ge." },
+        { q: "What devices are supported?", a: "LearnEazy works on any modern browser — Chrome, Firefox, Safari, Edge — on desktop, tablet, and mobile." },
+        { q: "In what languages is support available?", a: "Support is available in English, Georgian (ქართული), and Russian (Русский). Use the chat widget or email support@learneazy.ge." },
         { q: "How do I delete my account?", a: "Go to Settings > Account > Delete Account. This action is permanent and cannot be undone." },
       ],
     },
@@ -92,8 +92,8 @@ const faqData: Record<Language, { category: string; questions: { q: string; a: s
     {
       category: "ტექნიკური და მხარდაჭერა",
       questions: [
-        { q: "რა მოწყობილობებია მხარდაჭერილი?", a: "TutorHub მუშაობს ნებისმიერ თანამედროვე ბრაუზერზე — Chrome, Firefox, Safari, Edge." },
-        { q: "რა ენებზეა მხარდაჭერა?", a: "მხარდაჭერა ხელმისაწვდომია ინგლისურ, ქართულ და რუსულ ენებზე. მოგვწერეთ support@tutorhub.ge." },
+        { q: "რა მოწყობილობებია მხარდაჭერილი?", a: "LearnEazy მუშაობს ნებისმიერ თანამედროვე ბრაუზერზე — Chrome, Firefox, Safari, Edge." },
+        { q: "რა ენებზეა მხარდაჭერა?", a: "მხარდაჭერა ხელმისაწვდომია ინგლისურ, ქართულ და რუსულ ენებზე. მოგვწერეთ support@learneazy.ge." },
         { q: "როგორ წავშალო ანგარიში?", a: "გადადით პარამეტრები > ანგარიში > ანგარიშის წაშლა." },
       ],
     },
@@ -134,8 +134,8 @@ const faqData: Record<Language, { category: string; questions: { q: string; a: s
     {
       category: "Техническая поддержка",
       questions: [
-        { q: "Какие устройства поддерживаются?", a: "TutorHub работает в любом современном браузере — Chrome, Firefox, Safari, Edge." },
-        { q: "На каких языках доступна поддержка?", a: "Поддержка доступна на английском, грузинском и русском. Пишите на support@tutorhub.ge." },
+        { q: "Какие устройства поддерживаются?", a: "LearnEazy работает в любом современном браузере — Chrome, Firefox, Safari, Edge." },
+        { q: "На каких языках доступна поддержка?", a: "Поддержка доступна на английском, грузинском и русском. Пишите на support@learneazy.ge." },
         { q: "Как удалить аккаунт?", a: "Перейдите в Настройки > Аккаунт > Удалить аккаунт." },
       ],
     },
@@ -158,7 +158,7 @@ export default function FAQ() {
             <HelpCircle className="h-6 w-6 text-primary-foreground" />
           </div>
           <h1 className="text-3xl font-bold mb-2">FAQ</h1>
-          <p className="text-muted-foreground mb-4">TutorHub — Frequently Asked Questions</p>
+          <p className="text-muted-foreground mb-4">LearnEazy — Frequently Asked Questions</p>
 
           {/* Language switcher */}
           <div className="inline-flex items-center gap-1 bg-muted rounded-lg p-1">
