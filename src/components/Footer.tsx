@@ -148,14 +148,13 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom link sections: Learn / Classes / Tutors / Near you */}
+      {/* Bottom link sections: Learn / Classes / Tutors */}
       <div className="border-t">
         <div className="container py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {renderLinkColumn("LEARN", learnLinks)}
             {renderLinkColumn("ONLINE LANGUAGE CLASSES AND COURSES", classLinks)}
             {renderLinkColumn("1-ON-1 TUTORS", tutorTypeLinks)}
-            {renderLinkColumn("TUTORS NEAR YOU", nearYouLinks)}
           </div>
         </div>
       </div>
