@@ -42,7 +42,7 @@ export default function TutorSearch() {
     if (selectedRating === "4.7+" && tutor.rating < 4.7) return false;
     if (selectedRating === "4.9+" && tutor.rating < 4.9) return false;
     if (selectedAvailability !== "Any" && tutor.availability !== selectedAvailability.toLowerCase()) return false;
-    if (nativeSpeakerOnly && !tutor.nativeSpeaker) return false;
+    
     return true;
   });
 
@@ -115,12 +115,6 @@ export default function TutorSearch() {
               <FilterSection title={t("search.rating")} options={ratings} value={selectedRating} onChange={setSelectedRating} />
               <FilterSection title={t("search.availability")} options={availabilityOptions} value={selectedAvailability} onChange={setSelectedAvailability} />
 
-              <div className="mb-4 pt-2 border-t">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="native-toggle" className="text-sm font-semibold">{t("search.nativeSpeaker")}</Label>
-                  <Switch id="native-toggle" checked={nativeSpeakerOnly} onCheckedChange={setNativeSpeakerOnly} />
-                </div>
-              </div>
             </div>
           </aside>
 
@@ -154,9 +148,6 @@ export default function TutorSearch() {
                           <span className="text-xs text-muted-foreground">({tutor.reviews})</span>
                         </div>
                         <span className="text-xs text-muted-foreground">{tutor.languages.join(" · ")}</span>
-                        {tutor.nativeSpeaker && (
-                          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">{t("search.native")}</span>
-                        )}
                       </div>
                     </div>
                   </Link>

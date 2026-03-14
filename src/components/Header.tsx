@@ -24,9 +24,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-1">
-          <img src={logo} alt="LearnEazy" className="h-[70px] w-auto" />
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-1">
+            <img src={logo} alt="LearnEazy" className="h-[70px] w-auto" />
+          </Link>
+          <span className="hidden lg:inline text-xs text-muted-foreground italic border-l pl-3">Learn Smarter, Not Harder</span>
+        </div>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
