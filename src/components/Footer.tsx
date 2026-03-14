@@ -50,37 +50,37 @@ export function Footer() {
   ];
 
   const learnLinks = [
-    { label: "Learn English online", href: "/search" },
-    { label: "Learn Spanish online", href: "/search" },
-    { label: "Learn French online", href: "/search" },
-    { label: "Learn German online", href: "/search" },
-    { label: "Learn Georgian online", href: "/search" },
-    { label: "Learn Italian online", href: "/search" },
+    { label: "Learn English online", href: "/search?subject=English" },
+    { label: "Learn Spanish online", href: "/search?subject=Spanish" },
+    { label: "Learn French online", href: "/search?subject=French" },
+    { label: "Learn German online", href: "/search?subject=German" },
+    { label: "Learn Georgian online", href: "/search?subject=Georgian" },
+    { label: "Learn Italian online", href: "/search?subject=Italian" },
     { label: "Learn another language", href: "/search" },
   ];
 
   const classLinks = [
-    { label: "Online English Classes", href: "/search" },
-    { label: "Business English courses", href: "/search" },
-    { label: "Online Spanish classes", href: "/search" },
-    { label: "Online French classes", href: "/search" },
-    { label: "Online German classes", href: "/search" },
-    { label: "Online Chinese classes", href: "/search" },
-    { label: "Online Georgian classes", href: "/search" },
-    { label: "Online Turkish classes", href: "/search" },
-    { label: "Online Portuguese classes", href: "/search" },
+    { label: "Online English Classes", href: "/search?subject=English" },
+    { label: "Business English courses", href: "/search?subject=English" },
+    { label: "Online Spanish classes", href: "/search?subject=Spanish" },
+    { label: "Online French classes", href: "/search?subject=French" },
+    { label: "Online German classes", href: "/search?subject=German" },
+    { label: "Online Chinese classes", href: "/search?subject=Chinese" },
+    { label: "Online Georgian classes", href: "/search?subject=Georgian" },
+    { label: "Online Turkish classes", href: "/search?subject=Turkish" },
+    { label: "Online Portuguese classes", href: "/search?subject=Portuguese" },
   ];
 
   const tutorTypeLinks = [
-    { label: "English Tutors", href: "/search" },
-    { label: "Spanish Tutors", href: "/search" },
-    { label: "French Tutors", href: "/search" },
-    { label: "German Tutors", href: "/search" },
-    { label: "Arabic Tutors", href: "/search" },
-    { label: "Georgian Tutors", href: "/search" },
-    { label: "Chinese Tutors", href: "/search" },
-    { label: "Portuguese Tutors", href: "/search" },
-    { label: "Math Tutors", href: "/search" },
+    { label: "English Tutors", href: "/search?subject=English" },
+    { label: "Spanish Tutors", href: "/search?subject=Spanish" },
+    { label: "French Tutors", href: "/search?subject=French" },
+    { label: "German Tutors", href: "/search?subject=German" },
+    { label: "Arabic Tutors", href: "/search?subject=Arabic" },
+    { label: "Georgian Tutors", href: "/search?subject=Georgian" },
+    { label: "Chinese Tutors", href: "/search?subject=Chinese" },
+    { label: "Portuguese Tutors", href: "/search?subject=Portuguese" },
+    { label: "Math Tutors", href: "/search?subject=Mathematics" },
   ];
 
 
