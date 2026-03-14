@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
-import logo from "@/assets/learneazy-logo.jpg";
+import logo from "@/assets/learneazy-logo.png";
 
 const langLabels: Record<Language, string> = { en: "EN", ka: "ქარ", ru: "РУ" };
 
@@ -25,7 +25,7 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-1">
-          <img src={logo} alt="LearnEazy" className="h-[110px] w-auto" />
+          <img src={logo} alt="LearnEazy" className="h-14 w-auto" />
         </Link>
 
         {/* Desktop nav */}
