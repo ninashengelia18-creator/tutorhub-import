@@ -14,6 +14,8 @@ import Classroom from "./pages/Classroom.tsx";
 import AIPractice from "./pages/AIPractice.tsx";
 import Messages from "./pages/Messages.tsx";
 import FAQ from "./pages/FAQ.tsx";
+import ForBusiness from "./pages/ForBusiness.tsx";
+import BecomeTutor from "./pages/BecomeTutor.tsx";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +36,8 @@ const App = () => (
             <Route path="/ai-practice" element={<AIPractice />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/for-business" element={<ForBusiness />} />
+            <Route path="/become-tutor" element={<BecomeTutor />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
