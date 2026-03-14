@@ -160,9 +160,9 @@ const reviewsData = [
 ];
 
 const similarTutors = [
-  { id: "2", name: "Giorgi K.", rating: 5.0, reviewCount: 98, headline: "PhD in Physics — making physics intuitive, not intimidating.", price: 100 },
-  { id: "3", name: "Ana M.", rating: 5.0, reviewCount: 215, headline: "IELTS & TOEFL specialist with Cambridge CELTA. Achieve your target scores!", price: 75 },
-  { id: "4", name: "Luka T.", rating: 4.9, reviewCount: 164, headline: "Full-stack developer. Learn Python, JavaScript, React with project-based lessons!", price: 110 },
+  { id: "2", name: "Giorgi K.", rating: 5.0, reviewCount: 98, headline: "PhD in Physics — making physics intuitive, not intimidating.", price: 30, photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" },
+  { id: "3", name: "Ana M.", rating: 5.0, reviewCount: 215, headline: "IELTS & TOEFL specialist with Cambridge CELTA. Achieve your target scores!", price: 20, photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" },
+  { id: "4", name: "Luka T.", rating: 4.9, reviewCount: 164, headline: "Full-stack developer. Learn Python, JavaScript, React with project-based lessons!", price: 35, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
 ];
 
 const days = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
