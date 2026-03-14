@@ -28,7 +28,7 @@ export function Header() {
           <Link to="/" className="flex items-center gap-1">
             <img src={logo} alt="LearnEazy" className="h-[70px] w-auto" />
           </Link>
-          <span className="hidden lg:inline text-xs text-muted-foreground italic border-l pl-3">Learn Smarter, Not Harder</span>
+          <span className="hidden lg:inline text-sm font-bold text-primary border-l pl-3">Learn Smarter, Not Harder</span>
         </div>
 
         {/* Desktop nav */}
