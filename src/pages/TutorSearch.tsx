@@ -135,8 +135,8 @@ export default function TutorSearch() {
                     to={`/tutor/${tutor.id}`}
                     className="flex gap-4 rounded-xl border bg-card p-4 card-shadow hover:card-shadow-hover hover:border-primary/30 transition-all group"
                   >
-                    <div className="h-16 w-16 rounded-lg bg-primary-light flex items-center justify-center text-primary font-bold shrink-0">
-                      {tutor.avatar}
+                    <img src={tutor.photo} alt={tutor.name} className="h-16 w-16 rounded-lg object-cover shrink-0" />
+
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
