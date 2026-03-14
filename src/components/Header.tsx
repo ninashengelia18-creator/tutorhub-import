@@ -9,6 +9,7 @@ import logo from "@/assets/learneazy-logo.png";
 const langLabels: Record<Language, string> = { en: "EN", ka: "ქარ", ru: "РУ" };
 
 const navLinks = [
+  { labelKey: "nav.home", href: "/" },
   { labelKey: "nav.findTutors", href: "/search" },
   { labelKey: "nav.forBusiness", href: "/for-business" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },

@@ -13,6 +13,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const translations: Record<Language, Record<string, string>> = {
   en: {
     // Nav
+    "nav.home": "Home",
     "nav.findTutors": "Find Tutors",
     "nav.forBusiness": "For Business",
     "nav.becomeTutor": "Become a Tutor",
@@ -349,6 +350,7 @@ export const translations: Record<Language, Record<string, string>> = {
   },
   ka: {
     // Nav
+    "nav.home": "მთავარი",
     "nav.findTutors": "რეპეტიტორები",
     "nav.forBusiness": "ბიზნესისთვის",
     "nav.becomeTutor": "გახდი რეპეტიტორი",
@@ -645,6 +647,7 @@ export const translations: Record<Language, Record<string, string>> = {
   },
   ru: {
     // Nav
+    "nav.home": "Главная",
     "nav.findTutors": "Репетиторы",
     "nav.forBusiness": "Для бизнеса",
     "nav.becomeTutor": "Стать репетитором",
