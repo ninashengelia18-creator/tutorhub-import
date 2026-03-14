@@ -66,7 +66,7 @@ export function Footer() {
     { label: "Online French classes", href: "/search" },
     { label: "Online German classes", href: "/search" },
     { label: "Online Chinese classes", href: "/search" },
-    { label: "Online Japanese classes", href: "/search" },
+    { label: "Online Georgian classes", href: "/search" },
     { label: "Online Turkish classes", href: "/search" },
     { label: "Online Portuguese classes", href: "/search" },
   ];
