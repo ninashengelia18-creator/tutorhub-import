@@ -1,9 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Menu, X, Globe } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
+import logo from "@/assets/logo.png";
 
 const langLabels: Record<Language, string> = { en: "EN", ka: "ქარ", ru: "РУ" };
 
@@ -23,11 +24,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <GraduationCap className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <span className="text-foreground">TutorHub</span>
+        <Link to="/" className="flex items-center gap-1">
+          <img src={logo} alt="TutorHub" className="h-10 w-auto" />
         </Link>
 
         {/* Desktop nav */}
@@ -36,7 +34,7 @@ export function Header() {
             <Link
               key={link.href}
               to={link.href}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
+              className={`text-sm font-bold transition-colors hover:text-primary ${
                 location.pathname === link.href
                   ? "text-primary"
                   : "text-muted-foreground"
@@ -113,7 +111,7 @@ export function Header() {
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="py-2 text-sm font-medium text-muted-foreground hover:text-primary"
+                  className="py-2 text-sm font-bold text-muted-foreground hover:text-primary"
                   onClick={() => setMobileOpen(false)}
                 >
                   {t(link.labelKey)}
