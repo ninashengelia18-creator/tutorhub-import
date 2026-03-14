@@ -6,7 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { label: "Find Tutors", href: "/search" },
-  { label: "AI Practice", href: "/ai-practice" },
+  { label: "For Business", href: "/for-business" },
+  { label: "Become a Tutor", href: "/become-tutor" },
+  { label: "Proven Progress", href: "/ai-practice" },
   { label: "FAQ", href: "/faq" },
 ];
 
