@@ -4,39 +4,43 @@ import { Search, Star, Filter, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
 const allTutors = [
-  { id: 1, name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 35, avatar: "NB", languages: ["Georgian", "English"], bio: "10+ years teaching mathematics. Specializing in calculus and algebra." },
-  { id: 2, name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 40, avatar: "GK", languages: ["Georgian", "Russian"], bio: "PhD in Physics. Making complex concepts simple and fun." },
-  { id: 3, name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 30, avatar: "AM", languages: ["English", "Georgian"], bio: "IELTS & TOEFL specialist. Native-level English teacher." },
-  { id: 4, name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 45, avatar: "LT", languages: ["English", "Georgian"], bio: "Full-stack developer teaching Python, JavaScript, and more." },
-  { id: 5, name: "Mariam Jashi", subject: "Chemistry", rating: 4.7, reviews: 89, price: 35, avatar: "MJ", languages: ["Georgian", "English"], bio: "University professor with a passion for organic chemistry." },
-  { id: 6, name: "Davit Lomidze", subject: "Georgian", rating: 4.9, reviews: 201, price: 25, avatar: "DL", languages: ["Georgian", "Russian", "English"], bio: "Georgian language specialist for foreigners and native speakers." },
-  { id: 7, name: "Elena Ivanova", subject: "Russian", rating: 4.8, reviews: 156, price: 28, avatar: "EI", languages: ["Russian", "English"], bio: "Certified Russian teacher with 8 years of experience." },
-  { id: 8, name: "Tamta Gogua", subject: "Music", rating: 5.0, reviews: 73, price: 50, avatar: "TG", languages: ["Georgian", "English"], bio: "Conservatory graduate. Piano and vocal lessons for all levels." },
+  { id: 1, name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 85, avatar: "NB", languages: ["Georgian", "English"], bio: "10+ years teaching mathematics. Specializing in calculus and algebra.", nativeSpeaker: true, availability: "morning" },
+  { id: 2, name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 100, avatar: "GK", languages: ["Georgian", "Russian"], bio: "PhD in Physics. Making complex concepts simple and fun.", nativeSpeaker: true, availability: "afternoon" },
+  { id: 3, name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 75, avatar: "AM", languages: ["English", "Georgian"], bio: "IELTS & TOEFL specialist. Native-level English teacher.", nativeSpeaker: true, availability: "morning" },
+  { id: 4, name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 110, avatar: "LT", languages: ["English", "Georgian"], bio: "Full-stack developer teaching Python, JavaScript, and more.", nativeSpeaker: false, availability: "evening" },
+  { id: 5, name: "Mariam Jashi", subject: "Chemistry", rating: 4.7, reviews: 89, price: 85, avatar: "MJ", languages: ["Georgian", "English"], bio: "University professor with a passion for organic chemistry.", nativeSpeaker: true, availability: "afternoon" },
+  { id: 6, name: "Davit Lomidze", subject: "Georgian", rating: 4.9, reviews: 201, price: 60, avatar: "DL", languages: ["Georgian", "Russian", "English"], bio: "Georgian language specialist for foreigners and native speakers.", nativeSpeaker: true, availability: "morning" },
+  { id: 7, name: "Elena Ivanova", subject: "Russian", rating: 4.8, reviews: 156, price: 70, avatar: "EI", languages: ["Russian", "English"], bio: "Certified Russian teacher with 8 years of experience.", nativeSpeaker: true, availability: "evening" },
+  { id: 8, name: "Tamta Gogua", subject: "Music", rating: 5.0, reviews: 73, price: 125, avatar: "TG", languages: ["Georgian", "English"], bio: "Conservatory graduate. Piano and vocal lessons for all levels.", nativeSpeaker: true, availability: "afternoon" },
 ];
 
 const subjects = ["All", "Mathematics", "Physics", "English", "Programming", "Chemistry", "Georgian", "Russian", "Music"];
-const priceRanges = ["Any", "$0-25", "$25-35", "$35-50", "$50+"];
 const ratings = ["Any", "4.5+", "4.7+", "4.9+"];
+const availabilityOptions = ["Any", "Morning", "Afternoon", "Evening"];
 
 export default function TutorSearch() {
   const [search, setSearch] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("All");
-  const [selectedPrice, setSelectedPrice] = useState("Any");
+  const [priceRange, setPriceRange] = useState([0, 200]);
   const [selectedRating, setSelectedRating] = useState("Any");
+  const [selectedAvailability, setSelectedAvailability] = useState("Any");
+  const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   const filtered = allTutors.filter((t) => {
     if (selectedSubject !== "All" && t.subject !== selectedSubject) return false;
     if (search && !t.name.toLowerCase().includes(search.toLowerCase()) && !t.subject.toLowerCase().includes(search.toLowerCase())) return false;
-    if (selectedPrice === "$0-25" && t.price > 25) return false;
-    if (selectedPrice === "$25-35" && (t.price < 25 || t.price > 35)) return false;
-    if (selectedPrice === "$35-50" && (t.price < 35 || t.price > 50)) return false;
-    if (selectedPrice === "$50+" && t.price < 50) return false;
+    if (t.price < priceRange[0] || t.price > priceRange[1]) return false;
     if (selectedRating === "4.5+" && t.rating < 4.5) return false;
     if (selectedRating === "4.7+" && t.rating < 4.7) return false;
     if (selectedRating === "4.9+" && t.rating < 4.9) return false;
+    if (selectedAvailability !== "Any" && t.availability !== selectedAvailability.toLowerCase()) return false;
+    if (nativeSpeakerOnly && !t.nativeSpeaker) return false;
     return true;
   });
 
@@ -98,8 +102,38 @@ export default function TutorSearch() {
                 <h3 className="font-semibold text-sm">Filters</h3>
               </div>
               <FilterSection title="Subject" options={subjects} value={selectedSubject} onChange={setSelectedSubject} />
-              <FilterSection title="Price per hour" options={priceRanges} value={selectedPrice} onChange={setSelectedPrice} />
+
+              {/* Price range slider */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold mb-3">Price per hour (₾)</h4>
+                <Slider
+                  value={priceRange}
+                  onValueChange={setPriceRange}
+                  min={0}
+                  max={200}
+                  step={5}
+                  className="mb-2"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
+                  <span>₾{priceRange[0]}</span>
+                  <span>₾{priceRange[1]}</span>
+                </div>
+              </div>
+
               <FilterSection title="Rating" options={ratings} value={selectedRating} onChange={setSelectedRating} />
+              <FilterSection title="Availability" options={availabilityOptions} value={selectedAvailability} onChange={setSelectedAvailability} />
+
+              {/* Native speaker toggle */}
+              <div className="mb-4 pt-2 border-t">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="native-toggle" className="text-sm font-semibold">Native Speaker</Label>
+                  <Switch
+                    id="native-toggle"
+                    checked={nativeSpeakerOnly}
+                    onCheckedChange={setNativeSpeakerOnly}
+                  />
+                </div>
+              </div>
             </div>
           </aside>
 
@@ -130,7 +164,7 @@ export default function TutorSearch() {
                           <p className="text-sm text-primary font-medium">{tutor.subject}</p>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-xl font-bold tabular-nums">${tutor.price}<span className="text-xs font-normal text-muted-foreground">/hr</span></p>
+                          <p className="text-xl font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">/hr</span></p>
                         </div>
                       </div>
                       <p className="text-sm text-muted-foreground mt-1 line-clamp-1">{tutor.bio}</p>
@@ -143,6 +177,9 @@ export default function TutorSearch() {
                         <span className="text-xs text-muted-foreground">
                           {tutor.languages.join(" · ")}
                         </span>
+                        {tutor.nativeSpeaker && (
+                          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">Native</span>
+                        )}
                       </div>
                     </div>
                   </Link>
