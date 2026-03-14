@@ -23,7 +23,7 @@ export function Header() {
   const { lang, setLang, t } = useLanguage();
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <header className="sticky top-0 z-50 border-b border-primary/20 bg-primary backdrop-blur">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-1">
           <img src={logo} alt="LearnEazy" className="h-[70px] w-auto" />
@@ -35,10 +35,10 @@ export function Header() {
             <Link
               key={link.href}
               to={link.href}
-              className={`text-sm font-bold transition-colors hover:text-primary/80 ${
+              className={`text-sm font-bold transition-colors hover:text-white/80 ${
                 location.pathname === link.href
-                  ? "text-primary"
-                  : "text-primary"
+                  ? "text-white"
+                  : "text-primary-foreground/90"
               }`}
             >
               {t(link.labelKey)}
@@ -48,15 +48,15 @@ export function Header() {
 
         <div className="hidden md:flex items-center gap-3">
           {/* Language switcher */}
-          <div className="flex items-center gap-0.5 bg-muted rounded-md p-0.5">
+          <div className="flex items-center gap-0.5 bg-primary-foreground/10 rounded-md p-0.5">
             {(Object.keys(langLabels) as Language[]).map((l) => (
               <button
                 key={l}
                 onClick={() => setLang(l)}
                 className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
                   lang === l
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-primary-foreground text-primary shadow-sm"
+                    : "text-primary-foreground/70 hover:text-primary-foreground"
                 }`}
               >
                 {langLabels[l]}
@@ -64,17 +64,17 @@ export function Header() {
             ))}
           </div>
 
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground" asChild>
             <Link to="/login">{t("nav.login")}</Link>
           </Button>
-          <Button size="sm" className="hero-gradient text-primary-foreground border-0" asChild>
-            <Link to="/signup">{t("nav.signup")}</Link>
+          <Button size="sm" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 border-0" asChild>
+            <Link to="/search">{t("nav.signup")}</Link>
           </Button>
         </div>
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden p-2"
+          className="md:hidden p-2 text-primary-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
