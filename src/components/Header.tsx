@@ -13,7 +13,6 @@ const navLinks = [
   { labelKey: "nav.findTutors", href: "/search" },
   { labelKey: "nav.forBusiness", href: "/for-business" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
-  { labelKey: "nav.provenProgress", href: "/ai-practice" },
   { labelKey: "nav.faq", href: "/faq" },
 ];
 
@@ -35,10 +34,10 @@ export function Header() {
             <Link
               key={link.href}
               to={link.href}
-              className={`text-sm font-bold transition-colors hover:text-primary/80 ${
+              className={`text-sm font-bold transition-colors hover:text-foreground/70 ${
                 location.pathname === link.href
-                  ? "text-primary"
-                  : "text-primary"
+                  ? "text-foreground"
+                  : "text-foreground"
               }`}
             >
               {t(link.labelKey)}
@@ -112,7 +111,7 @@ export function Header() {
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="py-2 text-sm font-bold text-primary hover:text-primary/80"
+                  className="py-2 text-sm font-bold text-foreground hover:text-foreground/70"
                   onClick={() => setMobileOpen(false)}
                 >
                   {t(link.labelKey)}

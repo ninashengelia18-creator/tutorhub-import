@@ -10,14 +10,14 @@ import { Slider } from "@/components/ui/slider";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const allTutors = [
-  { id: 1, name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 85, avatar: "NB", languages: ["Georgian", "English"], bio: "10+ years teaching mathematics. Specializing in calculus and algebra.", nativeSpeaker: true, availability: "morning" },
-  { id: 2, name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 100, avatar: "GK", languages: ["Georgian", "Russian"], bio: "PhD in Physics. Making complex concepts simple and fun.", nativeSpeaker: true, availability: "afternoon" },
-  { id: 3, name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 75, avatar: "AM", languages: ["English", "Georgian"], bio: "IELTS & TOEFL specialist. Native-level English teacher.", nativeSpeaker: true, availability: "morning" },
-  { id: 4, name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 110, avatar: "LT", languages: ["English", "Georgian"], bio: "Full-stack developer teaching Python, JavaScript, and more.", nativeSpeaker: false, availability: "evening" },
-  { id: 5, name: "Mariam Jashi", subject: "Chemistry", rating: 4.7, reviews: 89, price: 85, avatar: "MJ", languages: ["Georgian", "English"], bio: "University professor with a passion for organic chemistry.", nativeSpeaker: true, availability: "afternoon" },
-  { id: 6, name: "Davit Lomidze", subject: "Georgian", rating: 4.9, reviews: 201, price: 60, avatar: "DL", languages: ["Georgian", "Russian", "English"], bio: "Georgian language specialist for foreigners and native speakers.", nativeSpeaker: true, availability: "morning" },
-  { id: 7, name: "Elena Ivanova", subject: "Russian", rating: 4.8, reviews: 156, price: 70, avatar: "EI", languages: ["Russian", "English"], bio: "Certified Russian teacher with 8 years of experience.", nativeSpeaker: true, availability: "evening" },
-  { id: 8, name: "Tamta Gogua", subject: "Music", rating: 5.0, reviews: 73, price: 125, avatar: "TG", languages: ["Georgian", "English"], bio: "Conservatory graduate. Piano and vocal lessons for all levels.", nativeSpeaker: true, availability: "afternoon" },
+  { id: 1, name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 25, avatar: "NB", languages: ["Georgian", "English"], bio: "10+ years teaching mathematics. Specializing in calculus and algebra.", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face" },
+  { id: 2, name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 30, avatar: "GK", languages: ["Georgian", "Russian"], bio: "PhD in Physics. Making complex concepts simple and fun.", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" },
+  { id: 3, name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 20, avatar: "AM", languages: ["English", "Georgian"], bio: "IELTS & TOEFL specialist. Native-level English teacher.", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" },
+  { id: 4, name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 35, avatar: "LT", languages: ["English", "Georgian"], bio: "Full-stack developer teaching Python, JavaScript, and more.", nativeSpeaker: false, availability: "evening", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
+  { id: 5, name: "Mariam Jashi", subject: "Chemistry", rating: 4.7, reviews: 89, price: 22, avatar: "MJ", languages: ["Georgian", "English"], bio: "University professor with a passion for organic chemistry.", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face" },
+  { id: 6, name: "Davit Lomidze", subject: "Georgian", rating: 4.9, reviews: 201, price: 15, avatar: "DL", languages: ["Georgian", "Russian", "English"], bio: "Georgian language specialist for foreigners and native speakers.", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" },
+  { id: 7, name: "Elena Ivanova", subject: "Russian", rating: 4.8, reviews: 156, price: 18, avatar: "EI", languages: ["Russian", "English"], bio: "Certified Russian teacher with 8 years of experience.", nativeSpeaker: true, availability: "evening", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" },
+  { id: 8, name: "Tamta Gogua", subject: "Music", rating: 5.0, reviews: 73, price: 40, avatar: "TG", languages: ["Georgian", "English"], bio: "Conservatory graduate. Piano and vocal lessons for all levels.", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face" },
 ];
 
 const subjects = ["All", "Mathematics", "Physics", "English", "Programming", "Chemistry", "Georgian", "Russian", "Music"];
@@ -27,7 +27,7 @@ const availabilityOptions = ["Any", "Morning", "Afternoon", "Evening"];
 export default function TutorSearch() {
   const [search, setSearch] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("All");
-  const [priceRange, setPriceRange] = useState([0, 200]);
+  const [priceRange, setPriceRange] = useState([0, 50]);
   const [selectedRating, setSelectedRating] = useState("Any");
   const [selectedAvailability, setSelectedAvailability] = useState("Any");
   const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false);
@@ -105,7 +105,7 @@ export default function TutorSearch() {
 
               <div className="mb-6">
                 <h4 className="text-sm font-semibold mb-3">{t("search.pricePerHour")}</h4>
-                <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={200} step={5} className="mb-2" />
+                <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={50} step={5} className="mb-2" />
                 <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
                   <span>₾{priceRange[0]}</span>
                   <span>₾{priceRange[1]}</span>
@@ -135,9 +135,7 @@ export default function TutorSearch() {
                     to={`/tutor/${tutor.id}`}
                     className="flex gap-4 rounded-xl border bg-card p-4 card-shadow hover:card-shadow-hover hover:border-primary/30 transition-all group"
                   >
-                    <div className="h-16 w-16 rounded-lg bg-primary-light flex items-center justify-center text-primary font-bold shrink-0">
-                      {tutor.avatar}
-                    </div>
+                    <img src={tutor.photo} alt={tutor.name} className="h-16 w-16 rounded-lg object-cover shrink-0" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
                         <div>

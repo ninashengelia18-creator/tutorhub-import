@@ -14,9 +14,10 @@ const tutorData: Record<string, any> = {
     origin: "Georgia",
     rating: 4.9,
     reviewCount: 127,
-    price: 85,
+    price: 25,
     lessonLength: "50-min",
     avatar: "NB",
+    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face",
     languages: [
       { name: "Georgian", level: "Native" },
       { name: "English", level: "Upper-Intermediate B2" },
@@ -51,9 +52,10 @@ Together, we will explore the beauty of mathematics. I am dedicated to your grow
     origin: "Georgia",
     rating: 4.8,
     reviewCount: 98,
-    price: 100,
+    price: 30,
     lessonLength: "50-min",
     avatar: "GK",
+    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face",
     languages: [
       { name: "Georgian", level: "Native" },
       { name: "Russian", level: "Native" },
@@ -84,9 +86,10 @@ I use real-world examples and visual demonstrations to make abstract concepts co
     origin: "Georgia",
     rating: 5.0,
     reviewCount: 215,
-    price: 75,
+    price: 20,
     lessonLength: "50-min",
     avatar: "AM",
+    photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face",
     languages: [
       { name: "English", level: "Native" },
       { name: "Georgian", level: "Native" },
@@ -117,9 +120,10 @@ With 12 years of experience, I've guided over 500 students to their language goa
     origin: "Georgia",
     rating: 4.9,
     reviewCount: 164,
-    price: 110,
+    price: 35,
     lessonLength: "50-min",
     avatar: "LT",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
     languages: [
       { name: "English", level: "Upper-Intermediate B2" },
       { name: "Georgian", level: "Native" },
@@ -156,9 +160,9 @@ const reviewsData = [
 ];
 
 const similarTutors = [
-  { id: "2", name: "Giorgi K.", rating: 5.0, reviewCount: 98, headline: "PhD in Physics — making physics intuitive, not intimidating.", price: 100 },
-  { id: "3", name: "Ana M.", rating: 5.0, reviewCount: 215, headline: "IELTS & TOEFL specialist with Cambridge CELTA. Achieve your target scores!", price: 75 },
-  { id: "4", name: "Luka T.", rating: 4.9, reviewCount: 164, headline: "Full-stack developer. Learn Python, JavaScript, React with project-based lessons!", price: 110 },
+  { id: "2", name: "Giorgi K.", rating: 5.0, reviewCount: 98, headline: "PhD in Physics — making physics intuitive, not intimidating.", price: 30, photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" },
+  { id: "3", name: "Ana M.", rating: 5.0, reviewCount: 215, headline: "IELTS & TOEFL specialist with Cambridge CELTA. Achieve your target scores!", price: 20, photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" },
+  { id: "4", name: "Luka T.", rating: 4.9, reviewCount: 164, headline: "Full-stack developer. Learn Python, JavaScript, React with project-based lessons!", price: 35, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
 ];
 
 const days = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
@@ -196,9 +200,7 @@ export default function TutorProfile() {
             {/* Hero card */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
               <div className="flex items-start gap-5">
-                <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-3xl shrink-0 ring-2 ring-primary/20">
-                  {tutor.avatar}
-                </div>
+                <img src={tutor.photo} alt={tutor.name} className="h-24 w-24 rounded-full object-cover shrink-0 ring-2 ring-primary/20" />
                 <div className="flex-1 min-w-0">
                   <h1 className="text-2xl font-bold text-foreground">{tutor.name}</h1>
                   <p className="text-muted-foreground text-sm mt-0.5">
@@ -379,9 +381,7 @@ export default function TutorProfile() {
                       className="rounded-xl border bg-card p-4 hover:border-primary/40 transition-colors group"
                     >
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-                          {st.name.charAt(0)}{st.name.split(" ")[1]?.charAt(0)}
-                        </div>
+                        <img src={st.photo} alt={st.name} className="h-10 w-10 rounded-full object-cover" />
                         <div>
                           <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{st.name}</p>
                           <div className="flex items-center gap-1">
