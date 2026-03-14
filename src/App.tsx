@@ -16,6 +16,7 @@ import Messages from "./pages/Messages.tsx";
 import FAQ from "./pages/FAQ.tsx";
 import ForBusiness from "./pages/ForBusiness.tsx";
 import BecomeTutor from "./pages/BecomeTutor.tsx";
+import TutorApply from "./pages/TutorApply.tsx";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/faq" element={<FAQ />} />
             <Route path="/for-business" element={<ForBusiness />} />
             <Route path="/become-tutor" element={<BecomeTutor />} />
+            <Route path="/tutor-apply" element={<TutorApply />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
