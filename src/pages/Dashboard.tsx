@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const upcomingLessons = [
   { id: 1, tutor: "Nino Beridze", subject: "Mathematics", date: "Today", time: "14:00 - 15:00", status: "upcoming" },
@@ -29,29 +30,24 @@ const recentActivity = [
 ];
 
 export default function Dashboard() {
+  const { t } = useLanguage();
+
   return (
     <Layout>
       <div className="container py-8">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-2xl font-bold mb-1">Welcome back, Student!</h1>
-          <p className="text-muted-foreground mb-8">Here's your learning overview</p>
+          <h1 className="text-2xl font-bold mb-1">{t("dash.welcome")}</h1>
+          <p className="text-muted-foreground mb-8">{t("dash.overview")}</p>
         </motion.div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
           {[
-            { icon: BookOpen, label: "Total Lessons", value: "24", color: "text-primary" },
-            { icon: Clock, label: "Hours Learned", value: "18.5", color: "text-info" },
-            { icon: TrendingUp, label: "This Week", value: "+3", color: "text-success" },
-            { icon: MessageSquare, label: "Unread", value: "2", color: "text-warning" },
+            { icon: BookOpen, label: t("dash.totalLessons"), value: "24", color: "text-primary" },
+            { icon: Clock, label: t("dash.hoursLearned"), value: "18.5", color: "text-info" },
+            { icon: TrendingUp, label: t("dash.thisWeek"), value: "+3", color: "text-success" },
+            { icon: MessageSquare, label: t("dash.unread"), value: "2", color: "text-warning" },
           ].map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              className="rounded-xl border bg-card p-4 card-shadow"
-            >
+            <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="rounded-xl border bg-card p-4 card-shadow">
               <stat.icon className={`h-5 w-5 ${stat.color} mb-2`} />
               <p className="text-2xl font-bold tabular-nums">{stat.value}</p>
               <p className="text-xs text-muted-foreground">{stat.label}</p>
@@ -60,20 +56,12 @@ export default function Dashboard() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Main column */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Upcoming lessons */}
             <div>
-              <h2 className="font-semibold text-lg mb-4">Upcoming Lessons</h2>
+              <h2 className="font-semibold text-lg mb-4">{t("dash.upcoming")}</h2>
               <div className="space-y-3">
                 {upcomingLessons.map((lesson, i) => (
-                  <motion.div
-                    key={lesson.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 + i * 0.05 }}
-                    className="rounded-xl border bg-card p-4 card-shadow flex items-center justify-between"
-                  >
+                  <motion.div key={lesson.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05 }} className="rounded-xl border bg-card p-4 card-shadow flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-lg bg-primary-light flex items-center justify-center">
                         <Calendar className="h-5 w-5 text-primary" />
@@ -87,29 +75,22 @@ export default function Dashboard() {
                       <Button size="sm" className="hero-gradient text-primary-foreground border-0" asChild>
                         <Link to="/classroom">
                           <Video className="mr-1 h-3.5 w-3.5" />
-                          Join
+                          {t("dash.join")}
                         </Link>
                       </Button>
                     ) : (
-                      <span className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full">Scheduled</span>
+                      <span className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full">{t("dash.scheduled")}</span>
                     )}
                   </motion.div>
                 ))}
               </div>
             </div>
 
-            {/* Completed lessons with insights */}
             <div>
-              <h2 className="font-semibold text-lg mb-4">Completed Lessons</h2>
+              <h2 className="font-semibold text-lg mb-4">{t("dash.completed")}</h2>
               <div className="space-y-3">
                 {completedLessons.map((lesson, i) => (
-                  <motion.div
-                    key={lesson.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 + i * 0.05 }}
-                    className="rounded-xl border bg-card p-4 card-shadow"
-                  >
+                  <motion.div key={lesson.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.05 }} className="rounded-xl border bg-card p-4 card-shadow">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
@@ -132,30 +113,25 @@ export default function Dashboard() {
 
             <div className="flex gap-3">
               <Button variant="outline" className="flex-1" asChild>
-                <Link to="/search">Find More Tutors</Link>
+                <Link to="/search">{t("dash.findMore")}</Link>
               </Button>
               <Button variant="outline" className="flex-1" asChild>
-                <Link to="/ai-practice">AI Practice</Link>
+                <Link to="/ai-practice">{t("dash.aiPractice")}</Link>
               </Button>
             </div>
           </div>
 
-          {/* Right column */}
           <div className="space-y-6">
-            {/* AI Insights Panel */}
             <div>
               <h2 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <Brain className="h-5 w-5 text-primary" />
-                AI Insights
+                {t("dash.aiInsights")}
               </h2>
               <div className="rounded-xl border bg-card p-4 card-shadow space-y-3">
                 {aiInsights.map((insight, i) => (
                   <div key={i} className="pb-3 border-b last:border-b-0 last:pb-0">
                     <p className="text-sm font-medium flex items-center gap-1.5">
-                      <span className={`h-2 w-2 rounded-full ${
-                        insight.type === "progress" ? "bg-primary" :
-                        insight.type === "strength" ? "bg-success" : "bg-warning"
-                      }`} />
+                      <span className={`h-2 w-2 rounded-full ${insight.type === "progress" ? "bg-primary" : insight.type === "strength" ? "bg-success" : "bg-warning"}`} />
                       {insight.title}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{insight.description}</p>
@@ -164,9 +140,8 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Recent Activity */}
             <div>
-              <h2 className="font-semibold text-lg mb-4">Recent Activity</h2>
+              <h2 className="font-semibold text-lg mb-4">{t("dash.recentActivity")}</h2>
               <div className="rounded-xl border bg-card p-4 card-shadow">
                 <div className="space-y-3">
                   {recentActivity.map((activity, i) => (

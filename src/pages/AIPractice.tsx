@@ -3,6 +3,7 @@ import { Brain, BookOpen, Target, CheckCircle, ArrowRight, Sparkles, Briefcase, 
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const dailyExercises = [
   { id: 1, subject: "Mathematics", title: "Solve: 2x² + 5x - 3 = 0", difficulty: "Medium", completed: true },
@@ -21,6 +22,7 @@ const scenarios = [
 
 export default function AIPractice() {
   const [selectedExercise, setSelectedExercise] = useState<number | null>(null);
+  const { t } = useLanguage();
 
   return (
     <Layout>
@@ -30,25 +32,19 @@ export default function AIPractice() {
             <div className="h-10 w-10 rounded-xl hero-gradient flex items-center justify-center">
               <Brain className="h-5 w-5 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold">AI Practice</h1>
+            <h1 className="text-2xl font-bold">{t("ai.title")}</h1>
           </div>
-          <p className="text-muted-foreground mb-8 ml-[52px]">Daily exercises and scenario practice powered by AI</p>
+          <p className="text-muted-foreground mb-8 ml-[52px]">{t("ai.subtitle")}</p>
         </motion.div>
 
-        {/* Daily exercises */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="rounded-xl border bg-card p-5 card-shadow mb-6"
-        >
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl border bg-card p-5 card-shadow mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-lg flex items-center gap-2">
               <Target className="h-5 w-5 text-primary" />
-              Daily Exercises
+              {t("ai.daily")}
             </h2>
             <span className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full tabular-nums">
-              1/4 completed
+              1/4 {t("ai.completed")}
             </span>
           </div>
           <div className="space-y-2">
@@ -57,58 +53,36 @@ export default function AIPractice() {
                 key={exercise.id}
                 onClick={() => setSelectedExercise(exercise.id)}
                 className={`w-full flex items-center gap-3 rounded-lg border p-3 text-left transition-all ${
-                  exercise.completed
-                    ? "bg-primary-light/50 border-primary/20"
-                    : selectedExercise === exercise.id
-                    ? "border-primary bg-primary-light"
-                    : "hover:border-muted-foreground/30"
+                  exercise.completed ? "bg-primary-light/50 border-primary/20" : selectedExercise === exercise.id ? "border-primary bg-primary-light" : "hover:border-muted-foreground/30"
                 }`}
               >
-                {exercise.completed ? (
-                  <CheckCircle className="h-5 w-5 text-success shrink-0" />
-                ) : (
-                  <div className="h-5 w-5 rounded-full border-2 border-muted shrink-0" />
-                )}
+                {exercise.completed ? <CheckCircle className="h-5 w-5 text-success shrink-0" /> : <div className="h-5 w-5 rounded-full border-2 border-muted shrink-0" />}
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium ${exercise.completed ? "line-through text-muted-foreground" : ""}`}>
-                    {exercise.title}
-                  </p>
+                  <p className={`text-sm font-medium ${exercise.completed ? "line-through text-muted-foreground" : ""}`}>{exercise.title}</p>
                   <p className="text-xs text-muted-foreground">{exercise.subject}</p>
                 </div>
                 <span className={`text-xs px-2 py-0.5 rounded-full ${
-                  exercise.difficulty === "Easy" ? "bg-success/10 text-success" :
-                  exercise.difficulty === "Medium" ? "bg-warning/10 text-warning" :
-                  "bg-destructive/10 text-destructive"
-                }`}>
-                  {exercise.difficulty}
-                </span>
+                  exercise.difficulty === "Easy" ? "bg-success/10 text-success" : exercise.difficulty === "Medium" ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive"
+                }`}>{exercise.difficulty}</span>
               </button>
             ))}
           </div>
           {selectedExercise && (
             <Button className="w-full mt-4 hero-gradient text-primary-foreground border-0">
               <Sparkles className="mr-2 h-4 w-4" />
-              Start Exercise with AI
+              {t("ai.startExercise")}
             </Button>
           )}
         </motion.div>
 
-        {/* Scenario Practice */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <h2 className="font-semibold text-lg mb-4 flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
-            Scenario Practice
+            {t("ai.scenario")}
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {scenarios.map((scenario) => (
-              <div
-                key={scenario.id}
-                className="rounded-xl border bg-card p-4 card-shadow hover:card-shadow-hover hover:border-primary/30 transition-all cursor-pointer group"
-              >
+              <div key={scenario.id} className="rounded-xl border bg-card p-4 card-shadow hover:card-shadow-hover hover:border-primary/30 transition-all cursor-pointer group">
                 <div className="h-9 w-9 rounded-lg bg-primary-light flex items-center justify-center mb-3">
                   <scenario.icon className="h-4.5 w-4.5 text-primary" />
                 </div>
