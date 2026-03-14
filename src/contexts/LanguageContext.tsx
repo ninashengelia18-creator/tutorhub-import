@@ -649,6 +649,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "biz.contactTitle": "Готовы трансформировать навыки команды?",
     "biz.contactSub": "Получите индивидуальный план обучения для вашей организации.",
     "biz.contactBtn": "Начать",
+    "biz.form.company": "Название компании",
+    "biz.form.name": "Контактное лицо",
+    "biz.form.email": "Эл. почта",
+    "biz.form.phone": "Телефон",
+    "biz.form.teamSize": "Размер команды",
+    "biz.form.teamSizePlaceholder": "напр. 10-50 сотрудников",
+    "biz.form.message": "Сообщение",
+    "biz.form.messagePlaceholder": "Расскажите о ваших потребностях в обучении...",
+    "biz.form.submit": "Отправить запрос",
+    "biz.form.success": "Запрос успешно отправлен! Мы свяжемся с вами в ближайшее время.",
+    "biz.form.error": "Что-то пошло не так. Попробуйте ещё раз.",
 
     // Become a Tutor
     "tutor.title": "Стать репетитором",

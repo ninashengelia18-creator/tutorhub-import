@@ -1,9 +1,16 @@
 import { Link } from "react-router-dom";
-import { Building2, BarChart3, Clock, Brain, UserCheck, BadgePercent, Globe, Code, Users, ArrowRight } from "lucide-react";
+import { Building2, BarChart3, Clock, Brain, UserCheck, BadgePercent, Globe, Code, Users, ArrowRight, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
+import { z } from "zod";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -11,8 +18,48 @@ const fadeUp = {
   transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 };
 
+const inquirySchema = z.object({
+  company_name: z.string().trim().min(1).max(200),
+  contact_name: z.string().trim().min(1).max(200),
+  email: z.string().trim().email().max(255),
+  phone: z.string().trim().max(30).optional().or(z.literal("")),
+  team_size: z.string().trim().max(50).optional().or(z.literal("")),
+  message: z.string().trim().max(2000).optional().or(z.literal("")),
+});
+
 export default function ForBusiness() {
   const { t } = useLanguage();
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    company_name: "",
+    contact_name: "",
+    email: "",
+    phone: "",
+    team_size: "",
+    message: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const parsed = inquirySchema.safeParse(formData);
+    if (!parsed.success) {
+      toast({ title: t("biz.form.error"), variant: "destructive" });
+      return;
+    }
+    setSubmitting(true);
+    const { error } = await supabase.from("business_inquiries").insert(parsed.data);
+    setSubmitting(false);
+    if (error) {
+      toast({ title: t("biz.form.error"), variant: "destructive" });
+    } else {
+      toast({ title: t("biz.form.success") });
+      setFormData({ company_name: "", contact_name: "", email: "", phone: "", team_size: "", message: "" });
+    }
+  };
 
   const features = [
     { icon: Building2, titleKey: "biz.feat1.title", descKey: "biz.feat1.desc" },
@@ -53,8 +100,8 @@ export default function ForBusiness() {
               {t("biz.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button size="lg" className="hero-gradient text-primary-foreground border-0 font-semibold">
-                {t("biz.cta")}
+              <Button size="lg" className="hero-gradient text-primary-foreground border-0 font-semibold" asChild>
+                <a href="#contact-form">{t("biz.cta")}</a>
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">{t("biz.ctaSub")}</p>
@@ -135,18 +182,53 @@ export default function ForBusiness() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="container py-16">
-        <div className="rounded-2xl hero-gradient p-8 md:p-12 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3">
-            {t("biz.contactTitle")}
-          </h2>
-          <p className="text-primary-foreground/80 mb-6 max-w-md mx-auto">
-            {t("biz.contactSub")}
-          </p>
-          <Button size="lg" variant="secondary" className="font-semibold">
-            {t("biz.contactBtn")} <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+      {/* Contact Form */}
+      <section id="contact-form" className="container py-16">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold">{t("biz.contactTitle")}</h2>
+            <p className="text-muted-foreground mt-2">{t("biz.contactSub")}</p>
+          </div>
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="rounded-2xl border bg-card p-6 md:p-8 card-shadow space-y-5"
+          >
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="company_name">{t("biz.form.company")} *</Label>
+                <Input id="company_name" name="company_name" value={formData.company_name} onChange={handleChange} required maxLength={200} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_name">{t("biz.form.name")} *</Label>
+                <Input id="contact_name" name="contact_name" value={formData.contact_name} onChange={handleChange} required maxLength={200} />
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">{t("biz.form.email")} *</Label>
+                <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required maxLength={255} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">{t("biz.form.phone")}</Label>
+                <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} maxLength={30} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="team_size">{t("biz.form.teamSize")}</Label>
+              <Input id="team_size" name="team_size" value={formData.team_size} onChange={handleChange} placeholder={t("biz.form.teamSizePlaceholder")} maxLength={50} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="message">{t("biz.form.message")}</Label>
+              <Textarea id="message" name="message" value={formData.message} onChange={handleChange} rows={4} maxLength={2000} placeholder={t("biz.form.messagePlaceholder")} />
+            </div>
+            <Button type="submit" size="lg" className="w-full hero-gradient text-primary-foreground border-0 font-semibold" disabled={submitting}>
+              {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
+              {t("biz.form.submit")}
+            </Button>
+          </motion.form>
         </div>
       </section>
     </Layout>
