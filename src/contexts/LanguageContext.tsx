@@ -189,6 +189,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "biz.contactTitle": "Ready to transform your team's skills?",
     "biz.contactSub": "Get a customized training plan tailored to your organization's needs.",
     "biz.contactBtn": "Get Started",
+    "biz.form.company": "Company Name",
+    "biz.form.name": "Contact Name",
+    "biz.form.email": "Email",
+    "biz.form.phone": "Phone",
+    "biz.form.teamSize": "Team Size",
+    "biz.form.teamSizePlaceholder": "e.g. 10-50 employees",
+    "biz.form.message": "Message",
+    "biz.form.messagePlaceholder": "Tell us about your training needs...",
+    "biz.form.submit": "Send Inquiry",
+    "biz.form.success": "Inquiry sent successfully! We'll be in touch soon.",
+    "biz.form.error": "Something went wrong. Please try again.",
 
     // Become a Tutor
     "tutor.title": "Become a Tutor",
