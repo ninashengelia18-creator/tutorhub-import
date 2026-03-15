@@ -47,6 +47,7 @@ const App = () => (
               <Route path="/classroom" element={<ProtectedRoute><Classroom /></ProtectedRoute>} />
               <Route path="/ai-practice" element={<AIPractice />} />
               <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+              <Route path="/my-lessons" element={<ProtectedRoute><MyLessons /></ProtectedRoute>} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/for-business" element={<ForBusiness />} />
               <Route path="/become-tutor" element={<BecomeTutor />} />
