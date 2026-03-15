@@ -672,7 +672,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.support": "მხარდაჭერა",
     "footer.needHelp": "გჭირდებათ დახმარება? ეწვიეთ FAQ-ს",
     "footer.contacts": "კონტაქტი",
-    "footer.location": "548 Market St, Suite 36879, San Francisco, CA 94104",
+    "footer.location": "1209 N Orange St, Wilmington, DE 19801",
     "footer.social": "სოციალური ქსელები",
     "footer.privacyPolicy": "კონფიდენციალურობის პოლიტიკა",
     "footer.termsOfService": "მომსახურების პირობები",
