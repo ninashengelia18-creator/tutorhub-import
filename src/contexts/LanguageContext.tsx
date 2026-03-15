@@ -1034,6 +1034,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.needHelp": "Нужна помощь? Посетите FAQ",
     "footer.contacts": "Контакты",
     "footer.location": "Грузия, Тбилиси",
+    "footer.social": "Соцсети",
+    "footer.apps": "Приложения",
 
     // Search
     "search.placeholder": "Поиск репетиторов по имени или предмету...",
