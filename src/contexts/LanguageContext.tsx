@@ -1077,7 +1077,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.fileTooLarge": "Файл должен быть менее 2 МБ.",
 
     // Hero
-    "hero.badge": "Доверяют 50 000+ студентов",
+    "hero.badge": "500+ студентов уже учатся",
     "hero.title1": "Найдите идеального",
     "hero.title2": "репетитора",
     "hero.subtitle": "Свяжитесь с экспертными репетиторами по любому предмету. Персонализированные уроки 1-на-1.",
