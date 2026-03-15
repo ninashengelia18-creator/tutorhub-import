@@ -20,7 +20,25 @@ const allTutors = [
   { id: 8, name: "Tamta Gogua", subject: "Music", rating: 5.0, reviews: 73, price: 40, avatar: "TG", languages: ["Georgian", "English"], bio: "Conservatory graduate. Piano and vocal lessons for all levels.", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face" },
 ];
 
-const subjects = ["All", "GeorgianLit", "Mathematics", "English", "ForeignLanguages", "History", "Geography", "Biology", "Physics", "Chemistry", "ExamGeorgianLit", "ExamForeignLang", "ExamHistoryMath", "GeneralAptitude", "Robotics", "Programming", "Art"];
+const subjectEntries: { value: string; labelKey: string }[] = [
+  { value: "All", labelKey: "search.all" },
+  { value: "GeorgianLit", labelKey: "home.subj.georgianLit" },
+  { value: "Mathematics", labelKey: "home.subj.math" },
+  { value: "English", labelKey: "home.subj.english" },
+  { value: "ForeignLanguages", labelKey: "home.subj.foreignLangs" },
+  { value: "History", labelKey: "home.subj.history" },
+  { value: "Geography", labelKey: "home.subj.geography" },
+  { value: "Biology", labelKey: "home.subj.biology" },
+  { value: "Physics", labelKey: "home.subj.physics" },
+  { value: "Chemistry", labelKey: "home.subj.chemistry" },
+  { value: "ExamGeorgianLit", labelKey: "home.subj.examGeorgianLit" },
+  { value: "ExamForeignLang", labelKey: "home.subj.examForeignLang" },
+  { value: "ExamHistoryMath", labelKey: "home.subj.examHistoryMath" },
+  { value: "GeneralAptitude", labelKey: "home.subj.generalAptitude" },
+  { value: "Robotics", labelKey: "home.subj.robotics" },
+  { value: "Programming", labelKey: "home.subj.programming" },
+  { value: "Art", labelKey: "home.subj.art" },
+];
 const ratings = ["Any", "4.5+", "4.7+", "4.9+"];
 const availabilityOptions = ["Any", "Morning", "Afternoon", "Evening"];
 
@@ -36,9 +54,20 @@ export default function TutorSearch() {
   const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
 
+  // Build a map of subject value -> translated label for search matching
+  const subjectTranslationMap = Object.fromEntries(
+    subjectEntries.map((s) => [s.value, t(s.labelKey).toLowerCase()])
+  );
+
   const filtered = allTutors.filter((tutor) => {
     if (selectedSubject !== "All" && tutor.subject !== selectedSubject) return false;
-    if (search && !tutor.name.toLowerCase().includes(search.toLowerCase()) && !tutor.subject.toLowerCase().includes(search.toLowerCase())) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      const nameMatch = tutor.name.toLowerCase().includes(q);
+      const subjectEngMatch = tutor.subject.toLowerCase().includes(q);
+      const subjectTransMatch = (subjectTranslationMap[tutor.subject] || "").includes(q);
+      if (!nameMatch && !subjectEngMatch && !subjectTransMatch) return false;
+    }
     if (tutor.price < priceRange[0] || tutor.price > priceRange[1]) return false;
     if (selectedRating === "4.5+" && tutor.rating < 4.5) return false;
     if (selectedRating === "4.7+" && tutor.rating < 4.7) return false;
@@ -103,7 +132,22 @@ export default function TutorSearch() {
                 <Filter className="h-4 w-4 text-primary" />
                 <h3 className="font-semibold text-sm">{t("search.filters")}</h3>
               </div>
-              <FilterSection title={t("search.subject")} options={subjects} value={selectedSubject} onChange={setSelectedSubject} />
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold mb-3">{t("search.subject")}</h4>
+                <div className="space-y-1.5">
+                  {subjectEntries.map((subj) => (
+                    <button
+                      key={subj.value}
+                      onClick={() => setSelectedSubject(subj.value)}
+                      className={`block w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors ${
+                        selectedSubject === subj.value ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {t(subj.labelKey)}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <div className="mb-6">
                 <h4 className="text-sm font-semibold mb-3">{t("search.pricePerHour")}</h4>

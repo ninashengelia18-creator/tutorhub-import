@@ -226,6 +226,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "terms.section7.title": "7. Changes to Terms",
     "terms.section7.body": "We may update these Terms of Service from time to time. We will notify you of significant changes via email or through the platform. Continued use after changes constitutes acceptance of the new terms.",
 
+    "search.all": "All",
     "search.placeholder": "Search tutors by name or subject...",
     "search.filters": "Filters",
     "search.subject": "Subject",
@@ -758,6 +759,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "terms.section7.title": "7. პირობების ცვლილებები",
     "terms.section7.body": "ჩვენ შეიძლება დროდადრო განვაახლოთ ეს მომსახურების პირობები. მნიშვნელოვანი ცვლილებების შესახებ შეგატყობინებთ.",
 
+    "search.all": "ყველა",
     "search.placeholder": "მოძებნეთ რეპეტიტორი სახელით ან საგნით...",
     "search.filters": "ფილტრები",
     "search.subject": "საგანი",
@@ -1281,6 +1283,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "terms.section7.title": "7. Изменение условий",
     "terms.section7.body": "Мы можем время от времени обновлять эти Условия использования. О существенных изменениях мы уведомим вас.",
 
+    "search.all": "Все",
     "search.placeholder": "Поиск репетиторов по имени или предмету...",
     "search.filters": "Фильтры",
     "search.subject": "Предмет",
