@@ -47,8 +47,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.joinNow": "Join Now",
 
     // Homepage
-    "home.heroTitle": "Learn faster with your best language tutor.",
-    "home.heroCta": "Find your tutor",
+    "home.heroTitle": "Find the perfect tutor & start learning today",
+    "home.heroCta": "Get started — it's free",
     "stats.tutors": "Experienced tutors",
     "stats.reviews": "5-star tutor reviews",
     "stats.subjects": "Subjects taught",
