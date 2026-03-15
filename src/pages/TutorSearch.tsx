@@ -20,7 +20,7 @@ const allTutors = [
   { id: 8, name: "Tamta Gogua", subject: "Music", rating: 5.0, reviews: 73, price: 40, avatar: "TG", languages: ["Georgian", "English"], bio: "Conservatory graduate. Piano and vocal lessons for all levels.", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face" },
 ];
 
-const subjects = ["All", "Mathematics", "Physics", "English", "Programming", "Chemistry", "Georgian", "Russian", "Music"];
+const subjects = ["All", "GeorgianLit", "Mathematics", "English", "ForeignLanguages", "History", "Geography", "Biology", "Physics", "Chemistry", "ExamGeorgianLit", "ExamForeignLang", "ExamHistoryMath", "GeneralAptitude", "Robotics", "Programming", "Art"];
 const ratings = ["Any", "4.5+", "4.7+", "4.9+"];
 const availabilityOptions = ["Any", "Morning", "Afternoon", "Evening"];
 
