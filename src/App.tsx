@@ -26,6 +26,7 @@ import ProfileSettings from "./pages/ProfileSettings.tsx";
 import BookingConfirmation from "./pages/BookingConfirmation.tsx";
 import MyLessons from "./pages/MyLessons.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
+import CookiePolicy from "./pages/CookiePolicy.tsx";
 import TermsOfService from "./pages/TermsOfService.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 
