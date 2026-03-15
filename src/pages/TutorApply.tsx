@@ -327,7 +327,7 @@ export default function TutorApply() {
                   <Label>{t("tutor.apply.videoLabel")}</Label>
                   <p className="text-xs text-muted-foreground">{t("tutor.apply.videoDesc")}</p>
                   <Input type="url" placeholder={t("tutor.apply.videoPlaceholder")} className="mt-1" />
-                  <p className="text-xs text-muted-foreground italic">{t("tutor.apply.videoTip")}</p>
+                  
                 </div>
 
                 <div className="space-y-2">
