@@ -1283,6 +1283,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "terms.section7.title": "7. Изменение условий",
     "terms.section7.body": "Мы можем время от времени обновлять эти Условия использования. О существенных изменениях мы уведомим вас.",
 
+    "search.all": "Все",
     "search.placeholder": "Поиск репетиторов по имени или предмету...",
     "search.filters": "Фильтры",
     "search.subject": "Предмет",
