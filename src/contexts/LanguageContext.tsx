@@ -190,6 +190,24 @@ export const translations: Record<Language, Record<string, string>> = {
     "privacy.section6.title": "6. Contact Us",
     "privacy.section6.body": "If you have questions about this Privacy Policy, please contact us at support@learneazy.org or through our FAQ page.",
 
+    // Cookie Policy
+    "cookie.title": "Cookie Policy",
+    "cookie.lastUpdated": "Last updated",
+    "cookie.section1.title": "1. What Are Cookies",
+    "cookie.section1.body": "Cookies are small text files that are placed on your device when you visit our website. They help us provide you with a better experience by remembering your preferences, analyzing site traffic, and enabling certain features.",
+    "cookie.section2.title": "2. How We Use Cookies",
+    "cookie.section2.body": "LearnEazy uses cookies for several purposes: to keep you signed in, to remember your language preference, to understand how you use our platform, and to improve our services. We also use cookies to deliver relevant content and measure the effectiveness of our communications.",
+    "cookie.section3.title": "3. Types of Cookies We Use",
+    "cookie.section3.body": "Essential cookies: Required for the website to function properly, including authentication and security. Functional cookies: Remember your preferences such as language and display settings. Analytics cookies: Help us understand how visitors interact with our website by collecting anonymous usage data. Marketing cookies: Used to deliver relevant advertisements and track campaign performance.",
+    "cookie.section4.title": "4. Third-Party Cookies",
+    "cookie.section4.body": "Some cookies are placed by third-party services that appear on our pages, such as analytics providers (e.g., Google Analytics), customer support tools (e.g., Tawk.to), and social media platforms. These third parties may use cookies to collect information about your online activities across different websites.",
+    "cookie.section5.title": "5. Managing Cookies",
+    "cookie.section5.body": "You can control and manage cookies through your browser settings. Most browsers allow you to refuse or delete cookies. However, please note that disabling cookies may affect the functionality of our website and limit your ability to use certain features.",
+    "cookie.section6.title": "6. Cookie Retention",
+    "cookie.section6.body": "Session cookies are temporary and are deleted when you close your browser. Persistent cookies remain on your device for a set period or until you delete them. We retain analytics data in anonymized form for up to 26 months.",
+    "cookie.section7.title": "7. Contact Us",
+    "cookie.section7.body": "If you have questions about our use of cookies, please contact us at support@learneazy.org or visit our FAQ page.",
+
     // Terms of Service
     "terms.title": "Terms of Service",
     "terms.lastUpdated": "Last updated",
