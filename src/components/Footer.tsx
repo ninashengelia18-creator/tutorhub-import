@@ -45,6 +45,40 @@ export function Footer() {
     { labelKey: "home.subj.art", href: "/search?subject=Art" },
   ];
 
+  const learnLinks = [
+    { labelKey: "footer.learnEnglish", href: "/search?subject=English" },
+    { labelKey: "footer.learnSpanish", href: "/search?subject=Spanish" },
+    { labelKey: "footer.learnFrench", href: "/search?subject=French" },
+    { labelKey: "footer.learnGerman", href: "/search?subject=German" },
+    { labelKey: "footer.learnGeorgian", href: "/search?subject=Georgian" },
+    { labelKey: "footer.learnItalian", href: "/search?subject=Italian" },
+    { labelKey: "footer.learnAnother", href: "/search" },
+  ];
+
+  const onlineClassLinks = [
+    { labelKey: "footer.onlineEnglishClasses", href: "/search?subject=English" },
+    { labelKey: "footer.businessEnglish", href: "/search?subject=BusinessEnglish" },
+    { labelKey: "footer.onlineSpanishClasses", href: "/search?subject=Spanish" },
+    { labelKey: "footer.onlineFrenchClasses", href: "/search?subject=French" },
+    { labelKey: "footer.onlineGermanClasses", href: "/search?subject=German" },
+    { labelKey: "footer.onlineChineseClasses", href: "/search?subject=Chinese" },
+    { labelKey: "footer.onlineGeorgianClasses", href: "/search?subject=Georgian" },
+    { labelKey: "footer.onlineTurkishClasses", href: "/search?subject=Turkish" },
+    { labelKey: "footer.onlinePortugueseClasses", href: "/search?subject=Portuguese" },
+  ];
+
+  const tutorTypeLinks = [
+    { labelKey: "footer.englishTutors", href: "/search?subject=English" },
+    { labelKey: "footer.spanishTutors", href: "/search?subject=Spanish" },
+    { labelKey: "footer.frenchTutors", href: "/search?subject=French" },
+    { labelKey: "footer.germanTutors", href: "/search?subject=German" },
+    { labelKey: "footer.arabicTutors", href: "/search?subject=Arabic" },
+    { labelKey: "footer.georgianTutors", href: "/search?subject=Georgian" },
+    { labelKey: "footer.chineseTutors", href: "/search?subject=Chinese" },
+    { labelKey: "footer.portugueseTutors", href: "/search?subject=Portuguese" },
+    { labelKey: "footer.mathTutors", href: "/search?subject=Mathematics" },
+  ];
+
   const renderLinkColumn = (titleKey: string, links: { labelKey: string; href: string }[]) => (
     <div>
       <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t(titleKey)}</h4>
