@@ -953,7 +953,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.readyTitle": "მზად ხართ სწავლების დასაწყებად?",
     "tutor.readySub": "შეუერთდით ათასობით რეპეტიტორს. გააკეთეთ განაცხადი დღეს — უფასოა.",
     "tutor.readyBtn": "დაიწყეთ განაცხადი",
-    "tutor.heroHeadline": "იშოვეთ საცხოვრებელი მსოფლიოს უდიდესი მოსწავლეების საზოგადოების სწავლებით",
+    "tutor.heroHeadline": "გახდი რეპეტიტორი",
     "tutor.teachStudentsTitle": "ასწავლეთ სტუდენტებს 180+ ქვეყნიდან",
     "tutor.teachStudentsDesc": "LearnEazy-ის რეპეტიტორები ასწავლიან 800,000+ სტუდენტს მთელ მსოფლიოში.",
     "tutor.pf1": "სტუდენტების მუდმივი ნაკადი",
