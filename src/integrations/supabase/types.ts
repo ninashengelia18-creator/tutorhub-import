@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          created_at: string
+          currency: string
+          duration_minutes: number
+          end_time: string
+          id: string
+          is_trial: boolean
+          lesson_date: string
+          notes: string | null
+          price_amount: number
+          start_time: string
+          status: string
+          student_id: string
+          subject: string
+          tutor_avatar_url: string | null
+          tutor_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          duration_minutes?: number
+          end_time: string
+          id?: string
+          is_trial?: boolean
+          lesson_date: string
+          notes?: string | null
+          price_amount: number
+          start_time: string
+          status?: string
+          student_id: string
+          subject: string
+          tutor_avatar_url?: string | null
+          tutor_name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          duration_minutes?: number
+          end_time?: string
+          id?: string
+          is_trial?: boolean
+          lesson_date?: string
+          notes?: string | null
+          price_amount?: number
+          start_time?: string
+          status?: string
+          student_id?: string
+          subject?: string
+          tutor_avatar_url?: string | null
+          tutor_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       business_inquiries: {
         Row: {
           company_name: string

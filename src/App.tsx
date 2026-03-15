@@ -23,6 +23,7 @@ import Signup from "./pages/Signup.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import ProfileSettings from "./pages/ProfileSettings.tsx";
+import BookingConfirmation from "./pages/BookingConfirmation.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
               <Route path="/search" element={<TutorSearch />} />
               <Route path="/tutor/:id" element={<TutorProfile />} />
               <Route path="/booking/:id" element={<Booking />} />
+              <Route path="/booking-confirmation" element={<ProtectedRoute><BookingConfirmation /></ProtectedRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/classroom" element={<ProtectedRoute><Classroom /></ProtectedRoute>} />
               <Route path="/ai-practice" element={<AIPractice />} />
