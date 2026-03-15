@@ -141,6 +141,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.needHelp": "Need any help? Visit our FAQ",
     "footer.contacts": "Contacts",
     "footer.location": "Georgia, Tbilisi",
+    "footer.social": "Social",
+    "footer.apps": "Apps",
 
     // Search
     "search.placeholder": "Search tutors by name or subject...",
@@ -590,6 +592,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.needHelp": "გჭირდებათ დახმარება? ეწვიეთ FAQ-ს",
     "footer.contacts": "კონტაქტი",
     "footer.location": "საქართველო, თბილისი",
+    "footer.social": "სოციალური ქსელები",
+    "footer.apps": "აპლიკაციები",
 
     // Search
     "search.placeholder": "მოძებნეთ რეპეტიტორი სახელით ან საგნით...",
@@ -1030,6 +1034,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.needHelp": "Нужна помощь? Посетите FAQ",
     "footer.contacts": "Контакты",
     "footer.location": "Грузия, Тбилиси",
+    "footer.social": "Соцсети",
+    "footer.apps": "Приложения",
 
     // Search
     "search.placeholder": "Поиск репетиторов по имени или предмету...",

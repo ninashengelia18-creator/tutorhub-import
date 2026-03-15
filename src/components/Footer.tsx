@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
 import logo from "@/assets/learneazy-logo.png";
+
+const socialLinks = [
+  { icon: Facebook, label: "Facebook", href: "https://facebook.com/learneazy" },
+  { icon: Instagram, label: "Instagram", href: "https://instagram.com/learneazy" },
+  { icon: Youtube, label: "YouTube", href: "https://youtube.com/@learneazy" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/company/learneazy" },
+];
 
 export function Footer() {
   const { t } = useLanguage();
@@ -66,21 +74,74 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Support & Contact */}
+      {/* Support, Contacts, Social, Apps */}
       <div className="border-t">
         <div className="container py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {/* Support */}
             <div>
               <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.support")}</h4>
-              <p className="text-sm text-muted-foreground">
-                <Link to="/faq" className="hover:text-primary transition-colors">{t("footer.needHelp")}</Link>
-              </p>
+              <Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                {t("footer.needHelp")}
+              </Link>
             </div>
+
+            {/* Contacts */}
             <div>
               <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.contacts")}</h4>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {t("footer.location")}
               </p>
+            </div>
+
+            {/* Social */}
+            <div>
+              <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.social")}</h4>
+              <div className="flex flex-wrap gap-3">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                  >
+                    <social.icon className="h-4 w-4" />
+                  </a>
+                ))}
+                {/* TikTok (no lucide icon) */}
+                <a
+                  href="https://tiktok.com/@learneazy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="TikTok"
+                  className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors text-xs font-bold"
+                >
+                  TT
+                </a>
+              </div>
+            </div>
+
+            {/* Apps */}
+            <div>
+              <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.apps")}</h4>
+              <div className="flex flex-col gap-2">
+                <a
+                  href="#"
+                  className="inline-flex items-center gap-2 rounded-lg border bg-foreground text-background px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity w-fit"
+                >
+                  <span className="text-base">🍎</span>
+                  App Store
+                </a>
+                <a
+                  href="#"
+                  className="inline-flex items-center gap-2 rounded-lg border bg-foreground text-background px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity w-fit"
+                >
+                  <span className="text-base">▶️</span>
+                  Google Play
+                </a>
+              </div>
             </div>
           </div>
         </div>
