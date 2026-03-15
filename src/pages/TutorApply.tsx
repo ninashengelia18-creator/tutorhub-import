@@ -10,7 +10,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle, User, GraduationCap, BookOpen, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+
 
 const TOTAL_STEPS = 4;
 
