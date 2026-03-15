@@ -47,8 +47,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.joinNow": "Join Now",
 
     // Homepage
-    "home.heroTitle": "Learn faster with your best language tutor.",
-    "home.heroCta": "Find your tutor",
+    "home.heroTitle": "Find the perfect tutor & start learning today",
+    "home.heroCta": "Get started — it's free",
     "stats.tutors": "Experienced tutors",
     "stats.reviews": "5-star tutor reviews",
     "stats.subjects": "Subjects taught",
@@ -466,8 +466,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.joinNow": "შესვლა",
 
     // Homepage
-    "home.heroTitle": "ისწავლე სწრაფად საუკეთესო ენის რეპეტიტორთან.",
-    "home.heroCta": "იპოვეთ რეპეტიტორი",
+    "home.heroTitle": "იპოვე იდეალური რეპეტიტორი და დაიწყე სწავლა დღესვე",
+    "home.heroCta": "დაიწყე უფასოდ",
     "home.teachers": "მასწავლებელი",
     "home.subj.english": "ინგლისურის რეპეტიტორები",
     "home.subj.georgian": "ქართულის რეპეტიტორები",
@@ -890,8 +890,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.joinNow": "Войти",
 
     // Homepage
-    "home.heroTitle": "Учись быстрее с лучшим языковым репетитором.",
-    "home.heroCta": "Найдите репетитора",
+    "home.heroTitle": "Найди идеального репетитора и начни учиться сегодня",
+    "home.heroCta": "Начать бесплатно",
     "home.teachers": "преподавателей",
     "home.subj.english": "Репетиторы английского",
     "home.subj.georgian": "Репетиторы грузинского",
