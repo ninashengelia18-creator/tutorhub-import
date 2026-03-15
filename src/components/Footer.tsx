@@ -98,7 +98,7 @@ export function Footer() {
   );
 
   return (
-    <footer className="border-t bg-muted/30">
+    <footer className="border-t border-border/50 bg-secondary/30">
       <div className="container py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {renderLinkColumn("footer.aboutUs", aboutLinks)}
@@ -107,7 +107,7 @@ export function Footer() {
           {renderLinkColumn("footer.subjects", subjectLinks)}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mt-10 pt-8 border-t">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mt-10 pt-8 border-t border-border/50">
           {renderLinkColumn("footer.learn", learnLinks)}
           {renderLinkColumn("footer.onlineClasses", onlineClassLinks)}
           {renderLinkColumn("footer.oneOnOneTutors", tutorTypeLinks)}
@@ -115,10 +115,9 @@ export function Footer() {
       </div>
 
       {/* Support, Contacts, Social, Apps */}
-      <div className="border-t">
+      <div className="border-t border-border/50">
         <div className="container py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {/* Support */}
             <div>
               <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.support")}</h4>
               <Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -126,15 +125,11 @@ export function Footer() {
               </Link>
             </div>
 
-            {/* Contacts */}
             <div>
               <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.contacts")}</h4>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {t("footer.location")}
-              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t("footer.location")}</p>
             </div>
 
-            {/* Social */}
             <div>
               <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.social")}</h4>
               <div className="flex flex-wrap gap-3">
@@ -145,38 +140,36 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                    className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
                     <social.icon className="h-4 w-4" />
                   </a>
                 ))}
-                {/* TikTok (no lucide icon) */}
                 <a
                   href="https://tiktok.com/@learneazy"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="TikTok"
-                  className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors text-xs font-bold"
+                  className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors text-xs font-bold"
                 >
                   TT
                 </a>
               </div>
             </div>
 
-            {/* Apps */}
             <div>
               <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.apps")}</h4>
               <div className="flex flex-col gap-2">
                 <a
                   href="#"
-                  className="inline-flex items-center gap-2 rounded-lg border bg-foreground text-background px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity w-fit"
+                  className="inline-flex items-center gap-2 rounded-lg border border-border bg-secondary text-foreground px-3 py-2 text-xs font-medium hover:bg-primary hover:text-primary-foreground transition-colors w-fit"
                 >
                   <span className="text-base">🍎</span>
                   App Store
                 </a>
                 <a
                   href="#"
-                  className="inline-flex items-center gap-2 rounded-lg border bg-foreground text-background px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity w-fit"
+                  className="inline-flex items-center gap-2 rounded-lg border border-border bg-secondary text-foreground px-3 py-2 text-xs font-medium hover:bg-primary hover:text-primary-foreground transition-colors w-fit"
                 >
                   <span className="text-base">▶️</span>
                   Google Play
@@ -188,7 +181,7 @@ export function Footer() {
       </div>
 
       {/* Copyright */}
-      <div className="border-t">
+      <div className="border-t border-border/50">
         <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img src={logo} alt="LearnEazy" className="h-8 w-auto" loading="lazy" decoding="async" />
@@ -201,7 +194,7 @@ export function Footer() {
       </div>
 
       {/* Legal Center */}
-      <div className="border-t bg-muted/50">
+      <div className="border-t border-border/50 bg-secondary/50">
         <div className="container py-4 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
           <span className="font-semibold text-foreground">Legal Center</span>
           <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>

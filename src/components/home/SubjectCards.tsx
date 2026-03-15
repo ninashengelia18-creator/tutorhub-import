@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Languages, Code, Music, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Palette, Lightbulb, MapPin } from "lucide-react";
+import { BookOpen, Languages, Code, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Palette, Lightbulb, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -48,7 +48,7 @@ export function SubjectCards() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-xl font-bold mb-4"
+            className="text-xl font-bold mb-4 text-foreground"
           >
             {t(category.categoryKey)}
           </motion.h2>
@@ -63,11 +63,11 @@ export function SubjectCards() {
               >
                 <Link
                   to={card.href}
-                  className="flex items-center gap-4 rounded-xl border bg-card p-4 hover:border-primary/30 hover:shadow-md transition-all group"
+                  className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 hover:border-primary/40 transition-all group card-glow"
                 >
-                  <card.icon className="h-5 w-5 text-muted-foreground shrink-0" />
+                  <card.icon className="h-5 w-5 text-muted-foreground shrink-0 group-hover:text-primary transition-colors" />
                   <div className="flex-1">
-                    <h3 className="font-semibold group-hover:text-primary transition-colors">{t(card.nameKey)}</h3>
+                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{t(card.nameKey)}</h3>
                     <p className="text-xs text-muted-foreground">{card.teacherCount} {t("home.teachers")}</p>
                   </div>
                   <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />

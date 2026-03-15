@@ -10,9 +10,9 @@ export function GuaranteeSection() {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="rounded-2xl bg-muted/50 p-8 md:p-12 text-center"
+        className="rounded-2xl border border-border bg-card p-8 md:p-12 text-center card-glow"
       >
-        <h2 className="text-2xl md:text-3xl font-bold mb-3">{t("home.guaranteeTitle")}</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-3 text-foreground">{t("home.guaranteeTitle")}</h2>
         <p className="text-muted-foreground max-w-md mx-auto">{t("home.guaranteeDesc")}</p>
       </motion.div>
     </section>
