@@ -66,10 +66,7 @@ export function Footer() {
     { labelKey: "footer.spanishTutors", href: "/search?subject=Spanish" },
     { labelKey: "footer.frenchTutors", href: "/search?subject=French" },
     { labelKey: "footer.germanTutors", href: "/search?subject=German" },
-    { labelKey: "footer.arabicTutors", href: "/search?subject=Arabic" },
-    { labelKey: "footer.georgianTutors", href: "/search?subject=Georgian" },
-    { labelKey: "footer.chineseTutors", href: "/search?subject=Chinese" },
-    { labelKey: "footer.portugueseTutors", href: "/search?subject=Portuguese" },
+    { labelKey: "footer.mathTutors", href: "/search?subject=Mathematics" },
     { labelKey: "footer.mathTutors", href: "/search?subject=Mathematics" },
   ];
 
