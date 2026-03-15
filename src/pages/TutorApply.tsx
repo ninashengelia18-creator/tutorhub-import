@@ -305,7 +305,21 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.timezone")}</Label>
-                  <Input value={timezone} onChange={(e) => setTimezone(e.target.value)} />
+                  <Select value={timezone} onValueChange={setTimezone}>
+                    <SelectTrigger><SelectValue placeholder={t("tutor.apply.selectTimezone")} /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GMT+4 (Tbilisi)">GMT+4 (Tbilisi)</SelectItem>
+                      <SelectItem value="GMT+0 (London)">GMT+0 (London)</SelectItem>
+                      <SelectItem value="GMT+1 (Berlin/Paris)">GMT+1 (Berlin/Paris)</SelectItem>
+                      <SelectItem value="GMT+2 (Athens/Istanbul)">GMT+2 (Athens/Istanbul)</SelectItem>
+                      <SelectItem value="GMT+3 (Moscow)">GMT+3 (Moscow)</SelectItem>
+                      <SelectItem value="GMT-5 (New York)">GMT-5 (New York)</SelectItem>
+                      <SelectItem value="GMT-8 (Los Angeles)">GMT-8 (Los Angeles)</SelectItem>
+                      <SelectItem value="GMT+5:30 (Mumbai)">GMT+5:30 (Mumbai)</SelectItem>
+                      <SelectItem value="GMT+8 (Beijing)">GMT+8 (Beijing)</SelectItem>
+                      <SelectItem value="GMT+9 (Tokyo)">GMT+9 (Tokyo)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Video introduction */}
