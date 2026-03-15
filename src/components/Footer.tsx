@@ -157,7 +157,7 @@ export function Footer() {
                     aria-label={social.label}
                     className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
-                    <social.icon className="h-4 w-4" />
+                    <social.icon />
                   </a>
                 ))}
                 <a
