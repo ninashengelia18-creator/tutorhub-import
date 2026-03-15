@@ -6,95 +6,48 @@ export function Footer() {
   const { t } = useLanguage();
 
   const aboutLinks = [
-    { label: "Who we are", href: "/about" },
-    { label: "How it works", href: "/how-it-works" },
-    { label: "LearnEazy reviews", href: "/reviews" },
-    { label: "LearnEazy app", href: "/app" },
-    { label: "Proven progress platform", href: "/ai-practice" },
-    { label: "Community guidelines", href: "/guidelines" },
-    { label: "Work at LearnEazy!", href: "/careers" },
-    { label: "Status", href: "/status" },
-    { label: "Research and Studies", href: "/research" },
-    { label: "Media kit", href: "/media" },
-    { label: "Affiliate program", href: "/affiliate" },
+    { labelKey: "footer.howItWorks", href: "/" },
+    { labelKey: "footer.faq", href: "/faq" },
+    { labelKey: "footer.forBusiness", href: "/for-business" },
   ];
 
   const studentLinks = [
-    { label: "LearnEazy Blog", href: "/blog" },
-    { label: "Questions and Answers", href: "/faq" },
-    { label: "Student discount", href: "/student-discount" },
-    { label: "Refer a friend", href: "/referral" },
-    { label: "Test your English for free", href: "/english-test" },
-    { label: "Test your vocab", href: "/vocab-test" },
-    { label: "LearnEazy discounts", href: "/discounts" },
-    { label: "LearnEazy Subscription", href: "/subscription" },
+    { labelKey: "footer.findTutor", href: "/search" },
+    { labelKey: "footer.schoolSubjects", href: "/search?subject=Mathematics" },
+    { labelKey: "footer.examPrep", href: "/search?subject=ExamGeorgianLit" },
+    { labelKey: "footer.programming", href: "/search?subject=Programming" },
+    { labelKey: "footer.art", href: "/search?subject=Art" },
   ];
 
   const tutorLinks = [
-    { label: "Become an online tutor", href: "/become-tutor" },
-    { label: "Teach English online", href: "/become-tutor" },
-    { label: "Teach French online", href: "/become-tutor" },
-    { label: "Teach Spanish online", href: "/become-tutor" },
-    { label: "Teach German online", href: "/become-tutor" },
-    { label: "See all online tutoring jobs", href: "/become-tutor" },
+    { labelKey: "footer.becomeTutor", href: "/become-tutor" },
+    { labelKey: "footer.applyNow", href: "/tutor-apply" },
   ];
 
-  const companyLinks = [
-    { label: "Corporate language training", href: "/for-business" },
-    { label: "Corporate English training", href: "/for-business" },
-    { label: "Corporate Spanish training", href: "/for-business" },
-    { label: "Corporate training blog", href: "/blog" },
-    { label: "Resource center", href: "/resources" },
-    { label: "English level test for companies", href: "/business-test" },
-    { label: "Language training for employee relocation", href: "/for-business" },
+  const subjectLinks = [
+    { labelKey: "home.subj.georgianLit", href: "/search?subject=GeorgianLit" },
+    { labelKey: "home.subj.math", href: "/search?subject=Mathematics" },
+    { labelKey: "home.subj.english", href: "/search?subject=English" },
+    { labelKey: "home.subj.physics", href: "/search?subject=Physics" },
+    { labelKey: "home.subj.chemistry", href: "/search?subject=Chemistry" },
+    { labelKey: "home.subj.history", href: "/search?subject=History" },
+    { labelKey: "home.subj.biology", href: "/search?subject=Biology" },
+    { labelKey: "home.subj.programming", href: "/search?subject=Programming" },
+    { labelKey: "home.subj.robotics", href: "/search?subject=Robotics" },
+    { labelKey: "home.subj.art", href: "/search?subject=Art" },
   ];
 
-  const learnLinks = [
-    { label: "Learn English online", href: "/search?subject=English" },
-    { label: "Learn Spanish online", href: "/search?subject=Spanish" },
-    { label: "Learn French online", href: "/search?subject=French" },
-    { label: "Learn German online", href: "/search?subject=German" },
-    { label: "Learn Georgian online", href: "/search?subject=Georgian" },
-    { label: "Learn Italian online", href: "/search?subject=Italian" },
-    { label: "Learn another language", href: "/search" },
-  ];
-
-  const classLinks = [
-    { label: "Online English Classes", href: "/search?subject=English" },
-    { label: "Business English courses", href: "/search?subject=English" },
-    { label: "Online Spanish classes", href: "/search?subject=Spanish" },
-    { label: "Online French classes", href: "/search?subject=French" },
-    { label: "Online German classes", href: "/search?subject=German" },
-    { label: "Online Chinese classes", href: "/search?subject=Chinese" },
-    { label: "Online Georgian classes", href: "/search?subject=Georgian" },
-    { label: "Online Turkish classes", href: "/search?subject=Turkish" },
-    { label: "Online Portuguese classes", href: "/search?subject=Portuguese" },
-  ];
-
-  const tutorTypeLinks = [
-    { label: "English Tutors", href: "/search?subject=English" },
-    { label: "Spanish Tutors", href: "/search?subject=Spanish" },
-    { label: "French Tutors", href: "/search?subject=French" },
-    { label: "German Tutors", href: "/search?subject=German" },
-    { label: "Arabic Tutors", href: "/search?subject=Arabic" },
-    { label: "Georgian Tutors", href: "/search?subject=Georgian" },
-    { label: "Chinese Tutors", href: "/search?subject=Chinese" },
-    { label: "Portuguese Tutors", href: "/search?subject=Portuguese" },
-    { label: "Math Tutors", href: "/search?subject=Mathematics" },
-  ];
-
-
-  const renderLinkColumn = (title: string, links: { label: string; href: string }[]) => (
+  const renderLinkColumn = (titleKey: string, links: { labelKey: string; href: string }[]) => (
     <div>
-      <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{title}</h4>
+      <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t(titleKey)}</h4>
       <ul className="space-y-2">
         {links.map((link) => (
-          <li key={link.label}>
+          <li key={link.labelKey}>
             <Link
               to={link.href}
               className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              {link.label}
+              {t(link.labelKey)}
             </Link>
           </li>
         ))}
@@ -104,57 +57,31 @@ export function Footer() {
 
   return (
     <footer className="border-t bg-muted/30">
-      {/* Top section: About / Students / Tutors / Companies */}
       <div className="container py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {renderLinkColumn("ABOUT US", aboutLinks)}
-          {renderLinkColumn("FOR STUDENTS", studentLinks)}
-          {renderLinkColumn("FOR TUTORS", tutorLinks)}
-          {renderLinkColumn("FOR COMPANIES", companyLinks)}
+          {renderLinkColumn("footer.aboutUs", aboutLinks)}
+          {renderLinkColumn("footer.forStudents", studentLinks)}
+          {renderLinkColumn("footer.forTutors", tutorLinks)}
+          {renderLinkColumn("footer.subjects", subjectLinks)}
         </div>
       </div>
 
-      {/* Support & Contact section */}
+      {/* Support & Contact */}
       <div className="border-t">
         <div className="container py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">Support</h4>
-              <p className="text-sm text-muted-foreground mb-2">
-                <Link to="/faq" className="hover:text-primary transition-colors">Need any help?</Link>
+              <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.support")}</h4>
+              <p className="text-sm text-muted-foreground">
+                <Link to="/faq" className="hover:text-primary transition-colors">{t("footer.needHelp")}</Link>
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">Contacts</h4>
+              <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.contacts")}</h4>
               <p className="text-sm text-muted-foreground">
-                Georgia, Tbilisi
+                {t("footer.location")}
               </p>
-              <div className="flex gap-4 mt-3">
-                <span className="text-sm font-medium text-foreground">LearnEazy social</span>
-              </div>
-              <div className="flex gap-4 mt-2">
-                {["Facebook", "Instagram", "Youtube", "LinkedIn", "TikTok"].map((s) => (
-                  <a
-                    key={s}
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {s}
-                  </a>
-                ))}
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom link sections: Learn / Classes / Tutors */}
-      <div className="border-t">
-        <div className="container py-12">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-            {renderLinkColumn("LEARN", learnLinks)}
-            {renderLinkColumn("ONLINE LANGUAGE CLASSES AND COURSES", classLinks)}
-            {renderLinkColumn("1-ON-1 TUTORS", tutorTypeLinks)}
           </div>
         </div>
       </div>
@@ -164,13 +91,11 @@ export function Footer() {
         <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img src={logo} alt="LearnEazy" className="h-8 w-auto" loading="lazy" decoding="async" />
-            <span className="text-sm text-muted-foreground">© 2012-{new Date().getFullYear()} LearnEazy Inc.</span>
+            <span className="text-sm text-muted-foreground">© {new Date().getFullYear()} LearnEazy</span>
           </div>
           <div className="flex gap-4 text-sm text-muted-foreground">
-            <Link to="/legal" className="hover:text-primary transition-colors">Legal Center</Link>
-            <Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link to="/cookies" className="hover:text-primary transition-colors">Cookie Policy</Link>
-            <Link to="/legal-notice" className="hover:text-primary transition-colors">Legal Notice</Link>
+            <Link to="/faq" className="hover:text-primary transition-colors">{t("footer.faq")}</Link>
+            <Link to="/for-business" className="hover:text-primary transition-colors">{t("footer.forBusiness")}</Link>
           </div>
         </div>
       </div>
