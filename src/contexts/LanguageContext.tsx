@@ -759,6 +759,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "terms.section7.title": "7. პირობების ცვლილებები",
     "terms.section7.body": "ჩვენ შეიძლება დროდადრო განვაახლოთ ეს მომსახურების პირობები. მნიშვნელოვანი ცვლილებების შესახებ შეგატყობინებთ.",
 
+    "search.all": "ყველა",
     "search.placeholder": "მოძებნეთ რეპეტიტორი სახელით ან საგნით...",
     "search.filters": "ფილტრები",
     "search.subject": "საგანი",
