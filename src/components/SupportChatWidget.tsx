@@ -65,8 +65,8 @@ const chatTranslations: Record<ChatLang, {
 
 const faqAnswers: Record<ChatLang, Record<string, string>> = {
   en: {
-    "How do I book a lesson?": "Go to the tutor's profile, pick a time slot, and click 'Book Trial Lesson'. You can pay with TBC PayGe or BOG Pay.",
-    "What payment methods?": "We accept TBC PayGe and Bank of Georgia (BOG) Pay. All prices are in Georgian Lari (₾).",
+    "How do I book a lesson?": "Go to the tutor's profile, pick a time slot, and click 'Book Trial Lesson'. After booking, we'll send you payment details (IBAN) via email.",
+    "What payment methods?": "After you book a lesson, we'll send you our IBAN details via email or chat. All prices are in Georgian Lari (₾). You can also message us here for payment info!",
     "How do I find a tutor?": "Click 'Find Tutors' in the menu to browse tutors by subject, price, rating, and availability. You can also use the search bar!",
     "Can I get a refund?": "Yes! If you're not satisfied, request a refund within 24 hours of your lesson. Our team will review it promptly.",
   },
