@@ -188,7 +188,6 @@ export function Footer() {
       </div>
 
       {/* Copyright */}
-      {/* Copyright */}
       <div className="border-t">
         <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -196,8 +195,6 @@ export function Footer() {
             <span className="text-sm text-muted-foreground">© {new Date().getFullYear()} LearnEazy</span>
           </div>
           <div className="flex gap-4 text-sm text-muted-foreground">
-            <Link to="/privacy-policy" className="hover:text-primary transition-colors">{t("footer.privacyPolicy")}</Link>
-            <Link to="/terms-of-service" className="hover:text-primary transition-colors">{t("footer.termsOfService")}</Link>
             <Link to="/faq" className="hover:text-primary transition-colors">{t("footer.faq")}</Link>
           </div>
         </div>
