@@ -565,7 +565,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.nextLessonDesc": "მათემატიკა ნინო ბ.-თან",
     "hero.joinNow": "შესვლა",
 
-    "brand.tagline": "Global Tutors. Personal Learning.",
+    "brand.tagline": "საერთაშორისო ტუტორები, პერსონალიზებული სწავლება.",
 
     // Homepage
     "home.heroTitle": "იპოვე იდეალური რეპეტიტორი და დაიწყე სწავლა დღესვე",
