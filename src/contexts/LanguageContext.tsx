@@ -466,8 +466,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.joinNow": "შესვლა",
 
     // Homepage
-    "home.heroTitle": "ისწავლე სწრაფად საუკეთესო ენის რეპეტიტორთან.",
-    "home.heroCta": "იპოვეთ რეპეტიტორი",
+    "home.heroTitle": "იპოვე იდეალური რეპეტიტორი და დაიწყე სწავლა დღესვე",
+    "home.heroCta": "დაიწყე უფასოდ",
     "home.teachers": "მასწავლებელი",
     "home.subj.english": "ინგლისურის რეპეტიტორები",
     "home.subj.georgian": "ქართულის რეპეტიტორები",
