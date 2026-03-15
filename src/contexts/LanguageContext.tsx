@@ -494,6 +494,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.apply.availability": "Weekly Availability",
     "tutor.apply.selectAvail": "Select availability",
     "tutor.apply.timezone": "Timezone",
+    "tutor.apply.selectTimezone": "Select timezone",
     "tutor.apply.aboutTeaching": "Your Teaching Philosophy",
     "tutor.apply.aboutTeachingPlaceholder": "Describe how you approach teaching and what students can expect...",
     "tutor.apply.terms": "I agree to the Terms of Service and confirm that the information provided is accurate.",
