@@ -226,6 +226,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "terms.section7.title": "7. Changes to Terms",
     "terms.section7.body": "We may update these Terms of Service from time to time. We will notify you of significant changes via email or through the platform. Continued use after changes constitutes acceptance of the new terms.",
 
+    "search.all": "All",
     "search.placeholder": "Search tutors by name or subject...",
     "search.filters": "Filters",
     "search.subject": "Subject",
