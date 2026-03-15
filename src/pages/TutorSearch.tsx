@@ -54,9 +54,20 @@ export default function TutorSearch() {
   const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
 
+  // Build a map of subject value -> translated label for search matching
+  const subjectTranslationMap = Object.fromEntries(
+    subjectEntries.map((s) => [s.value, t(s.labelKey).toLowerCase()])
+  );
+
   const filtered = allTutors.filter((tutor) => {
     if (selectedSubject !== "All" && tutor.subject !== selectedSubject) return false;
-    if (search && !tutor.name.toLowerCase().includes(search.toLowerCase()) && !tutor.subject.toLowerCase().includes(search.toLowerCase())) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      const nameMatch = tutor.name.toLowerCase().includes(q);
+      const subjectEngMatch = tutor.subject.toLowerCase().includes(q);
+      const subjectTransMatch = (subjectTranslationMap[tutor.subject] || "").includes(q);
+      if (!nameMatch && !subjectEngMatch && !subjectTransMatch) return false;
+    }
     if (tutor.price < priceRange[0] || tutor.price > priceRange[1]) return false;
     if (selectedRating === "4.5+" && tutor.rating < 4.5) return false;
     if (selectedRating === "4.7+" && tutor.rating < 4.7) return false;
