@@ -1292,7 +1292,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const t = (key: string): string => {
-    return translations[lang][key] || translations.en[key] || key;
+    return translations[lang][key] || translations.ka[key] || key;
   };
 
   return (
