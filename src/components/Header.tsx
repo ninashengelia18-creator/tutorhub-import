@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard, UserCircle } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
@@ -82,6 +82,12 @@ export function Header() {
                   {t("auth.dashboard")}
                 </Link>
               </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/profile">
+                  <UserCircle className="h-4 w-4 mr-1" />
+                  {t("nav.profile")}
+                </Link>
+              </Button>
               <Button variant="outline" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4 mr-1" />
                 {t("auth.logout")}
@@ -151,6 +157,11 @@ export function Header() {
                     <Button variant="ghost" size="sm" className="flex-1" asChild>
                       <Link to="/dashboard" onClick={() => setMobileOpen(false)}>
                         {t("auth.dashboard")}
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" size="sm" className="flex-1" asChild>
+                      <Link to="/profile" onClick={() => setMobileOpen(false)}>
+                        {t("nav.profile")}
                       </Link>
                     </Button>
                     <Button variant="outline" size="sm" className="flex-1" onClick={() => { handleSignOut(); setMobileOpen(false); }}>

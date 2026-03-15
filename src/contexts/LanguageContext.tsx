@@ -21,6 +21,19 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.faq": "FAQ",
     "nav.login": "Log in",
     "nav.signup": "Sign up",
+    "nav.profile": "Profile",
+
+    // Profile Settings
+    "profile.settings.title": "Profile Settings",
+    "profile.settings.desc": "Update your display name and profile picture.",
+    "profile.settings.clickToUpload": "Click to upload a photo",
+    "profile.settings.avatarUpdated": "Avatar updated!",
+    "profile.settings.saved": "Profile saved!",
+    "profile.settings.saving": "Saving...",
+    "profile.settings.save": "Save Changes",
+    "profile.settings.error": "Error",
+    "profile.settings.imageOnly": "Please select an image file.",
+    "profile.settings.fileTooLarge": "File must be under 2 MB.",
 
     // Hero
     "hero.badge": "Trusted by 50,000+ students",
@@ -398,6 +411,19 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.faq": "FAQ",
     "nav.login": "შესვლა",
     "nav.signup": "რეგისტრაცია",
+    "nav.profile": "პროფილი",
+
+    // Profile Settings
+    "profile.settings.title": "პროფილის პარამეტრები",
+    "profile.settings.desc": "განაახლეთ სახელი და პროფილის ფოტო.",
+    "profile.settings.clickToUpload": "დააჭირეთ ფოტოს ასატვირთად",
+    "profile.settings.avatarUpdated": "ავატარი განახლდა!",
+    "profile.settings.saved": "პროფილი შენახულია!",
+    "profile.settings.saving": "ინახება...",
+    "profile.settings.save": "ცვლილებების შენახვა",
+    "profile.settings.error": "შეცდომა",
+    "profile.settings.imageOnly": "გთხოვთ აირჩიოთ სურათის ფაილი.",
+    "profile.settings.fileTooLarge": "ფაილი უნდა იყოს 2 მბ-ზე ნაკლები.",
 
     // Hero
     "hero.badge": "50,000+ სტუდენტის ნდობით",
@@ -780,6 +806,19 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.faq": "FAQ",
     "nav.login": "Войти",
     "nav.signup": "Регистрация",
+    "nav.profile": "Профиль",
+
+    // Profile Settings
+    "profile.settings.title": "Настройки профиля",
+    "profile.settings.desc": "Обновите имя и фото профиля.",
+    "profile.settings.clickToUpload": "Нажмите, чтобы загрузить фото",
+    "profile.settings.avatarUpdated": "Аватар обновлён!",
+    "profile.settings.saved": "Профиль сохранён!",
+    "profile.settings.saving": "Сохранение...",
+    "profile.settings.save": "Сохранить изменения",
+    "profile.settings.error": "Ошибка",
+    "profile.settings.imageOnly": "Выберите файл изображения.",
+    "profile.settings.fileTooLarge": "Файл должен быть менее 2 МБ.",
 
     // Hero
     "hero.badge": "Доверяют 50 000+ студентов",
