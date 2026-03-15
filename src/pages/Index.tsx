@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Star, Landmark, BookOpen, Languages, Code, Music, GraduationCap, Calculator, ChevronRight, Users, Briefcase, Shield } from "lucide-react";
+import { ArrowRight, Star, BookOpen, Languages, Code, Music, GraduationCap, Calculator, ChevronRight, Users, Briefcase, Shield, FlaskConical, Globe, Cpu, Palette, Lightbulb, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -14,16 +14,38 @@ const stats = [
   { value: "4.8", labelKey: "stats.appRating", isStar: true },
 ];
 
-const subjectCards = [
-  { icon: Languages, nameKey: "home.subj.english", count: "2,450", href: "/search?subject=English" },
-  { icon: Languages, nameKey: "home.subj.georgian", count: "860", href: "/search?subject=Georgian" },
-  { icon: Languages, nameKey: "home.subj.russian", count: "1,120", href: "/search?subject=Russian" },
-  { icon: Calculator, nameKey: "home.subj.math", count: "980", href: "/search?subject=Mathematics" },
-  { icon: Code, nameKey: "home.subj.programming", count: "740", href: "/search?subject=Programming" },
-  { icon: BookOpen, nameKey: "home.subj.physics", count: "520", href: "/search?subject=Physics" },
-  { icon: Music, nameKey: "home.subj.music", count: "310", href: "/search?subject=Music" },
-  { icon: GraduationCap, nameKey: "home.subj.exam", count: "280", href: "/search?subject=Exam" },
-  { icon: Briefcase, nameKey: "home.subj.business", count: "640", href: "/search?subject=Business" },
+const subjectCategories = [
+  {
+    categoryKey: "home.cat.school",
+    subjects: [
+      { icon: BookOpen, nameKey: "home.subj.georgianLit", href: "/search?subject=GeorgianLit" },
+      { icon: Calculator, nameKey: "home.subj.math", href: "/search?subject=Mathematics" },
+      { icon: Languages, nameKey: "home.subj.english", href: "/search?subject=English" },
+      { icon: Globe, nameKey: "home.subj.foreignLangs", href: "/search?subject=ForeignLanguages" },
+      { icon: MapPin, nameKey: "home.subj.history", href: "/search?subject=History" },
+      { icon: MapPin, nameKey: "home.subj.geography", href: "/search?subject=Geography" },
+      { icon: FlaskConical, nameKey: "home.subj.biology", href: "/search?subject=Biology" },
+      { icon: FlaskConical, nameKey: "home.subj.physics", href: "/search?subject=Physics" },
+      { icon: FlaskConical, nameKey: "home.subj.chemistry", href: "/search?subject=Chemistry" },
+    ],
+  },
+  {
+    categoryKey: "home.cat.exams",
+    subjects: [
+      { icon: GraduationCap, nameKey: "home.subj.examGeorgianLit", href: "/search?subject=ExamGeorgianLit" },
+      { icon: GraduationCap, nameKey: "home.subj.examForeignLang", href: "/search?subject=ExamForeignLang" },
+      { icon: GraduationCap, nameKey: "home.subj.examHistoryMath", href: "/search?subject=ExamHistoryMath" },
+      { icon: Lightbulb, nameKey: "home.subj.generalAptitude", href: "/search?subject=GeneralAptitude" },
+    ],
+  },
+  {
+    categoryKey: "home.cat.special",
+    subjects: [
+      { icon: Cpu, nameKey: "home.subj.robotics", href: "/search?subject=Robotics" },
+      { icon: Code, nameKey: "home.subj.programming", href: "/search?subject=Programming" },
+      { icon: Palette, nameKey: "home.subj.art", href: "/search?subject=Art" },
+    ],
+  },
 ];
 
 const howSteps = [
