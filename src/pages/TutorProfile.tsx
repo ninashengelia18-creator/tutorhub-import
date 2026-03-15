@@ -200,7 +200,7 @@ export default function TutorProfile() {
             {/* Hero card */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
               <div className="flex items-start gap-5">
-                <img src={tutor.photo} alt={tutor.name} className="h-24 w-24 rounded-full object-cover shrink-0 ring-2 ring-primary/20" />
+                <img src={tutor.photo} alt={tutor.name} className="h-24 w-24 rounded-full object-cover shrink-0 ring-2 ring-primary/20" loading="lazy" decoding="async" />
                 <div className="flex-1 min-w-0">
                   <h1 className="text-2xl font-bold text-foreground">{tutor.name}</h1>
                   <p className="text-muted-foreground text-sm mt-0.5">
@@ -381,7 +381,7 @@ export default function TutorProfile() {
                       className="rounded-xl border bg-card p-4 hover:border-primary/40 transition-colors group"
                     >
                       <div className="flex items-center gap-3 mb-2">
-                        <img src={st.photo} alt={st.name} className="h-10 w-10 rounded-full object-cover" />
+                        <img src={st.photo} alt={st.name} className="h-10 w-10 rounded-full object-cover" loading="lazy" decoding="async" />
                         <div>
                           <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{st.name}</p>
                           <div className="flex items-center gap-1">

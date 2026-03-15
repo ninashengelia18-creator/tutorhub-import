@@ -163,7 +163,7 @@ export function Footer() {
       <div className="border-t">
         <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src={logo} alt="LearnEazy" className="h-8 w-auto" />
+            <img src={logo} alt="LearnEazy" className="h-8 w-auto" loading="lazy" decoding="async" />
             <span className="text-sm text-muted-foreground">© 2012-{new Date().getFullYear()} LearnEazy Inc.</span>
           </div>
           <div className="flex gap-4 text-sm text-muted-foreground">
