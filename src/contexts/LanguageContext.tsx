@@ -983,7 +983,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.pf3": "ინტერაქტიული საკლასო ოთახი",
     "tutor.pf4": "მოსახერხებელი გადახდის მეთოდები",
     "tutor.pf5": "პროფესიული განვითარების ვებინარები",
-    "tutor.pf6": "მხარდამჭერი რეპეტიტორების საზოგადოება",
+    "tutor.pf6": "რეპეტიტორების მხარდამჭერი საზოგადოება",
     "tutor.testimonialQuote": "LearnEazy-მა მომცა საშუალება ვიშოვო სახლიდან გაუსვლელად!",
     "tutor.testimonialAuthor": "ნინო ს. · ინგლისურის რეპეტიტორი",
     "tutor.faqTitle": "ხშირად დასმული კითხვები",
