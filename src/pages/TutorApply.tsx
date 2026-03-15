@@ -259,7 +259,7 @@ export default function TutorApply() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.rate")} * (USD/hr)</Label>
-                    <Input type="number" min="1" value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value)} placeholder="25" />
+                    <Input type="number" min="1" value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value)} />
                   </div>
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.nativeLang")}</Label>
