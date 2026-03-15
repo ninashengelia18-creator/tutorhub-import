@@ -24,6 +24,7 @@ import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import ProfileSettings from "./pages/ProfileSettings.tsx";
 import BookingConfirmation from "./pages/BookingConfirmation.tsx";
+import MyLessons from "./pages/MyLessons.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 
 const queryClient = new QueryClient();
