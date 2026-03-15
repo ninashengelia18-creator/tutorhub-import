@@ -1283,7 +1283,7 @@ export const translations: Record<Language, Record<string, string>> = {
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Language>(() => {
     const saved = localStorage.getItem("learneazy-lang");
-    return (saved as Language) || "en";
+    return (saved as Language) || "ka";
   });
 
   const handleSetLang = (newLang: Language) => {
