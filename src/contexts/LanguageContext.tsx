@@ -554,7 +554,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.fileTooLarge": "ფაილი უნდა იყოს 2 მბ-ზე ნაკლები.",
 
     // Hero
-    "hero.badge": "50,000+ სტუდენტის ნდობით",
+    "hero.badge": "500+ სტუდენტი უკვე სწავლობს",
     "hero.title1": "იპოვეთ იდეალური",
     "hero.title2": "რეპეტიტორი",
     "hero.subtitle": "დაუკავშირდით ექსპერტ რეპეტიტორებს ნებისმიერ საგანში. პერსონალიზებული 1-on-1 გაკვეთილები.",
