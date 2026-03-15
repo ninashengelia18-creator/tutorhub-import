@@ -159,6 +159,11 @@ export function Header() {
                         {t("auth.dashboard")}
                       </Link>
                     </Button>
+                    <Button variant="ghost" size="sm" className="flex-1" asChild>
+                      <Link to="/profile" onClick={() => setMobileOpen(false)}>
+                        {t("nav.profile")}
+                      </Link>
+                    </Button>
                     <Button variant="outline" size="sm" className="flex-1" onClick={() => { handleSignOut(); setMobileOpen(false); }}>
                       {t("auth.logout")}
                     </Button>
