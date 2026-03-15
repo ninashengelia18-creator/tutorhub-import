@@ -97,6 +97,8 @@ export default function BecomeTutor() {
               src={tutorHeroImg}
               alt="Online tutor teaching"
               className="rounded-2xl w-full object-cover shadow-lg"
+              loading="lazy"
+              decoding="async"
             />
           </motion.div>
         </div>
