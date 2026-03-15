@@ -155,8 +155,9 @@ export function Footer() {
             <span className="text-sm text-muted-foreground">© {new Date().getFullYear()} LearnEazy</span>
           </div>
           <div className="flex gap-4 text-sm text-muted-foreground">
+            <Link to="/privacy-policy" className="hover:text-primary transition-colors">{t("footer.privacyPolicy")}</Link>
+            <Link to="/terms-of-service" className="hover:text-primary transition-colors">{t("footer.termsOfService")}</Link>
             <Link to="/faq" className="hover:text-primary transition-colors">{t("footer.faq")}</Link>
-            <Link to="/for-business" className="hover:text-primary transition-colors">{t("footer.forBusiness")}</Link>
           </div>
         </div>
       </div>
