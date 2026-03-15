@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
+import { Instagram, Linkedin } from "lucide-react";
 import logo from "@/assets/learneazy-logo.png";
 
 const socialLinks = [
-  { icon: Facebook, label: "Facebook", href: "https://facebook.com/learneazy" },
   { icon: Instagram, label: "Instagram", href: "https://instagram.com/learneazy" },
-  { icon: Youtube, label: "YouTube", href: "https://youtube.com/@learneazy" },
   { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/company/learneazy" },
 ];
 
