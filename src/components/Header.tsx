@@ -7,7 +7,7 @@ import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/learneazy-logo.png";
 
-const langLabels: Record<Language, string> = { en: "EN", ka: "ქარ", ru: "РУ" };
+const langLabels: Record<Language, string> = { ka: "ქარ", en: "EN", ru: "РУ" };
 
 const navLinks = [
   { labelKey: "nav.home", href: "/" },
