@@ -92,13 +92,13 @@ export default function TutorApply() {
         about_teaching: aboutTeaching.trim() || null,
       };
 
-      const { error } = await supabase.from("tutor_applications" as any).insert(applicationData as any);
-      if (error) throw error;
-
-      // Send email notification to info@learneazy.org
-      supabase.functions.invoke("notify-tutor-application", { body: applicationData }).catch((err) => {
-        console.error("Email notification failed:", err);
+      // Submit to Formspree → forwards to info@learneazy.org
+      const res = await fetch("https://formspree.io/f/mojknpqp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(applicationData),
       });
+      if (!res.ok) throw new Error("Submission failed");
 
       setSubmitted(true);
     } catch (err: any) {
