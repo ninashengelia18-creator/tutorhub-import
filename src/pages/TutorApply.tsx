@@ -292,7 +292,7 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.timezone")}</Label>
-                  <Input value={timezone} onChange={(e) => setTimezone(e.target.value)} placeholder="GMT+4 (Tbilisi)" />
+                  <Input value={timezone} onChange={(e) => setTimezone(e.target.value)} />
                 </div>
 
                 {/* Video introduction */}
