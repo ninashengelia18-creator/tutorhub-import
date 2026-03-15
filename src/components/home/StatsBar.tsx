@@ -3,11 +3,10 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const stats = [
-  { value: "5,000+", labelKey: "stats.tutors" },
-  { value: "50,000+", labelKey: "stats.reviews" },
-  { value: "120+", labelKey: "stats.subjects" },
-  { value: "30+", labelKey: "stats.nationalities" },
-  { value: "4.8", labelKey: "stats.appRating", isStar: true },
+  { value: "150+", labelKey: "stats.tutors" },
+  { value: "500+", labelKey: "stats.reviews" },
+  { value: "40+", labelKey: "stats.subjects" },
+  { value: "10+", labelKey: "stats.nationalities" },
 ];
 
 export function StatsBar() {
