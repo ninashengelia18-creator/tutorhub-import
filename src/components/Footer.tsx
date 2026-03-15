@@ -106,6 +106,12 @@ export function Footer() {
           {renderLinkColumn("footer.forTutors", tutorLinks)}
           {renderLinkColumn("footer.subjects", subjectLinks)}
         </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mt-10 pt-8 border-t">
+          {renderLinkColumn("footer.learn", learnLinks)}
+          {renderLinkColumn("footer.onlineClasses", onlineClassLinks)}
+          {renderLinkColumn("footer.oneOnOneTutors", tutorTypeLinks)}
+        </div>
       </div>
 
       {/* Support, Contacts, Social, Apps */}
