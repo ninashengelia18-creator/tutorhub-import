@@ -25,16 +25,7 @@ export function StatsBar() {
               transition={{ delay: i * 0.1 }}
               className="py-8 text-center border-r border-border/30 last:border-r-0"
             >
-              <div className="flex items-center justify-center gap-1">
-                <p className="text-2xl md:text-3xl font-bold tabular-nums text-foreground">{stat.value}</p>
-                {stat.isStar && (
-                  <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, j) => (
-                      <Star key={j} className="h-4 w-4 fill-warning text-warning" />
-                    ))}
-                  </div>
-                )}
-              </div>
+              <p className="text-2xl md:text-3xl font-bold tabular-nums text-foreground">{stat.value}</p>
               <p className="text-sm text-muted-foreground mt-1">{t(stat.labelKey)}</p>
             </motion.div>
           ))}
