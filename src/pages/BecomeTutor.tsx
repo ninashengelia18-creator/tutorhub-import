@@ -40,7 +40,6 @@ export default function BecomeTutor() {
     { qKey: "tutor.faq1.q", aKey: "tutor.faq1.a" },
     { qKey: "tutor.faq2.q", aKey: "tutor.faq2.a" },
     { qKey: "tutor.faq3.q", aKey: "tutor.faq3.a" },
-    { qKey: "tutor.faq4.q", aKey: "tutor.faq4.a" },
     { qKey: "tutor.faq5.q", aKey: "tutor.faq5.a" },
     { qKey: "tutor.faq6.q", aKey: "tutor.faq6.a" },
     { qKey: "tutor.faq7.q", aKey: "tutor.faq7.a" },
