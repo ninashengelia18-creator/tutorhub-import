@@ -190,6 +190,24 @@ export const translations: Record<Language, Record<string, string>> = {
     "privacy.section6.title": "6. Contact Us",
     "privacy.section6.body": "If you have questions about this Privacy Policy, please contact us at support@learneazy.org or through our FAQ page.",
 
+    // Cookie Policy
+    "cookie.title": "Cookie Policy",
+    "cookie.lastUpdated": "Last updated",
+    "cookie.section1.title": "1. What Are Cookies",
+    "cookie.section1.body": "Cookies are small text files that are placed on your device when you visit our website. They help us provide you with a better experience by remembering your preferences, analyzing site traffic, and enabling certain features.",
+    "cookie.section2.title": "2. How We Use Cookies",
+    "cookie.section2.body": "LearnEazy uses cookies for several purposes: to keep you signed in, to remember your language preference, to understand how you use our platform, and to improve our services. We also use cookies to deliver relevant content and measure the effectiveness of our communications.",
+    "cookie.section3.title": "3. Types of Cookies We Use",
+    "cookie.section3.body": "Essential cookies: Required for the website to function properly, including authentication and security. Functional cookies: Remember your preferences such as language and display settings. Analytics cookies: Help us understand how visitors interact with our website by collecting anonymous usage data. Marketing cookies: Used to deliver relevant advertisements and track campaign performance.",
+    "cookie.section4.title": "4. Third-Party Cookies",
+    "cookie.section4.body": "Some cookies are placed by third-party services that appear on our pages, such as analytics providers (e.g., Google Analytics), customer support tools (e.g., Tawk.to), and social media platforms. These third parties may use cookies to collect information about your online activities across different websites.",
+    "cookie.section5.title": "5. Managing Cookies",
+    "cookie.section5.body": "You can control and manage cookies through your browser settings. Most browsers allow you to refuse or delete cookies. However, please note that disabling cookies may affect the functionality of our website and limit your ability to use certain features.",
+    "cookie.section6.title": "6. Cookie Retention",
+    "cookie.section6.body": "Session cookies are temporary and are deleted when you close your browser. Persistent cookies remain on your device for a set period or until you delete them. We retain analytics data in anonymized form for up to 26 months.",
+    "cookie.section7.title": "7. Contact Us",
+    "cookie.section7.body": "If you have questions about our use of cookies, please contact us at support@learneazy.org or visit our FAQ page.",
+
     // Terms of Service
     "terms.title": "Terms of Service",
     "terms.lastUpdated": "Last updated",
@@ -704,6 +722,24 @@ export const translations: Record<Language, Record<string, string>> = {
     "privacy.section6.title": "6. დაგვიკავშირდით",
     "privacy.section6.body": "თუ გაქვთ შეკითხვები ამ კონფიდენციალურობის პოლიტიკის შესახებ, გთხოვთ დაგვიკავშირდეთ support@learneazy.org-ზე.",
 
+    // Cookie Policy
+    "cookie.title": "ქუქი-ფაილების პოლიტიკა",
+    "cookie.lastUpdated": "ბოლო განახლება",
+    "cookie.section1.title": "1. რა არის ქუქი-ფაილები",
+    "cookie.section1.body": "ქუქი-ფაილები არის მცირე ტექსტური ფაილები, რომლებიც თქვენს მოწყობილობაზე ინახება ჩვენი ვებსაიტის მონახულებისას. ისინი გვეხმარება უკეთესი გამოცდილების მიწოდებაში თქვენი პარამეტრების დამახსოვრებით, ტრაფიკის ანალიზით და გარკვეული ფუნქციების ჩართვით.",
+    "cookie.section2.title": "2. როგორ ვიყენებთ ქუქი-ფაილებს",
+    "cookie.section2.body": "LearnEazy იყენებს ქუქი-ფაილებს რამდენიმე მიზნით: ავტორიზაციის შესანარჩუნებლად, ენის პარამეტრის დასამახსოვრებლად, პლატფორმის გამოყენების გასაანალიზებლად და სერვისების გასაუმჯობესებლად.",
+    "cookie.section3.title": "3. ქუქი-ფაილების ტიპები",
+    "cookie.section3.body": "აუცილებელი ქუქი-ფაილები: საჭიროა ვებსაიტის გამართულად მუშაობისთვის. ფუნქციონალური ქუქი-ფაილები: ამახსოვრებს თქვენს პარამეტრებს. ანალიტიკური ქუქი-ფაილები: გვეხმარება გავიგოთ, როგორ იყენებენ ვიზიტორები ვებსაიტს. მარკეტინგული ქუქი-ფაილები: გამოიყენება შესაბამისი რეკლამის მისაწოდებლად.",
+    "cookie.section4.title": "4. მესამე მხარის ქუქი-ფაილები",
+    "cookie.section4.body": "ზოგიერთი ქუქი-ფაილი მესამე მხარის სერვისებიდან მოდის, როგორიცაა ანალიტიკის პროვაიდერები, მომხმარებლის მხარდაჭერის ინსტრუმენტები და სოციალური მედიის პლატფორმები.",
+    "cookie.section5.title": "5. ქუქი-ფაილების მართვა",
+    "cookie.section5.body": "თქვენ შეგიძლიათ ქუქი-ფაილების მართვა ბრაუზერის პარამეტრებიდან. გაითვალისწინეთ, რომ ქუქი-ფაილების გამორთვამ შეიძლება გავლენა მოახდინოს ვებსაიტის ფუნქციონალობაზე.",
+    "cookie.section6.title": "6. ქუქი-ფაილების შენახვის ვადა",
+    "cookie.section6.body": "სესიის ქუქი-ფაილები დროებითია და იშლება ბრაუზერის დახურვისას. მუდმივი ქუქი-ფაილები რჩება თქვენს მოწყობილობაზე განსაზღვრული პერიოდის განმავლობაში.",
+    "cookie.section7.title": "7. დაგვიკავშირდით",
+    "cookie.section7.body": "თუ გაქვთ შეკითხვები ქუქი-ფაილების გამოყენების შესახებ, დაგვიკავშირდეთ support@learneazy.org-ზე.",
+
     // Terms of Service
     "terms.title": "მომსახურების პირობები",
     "terms.lastUpdated": "ბოლო განახლება",
@@ -1208,6 +1244,24 @@ export const translations: Record<Language, Record<string, string>> = {
     "privacy.section5.body": "Вы имеете право в любое время получить доступ, обновить или удалить свою личную информацию через настройки аккаунта. Свяжитесь с нами по адресу support@learneazy.org.",
     "privacy.section6.title": "6. Свяжитесь с нами",
     "privacy.section6.body": "Если у вас есть вопросы об этой Политике конфиденциальности, свяжитесь с нами по адресу support@learneazy.org.",
+
+    // Cookie Policy
+    "cookie.title": "Политика использования файлов cookie",
+    "cookie.lastUpdated": "Последнее обновление",
+    "cookie.section1.title": "1. Что такое файлы cookie",
+    "cookie.section1.body": "Файлы cookie — это небольшие текстовые файлы, которые сохраняются на вашем устройстве при посещении нашего сайта. Они помогают нам обеспечить лучший опыт, запоминая ваши настройки, анализируя трафик и активируя определённые функции.",
+    "cookie.section2.title": "2. Как мы используем файлы cookie",
+    "cookie.section2.body": "LearnEazy использует файлы cookie для нескольких целей: для сохранения авторизации, запоминания языковых настроек, анализа использования платформы и улучшения наших услуг.",
+    "cookie.section3.title": "3. Типы используемых файлов cookie",
+    "cookie.section3.body": "Обязательные: необходимы для работы сайта. Функциональные: запоминают ваши настройки. Аналитические: помогают понять, как посетители используют сайт. Маркетинговые: используются для показа релевантной рекламы.",
+    "cookie.section4.title": "4. Файлы cookie третьих сторон",
+    "cookie.section4.body": "Некоторые файлы cookie устанавливаются сторонними сервисами, такими как поставщики аналитики, инструменты поддержки клиентов и платформы социальных сетей.",
+    "cookie.section5.title": "5. Управление файлами cookie",
+    "cookie.section5.body": "Вы можете управлять файлами cookie через настройки браузера. Обратите внимание, что отключение файлов cookie может повлиять на функциональность сайта.",
+    "cookie.section6.title": "6. Срок хранения файлов cookie",
+    "cookie.section6.body": "Сессионные файлы cookie являются временными и удаляются при закрытии браузера. Постоянные файлы cookie остаются на вашем устройстве в течение определённого периода.",
+    "cookie.section7.title": "7. Свяжитесь с нами",
+    "cookie.section7.body": "Если у вас есть вопросы об использовании файлов cookie, свяжитесь с нами по адресу support@learneazy.org.",
 
     // Terms of Service
     "terms.title": "Условия использования",
