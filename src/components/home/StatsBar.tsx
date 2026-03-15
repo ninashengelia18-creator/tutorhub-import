@@ -15,7 +15,7 @@ export function StatsBar() {
   return (
     <section className="border-y border-border/50 bg-secondary/50">
       <div className="container">
-        <div className="grid grid-cols-2 md:grid-cols-5">
+        <div className="grid grid-cols-2 md:grid-cols-4">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.labelKey}
