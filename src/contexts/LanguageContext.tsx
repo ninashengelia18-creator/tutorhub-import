@@ -36,7 +36,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.fileTooLarge": "File must be under 2 MB.",
 
     // Hero
-    "hero.badge": "Trusted by 50,000+ students",
+    "hero.badge": "Join 500+ students learning today",
     "hero.title1": "Find the perfect",
     "hero.title2": "tutor for you",
     "hero.subtitle": "Connect with expert tutors in any subject. Personalized 1-on-1 lessons that fit your schedule and learning goals.",
