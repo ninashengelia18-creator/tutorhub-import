@@ -160,15 +160,6 @@ export function Footer() {
                     <social.icon />
                   </a>
                 ))}
-                <a
-                  href="https://tiktok.com/@learneazy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="TikTok"
-                  className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors text-xs font-bold"
-                >
-                  TT
-                </a>
               </div>
             </div>
           </div>
