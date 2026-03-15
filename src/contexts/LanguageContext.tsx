@@ -21,6 +21,19 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.faq": "FAQ",
     "nav.login": "Log in",
     "nav.signup": "Sign up",
+    "nav.profile": "Profile",
+
+    // Profile Settings
+    "profile.settings.title": "Profile Settings",
+    "profile.settings.desc": "Update your display name and profile picture.",
+    "profile.settings.clickToUpload": "Click to upload a photo",
+    "profile.settings.avatarUpdated": "Avatar updated!",
+    "profile.settings.saved": "Profile saved!",
+    "profile.settings.saving": "Saving...",
+    "profile.settings.save": "Save Changes",
+    "profile.settings.error": "Error",
+    "profile.settings.imageOnly": "Please select an image file.",
+    "profile.settings.fileTooLarge": "File must be under 2 MB.",
 
     // Hero
     "hero.badge": "Trusted by 50,000+ students",
