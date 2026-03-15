@@ -933,7 +933,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.feat6.title": "მხარდაჭერა და საზოგადოება",
     "tutor.feat6.desc": "წვდომა სასწავლო რესურსებზე და რეპეტიტორების საზოგადოებაზე.",
     "tutor.howTitle": "როგორ მუშაობს",
-    "tutor.step1.title": "განაცხადი ონლაინ",
+    "tutor.step1.title": "გააკეთე ონლაინ განაცხადი",
     "tutor.step1.desc": "შეავსეთ მოკლე განაცხადი კვალიფიკაციითა და სასწავლო გამოცდილებით.",
     "tutor.step2.title": "ვერიფიკაცია",
     "tutor.step2.desc": "ჩვენი გუნდი განიხილავს განაცხადს და ამოწმებს კვალიფიკაციას 48 საათში.",
