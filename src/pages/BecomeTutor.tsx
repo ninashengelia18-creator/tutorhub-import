@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { DollarSign, Clock, TrendingUp, Users, Calendar, Monitor, CreditCard, Headphones, MessageSquareQuote, ArrowRight } from "lucide-react";
+import { DollarSign, Clock, TrendingUp, Users, Calendar, Monitor, Banknote, Headphones, MessageSquareQuote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -31,7 +31,7 @@ export default function BecomeTutor() {
     { icon: Users, key: "tutor.pf1" },
     { icon: Calendar, key: "tutor.pf2" },
     { icon: Monitor, key: "tutor.pf3" },
-    { icon: CreditCard, key: "tutor.pf4" },
+    { icon: Banknote, key: "tutor.pf4" },
     { icon: TrendingUp, key: "tutor.pf5" },
     { icon: Headphones, key: "tutor.pf6" },
   ];

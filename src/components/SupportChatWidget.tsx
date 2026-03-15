@@ -65,20 +65,20 @@ const chatTranslations: Record<ChatLang, {
 
 const faqAnswers: Record<ChatLang, Record<string, string>> = {
   en: {
-    "How do I book a lesson?": "Go to the tutor's profile, pick a time slot, and click 'Book Trial Lesson'. You can pay with TBC PayGe or BOG Pay.",
-    "What payment methods?": "We accept TBC PayGe and Bank of Georgia (BOG) Pay. All prices are in Georgian Lari (₾).",
+    "How do I book a lesson?": "Go to the tutor's profile, pick a time slot, and click 'Book Trial Lesson'. After booking, we'll send you payment details (IBAN) via email.",
+    "What payment methods?": "After you book a lesson, we'll send you our IBAN details via email or chat. All prices are in Georgian Lari (₾). You can also message us here for payment info!",
     "How do I find a tutor?": "Click 'Find Tutors' in the menu to browse tutors by subject, price, rating, and availability. You can also use the search bar!",
     "Can I get a refund?": "Yes! If you're not satisfied, request a refund within 24 hours of your lesson. Our team will review it promptly.",
   },
   ka: {
-    "როგორ დავჯავშნო გაკვეთილი?": "გადადით რეპეტიტორის პროფილზე, აირჩიეთ დრო და დააჭირეთ 'საცდელი გაკვეთილის დაჯავშნას'. გადაიხადეთ TBC PayGe ან BOG Pay-ით.",
-    "რა გადახდის მეთოდებია?": "ვიღებთ TBC PayGe და საქართველოს ბანკის (BOG) Pay გადახდებს. ყველა ფასი ქართულ ლარშია (₾).",
+    "როგორ დავჯავშნო გაკვეთილი?": "გადადით რეპეტიტორის პროფილზე, აირჩიეთ დრო და დააჭირეთ 'საცდელი გაკვეთილის დაჯავშნას'. დაჯავშნის შემდეგ გამოგიგზავნით გადახდის დეტალებს (IBAN) ელ-ფოსტით.",
+    "რა გადახდის მეთოდებია?": "გაკვეთილის დაჯავშნის შემდეგ გამოგიგზავნით IBAN დეტალებს ელ-ფოსტით ან ჩატით. ყველა ფასი ქართულ ლარშია (₾). ასევე შეგიძლიათ აქვე მოგვწეროთ გადახდის ინფორმაციისთვის!",
     "როგორ ვიპოვო რეპეტიტორი?": "დააჭირეთ 'რეპეტიტორები' მენიუში და მოძებნეთ საგნის, ფასის, რეიტინგისა და ხელმისაწვდომობის მიხედვით. შეგიძლიათ საძიებო ზოლიც გამოიყენოთ!",
     "შემიძლია თანხის დაბრუნება?": "დიახ! თუ კმაყოფილი არ ხართ, მოითხოვეთ თანხის დაბრუნება გაკვეთილიდან 24 საათში.",
   },
   ru: {
-    "Как забронировать урок?": "Перейдите в профиль репетитора, выберите время и нажмите 'Забронировать пробный урок'. Оплата через TBC PayGe или BOG Pay.",
-    "Какие способы оплаты?": "Мы принимаем TBC PayGe и Bank of Georgia (BOG) Pay. Все цены указаны в грузинских лари (₾).",
+    "Как забронировать урок?": "Перейдите в профиль репетитора, выберите время и нажмите 'Забронировать пробный урок'. После бронирования мы отправим вам реквизиты (IBAN) по email.",
+    "Какие способы оплаты?": "После бронирования мы отправим вам реквизиты (IBAN) по электронной почте или в чате. Все цены в грузинских лари (₾). Напишите нам здесь для получения информации об оплате!",
     "Как найти репетитора?": "Нажмите 'Репетиторы' в меню и ищите по предмету, цене, рейтингу и доступности. Также можете использовать строку поиска!",
     "Могу ли я вернуть деньги?": "Да! Если вы недовольны, запросите возврат в течение 24 часов после урока.",
   },

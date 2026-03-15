@@ -26,9 +26,8 @@ const faqData: Record<Language, { category: string; questions: { q: string; a: s
     {
       category: "Payments",
       questions: [
-        { q: "What payment methods are accepted?", a: "We accept TBC PayGe and Bank of Georgia (BOG) Pay. All prices are in Georgian Lari (₾)." },
+        { q: "How do I pay for lessons?", a: "After booking, we'll send you payment details (IBAN) via email or chat. All prices are in Georgian Lari (₾). You can also message us directly through the support chat to get payment information." },
         { q: "Can I get a refund?", a: "If you're not satisfied, request a refund within 24 hours. Our support team will review your request." },
-        { q: "How does billing work?", a: "You pay per lesson in ₾. Payment is processed at booking and held securely until the lesson is completed." },
       ],
     },
     {
@@ -68,9 +67,8 @@ const faqData: Record<Language, { category: string; questions: { q: string; a: s
     {
       category: "გადახდები",
       questions: [
-        { q: "რა გადახდის მეთოდებია?", a: "ვიღებთ TBC PayGe და საქართველოს ბანკის (BOG) Pay გადახდებს. ყველა ფასი ქართულ ლარშია (₾)." },
+        { q: "როგორ გადავიხადო გაკვეთილებისთვის?", a: "დაჯავშნის შემდეგ გამოგიგზავნით გადახდის დეტალებს (IBAN) ელ-ფოსტით ან ჩატით. ყველა ფასი ქართულ ლარშია (₾). ასევე შეგიძლიათ მოგვწეროთ ჩატში გადახდის ინფორმაციისთვის." },
         { q: "შემიძლია თანხის დაბრუნება?", a: "თუ კმაყოფილი არ ხართ, მოითხოვეთ თანხის დაბრუნება 24 საათის განმავლობაში." },
-        { q: "როგორ მუშაობს ანგარიშსწორება?", a: "იხდით გაკვეთილის მიხედვით ლარში (₾). გადახდა მუშავდება დაჯავშნისას." },
       ],
     },
     {
@@ -110,9 +108,8 @@ const faqData: Record<Language, { category: string; questions: { q: string; a: s
     {
       category: "Оплата",
       questions: [
-        { q: "Какие способы оплаты принимаются?", a: "Мы принимаем TBC PayGe и Bank of Georgia (BOG) Pay. Все цены указаны в грузинских лари (₾)." },
+        { q: "Как оплатить уроки?", a: "После бронирования мы отправим вам реквизиты для оплаты (IBAN) по электронной почте или в чате. Все цены указаны в грузинских лари (₾). Вы также можете написать нам в чат поддержки для получения информации об оплате." },
         { q: "Могу ли я вернуть деньги?", a: "Если вы недовольны, запросите возврат в течение 24 часов после урока." },
-        { q: "Как работает оплата?", a: "Вы платите за каждый урок в ₾. Оплата обрабатывается при бронировании." },
       ],
     },
     {
