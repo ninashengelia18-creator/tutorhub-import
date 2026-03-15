@@ -40,10 +40,10 @@ const App = () => (
               <Route path="/search" element={<TutorSearch />} />
               <Route path="/tutor/:id" element={<TutorProfile />} />
               <Route path="/booking/:id" element={<Booking />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/classroom" element={<Classroom />} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/classroom" element={<ProtectedRoute><Classroom /></ProtectedRoute>} />
               <Route path="/ai-practice" element={<AIPractice />} />
-              <Route path="/messages" element={<Messages />} />
+              <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/for-business" element={<ForBusiness />} />
               <Route path="/become-tutor" element={<BecomeTutor />} />
