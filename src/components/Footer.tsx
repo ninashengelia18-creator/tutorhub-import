@@ -59,10 +59,6 @@ export function Footer() {
     { labelKey: "footer.onlineSpanishClasses", href: "/search?subject=Spanish" },
     { labelKey: "footer.onlineFrenchClasses", href: "/search?subject=French" },
     { labelKey: "footer.onlineGermanClasses", href: "/search?subject=German" },
-    { labelKey: "footer.onlineChineseClasses", href: "/search?subject=Chinese" },
-    { labelKey: "footer.onlineGeorgianClasses", href: "/search?subject=Georgian" },
-    { labelKey: "footer.onlineTurkishClasses", href: "/search?subject=Turkish" },
-    { labelKey: "footer.onlinePortugueseClasses", href: "/search?subject=Portuguese" },
   ];
 
   const tutorTypeLinks = [
