@@ -652,7 +652,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // CTA
     "cta.title": "მზად ხართ სწავლის დასაწყებად?",
-    "cta.subtitle": "შეუერთდით ათასობით სტუდენტს, რომლებიც უკვე სწავლობენ LearnEazy-ით. პირველი საცდელი გაკვეთილი უფასოა.",
+    "cta.subtitle": "შეუერთდით ასობით სტუდენტს, რომლებიც უკვე სწავლობენ LearnEazy-ით. პირველი საცდელი გაკვეთილი უფასოა.",
     "cta.button": "რეპეტიტორის პოვნა",
 
     // Footer
