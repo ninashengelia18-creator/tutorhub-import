@@ -46,7 +46,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.nextLessonDesc": "Mathematics with Nino B.",
     "hero.joinNow": "Join Now",
 
-    "brand.tagline": "Learn Smarter, Not Harder",
+    "brand.tagline": "Global Tutors. Personal Learning.",
 
     // Homepage
     "home.heroTitle": "Find the perfect tutor & start learning today",
