@@ -253,18 +253,18 @@ export default function TutorApply() {
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.subjects")} *</Label>
                   <div className="flex flex-wrap gap-2">
-                    {subjects.map((sub) => (
+                    {subjectKeys.map((sub) => (
                       <button
-                        key={sub}
+                        key={sub.value}
                         type="button"
-                        onClick={() => toggleSubject(sub)}
+                        onClick={() => toggleSubject(sub.value)}
                         className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                          selectedSubjects.includes(sub)
+                          selectedSubjects.includes(sub.value)
                             ? "bg-primary text-primary-foreground border-primary"
                             : "bg-background text-foreground border-border hover:border-primary"
                         }`}
                       >
-                        {sub}
+                        {t(sub.key)}
                       </button>
                     ))}
                   </div>
