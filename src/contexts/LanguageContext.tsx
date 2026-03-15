@@ -921,7 +921,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.nextLessonDesc": "Математика с Нино Б.",
     "hero.joinNow": "Войти",
 
-    "brand.tagline": "Учись умнее, расти быстрее",
+    "brand.tagline": "Learn Smarter, Not Harder",
 
     // Homepage
     "home.heroTitle": "Найди идеального репетитора и начни учиться сегодня",
