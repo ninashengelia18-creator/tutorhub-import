@@ -1041,6 +1041,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.apply.availability": "ყოველკვირეული ხელმისაწვდომობა",
     "tutor.apply.selectAvail": "აირჩიეთ ხელმისაწვდომობა",
     "tutor.apply.timezone": "დროის ზონა",
+    "tutor.apply.selectTimezone": "აირჩიეთ დროის ზონა",
     "tutor.apply.aboutTeaching": "სწავლების ფილოსოფია",
     "tutor.apply.aboutTeachingPlaceholder": "აღწერეთ როგორ მიუდგებით სწავლებას...",
     "tutor.apply.terms": "ვეთანხმები მომსახურების პირობებს და ვადასტურებ ინფორმაციის სიზუსტეს.",
