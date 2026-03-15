@@ -119,7 +119,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // CTA
     "cta.title": "Ready to start learning?",
-    "cta.subtitle": "Join thousands of students already learning with LearnEazy. Your first trial lesson is free.",
+    "cta.subtitle": "Join hundreds of students already learning with LearnEazy. Your first trial lesson is free.",
     "cta.button": "Find a Tutor",
 
     // Footer
