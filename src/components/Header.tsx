@@ -36,7 +36,7 @@ export function Header() {
           <Link to="/" className="flex items-center gap-1">
             <img src={logo} alt="LearnEazy" className="h-[70px] w-auto" loading="eager" decoding="async" />
           </Link>
-          <span className="hidden lg:inline text-sm font-bold text-primary border-l pl-3">Learn Smarter, Not Harder</span>
+          <span className="hidden lg:inline text-sm italic text-primary/80 border-l pl-3 display-font tracking-normal">{t("brand.tagline")}</span>
         </div>
 
         {/* Desktop nav */}
