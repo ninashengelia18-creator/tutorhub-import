@@ -806,6 +806,19 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.faq": "FAQ",
     "nav.login": "Войти",
     "nav.signup": "Регистрация",
+    "nav.profile": "Профиль",
+
+    // Profile Settings
+    "profile.settings.title": "Настройки профиля",
+    "profile.settings.desc": "Обновите имя и фото профиля.",
+    "profile.settings.clickToUpload": "Нажмите, чтобы загрузить фото",
+    "profile.settings.avatarUpdated": "Аватар обновлён!",
+    "profile.settings.saved": "Профиль сохранён!",
+    "profile.settings.saving": "Сохранение...",
+    "profile.settings.save": "Сохранить изменения",
+    "profile.settings.error": "Ошибка",
+    "profile.settings.imageOnly": "Выберите файл изображения.",
+    "profile.settings.fileTooLarge": "Файл должен быть менее 2 МБ.",
 
     // Hero
     "hero.badge": "Доверяют 50 000+ студентов",
