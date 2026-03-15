@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 const stats = [
   { value: "150+", labelKey: "stats.tutors" },
