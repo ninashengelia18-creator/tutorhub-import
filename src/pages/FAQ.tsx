@@ -26,9 +26,8 @@ const faqData: Record<Language, { category: string; questions: { q: string; a: s
     {
       category: "Payments",
       questions: [
-        { q: "What payment methods are accepted?", a: "We accept TBC PayGe and Bank of Georgia (BOG) Pay. All prices are in Georgian Lari (₾)." },
+        { q: "How do I pay for lessons?", a: "After booking, we'll send you payment details (IBAN) via email or chat. All prices are in Georgian Lari (₾). You can also message us directly through the support chat to get payment information." },
         { q: "Can I get a refund?", a: "If you're not satisfied, request a refund within 24 hours. Our support team will review your request." },
-        { q: "How does billing work?", a: "You pay per lesson in ₾. Payment is processed at booking and held securely until the lesson is completed." },
       ],
     },
     {
