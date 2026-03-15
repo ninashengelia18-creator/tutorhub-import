@@ -299,9 +299,9 @@ export default function TutorApply() {
                   <Select value={availability} onValueChange={setAvailability}>
                     <SelectTrigger><SelectValue placeholder={t("tutor.apply.selectAvail")} /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="part-time">Part-time (1-15 hrs/week)</SelectItem>
-                      <SelectItem value="full-time">Full-time (15-30 hrs/week)</SelectItem>
-                      <SelectItem value="flexible">Flexible (30+ hrs/week)</SelectItem>
+                      <SelectItem value="part-time">{t("tutor.apply.availPartTime")}</SelectItem>
+                      <SelectItem value="full-time">{t("tutor.apply.availFullTime")}</SelectItem>
+                      <SelectItem value="flexible">{t("tutor.apply.availFlexible")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
