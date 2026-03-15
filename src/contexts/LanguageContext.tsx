@@ -592,6 +592,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.needHelp": "გჭირდებათ დახმარება? ეწვიეთ FAQ-ს",
     "footer.contacts": "კონტაქტი",
     "footer.location": "საქართველო, თბილისი",
+    "footer.social": "სოციალური ქსელები",
+    "footer.apps": "აპლიკაციები",
 
     // Search
     "search.placeholder": "მოძებნეთ რეპეტიტორი სახელით ან საგნით...",
