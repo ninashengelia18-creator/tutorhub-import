@@ -141,6 +141,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.needHelp": "Need any help? Visit our FAQ",
     "footer.contacts": "Contacts",
     "footer.location": "Georgia, Tbilisi",
+    "footer.social": "Social",
+    "footer.apps": "Apps",
 
     // Search
     "search.placeholder": "Search tutors by name or subject...",
