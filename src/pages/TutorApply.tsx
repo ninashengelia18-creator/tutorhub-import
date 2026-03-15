@@ -268,7 +268,7 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.otherLangs")}</Label>
-                  <Input value={otherLanguages} onChange={(e) => setOtherLanguages(e.target.value)} placeholder="Georgian, Russian" />
+                  <Input value={otherLanguages} onChange={(e) => setOtherLanguages(e.target.value)} />
                 </div>
               </div>
             )}
