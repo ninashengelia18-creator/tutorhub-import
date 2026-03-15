@@ -115,7 +115,7 @@ export function Footer() {
       {/* Support, Contacts, Social, Apps */}
       <div className="border-t border-border/50">
         <div className="container py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.support")}</h4>
               <Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">
