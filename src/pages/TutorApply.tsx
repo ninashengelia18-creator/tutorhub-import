@@ -25,12 +25,14 @@ const subjectKeys = [
   { value: "Computer Science", key: "tutor.apply.subj.computerScience" },
   { value: "Business", key: "tutor.apply.subj.business" },
   { value: "Music", key: "tutor.apply.subj.music" },
-  { value: "Art", key: "tutor.apply.subj.art" },
   { value: "French", key: "tutor.apply.subj.french" },
   { value: "German", key: "tutor.apply.subj.german" },
   { value: "Spanish", key: "tutor.apply.subj.spanish" },
   { value: "Georgian", key: "tutor.apply.subj.georgian" },
   { value: "Russian", key: "tutor.apply.subj.russian" },
+  { value: "National Exams", key: "tutor.apply.subj.nationalExams" },
+  { value: "IELTS", key: "tutor.apply.subj.ielts" },
+  { value: "TOEFL", key: "tutor.apply.subj.toefl" },
 ];
 
 const experienceOptions = ["0-1 years", "1-3 years", "3-5 years", "5-10 years", "10+ years"];
