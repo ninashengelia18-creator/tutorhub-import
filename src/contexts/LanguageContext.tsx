@@ -140,7 +140,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.support": "Support",
     "footer.needHelp": "Need any help? Visit our FAQ",
     "footer.contacts": "Contacts",
-    "footer.location": "548 Market St, Suite 36879, San Francisco, CA 94104",
+    "footer.location": "1209 N Orange St, Wilmington, DE 19801",
     "footer.social": "Social",
     "footer.privacyPolicy": "Privacy Policy",
     "footer.termsOfService": "Terms of Service",
