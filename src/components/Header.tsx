@@ -46,9 +46,9 @@ export function Header() {
       <div className="container flex h-18 items-center justify-between py-2">
         {/* Logo + Tagline */}
         <div className="flex items-center gap-4">
-          <Link to="/" className="flex flex-col items-center gap-0">
-            <img src={logo} alt="LearnEazy" className="h-[90px] w-auto" loading="eager" decoding="async" />
-            <span className="text-xs font-bold text-foreground tracking-widest uppercase -mt-2">LearnEazy</span>
+          <Link to="/" className="flex items-center gap-3">
+            <img src={logo} alt="LearnEazy" className="h-[70px] w-auto" loading="eager" decoding="async" />
+            <span className="text-xl font-bold text-foreground tracking-wide">LearnEazy</span>
           </Link>
           <span className="hidden lg:inline text-sm font-semibold text-muted-foreground border-l border-border pl-4 tracking-wide">
             Global Tutors. Personal Learning.
