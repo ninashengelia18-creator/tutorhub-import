@@ -326,7 +326,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.pf1": "Steady stream of new students",
     "tutor.pf2": "Smart calendar",
     "tutor.pf3": "Interactive classroom",
-    "tutor.pf4": "Convenient payment methods",
+    "tutor.pf4": "Easy bank transfer payments",
     "tutor.pf5": "Professional development webinars",
     "tutor.pf6": "Supportive tutor community",
     "tutor.testimonialQuote": "LearnEazy allowed me to make a living without leaving home!",
