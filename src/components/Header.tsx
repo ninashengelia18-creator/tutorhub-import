@@ -1,9 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/learneazy-logo.png";
 
 const langLabels: Record<Language, string> = { en: "EN", ka: "ქარ", ru: "РУ" };
@@ -19,7 +20,14 @@ const navLinks = [
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { lang, setLang, t } = useLanguage();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -66,12 +74,29 @@ export function Header() {
             ))}
           </div>
 
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/login">{t("nav.login")}</Link>
-          </Button>
-          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 border-0" asChild>
-            <Link to="/search">{t("nav.signup")}</Link>
-          </Button>
+          {user ? (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/dashboard">
+                  <LayoutDashboard className="h-4 w-4 mr-1" />
+                  {t("auth.dashboard")}
+                </Link>
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4 mr-1" />
+                {t("auth.logout")}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/login">{t("nav.login")}</Link>
+              </Button>
+              <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 border-0" asChild>
+                <Link to="/signup">{t("nav.signup")}</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -121,12 +146,27 @@ export function Header() {
                 </Link>
               ))}
               <div className="flex gap-3 pt-2 border-t">
-                <Button variant="ghost" size="sm" className="flex-1" asChild>
-                  <Link to="/login">{t("nav.login")}</Link>
-                </Button>
-                <Button size="sm" className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 border-0" asChild>
-                  <Link to="/search">{t("nav.signup")}</Link>
-                </Button>
+                {user ? (
+                  <>
+                    <Button variant="ghost" size="sm" className="flex-1" asChild>
+                      <Link to="/dashboard" onClick={() => setMobileOpen(false)}>
+                        {t("auth.dashboard")}
+                      </Link>
+                    </Button>
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => { handleSignOut(); setMobileOpen(false); }}>
+                      {t("auth.logout")}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" className="flex-1" asChild>
+                      <Link to="/login" onClick={() => setMobileOpen(false)}>{t("nav.login")}</Link>
+                    </Button>
+                    <Button size="sm" className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 border-0" asChild>
+                      <Link to="/signup" onClick={() => setMobileOpen(false)}>{t("nav.signup")}</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>

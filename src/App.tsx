@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import TutorSearch from "./pages/TutorSearch.tsx";
@@ -17,33 +18,43 @@ import FAQ from "./pages/FAQ.tsx";
 import ForBusiness from "./pages/ForBusiness.tsx";
 import BecomeTutor from "./pages/BecomeTutor.tsx";
 import TutorApply from "./pages/TutorApply.tsx";
+import Login from "./pages/Login.tsx";
+import Signup from "./pages/Signup.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/search" element={<TutorSearch />} />
-            <Route path="/tutor/:id" element={<TutorProfile />} />
-            <Route path="/booking/:id" element={<Booking />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/classroom" element={<Classroom />} />
-            <Route path="/ai-practice" element={<AIPractice />} />
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/for-business" element={<ForBusiness />} />
-            <Route path="/become-tutor" element={<BecomeTutor />} />
-            <Route path="/tutor-apply" element={<TutorApply />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/search" element={<TutorSearch />} />
+              <Route path="/tutor/:id" element={<TutorProfile />} />
+              <Route path="/booking/:id" element={<Booking />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/classroom" element={<Classroom />} />
+              <Route path="/ai-practice" element={<AIPractice />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/for-business" element={<ForBusiness />} />
+              <Route path="/become-tutor" element={<BecomeTutor />} />
+              <Route path="/tutor-apply" element={<TutorApply />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
     </LanguageProvider>
   </QueryClientProvider>
 );
