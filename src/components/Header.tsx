@@ -50,8 +50,10 @@ export function Header() {
             <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
             <span className="text-foreground tracking-[0.25em] uppercase" style={{ fontFamily: "'Playfair Display', serif", fontSize: '16px', fontWeight: 600 }}>LearnEazy</span>
           </Link>
-          <span className="hidden lg:inline text-sm font-semibold text-muted-foreground border-l border-border pl-4 tracking-wide">
-            Global Tutors. Personal Learning.
+          <span className="hidden lg:flex flex-col text-sm font-semibold text-muted-foreground border-l border-border pl-4 tracking-wide leading-tight">
+            {t("brand.tagline").split(". ").map((line, i, arr) => (
+              <span key={i}>{line}{i < arr.length - 1 ? "." : ""}</span>
+            ))}
           </span>
         </div>
 
