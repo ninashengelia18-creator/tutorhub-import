@@ -381,7 +381,7 @@ export default function TutorProfile() {
                       className="rounded-xl border bg-card p-4 hover:border-primary/40 transition-colors group"
                     >
                       <div className="flex items-center gap-3 mb-2">
-                        <img src={st.photo} alt={st.name} className="h-10 w-10 rounded-full object-cover" />
+                        <img src={st.photo} alt={st.name} className="h-10 w-10 rounded-full object-cover" loading="lazy" decoding="async" />
                         <div>
                           <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{st.name}</p>
                           <div className="flex items-center gap-1">

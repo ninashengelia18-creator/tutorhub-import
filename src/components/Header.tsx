@@ -34,7 +34,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-1">
-            <img src={logo} alt="LearnEazy" className="h-[70px] w-auto" />
+            <img src={logo} alt="LearnEazy" className="h-[70px] w-auto" loading="eager" decoding="async" />
           </Link>
           <span className="hidden lg:inline text-sm font-bold text-primary border-l pl-3">Learn Smarter, Not Harder</span>
         </div>
