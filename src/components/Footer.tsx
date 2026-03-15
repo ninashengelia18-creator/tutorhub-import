@@ -59,10 +59,6 @@ export function Footer() {
     { labelKey: "footer.onlineSpanishClasses", href: "/search?subject=Spanish" },
     { labelKey: "footer.onlineFrenchClasses", href: "/search?subject=French" },
     { labelKey: "footer.onlineGermanClasses", href: "/search?subject=German" },
-    { labelKey: "footer.onlineChineseClasses", href: "/search?subject=Chinese" },
-    { labelKey: "footer.onlineGeorgianClasses", href: "/search?subject=Georgian" },
-    { labelKey: "footer.onlineTurkishClasses", href: "/search?subject=Turkish" },
-    { labelKey: "footer.onlinePortugueseClasses", href: "/search?subject=Portuguese" },
   ];
 
   const tutorTypeLinks = [
@@ -70,10 +66,7 @@ export function Footer() {
     { labelKey: "footer.spanishTutors", href: "/search?subject=Spanish" },
     { labelKey: "footer.frenchTutors", href: "/search?subject=French" },
     { labelKey: "footer.germanTutors", href: "/search?subject=German" },
-    { labelKey: "footer.arabicTutors", href: "/search?subject=Arabic" },
-    { labelKey: "footer.georgianTutors", href: "/search?subject=Georgian" },
-    { labelKey: "footer.chineseTutors", href: "/search?subject=Chinese" },
-    { labelKey: "footer.portugueseTutors", href: "/search?subject=Portuguese" },
+    { labelKey: "footer.mathTutors", href: "/search?subject=Mathematics" },
     { labelKey: "footer.mathTutors", href: "/search?subject=Mathematics" },
   ];
 
