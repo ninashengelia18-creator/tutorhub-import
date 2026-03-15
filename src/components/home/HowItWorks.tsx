@@ -18,7 +18,7 @@ export function HowItWorks() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="text-3xl md:text-4xl font-bold mb-12"
+        className="text-3xl md:text-4xl font-bold mb-12 text-foreground"
       >
         {t("home.howTitle")}
       </motion.h2>
@@ -31,13 +31,13 @@ export function HowItWorks() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.15 }}
-            className={`grid md:grid-cols-2 gap-8 items-center ${i % 2 === 1 ? "md:direction-rtl" : ""}`}
+            className="grid md:grid-cols-2 gap-8 items-center"
           >
             <div className={`space-y-4 ${i % 2 === 1 ? "md:order-2" : ""}`}>
-              <div className="h-12 w-12 rounded-full bg-foreground text-background flex items-center justify-center font-bold text-lg">
+              <div className="h-12 w-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">
                 {step.num}
               </div>
-              <h3 className="text-xl font-bold">{t(step.titleKey)}</h3>
+              <h3 className="text-xl font-bold text-foreground">{t(step.titleKey)}</h3>
               <p className="text-muted-foreground leading-relaxed">{t(step.descKey)}</p>
             </div>
             {step.image && (
@@ -45,7 +45,7 @@ export function HowItWorks() {
                 <img
                   src={step.image}
                   alt={t(step.titleKey)}
-                  className="rounded-2xl w-full object-cover shadow-md max-h-[300px]"
+                  className="rounded-2xl w-full object-cover max-h-[300px] border border-border card-glow"
                   loading="lazy"
                   decoding="async"
                 />

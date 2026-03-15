@@ -15,7 +15,7 @@ export function BottomCta() {
         <p className="text-primary-foreground/70 mb-6 max-w-md mx-auto">
           {t("cta.subtitle")}
         </p>
-        <Button size="lg" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold" asChild>
+        <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold rounded-full px-8" asChild>
           <Link to="/search">{t("cta.button")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
         </Button>
       </div>

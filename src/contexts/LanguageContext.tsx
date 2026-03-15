@@ -46,7 +46,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.nextLessonDesc": "Mathematics with Nino B.",
     "hero.joinNow": "Join Now",
 
-    "brand.tagline": "Learn Smarter, Not Harder",
+    "brand.tagline": "Global Tutors. Personal Learning.",
 
     // Homepage
     "home.heroTitle": "Find the perfect tutor & start learning today",
@@ -564,7 +564,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.nextLessonDesc": "მათემატიკა ნინო ბ.-თან",
     "hero.joinNow": "შესვლა",
 
-    "brand.tagline": "Learn Smarter, Not Harder",
+    "brand.tagline": "Global Tutors. Personal Learning.",
 
     // Homepage
     "home.heroTitle": "იპოვე იდეალური რეპეტიტორი და დაიწყე სწავლა დღესვე",
@@ -1087,7 +1087,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "hero.nextLessonDesc": "Математика с Нино Б.",
     "hero.joinNow": "Войти",
 
-    "brand.tagline": "Learn Smarter, Not Harder",
+    "brand.tagline": "Global Tutors. Personal Learning.",
 
     // Homepage
     "home.heroTitle": "Найди идеального репетитора и начни учиться сегодня",

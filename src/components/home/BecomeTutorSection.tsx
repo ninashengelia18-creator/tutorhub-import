@@ -17,27 +17,27 @@ export function BecomeTutorSection() {
           viewport={{ once: true }}
           className="space-y-6"
         >
-          <h2 className="text-3xl md:text-4xl font-bold">{t("home.becomeTutorTitle")}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">{t("home.becomeTutorTitle")}</h2>
           <p className="text-muted-foreground leading-relaxed">{t("home.becomeTutorDesc")}</p>
           <ul className="space-y-3">
             <li className="flex items-center gap-3">
               <Users className="h-5 w-5 text-primary shrink-0" />
-              <span className="font-medium">{t("home.tutorBenefit1")}</span>
+              <span className="font-medium text-foreground">{t("home.tutorBenefit1")}</span>
             </li>
             <li className="flex items-center gap-3">
               <Briefcase className="h-5 w-5 text-primary shrink-0" />
-              <span className="font-medium">{t("home.tutorBenefit2")}</span>
+              <span className="font-medium text-foreground">{t("home.tutorBenefit2")}</span>
             </li>
             <li className="flex items-center gap-3">
               <Shield className="h-5 w-5 text-primary shrink-0" />
-              <span className="font-medium">{t("home.tutorBenefit3")}</span>
+              <span className="font-medium text-foreground">{t("home.tutorBenefit3")}</span>
             </li>
           </ul>
           <div className="flex gap-3 flex-wrap">
-            <Button size="lg" className="bg-foreground text-background hover:bg-foreground/90 font-semibold" asChild>
+            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary-hover font-semibold rounded-full px-8" asChild>
               <Link to="/become-tutor">{t("home.becomeTutorBtn")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline" className="border-foreground/30 text-foreground hover:bg-foreground/10 rounded-full" asChild>
               <Link to="/become-tutor">{t("home.howPlatformWorks")}</Link>
             </Button>
           </div>
@@ -52,7 +52,7 @@ export function BecomeTutorSection() {
           <img
             src={tutorImage}
             alt="Become a tutor"
-            className="rounded-2xl w-full object-cover shadow-md max-h-[400px]"
+            className="rounded-2xl w-full object-cover max-h-[400px] border border-border card-glow"
             loading="lazy"
             decoding="async"
           />

@@ -1,52 +1,69 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import heroImage from "@/assets/hero-students.jpg";
 
 export function HeroSection() {
   const { t } = useLanguage();
 
   return (
-    <section className="relative" style={{ backgroundColor: "hsl(265, 50%, 96%)" }}>
-      <div className="container py-16 md:py-24">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+    <section className="relative overflow-hidden">
+      {/* Abstract gradient background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-secondary to-background" />
+        <div className="absolute top-1/4 -right-20 w-[500px] h-[500px] rounded-full bg-primary/10 blur-[120px]" />
+        <div className="absolute bottom-0 -left-20 w-[400px] h-[400px] rounded-full bg-primary/8 blur-[100px]" />
+        <div className="absolute top-10 left-1/3 w-[300px] h-[300px] rounded-full bg-primary/5 blur-[80px]" />
+      </div>
+
+      <div className="container relative py-24 md:py-32">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-3xl mx-auto text-center space-y-8"
+        >
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-sm text-primary font-medium"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold leading-[1.1] tracking-tight text-foreground">
-              {t("home.heroTitle")}
-            </h1>
+            <Sparkles className="h-4 w-4" />
+            {t("hero.badge")}
+          </motion.div>
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight text-foreground">
+            {t("home.heroTitle")}
+          </h1>
+
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            {t("hero.subtitle")}
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button
               size="lg"
-              className="bg-foreground text-background hover:bg-foreground/90 font-semibold text-base px-8 rounded-xl"
+              className="bg-primary text-primary-foreground hover:bg-primary-hover font-semibold text-base px-8 rounded-full shadow-lg shadow-primary/25"
               asChild
             >
               <Link to="/search">
-                {t("home.heroCta")} <ArrowRight className="ml-2 h-4 w-4" />
+                {t("cta.button")} <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="hidden md:block"
-          >
-            <img
-              src={heroImage}
-              alt="Students learning online"
-              className="rounded-2xl w-full object-cover shadow-lg max-h-[400px]"
-              loading="eager"
-              decoding="async"
-            />
-          </motion.div>
-        </div>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-foreground/30 text-foreground hover:bg-foreground/10 font-semibold text-base px-8 rounded-full"
+              asChild
+            >
+              <Link to="/become-tutor">
+                {t("home.becomeTutorBtn")}
+              </Link>
+            </Button>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
