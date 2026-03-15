@@ -1,163 +1,294 @@
-import { Calendar, Clock, Video, BookOpen, MessageSquare, TrendingUp, Brain, CheckCircle, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Clock, Video, MoreHorizontal, TrendingUp, Monitor, ChevronRight, BookOpen, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent } from "@/components/ui/card";
 
-const upcomingLessons = [
-  { id: 1, tutor: "Nino Beridze", subject: "Mathematics", date: "Today", time: "14:00 - 15:00", status: "upcoming" },
-  { id: 2, tutor: "Luka Tsiklauri", subject: "Programming", date: "Tomorrow", time: "10:00 - 11:00", status: "upcoming" },
-  { id: 3, tutor: "Ana Melikishvili", subject: "English", date: "Mar 19", time: "16:00 - 17:00", status: "scheduled" },
-];
-
-const completedLessons = [
-  { id: 4, tutor: "Giorgi Kharadze", subject: "Physics", date: "Mar 14", time: "11:00 - 12:00", insight: "Strong grasp of Newton's laws. Focus next on energy conservation." },
-  { id: 5, tutor: "Nino Beridze", subject: "Mathematics", date: "Mar 12", time: "14:00 - 15:00", insight: "Great progress on derivatives. Ready for integration techniques." },
-  { id: 6, tutor: "Ana Melikishvili", subject: "English", date: "Mar 10", time: "16:00 - 17:00", insight: "Fluency improving. Work on conditional sentences and subjunctive mood." },
-];
-
-const aiInsights = [
-  { title: "Weekly Progress", description: "You completed 3 lessons this week — 50% more than last week!", type: "progress" },
-  { title: "Strength", description: "Mathematics: Algebra skills are above average for your level.", type: "strength" },
-  { title: "Recommendation", description: "Schedule an extra English session to reinforce conditionals before your IELTS.", type: "recommendation" },
-];
-
-const recentActivity = [
-  { action: "Completed lesson with Giorgi K.", time: "2 hours ago", type: "lesson" },
-  { action: "AI Practice: Solved 5 physics problems", time: "Yesterday", type: "practice" },
-  { action: "New message from Ana M.", time: "Yesterday", type: "message" },
-];
+interface Booking {
+  id: string;
+  tutor_name: string;
+  tutor_avatar_url: string | null;
+  subject: string;
+  duration_minutes: number;
+  lesson_date: string;
+  start_time: string;
+  end_time: string;
+  price_amount: number;
+  currency: string;
+  status: string;
+  is_trial: boolean;
+}
 
 export default function Dashboard() {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const displayName = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Student";
+
+  useEffect(() => {
+    async function fetchBookings() {
+      const { data } = await supabase
+        .from("bookings")
+        .select("*")
+        .order("lesson_date", { ascending: true });
+      setBookings(data || []);
+      setLoading(false);
+    }
+    fetchBookings();
+  }, []);
+
+  const today = new Date().toISOString().split("T")[0];
+  const upcomingBookings = bookings.filter(b => b.lesson_date >= today && b.status === "confirmed");
+  const nextBooking = upcomingBookings[0];
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr + "T00:00:00");
+    const now = new Date();
+    const todayStr = now.toISOString().split("T")[0];
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split("T")[0];
+
+    if (dateStr === todayStr) return "Today";
+    if (dateStr === tomorrowStr) return "Tomorrow";
+    return date.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+  };
+
+  const formatTime = (time: string) => time.slice(0, 5);
+
+  const getDayName = (dateStr: string) => {
+    const date = new Date(dateStr + "T00:00:00");
+    return date.toLocaleDateString("en-US", { weekday: "long" });
+  };
 
   return (
     <Layout>
-      <div className="container py-8">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-2xl font-bold mb-1">{t("dash.welcome")}</h1>
-          <p className="text-muted-foreground mb-8">{t("dash.overview")}</p>
-        </motion.div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          {[
-            { icon: BookOpen, label: t("dash.totalLessons"), value: "24", color: "text-primary" },
-            { icon: Clock, label: t("dash.hoursLearned"), value: "18.5", color: "text-info" },
-            { icon: TrendingUp, label: t("dash.thisWeek"), value: "+3", color: "text-success" },
-            { icon: MessageSquare, label: t("dash.unread"), value: "2", color: "text-warning" },
-          ].map((stat, i) => (
-            <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="rounded-xl border bg-card p-4 card-shadow">
-              <stat.icon className={`h-5 w-5 ${stat.color} mb-2`} />
-              <p className="text-2xl font-bold tabular-nums">{stat.value}</p>
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
-            </motion.div>
-          ))}
+      {/* Sub-navigation */}
+      <div className="border-b bg-card">
+        <div className="container flex items-center gap-8 overflow-x-auto">
+          <Link to="/dashboard" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">
+            Home
+          </Link>
+          <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
+            Messages
+          </Link>
+          <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
+            My lessons
+          </Link>
+          <Link to="/for-business" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
+            For business
+          </Link>
         </div>
+      </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div>
-              <h2 className="font-semibold text-lg mb-4">{t("dash.upcoming")}</h2>
-              <div className="space-y-3">
-                {upcomingLessons.map((lesson, i) => (
-                  <motion.div key={lesson.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05 }} className="rounded-xl border bg-card p-4 card-shadow flex items-center justify-between">
+      {/* Hero section with pink bg */}
+      <div className="bg-primary/10 pb-8">
+        <div className="container pt-8">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <p className="text-muted-foreground mb-1">Good to see you, {displayName}!</p>
+            <h1 className="text-2xl md:text-3xl font-bold mb-6">
+              {nextBooking?.is_trial
+                ? "Let's get you ready for your trial lesson"
+                : upcomingBookings.length > 0
+                  ? "Your next lesson is coming up"
+                  : "Find your perfect tutor"}
+            </h1>
+
+            {/* Next lesson card */}
+            {nextBooking && (
+              <Card className="max-w-2xl">
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-primary-light flex items-center justify-center">
-                        <Calendar className="h-5 w-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{lesson.subject} with {lesson.tutor}</p>
-                        <p className="text-xs text-muted-foreground tabular-nums">{lesson.date} · {lesson.time}</p>
-                      </div>
-                    </div>
-                    {lesson.status === "upcoming" ? (
-                      <Button size="sm" className="hero-gradient text-primary-foreground border-0" asChild>
-                        <Link to="/classroom">
-                          <Video className="mr-1 h-3.5 w-3.5" />
-                          {t("dash.join")}
-                        </Link>
-                      </Button>
-                    ) : (
-                      <span className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full">{t("dash.scheduled")}</span>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h2 className="font-semibold text-lg mb-4">{t("dash.completed")}</h2>
-              <div className="space-y-3">
-                {completedLessons.map((lesson, i) => (
-                  <motion.div key={lesson.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.05 }} className="rounded-xl border bg-card p-4 card-shadow">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
-                          <CheckCircle className="h-5 w-5 text-success" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm">{lesson.subject} with {lesson.tutor}</p>
-                          <p className="text-xs text-muted-foreground tabular-nums">{lesson.date} · {lesson.time}</p>
-                        </div>
+                      <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex items-center justify-center">
+                        {nextBooking.tutor_avatar_url ? (
+                          <img src={nextBooking.tutor_avatar_url} alt={nextBooking.tutor_name} className="h-full w-full object-cover" />
+                        ) : (
+                          <span className="text-sm font-bold text-primary">
+                            {nextBooking.tutor_name.split(" ").map(n => n[0]).join("")}
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <div className="ml-[52px] bg-primary/5 rounded-lg px-3 py-2 flex items-start gap-2">
-                      <Sparkles className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
-                      <p className="text-xs text-muted-foreground leading-relaxed">{lesson.insight}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <Button variant="outline" className="flex-1" asChild>
-                <Link to="/search">{t("dash.findMore")}</Link>
-              </Button>
-              <Button variant="outline" className="flex-1" asChild>
-                <Link to="/ai-practice">{t("dash.aiPractice")}</Link>
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div>
-              <h2 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                <Brain className="h-5 w-5 text-primary" />
-                {t("dash.aiInsights")}
-              </h2>
-              <div className="rounded-xl border bg-card p-4 card-shadow space-y-3">
-                {aiInsights.map((insight, i) => (
-                  <div key={i} className="pb-3 border-b last:border-b-0 last:pb-0">
-                    <p className="text-sm font-medium flex items-center gap-1.5">
-                      <span className={`h-2 w-2 rounded-full ${insight.type === "progress" ? "bg-primary" : insight.type === "strength" ? "bg-success" : "bg-warning"}`} />
-                      {insight.title}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{insight.description}</p>
+                    <button className="text-muted-foreground hover:text-foreground">
+                      <MoreHorizontal className="h-5 w-5" />
+                    </button>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            <div>
-              <h2 className="font-semibold text-lg mb-4">{t("dash.recentActivity")}</h2>
-              <div className="rounded-xl border bg-card p-4 card-shadow">
-                <div className="space-y-3">
-                  {recentActivity.map((activity, i) => (
-                    <div key={i} className="flex gap-3 pb-3 border-b last:border-b-0 last:pb-0">
-                      <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0" />
+                  <p className="text-sm text-muted-foreground mb-1">{formatDate(nextBooking.lesson_date)}</p>
+                  <p className="text-lg font-bold mb-1">
+                    {getDayName(nextBooking.lesson_date)} · {formatTime(nextBooking.start_time)} – {formatTime(nextBooking.end_time)}
+                  </p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {nextBooking.subject} with {nextBooking.tutor_name}
+                  </p>
+
+                  <Button variant="outline" size="lg" asChild>
+                    <Link to="/classroom">
+                      <Video className="h-4 w-4 mr-2" />
+                      Join lesson
+                    </Link>
+                  </Button>
+
+                  {/* Before your lesson section */}
+                  <div className="mt-6 pt-4 border-t">
+                    <p className="font-semibold text-sm mb-3">Before your lesson</p>
+                    <div className="space-y-2">
+                      <button className="w-full flex items-center gap-3 rounded-lg border p-3 text-left hover:bg-muted/50 transition-colors">
+                        <TrendingUp className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-sm flex-1">Share your learning needs</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </button>
+                      <button className="w-full flex items-center gap-3 rounded-lg border p-3 text-left hover:bg-muted/50 transition-colors">
+                        <Monitor className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-sm flex-1">Test your classroom</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Trial preview banner */}
+                  {nextBooking.is_trial && (
+                    <div className="mt-4 bg-muted rounded-lg p-4 flex items-center justify-between">
                       <div>
-                        <p className="text-sm">{activity.action}</p>
-                        <p className="text-xs text-muted-foreground">{activity.time}</p>
+                        <p className="font-semibold text-sm">Get a preview of your trial lesson</p>
+                        <Button size="sm" className="mt-2 hero-gradient text-primary-foreground border-0">
+                          See what to expect
+                        </Button>
                       </div>
+                      <BookOpen className="h-12 w-12 text-primary/30" />
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {!nextBooking && !loading && (
+              <Card className="max-w-2xl">
+                <CardContent className="p-8 text-center">
+                  <BookOpen className="h-12 w-12 text-primary/40 mx-auto mb-4" />
+                  <p className="font-semibold mb-2">No upcoming lessons</p>
+                  <p className="text-sm text-muted-foreground mb-4">Book a lesson with a tutor to get started</p>
+                  <Button className="hero-gradient text-primary-foreground border-0" asChild>
+                    <Link to="/search">
+                      <Search className="h-4 w-4 mr-2" />
+                      Find a tutor
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Up next section */}
+      <div className="container py-8">
+        {upcomingBookings.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <h2 className="text-xl font-bold mb-4">Up next</h2>
+            <div className="space-y-4">
+              {upcomingBookings.map((booking) => (
+                <div key={booking.id} className="flex items-start gap-4">
+                  <div className="flex flex-col items-center">
+                    <div className="h-2.5 w-2.5 rounded-full bg-foreground mt-1.5" />
+                    <div className="w-px h-full bg-border min-h-[40px]" />
+                  </div>
+                  <div className="flex-1 flex items-center justify-between pb-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">{formatDate(booking.lesson_date)}</p>
+                      <p className="font-bold">
+                        {getDayName(booking.lesson_date)} · {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {booking.subject} with{" "}
+                        <span className="inline-flex items-center gap-1">
+                          {booking.tutor_avatar_url && (
+                            <img src={booking.tutor_avatar_url} alt="" className="h-4 w-4 rounded-full inline" />
+                          )}
+                          {booking.tutor_name}
+                        </span>
+                      </p>
+                    </div>
+                    <button className="text-muted-foreground hover:text-foreground">
+                      <MoreHorizontal className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Subscriptions section */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-10">
+          <h2 className="text-xl font-bold mb-4">Subscriptions</h2>
+          <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
+            {upcomingBookings.length > 0 && (
+              <Card className="overflow-hidden">
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="h-16 w-16 rounded-lg bg-muted overflow-hidden flex items-center justify-center">
+                      {upcomingBookings[0].tutor_avatar_url ? (
+                        <img src={upcomingBookings[0].tutor_avatar_url} alt="" className="h-full w-full object-cover" />
+                      ) : (
+                        <span className="text-lg font-bold text-primary">
+                          {upcomingBookings[0].tutor_name.split(" ").map(n => n[0]).join("")}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs border rounded-full px-2 py-0.5">Not started</span>
+                  </div>
+                  <p className="font-semibold text-sm mb-1">
+                    Want to continue learning with {upcomingBookings[0].tutor_name.split(" ")[0]}?
+                  </p>
+                  <p className="text-xs text-muted-foreground mb-4">Start a monthly subscription and set up your schedule</p>
+                  <Button variant="outline" className="w-full">Subscribe</Button>
+                </CardContent>
+              </Card>
+            )}
+
+            <Card className="overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex -space-x-2 mb-4">
+                  {["NB", "LT", "AM"].map((initials, i) => (
+                    <div key={i} className="h-12 w-12 rounded-lg bg-muted border-2 border-card flex items-center justify-center">
+                      <span className="text-xs font-bold text-primary">{initials}</span>
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
+                <p className="font-semibold text-sm mb-1">Want to find another tutor?</p>
+                <p className="text-xs text-muted-foreground mb-4">Try different teaching styles to choose your perfect tutor match</p>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link to="/search">Find another tutor</Link>
+                </Button>
+              </CardContent>
+            </Card>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Guarantee */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-8 max-w-2xl bg-accent/40 rounded-xl p-4 flex items-start gap-3"
+        >
+          <div className="h-6 w-6 rounded-full bg-success/20 flex items-center justify-center shrink-0 mt-0.5">
+            <svg className="h-3.5 w-3.5 text-success" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            We guarantee that your lesson will be amazing. If not, you can try 2 more tutors for free.
+          </p>
+        </motion.div>
       </div>
     </Layout>
   );
