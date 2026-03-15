@@ -411,6 +411,19 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.faq": "FAQ",
     "nav.login": "შესვლა",
     "nav.signup": "რეგისტრაცია",
+    "nav.profile": "პროფილი",
+
+    // Profile Settings
+    "profile.settings.title": "პროფილის პარამეტრები",
+    "profile.settings.desc": "განაახლეთ სახელი და პროფილის ფოტო.",
+    "profile.settings.clickToUpload": "დააჭირეთ ფოტოს ასატვირთად",
+    "profile.settings.avatarUpdated": "ავატარი განახლდა!",
+    "profile.settings.saved": "პროფილი შენახულია!",
+    "profile.settings.saving": "ინახება...",
+    "profile.settings.save": "ცვლილებების შენახვა",
+    "profile.settings.error": "შეცდომა",
+    "profile.settings.imageOnly": "გთხოვთ აირჩიოთ სურათის ფაილი.",
+    "profile.settings.fileTooLarge": "ფაილი უნდა იყოს 2 მბ-ზე ნაკლები.",
 
     // Hero
     "hero.badge": "50,000+ სტუდენტის ნდობით",
