@@ -132,7 +132,22 @@ export default function TutorSearch() {
                 <Filter className="h-4 w-4 text-primary" />
                 <h3 className="font-semibold text-sm">{t("search.filters")}</h3>
               </div>
-              <FilterSection title={t("search.subject")} options={subjects} value={selectedSubject} onChange={setSelectedSubject} />
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold mb-3">{t("search.subject")}</h4>
+                <div className="space-y-1.5">
+                  {subjectEntries.map((subj) => (
+                    <button
+                      key={subj.value}
+                      onClick={() => setSelectedSubject(subj.value)}
+                      className={`block w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors ${
+                        selectedSubject === subj.value ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {t(subj.labelKey)}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <div className="mb-6">
                 <h4 className="text-sm font-semibold mb-3">{t("search.pricePerHour")}</h4>
