@@ -3,7 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const stats = [
   { value: "150+", labelKey: "stats.tutors" },
-  { value: "500+", labelKey: "stats.reviews" },
+  { value: "100+", labelKey: "stats.reviews" },
   { value: "40+", labelKey: "stats.subjects" },
   { value: "10+", labelKey: "stats.nationalities" },
 ];

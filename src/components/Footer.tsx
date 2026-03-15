@@ -67,7 +67,6 @@ export function Footer() {
     { labelKey: "footer.frenchTutors", href: "/search?subject=French" },
     { labelKey: "footer.germanTutors", href: "/search?subject=German" },
     { labelKey: "footer.mathTutors", href: "/search?subject=Mathematics" },
-    { labelKey: "footer.mathTutors", href: "/search?subject=Mathematics" },
   ];
 
   const renderLinkColumn = (titleKey: string, links: { labelKey: string; href: string }[]) => (
