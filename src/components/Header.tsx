@@ -82,6 +82,12 @@ export function Header() {
                   {t("auth.dashboard")}
                 </Link>
               </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/profile">
+                  <UserCircle className="h-4 w-4 mr-1" />
+                  {t("nav.profile")}
+                </Link>
+              </Button>
               <Button variant="outline" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4 mr-1" />
                 {t("auth.logout")}
