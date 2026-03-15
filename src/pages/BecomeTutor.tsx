@@ -31,7 +31,7 @@ export default function BecomeTutor() {
     { icon: Users, key: "tutor.pf1" },
     { icon: Calendar, key: "tutor.pf2" },
     { icon: Monitor, key: "tutor.pf3" },
-    { icon: CreditCard, key: "tutor.pf4" },
+    { icon: Banknote, key: "tutor.pf4" },
     { icon: TrendingUp, key: "tutor.pf5" },
     { icon: Headphones, key: "tutor.pf6" },
   ];
