@@ -1003,7 +1003,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.apply.step2Desc": "გაგვიზიარეთ თქვენი სასწავლო გამოცდილება.",
     "tutor.apply.step3Title": "საგნები და ტარიფები",
     "tutor.apply.step3Desc": "აირჩიეთ რა გსურთ ასწავლოთ და დააწესეთ ფასი.",
-    "tutor.apply.step4Title": "ხელმისაწვდომობა და საბოლოო დეტალები",
+    "tutor.apply.step4Title": "სწავლების გრაფიკი და სხვა დეტალები",
     "tutor.apply.step4Desc": "გვაცნობეთ როდის შეგიძლიათ სწავლება.",
     "tutor.apply.firstName": "სახელი",
     "tutor.apply.lastName": "გვარი",
