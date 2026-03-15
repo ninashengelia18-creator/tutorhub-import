@@ -22,6 +22,7 @@ import Login from "./pages/Login.tsx";
 import Signup from "./pages/Signup.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
+import ProfileSettings from "./pages/ProfileSettings.tsx";
 
 const queryClient = new QueryClient();
 
