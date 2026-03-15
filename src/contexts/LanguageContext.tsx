@@ -1176,7 +1176,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // CTA
     "cta.title": "Готовы начать обучение?",
-    "cta.subtitle": "Присоединяйтесь к тысячам студентов, которые уже учатся с LearnEazy. Первый пробный урок бесплатный.",
+    "cta.subtitle": "Присоединяйтесь к сотням студентов, которые уже учатся с LearnEazy. Первый пробный урок бесплатный.",
     "cta.button": "Найти репетитора",
 
     // Footer
