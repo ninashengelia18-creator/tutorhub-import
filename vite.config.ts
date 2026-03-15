@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === "development" && componentTagger(),
-    compression({ algorithm: "gzip", threshold: 1024 }),
+    compression(),
   ].filter(Boolean),
   resolve: {
     alias: {
