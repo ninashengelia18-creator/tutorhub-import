@@ -14,10 +14,23 @@ import { useToast } from "@/hooks/use-toast";
 
 const TOTAL_STEPS = 4;
 
-const subjects = [
-  "English", "Mathematics", "Physics", "Chemistry", "Biology",
-  "History", "Geography", "Computer Science", "Business",
-  "Music", "Art", "French", "German", "Spanish", "Georgian", "Russian",
+const subjectKeys = [
+  { value: "English", key: "tutor.apply.subj.english" },
+  { value: "Mathematics", key: "tutor.apply.subj.mathematics" },
+  { value: "Physics", key: "tutor.apply.subj.physics" },
+  { value: "Chemistry", key: "tutor.apply.subj.chemistry" },
+  { value: "Biology", key: "tutor.apply.subj.biology" },
+  { value: "History", key: "tutor.apply.subj.history" },
+  { value: "Geography", key: "tutor.apply.subj.geography" },
+  { value: "Computer Science", key: "tutor.apply.subj.computerScience" },
+  { value: "Business", key: "tutor.apply.subj.business" },
+  { value: "Music", key: "tutor.apply.subj.music" },
+  { value: "Art", key: "tutor.apply.subj.art" },
+  { value: "French", key: "tutor.apply.subj.french" },
+  { value: "German", key: "tutor.apply.subj.german" },
+  { value: "Spanish", key: "tutor.apply.subj.spanish" },
+  { value: "Georgian", key: "tutor.apply.subj.georgian" },
+  { value: "Russian", key: "tutor.apply.subj.russian" },
 ];
 
 const experienceOptions = ["0-1 years", "1-3 years", "3-5 years", "5-10 years", "10+ years"];
