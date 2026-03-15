@@ -154,6 +154,30 @@ export function Footer() {
                 </a>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Copyright */}
+      <div className="border-t border-border/50">
+        <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <img src={logo} alt="LearnEazy" className="h-8 w-auto" loading="lazy" decoding="async" />
+            <span className="text-sm text-muted-foreground">© {new Date().getFullYear()} LearnEazy</span>
+          </div>
+          <div className="flex gap-4 text-sm text-muted-foreground">
+            <Link to="/privacy-policy" className="hover:text-primary transition-colors">{t("footer.privacyPolicy")}</Link>
+            <Link to="/terms-of-service" className="hover:text-primary transition-colors">{t("footer.terms")}</Link>
+            <Link to="/cookie-policy" className="hover:text-primary transition-colors">{t("footer.cookiePolicy")}</Link>
+            <Link to="/faq" className="hover:text-primary transition-colors">{t("footer.faq")}</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+              </div>
+            </div>
 
           </div>
         </div>
