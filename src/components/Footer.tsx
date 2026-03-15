@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Instagram, Linkedin } from "lucide-react";
-import logo from "@/assets/learneazy-owl.png";
+import logo from "@/assets/owl-logo.png";
 
 const socialLinks = [
   { icon: Instagram, label: "Instagram", href: "https://instagram.com/learneazy" },

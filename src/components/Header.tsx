@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
-import logo from "@/assets/learneazy-owl.png";
+import logo from "@/assets/owl-logo.png";
 
 const langLabels: Record<Language, string> = { ka: "ქარ", en: "EN", ru: "РУ" };
 
@@ -46,9 +46,9 @@ export function Header() {
       <div className="container flex h-18 items-center justify-between py-2">
         {/* Logo + Tagline */}
         <div className="flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="LearnEazy" className="h-[70px] w-auto" loading="eager" decoding="async" />
-            <span className="text-xl font-bold text-foreground tracking-wide">LearnEazy</span>
+          <Link to="/" className="flex flex-col items-center gap-1">
+            <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
+            <span className="text-foreground tracking-[0.25em] uppercase" style={{ fontFamily: "'Playfair Display', serif", fontSize: '16px', fontWeight: 600 }}>LearnEazy</span>
           </Link>
           <span className="hidden lg:inline text-sm font-semibold text-muted-foreground border-l border-border pl-4 tracking-wide">
             Global Tutors. Personal Learning.
