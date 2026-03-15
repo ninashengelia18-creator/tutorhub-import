@@ -73,7 +73,7 @@ export default function TutorApply() {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      const { error } = await supabase.from("tutor_applications" as any).insert({
+      const applicationData = {
         first_name: firstName.trim(),
         last_name: lastName.trim(),
         email: email.trim(),
@@ -90,9 +90,16 @@ export default function TutorApply() {
         availability,
         timezone: timezone.trim() || null,
         about_teaching: aboutTeaching.trim() || null,
-      } as any);
+      };
 
+      const { error } = await supabase.from("tutor_applications" as any).insert(applicationData as any);
       if (error) throw error;
+
+      // Send email notification to info@learneazy.org
+      supabase.functions.invoke("notify-tutor-application", { body: applicationData }).catch((err) => {
+        console.error("Email notification failed:", err);
+      });
+
       setSubmitted(true);
     } catch (err: any) {
       toast({ title: t("tutor.apply.error"), variant: "destructive" });
