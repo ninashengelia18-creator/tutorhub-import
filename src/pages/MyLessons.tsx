@@ -289,10 +289,7 @@ export default function MyLessons() {
 
           {/* Calendar tab */}
           {activeTab === "calendar" && (
-            <div className="text-center py-16">
-              <CalendarIcon className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
-              <p className="text-muted-foreground">Calendar view coming soon</p>
-            </div>
+            <CalendarView bookings={bookings} />
           )}
 
           {/* Tutors tab */}
