@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
+import { Instagram, Linkedin } from "lucide-react";
 import logo from "@/assets/learneazy-logo.png";
 
 const socialLinks = [
-  { icon: Facebook, label: "Facebook", href: "https://facebook.com/learneazy" },
   { icon: Instagram, label: "Instagram", href: "https://instagram.com/learneazy" },
-  { icon: Youtube, label: "YouTube", href: "https://youtube.com/@learneazy" },
   { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/company/learneazy" },
 ];
 
@@ -117,7 +115,7 @@ export function Footer() {
       {/* Support, Contacts, Social, Apps */}
       <div className="border-t border-border/50">
         <div className="container py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.support")}</h4>
               <Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -156,26 +154,6 @@ export function Footer() {
                 </a>
               </div>
             </div>
-
-            <div>
-              <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.apps")}</h4>
-              <div className="flex flex-col gap-2">
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 rounded-lg border border-border bg-secondary text-foreground px-3 py-2 text-xs font-medium hover:bg-primary hover:text-primary-foreground transition-colors w-fit"
-                >
-                  <span className="text-base">🍎</span>
-                  App Store
-                </a>
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 rounded-lg border border-border bg-secondary text-foreground px-3 py-2 text-xs font-medium hover:bg-primary hover:text-primary-foreground transition-colors w-fit"
-                >
-                  <span className="text-base">▶️</span>
-                  Google Play
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -188,18 +166,11 @@ export function Footer() {
             <span className="text-sm text-muted-foreground">© {new Date().getFullYear()} LearnEazy</span>
           </div>
           <div className="flex gap-4 text-sm text-muted-foreground">
+            <Link to="/privacy-policy" className="hover:text-primary transition-colors">{t("footer.privacyPolicy")}</Link>
+            <Link to="/terms-of-service" className="hover:text-primary transition-colors">{t("footer.termsOfService")}</Link>
+            <Link to="/cookie-policy" className="hover:text-primary transition-colors">{t("footer.cookiePolicy")}</Link>
             <Link to="/faq" className="hover:text-primary transition-colors">{t("footer.faq")}</Link>
           </div>
-        </div>
-      </div>
-
-      {/* Legal Center */}
-      <div className="border-t border-border/50 bg-secondary/50">
-        <div className="container py-4 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">Legal Center</span>
-          <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-          <Link to="/cookie-policy" className="hover:text-primary transition-colors">Cookie Policy</Link>
-          <Link to="/terms-of-service" className="hover:text-primary transition-colors">Legal Notice</Link>
         </div>
       </div>
     </footer>
