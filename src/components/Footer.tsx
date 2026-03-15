@@ -155,25 +155,6 @@ export function Footer() {
               </div>
             </div>
 
-            <div>
-              <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t("footer.apps")}</h4>
-              <div className="flex flex-col gap-2">
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 rounded-lg border border-border bg-secondary text-foreground px-3 py-2 text-xs font-medium hover:bg-primary hover:text-primary-foreground transition-colors w-fit"
-                >
-                  <span className="text-base">🍎</span>
-                  App Store
-                </a>
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 rounded-lg border border-border bg-secondary text-foreground px-3 py-2 text-xs font-medium hover:bg-primary hover:text-primary-foreground transition-colors w-fit"
-                >
-                  <span className="text-base">▶️</span>
-                  Google Play
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </div>
