@@ -259,16 +259,16 @@ export default function TutorApply() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.rate")} * (USD/hr)</Label>
-                    <Input type="number" min="1" value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value)} placeholder="25" />
+                    <Input type="number" min="1" value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value)} />
                   </div>
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.nativeLang")}</Label>
-                    <Input value={nativeLanguage} onChange={(e) => setNativeLanguage(e.target.value)} placeholder="English" />
+                    <Input value={nativeLanguage} onChange={(e) => setNativeLanguage(e.target.value)} />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.otherLangs")}</Label>
-                  <Input value={otherLanguages} onChange={(e) => setOtherLanguages(e.target.value)} placeholder="Georgian, Russian" />
+                  <Input value={otherLanguages} onChange={(e) => setOtherLanguages(e.target.value)} />
                 </div>
               </div>
             )}
@@ -292,7 +292,7 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.timezone")}</Label>
-                  <Input value={timezone} onChange={(e) => setTimezone(e.target.value)} placeholder="GMT+4 (Tbilisi)" />
+                  <Input value={timezone} onChange={(e) => setTimezone(e.target.value)} />
                 </div>
 
                 {/* Video introduction */}
