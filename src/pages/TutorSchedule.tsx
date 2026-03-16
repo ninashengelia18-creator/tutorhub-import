@@ -18,6 +18,8 @@ interface TutorBooking {
   duration_minutes: number;
   status: string;
   google_meet_link: string | null;
+  price_amount: number;
+  currency: string;
 }
 
 export default function TutorSchedule() {
