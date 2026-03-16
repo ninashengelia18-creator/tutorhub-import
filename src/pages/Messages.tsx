@@ -152,6 +152,7 @@ export default function Messages() {
       if (conversation?.deleted_by_student) return;
 
       conversationMap.set(tutorName, {
+        id: tutorName,
         name: tutorName,
         avatar_url: contact.tutor_avatar_url,
         subject: contact.subject,
