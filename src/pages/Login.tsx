@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { LogIn, Mail, Lock } from "lucide-react";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 
@@ -20,6 +21,13 @@ export default function Login() {
   const redirect = searchParams.get("redirect");
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { user, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate(redirect || "/dashboard", { replace: true });
+    }
+  }, [authLoading, navigate, redirect, user]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +65,7 @@ export default function Login() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={loading}>{loading ? t("auth.signingIn") : t("auth.login")}</Button>
+              <Button type="submit" className="w-full" disabled={loading || authLoading}>{loading ? t("auth.signingIn") : t("auth.login")}</Button>
               <p className="text-center text-sm text-muted-foreground">{t("auth.noAccount")} <Link to="/signup" className="font-medium text-primary hover:underline">{t("auth.signupLink")}</Link></p>
             </CardFooter>
           </form>

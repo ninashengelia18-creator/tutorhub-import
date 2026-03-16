@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import type { Session, User } from "@supabase/supabase-js";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 
 import { supabase } from "@/integrations/supabase/client";
 
@@ -26,7 +26,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
-  const refreshProfile = async () => {
+  const applySession = useCallback((nextSession: Session | null) => {
+    setSession(nextSession);
+    setUser(nextSession?.user ?? null);
+    setLoading(false);
+
+    if (!nextSession) {
+      setProfile(null);
+    }
+  }, []);
+
+  const refreshProfile = useCallback(async () => {
     const userId = session?.user?.id;
     if (!userId) {
       setProfile(null);
@@ -40,29 +50,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .maybeSingle();
 
     setProfile(data ?? { display_name: null, avatar_url: null });
-  };
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setUser(nextSession?.user ?? null);
-      setLoading(false);
-    });
-
-    supabase.auth.getSession().then(({ data: { session: nextSession } }) => {
-      setSession(nextSession);
-      setUser(nextSession?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    void refreshProfile();
   }, [session?.user?.id]);
 
   useEffect(() => {
+    const handleAuthChange = (_event: AuthChangeEvent, nextSession: Session | null) => {
+      applySession(nextSession);
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthChange);
+
+    void supabase.auth.getSession().then(({ data: { session: nextSession } }) => {
+      applySession(nextSession);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [applySession]);
+
+  useEffect(() => {
+    void refreshProfile();
+  }, [refreshProfile]);
+
+  useEffect(() => {
+    const userId = session?.user?.id;
+    if (!userId) return;
+
     const channel = supabase
       .channel("auth-profile-sync")
       .on(
@@ -71,9 +82,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           event: "UPDATE",
           schema: "public",
           table: "profiles",
+          filter: `id=eq.${userId}`,
         },
         (payload) => {
-          if (payload.new && "id" in payload.new && payload.new.id === session?.user?.id) {
+          if (payload.new && "id" in payload.new && payload.new.id === userId) {
             setProfile({
               display_name: (payload.new as { display_name?: string | null }).display_name ?? null,
               avatar_url: (payload.new as { avatar_url?: string | null }).avatar_url ?? null,
@@ -88,24 +100,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [session?.user?.id]);
 
-  const signOut = async () => {
-    await supabase.auth.signOut({ scope: "local" });
-    setSession(null);
-    setUser(null);
+  const signOut = useCallback(async () => {
     setProfile(null);
-  };
+    applySession(null);
+    await supabase.auth.signOut();
+  }, [applySession]);
 
-  const updateProfileState = (nextProfile: Partial<UserProfile>) => {
+  const updateProfileState = useCallback((nextProfile: Partial<UserProfile>) => {
     setProfile((current) => ({
       display_name: current?.display_name ?? null,
       avatar_url: current?.avatar_url ?? null,
       ...nextProfile,
     }));
-  };
+  }, []);
 
   const value = useMemo<AuthContextType>(
     () => ({ user, session, loading, profile, signOut, refreshProfile, updateProfileState }),
-    [user, session, loading, profile],
+    [user, session, loading, profile, signOut, refreshProfile, updateProfileState],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
