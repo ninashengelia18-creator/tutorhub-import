@@ -375,8 +375,8 @@ export default function LessonPlanner() {
                     <div>
                       <label className="mb-1 block text-sm text-muted-foreground">{l.subject} *</label>
                       <Select value={subject} onValueChange={setSubject}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>{subjects.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                        <SelectTrigger><SelectValue placeholder={l.subjectPlaceholder} /></SelectTrigger>
+                        <SelectContent>{options.subjects.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
                     <div>
