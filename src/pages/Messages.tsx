@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Info } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 import { Layout } from "@/components/Layout";
 import { ChatComposer } from "@/components/messages/ChatComposer";
@@ -34,6 +35,7 @@ export default function Messages() {
   const { user, profile } = useAuth();
   const { t, lang } = useLanguage();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
 
   const [contacts, setContacts] = useState<BookingContactRecord[]>([]);
   const [conversations, setConversations] = useState<ConversationRecord[]>([]);
@@ -200,6 +202,16 @@ export default function Messages() {
       setSelectedTutorId(conversationItems[0]?.id ?? null);
     }
   }, [conversationItems, selectedTutorId]);
+
+  useEffect(() => {
+    const requestedTutor = searchParams.get("tutor");
+    if (!requestedTutor) return;
+
+    const matchedConversation = conversationItems.find((item) => item.id === requestedTutor);
+    if (matchedConversation) {
+      setSelectedTutorId(matchedConversation.id);
+    }
+  }, [conversationItems, searchParams]);
 
   const selectedConversation = useMemo(
     () => conversationItems.find((item) => item.id === selectedTutorId) ?? null,

@@ -1,11 +1,16 @@
-import { useParams, Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Star, Globe, BookOpen, Calendar, CheckCircle, Video, Heart, Share2, MessageSquare, Shield, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { isTutorSaved, subscribeToSavedTutors, toggleSavedTutor } from "@/lib/savedTutors";
 
 // Translation key-based tutor data
 const tutorData: Record<string, {
@@ -186,52 +191,147 @@ const scheduleSlots: Record<number, string[]> = {
   20: ["18:30", "21:30", "22:00", "22:30"],
 };
 
+const actionCopy = {
+  en: {
+    loginRequired: "Please log in as a student to message tutors.",
+    messageFailed: "Unable to open messages right now.",
+    saved: "Tutor saved",
+    removed: "Tutor removed",
+    shared: "Profile link copied",
+  },
+  ka: {
+    loginRequired: "რეპეტიტორთან დასაკავშირებლად შედით სტუდენტის ანგარიშით.",
+    messageFailed: "შეტყობინებების გახსნა ახლა ვერ მოხერხდა.",
+    saved: "რეპეტიტორი შენახულია",
+    removed: "რეპეტიტორი წაიშალა",
+    shared: "პროფილის ბმული დაკოპირდა",
+  },
+  ru: {
+    loginRequired: "Чтобы написать репетитору, войдите как студент.",
+    messageFailed: "Сейчас не удалось открыть сообщения.",
+    saved: "Репетитор сохранен",
+    removed: "Репетитор удален",
+    shared: "Ссылка на профиль скопирована",
+  },
+} as const;
+
 export default function TutorProfile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const tutor = tutorData[id || "1"] || tutorData["1"];
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const text = useMemo(() => actionCopy[lang], [lang]);
+  const [saved, setSaved] = useState(() => isTutorSaved(id || "1"));
+
+  useEffect(() => {
+    setSaved(isTutorSaved(id || "1"));
+    return subscribeToSavedTutors(() => setSaved(isTutorSaved(id || "1")));
+  }, [id]);
+
+  const handleMessageTutor = async () => {
+    if (!user) {
+      navigate(`/login?portal=student&redirect=${encodeURIComponent(`/messages?tutor=${tutor.name}`)}`);
+      toast({ title: text.loginRequired });
+      return;
+    }
+
+    const { error } = await supabase.from("message_conversations").upsert(
+      {
+        student_id: user.id,
+        tutor_name: tutor.name,
+        archived_by_student: false,
+        deleted_by_student: false,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "student_id,tutor_name" },
+    );
+
+    if (error) {
+      toast({ title: text.messageFailed, variant: "destructive" });
+      return;
+    }
+
+    navigate(`/messages?tutor=${encodeURIComponent(tutor.name)}`);
+  };
+
+  const handleToggleSave = () => {
+    const nextSaved = toggleSavedTutor({
+      id: id || "1",
+      name: tutor.name,
+      subject: tutor.subjectKey,
+      price: tutor.price,
+      photo: tutor.photo,
+    });
+
+    setSaved(nextSaved);
+    toast({ title: nextSaved ? text.saved : text.removed });
+  };
+
+  const handleShareProfile = async () => {
+    const url = typeof window !== "undefined" ? window.location.href : `/tutor/${id || "1"}`;
+
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({
+          title: `${tutor.name} · LearnEazy`,
+          text: `${t(tutor.subjectKey)} · ${tutor.name}`,
+          url,
+        });
+        return;
+      }
+
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        toast({ title: text.shared });
+      }
+    } catch {
+      // Ignore cancelled native share dialogs.
+    }
+  };
 
   return (
     <Layout>
       <div className="container py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
-          <Link to="/search" className="hover:text-primary transition-colors">{t("tp.findTutors")}</Link>
+        <nav className="mb-6 flex items-center gap-1 text-sm text-muted-foreground">
+          <Link to="/search" className="transition-colors hover:text-primary">{t("tp.findTutors")}</Link>
           <ChevronRight className="h-3.5 w-3.5" />
-          <Link to="/search" className="hover:text-primary transition-colors">{t(tutor.subjectKey)} {t("tp.tutorsOnline")}</Link>
+          <Link to="/search" className="transition-colors hover:text-primary">{t(tutor.subjectKey)} {t("tp.tutorsOnline")}</Link>
           <ChevronRight className="h-3.5 w-3.5" />
-          <span className="text-foreground font-medium">{tutor.name}</span>
+          <span className="font-medium text-foreground">{tutor.name}</span>
         </nav>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col gap-8 lg:flex-row">
           {/* Main content */}
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             {/* Hero card */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
               <div className="flex items-start gap-5">
-                <img src={tutor.photo} alt={tutor.name} className="h-24 w-24 rounded-full object-cover shrink-0 ring-2 ring-primary/20" loading="lazy" decoding="async" />
-                <div className="flex-1 min-w-0">
+                <img src={tutor.photo} alt={tutor.name} className="h-24 w-24 shrink-0 rounded-full object-cover ring-2 ring-primary/20" loading="lazy" decoding="async" />
+                <div className="min-w-0 flex-1">
                   <h1 className="text-2xl font-bold text-foreground">{tutor.name}</h1>
-                  <p className="text-muted-foreground text-sm mt-0.5">
+                  <p className="mt-0.5 text-sm text-muted-foreground">
                     {t(tutor.subjectKey)} {t("tp.tutorFrom")} <span className="mx-1">·</span> {t("tp.from")} {t(tutor.originKey)}
                   </p>
-                  <p className="text-sm text-foreground/80 mt-3 leading-relaxed">{t(tutor.headlineKey)}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-foreground/80">{t(tutor.headlineKey)}</p>
                 </div>
               </div>
             </motion.div>
 
             {/* Highlights */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-8">
-              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">{t("tp.highlights")}</h2>
-              <p className="text-xs text-muted-foreground mb-3">{t("tp.basedOnData")}</p>
-              <div className="flex flex-wrap gap-2 mb-3">
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">{t("tp.highlights")}</h2>
+              <p className="mb-3 text-xs text-muted-foreground">{t("tp.basedOnData")}</p>
+              <div className="mb-3 flex flex-wrap gap-2">
                 {tutor.highlightKeys.map((hk) => (
                   <Badge key={hk} variant="secondary" className="px-3 py-1.5 text-sm font-medium">{t(hk)}</Badge>
                 ))}
               </div>
               {tutor.superTutor && (
-                <div className="flex items-start gap-2 mt-4 p-3 rounded-lg bg-accent/50 border border-accent">
-                  <Shield className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <div className="mt-4 flex items-start gap-2 rounded-lg border border-accent bg-accent/50 p-3">
+                  <Shield className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">{t("tp.superTutor")}</p>
                     <p className="text-xs text-muted-foreground">{t(tutor.superTutorDescKey)} <Link to="#" className="text-primary hover:underline">{t("tp.learnMore")}</Link></p>
@@ -242,26 +342,26 @@ export default function TutorProfile() {
 
             {/* Teaches */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="mb-8">
-              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2">{t("tp.teaches")}</h2>
+              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">{t("tp.teaches")}</h2>
               <p className="text-sm text-foreground">{t(tutor.teachesKey)}</p>
             </motion.div>
 
             {/* About me */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-3">{t("tp.aboutMe")}</h2>
-              <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+              <h2 className="mb-3 text-lg font-semibold text-foreground">{t("tp.aboutMe")}</h2>
+              <div className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
                 {t(tutor.bioKey)}
               </div>
             </motion.div>
 
             {/* I speak */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-3">{t("tp.iSpeak")}</h2>
+              <h2 className="mb-3 text-lg font-semibold text-foreground">{t("tp.iSpeak")}</h2>
               <div className="space-y-1.5">
-                {tutor.languages.map((lang) => (
-                  <div key={lang.nameKey} className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-foreground">{t(lang.nameKey)}</span>
-                    <span className="text-xs text-muted-foreground">{t(lang.levelKey)}</span>
+                {tutor.languages.map((language) => (
+                  <div key={language.nameKey} className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-foreground">{t(language.nameKey)}</span>
+                    <span className="text-xs text-muted-foreground">{t(language.levelKey)}</span>
                   </div>
                 ))}
               </div>
@@ -269,7 +369,7 @@ export default function TutorProfile() {
 
             {/* Lesson rating */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-4">{t("tp.lessonRating")}</h2>
+              <h2 className="mb-4 text-lg font-semibold text-foreground">{t("tp.lessonRating")}</h2>
               <div className="space-y-3">
                 {[
                   { label: t("tp.reassurance"), value: tutor.lessonRating.reassurance },
@@ -278,22 +378,22 @@ export default function TutorProfile() {
                   { label: t("tp.preparation"), value: tutor.lessonRating.preparation },
                 ].map((item) => (
                   <div key={item.label} className="flex items-center gap-4">
-                    <span className="text-sm text-foreground w-28 shrink-0">{item.label}</span>
-                    <Progress value={item.value * 20} className="flex-1 h-2" />
-                    <span className="text-sm font-semibold tabular-nums w-8 text-right">{item.value}</span>
+                    <span className="w-28 shrink-0 text-sm text-foreground">{item.label}</span>
+                    <Progress value={item.value * 20} className="h-2 flex-1" />
+                    <span className="w-8 text-right text-sm font-semibold tabular-nums">{item.value}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground mt-3">{t("tp.basedOnReviews").replace("{count}", String(tutor.ratingReviewCount))}</p>
+              <p className="mt-3 text-xs text-muted-foreground">{t("tp.basedOnReviews").replace("{count}", String(tutor.ratingReviewCount))}</p>
             </motion.div>
 
             {/* Reviews */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-1">{t("tp.whatStudentsSay")}</h2>
-              <div className="flex items-center gap-2 mb-5">
+              <h2 className="mb-1 text-lg font-semibold text-foreground">{t("tp.whatStudentsSay")}</h2>
+              <div className="mb-5 flex items-center gap-2">
                 <div className="flex items-center gap-1">
                   <Star className="h-4 w-4 fill-warning text-warning" />
-                  <span className="font-bold text-lg">{tutor.rating}</span>
+                  <span className="text-lg font-bold">{tutor.rating}</span>
                 </div>
                 <span className="text-sm text-muted-foreground">{t("tp.basedOnStudentReviews").replace("{count}", String(tutor.reviewCount))}</span>
               </div>
@@ -301,9 +401,9 @@ export default function TutorProfile() {
                 {reviewKeys.map((review, i) => {
                   const name = t(review.nameKey);
                   return (
-                    <div key={i} className="pb-5 border-b last:border-b-0 last:pb-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground">
+                    <div key={i} className="border-b pb-5 last:border-b-0 last:pb-0">
+                      <div className="mb-2 flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
                           {name === t("td.rev.anonymous") ? "?" : name.charAt(0)}
                         </div>
                         <div>
@@ -314,7 +414,7 @@ export default function TutorProfile() {
                           </p>
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{t(review.textKey)}</p>
+                      <p className="text-sm leading-relaxed text-muted-foreground">{t(review.textKey)}</p>
                     </div>
                   );
                 })}
@@ -323,25 +423,25 @@ export default function TutorProfile() {
 
             {/* Schedule */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-1">{t("tp.schedule")}</h2>
-              <p className="text-sm text-muted-foreground mb-4">{t("tp.scheduleDesc")}</p>
-              <div className="rounded-xl border bg-card overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+              <h2 className="mb-1 text-lg font-semibold text-foreground">{t("tp.schedule")}</h2>
+              <p className="mb-4 text-sm text-muted-foreground">{t("tp.scheduleDesc")}</p>
+              <div className="overflow-hidden rounded-xl border bg-card">
+                <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
                   <p className="text-sm font-medium text-foreground">{t("td.scheduleRange")}</p>
                   <p className="text-xs text-muted-foreground">Asia/Tbilisi · GMT +4:00</p>
                 </div>
                 <div className="grid grid-cols-7 divide-x">
                   {dayKeys.map((dayKey, i) => (
                     <div key={dayKey} className="text-center">
-                      <div className="py-2 border-b bg-muted/20">
+                      <div className="border-b bg-muted/20 py-2">
                         <p className="text-xs text-muted-foreground">{t(dayKey)}</p>
                         <p className="text-sm font-semibold text-foreground">{dates[i]}</p>
                       </div>
-                      <div className="p-1 space-y-1 max-h-48 overflow-y-auto">
+                      <div className="max-h-48 space-y-1 overflow-y-auto p-1">
                         {(scheduleSlots[dates[i]] || []).map((slot) => (
                           <button
                             key={slot}
-                            className="w-full rounded border px-1 py-1 text-xs tabular-nums text-primary hover:bg-primary hover:text-primary-foreground transition-colors font-medium"
+                            className="w-full rounded border px-1 py-1 text-xs font-medium tabular-nums text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
                           >
                             {slot}
                           </button>
@@ -355,11 +455,11 @@ export default function TutorProfile() {
 
             {/* Resume */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-4">{t("tp.resume")}</h2>
+              <h2 className="mb-4 text-lg font-semibold text-foreground">{t("tp.resume")}</h2>
               <div className="space-y-4">
                 {tutor.resume.map((item, i) => (
                   <div key={i} className="flex gap-4">
-                    <span className="text-xs text-muted-foreground w-28 shrink-0 pt-0.5">{item.period}</span>
+                    <span className="w-28 shrink-0 pt-0.5 text-xs text-muted-foreground">{item.period}</span>
                     <div>
                       <p className="text-sm font-medium text-foreground">{t(item.orgKey)}</p>
                       <p className="text-xs text-muted-foreground">{t(item.roleKey)}</p>
@@ -371,7 +471,7 @@ export default function TutorProfile() {
 
             {/* Specialties */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-3">{t("tp.mySpecialties")}</h2>
+              <h2 className="mb-3 text-lg font-semibold text-foreground">{t("tp.mySpecialties")}</h2>
               <div className="flex flex-wrap gap-2">
                 {tutor.specialtyKeys.map((sk) => (
                   <Badge key={sk} variant="outline" className="px-3 py-1.5 text-sm">{t(sk)}</Badge>
@@ -381,8 +481,8 @@ export default function TutorProfile() {
 
             {/* Similar tutors */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-4">{t("tp.youMightLike")}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <h2 className="mb-4 text-lg font-semibold text-foreground">{t("tp.youMightLike")}</h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {similarTutors
                   .filter((st) => st.id !== id)
                   .slice(0, 3)
@@ -390,12 +490,12 @@ export default function TutorProfile() {
                     <Link
                       key={st.id}
                       to={`/tutor/${st.id}`}
-                      className="rounded-xl border bg-card p-4 hover:border-primary/40 transition-colors group"
+                      className="group rounded-xl border bg-card p-4 transition-colors hover:border-primary/40"
                     >
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="mb-2 flex items-center gap-3">
                         <img src={st.photo} alt={st.name} className="h-10 w-10 rounded-full object-cover" loading="lazy" decoding="async" />
                         <div>
-                          <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{st.name}</p>
+                          <p className="text-sm font-semibold text-foreground transition-colors group-hover:text-primary">{st.name}</p>
                           <div className="flex items-center gap-1">
                             <Star className="h-3 w-3 fill-warning text-warning" />
                             <span className="text-xs font-medium">{st.rating}</span>
@@ -403,8 +503,8 @@ export default function TutorProfile() {
                           </div>
                         </div>
                       </div>
-                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{t(st.headlineKey)}</p>
-                      <p className="text-sm font-bold text-foreground mt-2">₾{st.price}<span className="text-xs font-normal text-muted-foreground">{t("tp.perLesson")}</span></p>
+                      <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{t(st.headlineKey)}</p>
+                      <p className="mt-2 text-sm font-bold text-foreground">₾{st.price}<span className="text-xs font-normal text-muted-foreground">{t("tp.perLesson")}</span></p>
                     </Link>
                   ))}
               </div>
@@ -416,45 +516,45 @@ export default function TutorProfile() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
-            className="w-full lg:w-[320px] shrink-0"
+            className="w-full shrink-0 lg:w-[320px]"
           >
             <div className="sticky top-20 space-y-4">
-              <div className="rounded-xl border bg-card p-5 card-shadow">
+              <div className="card-shadow rounded-xl border bg-card p-5">
                 {/* Rating & stats */}
-                <div className="flex items-center gap-2 mb-1">
+                <div className="mb-1 flex items-center gap-2">
                   <Star className="h-5 w-5 fill-warning text-warning" />
                   <span className="text-xl font-bold">{tutor.rating}</span>
                 </div>
-                <p className="text-xs text-muted-foreground mb-4">
+                <p className="mb-4 text-xs text-muted-foreground">
                   {tutor.reviewCount} {t("tp.reviews")} · {tutor.lessons.toLocaleString()} {t("tp.lessons")}
                 </p>
 
                 {/* Price */}
-                <div className="pb-4 mb-4 border-b">
-                  <p className="text-2xl font-bold text-foreground tabular-nums">
+                <div className="mb-4 border-b pb-4">
+                  <p className="text-2xl font-bold tabular-nums text-foreground">
                     ₾{tutor.price}
-                    <span className="text-sm font-normal text-muted-foreground ml-1">{t(tutor.lessonLengthKey)} {t("tp.lesson")}</span>
+                    <span className="ml-1 text-sm font-normal text-muted-foreground">{t(tutor.lessonLengthKey)} {t("tp.lesson")}</span>
                   </p>
                 </div>
 
                 {/* CTAs */}
                 <div className="space-y-2.5">
-                  <Button className="w-full hero-gradient text-primary-foreground border-0" asChild>
+                  <Button className="hero-gradient w-full border-0 text-primary-foreground" asChild>
                     <Link to={`/booking/${id}`}>
                       <Video className="mr-2 h-4 w-4" />
                       {t("tp.bookTrialLesson")}
                     </Link>
                   </Button>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full" onClick={() => void handleMessageTutor()}>
                     <MessageSquare className="mr-2 h-4 w-4" />
                     {t("tp.sendMessage")}
                   </Button>
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" className="flex-1 text-muted-foreground">
-                      <Heart className="mr-1.5 h-4 w-4" />
+                    <Button variant="ghost" size="sm" className="flex-1 text-muted-foreground" onClick={handleToggleSave}>
+                      <Heart className={`mr-1.5 h-4 w-4 ${saved ? "fill-primary text-primary" : ""}`} />
                       {t("tp.save")}
                     </Button>
-                    <Button variant="ghost" size="sm" className="flex-1 text-muted-foreground">
+                    <Button variant="ghost" size="sm" className="flex-1 text-muted-foreground" onClick={() => void handleShareProfile()}>
                       <Share2 className="mr-1.5 h-4 w-4" />
                       {t("tp.share")}
                     </Button>
@@ -462,15 +562,15 @@ export default function TutorProfile() {
                 </div>
 
                 {/* Free switch */}
-                <div className="mt-4 p-3 rounded-lg bg-accent/50 border border-accent">
-                  <p className="text-xs font-semibold text-foreground mb-0.5">{t("tp.freeSwitch")}</p>
+                <div className="mt-4 rounded-lg border border-accent bg-accent/50 p-3">
+                  <p className="mb-0.5 text-xs font-semibold text-foreground">{t("tp.freeSwitch")}</p>
                   <p className="text-xs text-muted-foreground">
                     {t("tp.freeSwitchDesc").replace("{name}", tutor.name)}
                   </p>
                 </div>
 
                 {/* Responsiveness */}
-                <p className="text-xs text-muted-foreground mt-4 text-center">{t(tutor.responsivenessKey)}</p>
+                <p className="mt-4 text-center text-xs text-muted-foreground">{t(tutor.responsivenessKey)}</p>
               </div>
             </div>
           </motion.aside>
