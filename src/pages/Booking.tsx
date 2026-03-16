@@ -24,6 +24,13 @@ const DURATIONS = [
   { labelKey: "booking.duration90", value: 90 },
 ];
 
+const TIME_OPTIONS = Array.from({ length: 27 }, (_, index) => {
+  const totalMinutes = 8 * 60 + index * 30;
+  const hours = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
+  const minutes = String(totalMinutes % 60).padStart(2, "0");
+  return `${hours}:${minutes}`;
+});
+
 const tutorData: Record<string, { name: string; subject: string; price: number }> = {
   "1": { name: "Nino B.", subject: "Mathematics", price: 25 },
   "2": { name: "Giorgi K.", subject: "Physics", price: 30 },
