@@ -161,6 +161,72 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          read_at: string | null
+          sender_display_name: string | null
+          sender_id: string
+          sender_type: string
+          student_id: string
+          tutor_name: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_display_name?: string | null
+          sender_id: string
+          sender_type: string
+          student_id: string
+          tutor_name: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_display_name?: string | null
+          sender_id?: string
+          sender_type?: string
+          student_id?: string
+          tutor_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_surveys: boolean
+          email_tips_discount: boolean
+          email_transactional: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_surveys?: boolean
+          email_tips_discount?: boolean
+          email_transactional?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_surveys?: boolean
+          email_tips_discount?: boolean
+          email_transactional?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
