@@ -218,6 +218,11 @@ export function Header() {
                     <Button variant="ghost" size="sm" className="flex-1" asChild>
                       <Link to="/lesson-planner" onClick={() => setMobileOpen(false)}>{t("nav.lessonPlanner")}</Link>
                     </Button>
+                    {isAdmin && (
+                      <Button variant="ghost" size="sm" className="flex-1" asChild>
+                        <Link to="/admin" onClick={() => setMobileOpen(false)}>{t("nav.admin")}</Link>
+                      </Button>
+                    )}
                     <Button variant="ghost" size="sm" className="flex-1" asChild>
                       <Link to="/dashboard" onClick={() => setMobileOpen(false)}>{t("auth.dashboard")}</Link>
                     </Button>
