@@ -2431,6 +2431,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.passwordUpdated": "Пароль успешно обновлён!",
     "auth.logout": "Выйти",
     "auth.dashboard": "Панель",
+    "auth.togglePassword": "Показать или скрыть пароль",
 
     // Signup role selection
     "signup.chooseRole": "Присоединяйтесь к LearnEazy",

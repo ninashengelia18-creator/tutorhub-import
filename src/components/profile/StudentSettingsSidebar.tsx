@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export type StudentSettingsSection =
   | "account"
@@ -8,21 +9,24 @@ export type StudentSettingsSection =
   | "notifications"
   | "delete";
 
-const sections: Array<{ id: StudentSettingsSection; label: string }> = [
-  { id: "account", label: "Account" },
-  { id: "password", label: "Password" },
-  { id: "email", label: "Email" },
-  { id: "calendar", label: "Calendar" },
-  { id: "notifications", label: "Notifications" },
-  { id: "delete", label: "Delete account" },
-];
-
-interface StudentSettingsSidebarProps {
+export function StudentSettingsSidebar({
+  activeSection,
+  onSectionChange,
+}: {
   activeSection: StudentSettingsSection;
   onSectionChange: (section: StudentSettingsSection) => void;
-}
+}) {
+  const { t } = useLanguage();
 
-export function StudentSettingsSidebar({ activeSection, onSectionChange }: StudentSettingsSidebarProps) {
+  const sections: Array<{ id: StudentSettingsSection; label: string }> = [
+    { id: "account", label: t("profile.settings.account") },
+    { id: "password", label: t("profile.settings.password") },
+    { id: "email", label: t("profile.settings.emailSection") },
+    { id: "calendar", label: t("profile.settings.calendar") },
+    { id: "notifications", label: t("profile.settings.notifications") },
+    { id: "delete", label: t("profile.settings.deleteAccount") },
+  ];
+
   return (
     <aside className="w-full max-w-[220px] shrink-0">
       <nav className="flex flex-col gap-1">
