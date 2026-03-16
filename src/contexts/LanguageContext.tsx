@@ -1037,7 +1037,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.localization": "ლოკალიზაცია",
     "profile.settings.calendar": "კალენდარი",
     "profile.settings.notifications": "შეტყობინებები",
-    "profile.settings.deleteAccount": "ანგარიშის წაშლა"
+    "profile.settings.deleteAccount": "ანგარიშის წაშლა",
     "profile.settings.accountTitle": "ანგარიშის პარამეტრები",
     "profile.settings.profileImage": "პროფილის ფოტო",
     "profile.settings.edit": "რედაქტირება",
