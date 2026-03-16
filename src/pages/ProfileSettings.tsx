@@ -57,21 +57,31 @@ export default function ProfileSettings() {
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
-    if (!file.type.startsWith("image/")) return toast({ title: t("profile.settings.error"), description: t("profile.settings.imageOnly"), variant: "destructive" });
-    if (file.size > 2 * 1024 * 1024) return toast({ title: t("profile.settings.error"), description: t("profile.settings.fileTooLarge"), variant: "destructive" });
+    if (!file.type.startsWith("image/")) {
+      toast({ title: t("profile.settings.error"), description: t("profile.settings.imageOnly"), variant: "destructive" });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: t("profile.settings.error"), description: t("profile.settings.fileTooLarge"), variant: "destructive" });
+      return;
+    }
 
     setUploading(true);
     const filePath = `${user.id}/${Date.now()}-${sanitizeFileName(file.name)}`;
     const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file, { upsert: true });
     if (uploadError) {
       setUploading(false);
-      return toast({ title: t("profile.settings.error"), description: uploadError.message, variant: "destructive" });
+      toast({ title: t("profile.settings.error"), description: uploadError.message, variant: "destructive" });
+      return;
     }
     const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
     const url = `${data.publicUrl}?t=${Date.now()}`;
     const { error } = await supabase.from("profiles").update({ avatar_url: url, updated_at: new Date().toISOString() }).eq("id", user.id);
     setUploading(false);
-    if (error) return toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
+    if (error) {
+      toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
+      return;
+    }
     setAvatarUrl(url);
     updateProfileState({ avatar_url: url });
     await refreshProfile();
@@ -85,7 +95,10 @@ export default function ProfileSettings() {
     const cleanName = displayName.trim();
     const { error } = await supabase.from("profiles").update({ display_name: cleanName, updated_at: new Date().toISOString() }).eq("id", user.id);
     setLoading(false);
-    if (error) return toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
+    if (error) {
+      toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
+      return;
+    }
     updateProfileState({ display_name: cleanName });
     await refreshProfile();
     toast({ title: t("profile.settings.saved") });
@@ -94,34 +107,56 @@ export default function ProfileSettings() {
   const handleSavePassword = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!user) return;
-    if (newPassword.length < 6) return toast({ title: t("auth.error"), description: t("auth.passwordMin"), variant: "destructive" });
-    if (newPassword !== confirmPassword) return toast({ title: t("auth.error"), description: t("profile.settings.passwordMismatch"), variant: "destructive" });
+    if (newPassword.length < 6) {
+      toast({ title: t("auth.error"), description: t("auth.passwordMin"), variant: "destructive" });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast({ title: t("auth.error"), description: t("profile.settings.passwordMismatch"), variant: "destructive" });
+      return;
+    }
     setLoading(true);
     const { error: signInError } = await supabase.auth.signInWithPassword({ email: user.email || "", password: currentPassword });
     if (signInError) {
       setLoading(false);
-      return toast({ title: t("auth.error"), description: t("profile.settings.invalidCurrentPassword"), variant: "destructive" });
+      toast({ title: t("auth.error"), description: t("profile.settings.invalidCurrentPassword"), variant: "destructive" });
+      return;
     }
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     setLoading(false);
-    if (error) return toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
-    setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
+    if (error) {
+      toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
+      return;
+    }
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
     toast({ title: t("profile.settings.passwordSaved") });
   };
 
   const handleSaveNotifications = async () => {
     if (!user) return;
     setLoading(true);
-    const { error } = await supabase.from("notification_preferences").upsert({ user_id: user.id, ...notificationPreferences, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+    const { data: existing } = await supabase.from("notification_preferences").select("user_id").eq("user_id", user.id).maybeSingle();
+    const payload = { ...notificationPreferences, updated_at: new Date().toISOString() };
+    const result = existing
+      ? await supabase.from("notification_preferences").update(payload).eq("user_id", user.id)
+      : await supabase.from("notification_preferences").insert({ user_id: user.id, ...notificationPreferences });
     setLoading(false);
-    if (error) return toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
+    if (result.error) {
+      toast({ title: t("profile.settings.error"), description: result.error.message, variant: "destructive" });
+      return;
+    }
     toast({ title: t("profile.settings.notificationsSaved") });
   };
 
   const handleDeleteAccount = async () => {
     if (!user) return;
     const { error } = await supabase.functions.invoke("delete-account", { body: { email: deleteEmail } });
-    if (error) return toast({ title: t("profile.settings.error"), description: t("profile.settings.deleteFailed"), variant: "destructive" });
+    if (error) {
+      toast({ title: t("profile.settings.error"), description: t("profile.settings.deleteFailed"), variant: "destructive" });
+      return;
+    }
     await supabase.auth.signOut({ scope: "local" });
     toast({ title: t("profile.settings.accountDeleted") });
     navigate("/");
