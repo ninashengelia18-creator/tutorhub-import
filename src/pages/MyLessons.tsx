@@ -266,7 +266,7 @@ export default function MyLessons() {
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="outline" className={`gap-1 text-xs ${sb.class}`}>
               <StatusIcon className="h-3 w-3" />
-              {sb.label}
+              {t(sb.labelKey)}
             </Badge>
           </div>
           <p className="text-sm font-medium">
