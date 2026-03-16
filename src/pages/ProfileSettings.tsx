@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Camera, User, Loader2 } from "lucide-react";
+import { Camera, User, Loader2, Wallet } from "lucide-react";
 
 export default function ProfileSettings() {
   const { user } = useAuth();
