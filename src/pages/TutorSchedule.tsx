@@ -6,6 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet } from "lucide-react";
+import { getLocaleForLanguage, localizeSubjectLabel } from "@/lib/localization";
 import { cn } from "@/lib/utils";
 
 interface TutorBooking {
@@ -24,7 +25,7 @@ interface TutorBooking {
 
 export default function TutorSchedule() {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [allBookings, setAllBookings] = useState<TutorBooking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,8 +66,8 @@ export default function TutorSchedule() {
   const formatDate = (dateStr: string) => {
     const date = new Date(`${dateStr}T00:00:00`);
     const todayStr = new Date().toISOString().split("T")[0];
-    const prefix = dateStr === todayStr ? "Today, " : "";
-    return prefix + date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    const prefix = dateStr === todayStr ? `${t("tutorSchedule.todayPrefix")} ` : "";
+    return prefix + date.toLocaleDateString(getLocaleForLanguage(lang), { weekday: "short", month: "short", day: "numeric" });
   };
 
   const formatTime = (timeValue: string) => timeValue.slice(0, 5);
@@ -113,7 +114,7 @@ export default function TutorSchedule() {
           </div>
 
           {loading ? (
-            <div className="py-12 text-center text-muted-foreground">Loading...</div>
+            <div className="py-12 text-center text-muted-foreground">{t("tutorSchedule.loading")}</div>
           ) : bookings.length === 0 ? (
             <div className="py-16 text-center">
               <BookOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
@@ -128,7 +129,7 @@ export default function TutorSchedule() {
                     <CalendarDays className="h-4 w-4" />
                     {formatDate(date)}
                     <Badge variant="outline" className="ml-auto text-xs">
-                      {lessons.length} {lessons.length === 1 ? "lesson" : "lessons"}
+                      {lessons.length} {lessons.length === 1 ? t("tutorSchedule.lessonSingle") : t("tutorSchedule.lessonPlural")}
                     </Badge>
                   </h2>
                   <div className="space-y-3">
@@ -143,7 +144,7 @@ export default function TutorSchedule() {
                               {booking.student_name || t("tutorSchedule.unknownStudent")}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              {booking.subject} · {booking.duration_minutes} min · <span className="font-medium text-foreground">{booking.currency}{booking.price_amount.toFixed(2)}</span>
+                              {localizeSubjectLabel(booking.subject, t)} · {booking.duration_minutes} {t("tutorSchedule.minutes")} · <span className="font-medium text-foreground">{booking.currency}{booking.price_amount.toFixed(2)}</span>
                             </p>
                           </div>
                         </div>
@@ -160,9 +161,7 @@ export default function TutorSchedule() {
                             href={booking.google_meet_link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={cn(
-                              "inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20",
-                            )}
+                            className={cn("inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20")}
                           >
                             <Video className="h-3.5 w-3.5" />
                             {t("tutorSchedule.joinMeet")}
