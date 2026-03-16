@@ -167,7 +167,7 @@ export default function TutorSchedule() {
                               {booking.student_name || t("tutorSchedule.unknownStudent")}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              {booking.subject} · {booking.duration_minutes} min
+                              {booking.subject} · {booking.duration_minutes} min · <span className="font-medium text-foreground">{booking.currency}{booking.price_amount.toFixed(2)}</span>
                             </p>
                           </div>
                         </div>
