@@ -66,6 +66,7 @@ const CANCEL_REASON_KEYS = [
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
 
 function CalendarView({ bookings }: { bookings: Booking[] }) {
+  const { lang, t } = useLanguage();
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const navigateWeek = (dir: number) => {
