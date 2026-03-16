@@ -141,8 +141,8 @@ export function PortalHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="border-b border-border/60">
-        <div className="container flex min-h-24 items-center justify-between gap-3 py-3">
-          <div className="flex items-center gap-3 sm:gap-4">
+        <div className="container flex h-18 items-center justify-between gap-3 py-2">
+          <div className="flex items-center gap-4">
             <button
               type="button"
               className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary sm:hidden"
@@ -155,7 +155,7 @@ export function PortalHeader() {
             <Link to={isTutor ? "/tutor-dashboard" : "/dashboard"} className="flex items-center gap-4">
               <div className="flex flex-col items-center gap-1">
                 <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
-                <span className="text-base font-semibold uppercase tracking-[0.25em] text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <span className="text-foreground uppercase tracking-[0.25em]" style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}>
                   LearnEazy
                 </span>
               </div>
@@ -302,10 +302,10 @@ export function PortalHeader() {
         <div className="border-b border-border/60 bg-background sm:hidden">
           <div className="container flex flex-col gap-2 py-4">
             <div className="mb-2 border-b border-border/60 pb-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <p className="uppercase tracking-[0.25em] text-foreground" style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}>
                 LearnEazy
               </p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t("brand.tagline")}</p>
+              <p className="mt-1 text-sm font-semibold leading-tight tracking-wide text-muted-foreground">{t("brand.tagline")}</p>
             </div>
             <Link to={profilePath} className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
               {t("nav.profile")}
