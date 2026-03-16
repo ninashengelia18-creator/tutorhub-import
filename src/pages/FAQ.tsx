@@ -151,10 +151,13 @@ export default function FAQ() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
-          <div className="mx-auto h-12 w-12 rounded-xl hero-gradient flex items-center justify-center mb-4">
-            <HelpCircle className="h-6 w-6 text-primary-foreground" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl hero-gradient md:h-20 md:w-20">
+            <HelpCircle className="h-9 w-9 text-primary-foreground md:h-12 md:w-12" />
           </div>
-          <h1 className="text-3xl font-bold mb-2">FAQ</h1>
+          <h1 className="mb-2 flex justify-center" aria-label="FAQ">
+            <HelpCircle className="h-14 w-14 text-foreground md:h-20 md:w-20" aria-hidden="true" />
+            <span className="sr-only">FAQ</span>
+          </h1>
           <p className="text-muted-foreground mb-4">LearnEazy — Frequently Asked Questions</p>
 
           {/* Language switcher */}
