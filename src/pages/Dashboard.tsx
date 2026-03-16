@@ -110,7 +110,7 @@ export default function Dashboard() {
                       <p className="text-xs text-primary">{t("dash.trialBooked")}</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">{t("dash.subscribe")}</Button>
+                  <SubscribePlansDialog buttonVariant="outline" />
                 </div>
               </div>
             </div>

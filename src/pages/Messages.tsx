@@ -207,10 +207,10 @@ export default function Messages() {
               <span className="font-medium">5</span>
               <span className="text-muted-foreground">(0)</span>
             </div>
-            <Button className="w-full hero-gradient text-primary-foreground border-0 mb-2">
-              <Clock className="h-4 w-4 mr-2" />
-              {t("msg.subscribe")}
-            </Button>
+            <SubscribePlansDialog
+              buttonVariant="default"
+              buttonClassName="mb-2 w-full hero-gradient border-0 text-primary-foreground"
+            />
             <Button variant="outline" className="w-full" asChild>
               <Link to="/classroom">
                 <Monitor className="h-4 w-4 mr-2" />

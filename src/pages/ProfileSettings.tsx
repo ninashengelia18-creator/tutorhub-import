@@ -134,7 +134,7 @@ export default function ProfileSettings() {
   }
 
   return (
-    <Layout>
+    <Layout hideFooter>
       <div className="container max-w-xl py-12 px-4">
         <Card className="border-border shadow-lg">
           <CardHeader className="text-center space-y-2">

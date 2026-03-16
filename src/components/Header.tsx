@@ -216,11 +216,6 @@ export function Header() {
                     </button>
                   ))}
                 </div>
-                <SubscribePlansDialog
-                  buttonVariant="outline"
-                  buttonSize="sm"
-                  buttonClassName="rounded-full border-primary/35 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground"
-                />
               </div>
 
               {navLinks.map((link) => (

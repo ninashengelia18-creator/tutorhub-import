@@ -100,7 +100,7 @@ export default function TutorSchedule() {
   }
 
   return (
-    <Layout>
+    <Layout hideFooter>
       <div className="container py-8">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-3 mb-2">
