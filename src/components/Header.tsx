@@ -17,7 +17,7 @@ const navLinks = [
   { labelKey: "nav.forBusiness", href: "/for-business" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
   { labelKey: "nav.faq", href: "/faq" },
-];
+] as const;
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
