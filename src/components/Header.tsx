@@ -193,7 +193,7 @@ export function Header() {
                       transition={{ duration: 0.15 }}
                       className="absolute right-0 z-50 mt-1 w-36 overflow-hidden rounded-2xl border bg-card shadow-lg"
                     >
-                      {(Object.keys(langLabels) as Language[]).map((l) => (
+                      {(["en", "ru", "ka"] as Language[]).map((l) => (
                         <button
                           key={l}
                           onClick={() => {
@@ -204,7 +204,7 @@ export function Header() {
                             lang === l ? "bg-primary/20 text-primary font-semibold" : "text-foreground hover:bg-secondary"
                           }`}
                         >
-                          {l === "en" ? "English" : l === "ka" ? "ქართული" : "Русский"}
+                          {l === "en" ? "English" : l === "ru" ? "Русский" : "ქართული"}
                         </button>
                       ))}
                     </motion.div>
