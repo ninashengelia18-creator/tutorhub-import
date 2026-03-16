@@ -2062,7 +2062,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.tipsDesc": "Получайте полезные материалы и эксклюзивные предложения.",
     "profile.settings.surveysTitle": "Опросы и интервью",
     "profile.settings.surveysDesc": "Помогите нам улучшить опыт студентов.",
-    "profile.settings.notificationsSaved": "Настройки уведомлений сохранены!"
+    "profile.settings.notificationsSaved": "Настройки уведомлений сохранены!",
     "profile.settings.deleteTitle": "Удалить аккаунт",
     "profile.settings.deleteDesc": "Удаление аккаунта необратимо, и все ваши данные будут удалены.",
     "profile.settings.deleteWarning": "Введите ваш email, чтобы подтвердить удаление аккаунта.",
