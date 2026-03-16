@@ -335,10 +335,10 @@ export default function MyLessons() {
                   {lastTutor.tutor_name.split(" ").map(n => n[0]).join("")}
                 </span>
               </div>
-              <p className="font-semibold text-sm">Schedule your next lesson with {lastTutor.tutor_name.split(" ")[0]}.</p>
+              <p className="font-semibold text-sm">{t("myLessons.scheduleNext").replace("{name}", lastTutor.tutor_name.split(" ")[0])}</p>
             </div>
             <Button variant="outline" asChild>
-              <Link to="/search">Schedule lesson</Link>
+              <Link to="/search">{t("myLessons.scheduleLesson")}</Link>
             </Button>
           </motion.div>
         )}
