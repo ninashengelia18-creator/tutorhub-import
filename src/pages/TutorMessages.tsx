@@ -374,6 +374,16 @@ export default function TutorMessages() {
     { key: "archived" as const, label: t("msg.archived") },
   ];
 
+  const subjectOptions = useMemo(
+    () => [
+      "all",
+      ...Array.from(
+        new Set(conversationItems.map((item) => item.subject).filter((subject) => subject.trim().length > 0)),
+      ).sort((a, b) => a.localeCompare(b)),
+    ],
+    [conversationItems],
+  );
+
   if (!tutorName) {
     return (
       <Layout hideFooter>
