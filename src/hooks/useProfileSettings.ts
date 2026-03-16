@@ -16,6 +16,7 @@ export function useProfileSettings(redirectPath: string) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -39,6 +40,8 @@ export function useProfileSettings(redirectPath: string) {
       supabase.from("notification_preferences").select("email_transactional, email_tips_discount, email_surveys").eq("user_id", user.id).maybeSingle(),
     ]);
 
+    setEmail(user.email || "");
+
     if (profileData) {
       setDisplayName(profileData.display_name || "");
       setAvatarUrl(profileData.avatar_url);
@@ -59,6 +62,10 @@ export function useProfileSettings(redirectPath: string) {
 
     void fetchProfile();
   }, [fetchProfile, navigate, redirectPath, user]);
+
+  useEffect(() => {
+    setEmail(user?.email || "");
+  }, [user?.email]);
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -116,6 +123,33 @@ export function useProfileSettings(redirectPath: string) {
 
     updateProfileState({ display_name: cleanName });
     await refreshProfile();
+    toast({ title: t("profile.settings.saved") });
+  };
+
+  const handleSaveEmail = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!user) return;
+
+    const cleanEmail = email.trim();
+    if (!cleanEmail) {
+      toast({ title: t("profile.settings.error"), description: t("auth.email"), variant: "destructive" });
+      return;
+    }
+
+    if (cleanEmail === (user.email || "")) {
+      toast({ title: t("profile.settings.saved") });
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ email: cleanEmail });
+    setLoading(false);
+
+    if (error) {
+      toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
+      return;
+    }
+
     toast({ title: t("profile.settings.saved") });
   };
 
@@ -204,6 +238,8 @@ export function useProfileSettings(redirectPath: string) {
     fileInputRef,
     displayName,
     setDisplayName,
+    email,
+    setEmail,
     avatarUrl,
     loading,
     uploading,
@@ -227,8 +263,10 @@ export function useProfileSettings(redirectPath: string) {
     setNotificationPreferences,
     handleAvatarUpload,
     handleSaveAccount,
+    handleSaveEmail,
     handleSavePassword,
     handleSaveNotifications,
     handleDeleteAccount,
   };
 }
+

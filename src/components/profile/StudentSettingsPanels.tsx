@@ -132,10 +132,13 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
   if (activeSection === "email") {
     return (
       <SectionShell title={t("profile.settings.emailTitle")} description={t("profile.settings.emailDesc")}>
-        <div className="space-y-3">
-          <Label htmlFor="accountEmail">{t("profile.settings.accountEmail")}</Label>
-          <Input id="accountEmail" value={email} disabled className="h-16 rounded-2xl border-border bg-background px-6 text-lg" />
-        </div>
+        <form className="space-y-6" onSubmit={(event) => void onSaveEmail(event)}>
+          <div className="space-y-3">
+            <Label htmlFor="accountEmail">{t("profile.settings.accountEmail")}</Label>
+            <Input id="accountEmail" type="email" value={email} onChange={(e) => onEmailChange(e.target.value)} className="h-16 rounded-2xl border-border bg-background px-6 text-lg" />
+          </div>
+          <Button type="submit" className="h-16 w-full rounded-2xl text-lg font-semibold" disabled={loading}>{loading ? t("profile.settings.saving") : t("profile.settings.save")}</Button>
+        </form>
       </SectionShell>
     );
   }
