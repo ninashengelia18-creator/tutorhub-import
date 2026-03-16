@@ -161,8 +161,48 @@ export type Database = {
         }
         Relationships: []
       }
+      message_conversations: {
+        Row: {
+          archived_by_student: boolean
+          archived_by_tutor: boolean
+          created_at: string
+          deleted_by_student: boolean
+          deleted_by_tutor: boolean
+          id: string
+          student_id: string
+          tutor_name: string
+          updated_at: string
+        }
+        Insert: {
+          archived_by_student?: boolean
+          archived_by_tutor?: boolean
+          created_at?: string
+          deleted_by_student?: boolean
+          deleted_by_tutor?: boolean
+          id?: string
+          student_id: string
+          tutor_name: string
+          updated_at?: string
+        }
+        Update: {
+          archived_by_student?: boolean
+          archived_by_tutor?: boolean
+          created_at?: string
+          deleted_by_student?: boolean
+          deleted_by_tutor?: boolean
+          id?: string
+          student_id?: string
+          tutor_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
+          attachment_name: string | null
+          attachment_size: number | null
+          attachment_type: string | null
+          attachment_url: string | null
           content: string
           created_at: string
           id: string
@@ -175,6 +215,10 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          attachment_name?: string | null
+          attachment_size?: number | null
+          attachment_type?: string | null
+          attachment_url?: string | null
           content: string
           created_at?: string
           id?: string
@@ -187,6 +231,10 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          attachment_name?: string | null
+          attachment_size?: number | null
+          attachment_type?: string | null
+          attachment_url?: string | null
           content?: string
           created_at?: string
           id?: string
