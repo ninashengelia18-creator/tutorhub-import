@@ -92,7 +92,7 @@ export default function TutorSearch() {
               value === opt ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
             }`}
           >
-            {opt}
+            {opt.startsWith("search.") ? t(opt) : opt}
           </button>
         ))}
       </div>
