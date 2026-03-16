@@ -104,9 +104,11 @@ export default function ProfileSettings() {
     if (!user) return;
     setLoading(true);
 
+    const rate = hourlyRate.trim() ? parseFloat(hourlyRate) : null;
+
     const { error } = await supabase
       .from("profiles")
-      .update({ display_name: displayName, updated_at: new Date().toISOString() })
+      .update({ display_name: displayName, hourly_rate: rate, updated_at: new Date().toISOString() })
       .eq("id", user.id);
 
     if (error) {
