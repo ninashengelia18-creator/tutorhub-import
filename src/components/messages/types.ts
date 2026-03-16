@@ -2,6 +2,7 @@ export type MessageFilter = "all" | "unread" | "archived";
 
 export interface MessageRecord {
   id: string;
+  student_id: string;
   tutor_name: string;
   content: string;
   created_at: string;
@@ -15,20 +16,26 @@ export interface MessageRecord {
 }
 
 export interface ConversationRecord {
+  student_id: string;
   tutor_name: string;
-  archived_by_student: boolean;
-  deleted_by_student: boolean;
+  archived_by_student?: boolean;
+  archived_by_tutor?: boolean;
+  deleted_by_student?: boolean;
+  deleted_by_tutor?: boolean;
   updated_at: string;
 }
 
 export interface BookingContactRecord {
-  tutor_name: string;
-  tutor_avatar_url: string | null;
+  student_id?: string;
+  student_name?: string | null;
+  tutor_name?: string;
+  tutor_avatar_url?: string | null;
   subject: string;
   created_at: string;
 }
 
 export interface ConversationListItem {
+  id: string;
   name: string;
   avatar_url: string | null;
   subject: string;
