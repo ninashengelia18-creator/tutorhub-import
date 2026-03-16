@@ -1001,6 +1001,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "შესვლა",
     "nav.signup": "რეგისტრაცია",
     "nav.profile": "პროფილი",
+    "nav.dashboard": "დეშბორდი",
+    "nav.schedule": "განრიგი",
     "nav.lessonPlanner": "გაკვეთილის გეგმა",
 
     // Profile Settings
