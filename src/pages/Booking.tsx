@@ -234,12 +234,18 @@ export default function Booking() {
             {/* Time */}
             <div>
               <label className="text-sm font-medium mb-1.5 block">{t("booking.time")}</label>
-              <input
-                type="time"
-                value={time}
-                onChange={e => setTime(e.target.value)}
-                className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
-              />
+              <Select value={time} onValueChange={setTime}>
+                <SelectTrigger className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm focus:ring-primary">
+                  <SelectValue placeholder={t("booking.selectTime")} />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-border bg-popover text-popover-foreground">
+                  {TIME_OPTIONS.map((slot) => (
+                    <SelectItem key={slot} value={slot} className="rounded-lg">
+                      {slot}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Duration */}
