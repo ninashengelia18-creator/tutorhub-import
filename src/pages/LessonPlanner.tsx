@@ -396,8 +396,8 @@ export default function LessonPlanner() {
                     <div>
                       <label className="mb-1 block text-sm text-muted-foreground">{l.numStudents} *</label>
                       <Select value={numStudents} onValueChange={setNumStudents}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>{studentCounts.map((n) => <SelectItem key={n} value={n}>{n}</SelectItem>)}</SelectContent>
+                        <SelectTrigger><SelectValue placeholder={l.numStudentsPlaceholder} /></SelectTrigger>
+                        <SelectContent>{options.studentCounts.map((n) => <SelectItem key={n} value={n}>{n}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
                   </div>
