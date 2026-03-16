@@ -620,6 +620,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.passwordUpdated": "Password updated successfully!",
     "auth.logout": "Log out",
     "auth.dashboard": "Dashboard",
+    "auth.togglePassword": "Show or hide password",
 
     // Signup role selection
     "signup.chooseRole": "Join LearnEazy",
