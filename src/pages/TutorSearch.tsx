@@ -48,8 +48,8 @@ export default function TutorSearch() {
   const [search, setSearch] = useState("");
   const [selectedSubject, setSelectedSubject] = useState(initialSubject);
   const [priceRange, setPriceRange] = useState([0, 50]);
-  const [selectedRating, setSelectedRating] = useState("Any");
-  const [selectedAvailability, setSelectedAvailability] = useState("Any");
+  const [selectedRating, setSelectedRating] = useState("search.any");
+  const [selectedAvailability, setSelectedAvailability] = useState("search.any");
   const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
