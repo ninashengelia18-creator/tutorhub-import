@@ -58,7 +58,7 @@ export default function Booking() {
     }
 
     if (!date || !time || !studentName.trim() || !studentEmail.trim()) {
-      toast({ title: t("booking.failed"), description: "Please fill in all required fields.", variant: "destructive" });
+      toast({ title: t("booking.failed"), description: t("booking.fillRequired"), variant: "destructive" });
       return;
     }
 
