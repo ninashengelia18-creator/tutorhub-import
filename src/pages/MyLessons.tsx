@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { localizeSubjectLabel } from "@/lib/localization";
 
 interface Booking {
   id: string;
@@ -164,7 +165,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
                         }`}
                         style={{ minHeight: `${(b.duration_minutes / 60) * 48 - 4}px` }}
                       >
-                        <p className="text-[10px] font-medium truncate">{b.subject}</p>
+                        <p className="text-[10px] font-medium truncate">{localizeSubjectLabel(b.subject, t)}</p>
                         <p className="text-[10px] opacity-70 truncate tabular-nums">
                           {formatTime(b.start_time)} – {formatTime(b.end_time)}
                         </p>
@@ -273,7 +274,7 @@ export default function MyLessons() {
             {formatDate(booking.lesson_date)} · {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
           </p>
           <p className="text-sm text-muted-foreground">
-            {booking.tutor_name}, {booking.subject}
+            {booking.tutor_name}, {localizeSubjectLabel(booking.subject, t)}
           </p>
           {booking.google_meet_link && booking.status === "confirmed" && (
             <a href={booking.google_meet_link} target="_blank" rel="noopener noreferrer"
@@ -421,7 +422,7 @@ export default function MyLessons() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-primary">{tutor.tutor_name}</p>
-                      <p className="text-sm text-muted-foreground">{tutor.subject}</p>
+                      <p className="text-sm text-muted-foreground">{localizeSubjectLabel(tutor.subject, t)}</p>
                     </div>
                     <Button variant="outline" asChild>
                       <Link to="/search">{t("myLessons.bookAgain")}</Link>

@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { localizeSubjectLabel } from "@/lib/localization";
 
 interface Booking {
   id: string;
@@ -121,7 +122,7 @@ export default function Dashboard() {
                       )}
                     </div>
                     <div>
-                      <p className="font-semibold text-sm">{lastTutor.tutor_name} · {lastTutor.subject}</p>
+                      <p className="font-semibold text-sm">{lastTutor.tutor_name} · {localizeSubjectLabel(lastTutor.subject, t)}</p>
                       <p className="text-xs text-primary">{t("dash.trialBooked")}</p>
                     </div>
                   </div>
@@ -184,7 +185,7 @@ export default function Dashboard() {
                     {formatTime(upcomingBookings[0].start_time)} – {formatTime(upcomingBookings[0].end_time)}
                   </p>
                   <p className="text-sm text-muted-foreground mb-4">
-                    {upcomingBookings[0].subject} {t("dash.withTutor")} {upcomingBookings[0].tutor_name}
+                    {localizeSubjectLabel(upcomingBookings[0].subject, t)} {t("dash.withTutor")} {upcomingBookings[0].tutor_name}
                   </p>
 
                   <Button variant="outline" size="lg" asChild>
@@ -230,7 +231,7 @@ export default function Dashboard() {
                               {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              {booking.subject} {t("dash.withTutor")} {booking.tutor_name}
+                              {localizeSubjectLabel(booking.subject, t)} {t("dash.withTutor")} {booking.tutor_name}
                             </p>
                           </div>
                           <button className="text-muted-foreground hover:text-foreground">

@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { formatLocalizedDate, localizeSubjectLabel } from "@/lib/localization";
 
 const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
 
@@ -37,8 +38,9 @@ export default function Booking() {
   const { toast } = useToast();
 
   const tutor = tutorData[id || "1"] || tutorData["1"];
+  const localizedTutorSubject = localizeSubjectLabel(tutor.subject, t);
 
-  const [subject, setSubject] = useState(tutor.subject);
+  const [subject, setSubject] = useState(localizedTutorSubject);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [time, setTime] = useState("");
   const [duration, setDuration] = useState(60);
@@ -205,7 +207,7 @@ export default function Booking() {
                     className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : t("booking.selectDate")}
+                    {date ? formatLocalizedDate(date, lang) : t("booking.selectDate")}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
