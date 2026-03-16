@@ -169,9 +169,9 @@ export function PortalHeader() {
 
           <div className="flex items-center gap-2 sm:gap-3">
 
-            <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
+            <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
               <Link to={isTutor ? "/tutor-messages" : "/messages"} aria-label={t("msg.messages")}>
-                <Mail className="h-4 w-4" />
+                <Mail className="h-5 w-5" />
                 {unreadCount > 0 ? (
                   <span className="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
                     {Math.min(unreadCount, 9)}
@@ -181,24 +181,24 @@ export function PortalHeader() {
             </Button>
 
             {!isTutor ? (
-              <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
+              <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
                 <Link to="/saved-tutors" aria-label="Saved tutors">
-                  <Heart className="h-4 w-4" />
+                  <Heart className="h-5 w-5" />
                   {savedCount > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
                 </Link>
               </Button>
             ) : null}
 
-            <Button variant="ghost" size="icon" className="rounded-full" asChild>
+            <Button variant="ghost" size="icon" className="h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
               <Link to="/faq" aria-label="FAQ">
-                <LifeBuoy className="h-4 w-4" />
+                <HelpCircle className="h-5 w-5" />
               </Link>
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative rounded-full" aria-label="Notifications">
-                  <Bell className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" aria-label="Notifications">
+                  <Bell className="h-5 w-5" />
                   {notifications.length > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
                 </Button>
               </DropdownMenuTrigger>
@@ -219,7 +219,7 @@ export function PortalHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-2 rounded-full px-3 text-foreground hover:bg-accent">
+                <Button variant="ghost" size="sm" className="h-11 rounded-2xl border border-border bg-secondary/60 px-4 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground">
                   <span className="hidden sm:inline">{lang === "en" ? "English" : lang === "ka" ? "ქართული" : "Русский"}</span>
                   <span className="sm:hidden">{lang.toUpperCase()}</span>
                   <ChevronDown className="h-4 w-4" />
