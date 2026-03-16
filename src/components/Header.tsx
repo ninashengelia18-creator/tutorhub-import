@@ -7,7 +7,7 @@ import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/owl-logo.png";
-import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
+import { PortalHeader } from "@/components/PortalHeader";
 
 const langLabels: Record<Language, string> = { ka: "ქარ", en: "EN", ru: "РУ" };
 

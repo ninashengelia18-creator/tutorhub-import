@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
+import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { localizeSubjectLabel } from "@/lib/localization";
 
