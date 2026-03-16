@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Info, MessageSquare } from "lucide-react";
+import { Info, MessageSquare, Search } from "lucide-react";
 
 import { Layout } from "@/components/Layout";
 import { ChatComposer } from "@/components/messages/ChatComposer";
@@ -25,6 +25,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -43,6 +51,8 @@ export default function TutorMessages() {
   const [message, setMessage] = useState("");
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [msgFilter, setMsgFilter] = useState<MessageFilter>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [subjectFilter, setSubjectFilter] = useState("all");
   const [showTip, setShowTip] = useState(true);
   const [sending, setSending] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<ConversationListItem | null>(null);
@@ -180,14 +190,19 @@ export default function TutorMessages() {
       });
     });
 
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
     return Array.from(conversationMap.values())
       .filter((item) => {
-        if (msgFilter === "unread") return item.unread > 0 && !item.archived;
-        if (msgFilter === "archived") return item.archived;
-        return !item.archived;
+        if (msgFilter === "unread" && (item.unread === 0 || item.archived)) return false;
+        if (msgFilter === "archived" && !item.archived) return false;
+        if (msgFilter === "all" && item.archived) return false;
+        if (subjectFilter !== "all" && item.subject !== subjectFilter) return false;
+        if (normalizedQuery && !item.name.toLowerCase().includes(normalizedQuery)) return false;
+        return true;
       })
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-  }, [contacts, conversations, messages, msgFilter]);
+  }, [contacts, conversations, messages, msgFilter, searchQuery, subjectFilter]);
 
   useEffect(() => {
     if (!selectedStudentId && conversationItems.length > 0) {
@@ -359,6 +374,16 @@ export default function TutorMessages() {
     { key: "archived" as const, label: t("msg.archived") },
   ];
 
+  const subjectOptions = useMemo(
+    () => [
+      "all",
+      ...Array.from(
+        new Set(conversationItems.map((item) => item.subject).filter((subject) => subject.trim().length > 0)),
+      ).sort((a, b) => a.localeCompare(b)),
+    ],
+    [conversationItems],
+  );
+
   if (!tutorName) {
     return (
       <Layout hideFooter>
@@ -386,20 +411,51 @@ export default function TutorMessages() {
               <h1 className="mt-2 text-xl font-semibold text-foreground">Student messages</h1>
             </div>
 
-            <div className="flex items-center gap-4 px-4 pb-2 pt-4">
-              {filters.map((filter) => (
-                <button
-                  key={filter.key}
-                  onClick={() => setMsgFilter(filter.key)}
-                  className={`border-b-2 pb-1 text-sm font-medium transition-colors ${
-                    msgFilter === filter.key
-                      ? "border-primary text-foreground"
-                      : "border-transparent text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {filter.label}
-                </button>
-              ))}
+            <div className="space-y-4 px-4 pb-3 pt-4">
+              <div className="flex items-center gap-4">
+                {filters.map((filter) => (
+                  <button
+                    key={filter.key}
+                    onClick={() => setMsgFilter(filter.key)}
+                    className={`border-b-2 pb-1 text-sm font-medium transition-colors ${
+                      msgFilter === filter.key
+                        ? "border-primary text-foreground"
+                        : "border-transparent text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="space-y-3">
+                <div className="relative">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Search by student name"
+                    className="rounded-xl pl-9"
+                    aria-label="Search conversations by student name"
+                  />
+                </div>
+
+                <Select value={subjectFilter} onValueChange={setSubjectFilter}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue placeholder="Filter by subject" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All subjects</SelectItem>
+                    {subjectOptions
+                      .filter((subject) => subject !== "all")
+                      .map((subject) => (
+                        <SelectItem key={subject} value={subject}>
+                          {subject}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <ConversationList
