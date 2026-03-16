@@ -141,25 +141,25 @@ export function PortalHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="border-b border-border/60">
-        <div className="container flex min-h-16 items-center justify-between gap-3 py-3">
+        <div className="container flex min-h-24 items-center justify-between gap-3 py-3">
           <div className="flex items-center gap-3 sm:gap-4">
             <button
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent sm:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary sm:hidden"
               onClick={() => setMobileMenuOpen((value) => !value)}
               aria-label="Toggle portal menu"
             >
               <Menu className="h-5 w-5" />
             </button>
 
-            <Link to={isTutor ? "/tutor-dashboard" : "/dashboard"} className="flex items-center gap-3">
+            <Link to={isTutor ? "/tutor-dashboard" : "/dashboard"} className="flex items-center gap-4">
               <div className="flex flex-col items-center gap-1">
-                <img src={logo} alt="LearnEazy owl" className="h-12 w-auto sm:h-14" loading="eager" decoding="async" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-foreground sm:text-xs" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
+                <span className="text-base font-semibold uppercase tracking-[0.25em] text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
                   LearnEazy
                 </span>
               </div>
-              <span className="hidden lg:flex flex-col border-l border-border pl-3 text-xs font-semibold leading-tight tracking-wide text-muted-foreground">
+              <span className="hidden lg:flex flex-col border-l border-border pl-4 text-sm font-semibold leading-tight tracking-wide text-muted-foreground">
                 {t("brand.tagline").split(". ").map((line, i, arr) => (
                   <span key={i}>{line}{i < arr.length - 1 ? "." : ""}</span>
                 ))}
@@ -167,7 +167,7 @@ export function PortalHeader() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
 
             <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
               <Link to={isTutor ? "/tutor-messages" : "/messages"} aria-label={t("msg.messages")}>
