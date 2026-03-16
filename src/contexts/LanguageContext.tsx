@@ -593,6 +593,21 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "Access Denied",
     "admin.adminOnly": "This page is only accessible to administrators.",
     "nav.admin": "Admin",
+    "nav.tutorSchedule": "My Schedule",
+
+    // Tutor Schedule
+    "tutorSchedule.title": "My Schedule",
+    "tutorSchedule.subtitle": "Your upcoming confirmed lessons with students",
+    "tutorSchedule.upcomingCount": "Upcoming lessons",
+    "tutorSchedule.daysScheduled": "Days scheduled",
+    "tutorSchedule.totalTime": "Total teaching time",
+    "tutorSchedule.noLessons": "No upcoming lessons",
+    "tutorSchedule.noLessonsDesc": "When students book lessons with you, they'll appear here.",
+    "tutorSchedule.joinMeet": "Join Meet",
+    "tutorSchedule.noMeetLink": "Meet link pending",
+    "tutorSchedule.unknownStudent": "Student",
+    "tutorSchedule.setName": "Set your display name",
+    "tutorSchedule.setNameDesc": "Please set your display name in Profile Settings to match the name used in bookings.",
   },
   ka: {
     // Nav
