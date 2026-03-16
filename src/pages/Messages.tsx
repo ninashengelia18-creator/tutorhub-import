@@ -383,11 +383,11 @@ export default function Messages() {
 
             <ConversationList
               conversations={conversationItems}
-              selectedName={selectedTutorName}
+              selectedId={selectedTutorId}
               lang={lang}
               emptyLabel={t("msg.noConversations")}
               continueLabel={(name) => t("msg.continueWith").replace("{name}", name)}
-              onSelect={(name) => setSelectedTutorName(name)}
+              onSelect={setSelectedTutorId}
               onDelete={(conversation) => setPendingDelete(conversation)}
             />
           </div>

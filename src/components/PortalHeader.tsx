@@ -165,7 +165,7 @@ export function PortalHeader() {
             ) : null}
 
             <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
-              <Link to="/messages" aria-label={t("msg.messages")}>
+              <Link to={isTutor ? "/tutor-messages" : "/messages"} aria-label={t("msg.messages")}>
                 <Mail className="h-4 w-4" />
                 {unreadCount > 0 ? (
                   <span className="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">

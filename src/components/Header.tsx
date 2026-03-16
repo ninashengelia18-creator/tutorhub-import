@@ -51,7 +51,7 @@ export function Header() {
     });
   }, [user]);
 
-  const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/saved-tutors", "/tutor-settings", "/tutor-dashboard", "/tutor-schedule", "/lesson-planner"].includes(location.pathname);
+  const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/saved-tutors", "/tutor-settings", "/tutor-dashboard", "/tutor-messages", "/tutor-schedule", "/lesson-planner"].includes(location.pathname);
   const profilePath = isTutor ? "/tutor-settings" : "/profile";
 
   if (isPortalHeaderRoute) {
