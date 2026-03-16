@@ -178,7 +178,7 @@ export default function LessonPlanner() {
   const [numStudents, setNumStudents] = useState("");
   const [learningGoals, setLearningGoals] = useState("");
   const [weakPoints, setWeakPoints] = useState("");
-  const [planLang, setPlanLang] = useState(lang);
+  const [planLang, setPlanLang] = useState<string>(lang);
   const [generating, setGenerating] = useState(false);
   const [plan, setPlan] = useState<LessonPlan | null>(null);
   const [savedPlans, setSavedPlans] = useState<SavedPlan[]>([]);
