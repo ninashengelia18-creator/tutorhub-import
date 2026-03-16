@@ -33,7 +33,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const langLabels: Record<Language, string> = { ka: "ქარ", en: "EN", ru: "РУ" };
+const langLabels: Record<Language, string> = { en: "EN", ru: "РУ", ka: "ქარ" };
 
 const navLinks = [
   { labelKey: "nav.home", href: "/" },

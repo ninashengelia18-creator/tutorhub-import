@@ -11,7 +11,7 @@ import {
 
 type Language = "en" | "ka" | "ru";
 
-const langLabels: Record<Language, string> = { ka: "ქართული", en: "English", ru: "Русский" };
+const langLabels: Record<Language, string> = { en: "English", ru: "Русский", ka: "ქართული" };
 
 const faqData: Record<Language, { category: string; questions: { q: string; a: string }[] }[]> = {
   en: [
