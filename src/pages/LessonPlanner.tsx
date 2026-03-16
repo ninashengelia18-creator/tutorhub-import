@@ -389,8 +389,8 @@ export default function LessonPlanner() {
                     <div>
                       <label className="mb-1 block text-sm text-muted-foreground">{l.duration} *</label>
                       <Select value={duration} onValueChange={setDuration}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>{durations.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
+                        <SelectTrigger><SelectValue placeholder={l.durationPlaceholder} /></SelectTrigger>
+                        <SelectContent>{options.durations.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
                     <div>
