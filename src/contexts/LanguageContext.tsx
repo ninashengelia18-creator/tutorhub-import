@@ -1811,6 +1811,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutorSchedule.upcomingCount": "Предстоящие уроки",
     "tutorSchedule.daysScheduled": "Запланированные дни",
     "tutorSchedule.totalTime": "Общее время обучения",
+    "tutorSchedule.earnedTotal": "Всего заработано (завершённые)",
+    "tutorSchedule.upcomingRevenue": "Предстоящий доход",
     "tutorSchedule.noLessons": "Нет предстоящих уроков",
     "tutorSchedule.noLessonsDesc": "Когда студенты забронируют уроки с вами, они появятся здесь.",
     "tutorSchedule.joinMeet": "Войти в Meet",
