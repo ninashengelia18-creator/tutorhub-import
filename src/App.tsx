@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { AppLocaleProvider } from "@/contexts/AppLocaleContext";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import TutorSearch from "./pages/TutorSearch.tsx";
@@ -44,45 +45,47 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
       <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/search" element={<TutorSearch />} />
-              <Route path="/tutor/:id" element={<TutorProfile />} />
-              <Route path="/booking/:id" element={<Booking />} />
-              <Route path="/booking-confirmation" element={<ProtectedRoute requiredRole="student"><BookingConfirmation /></ProtectedRoute>} />
-              <Route path="/dashboard" element={<ProtectedRoute requiredRole="student"><Dashboard /></ProtectedRoute>} />
-              <Route path="/classroom" element={<ProtectedRoute requiredRole="student"><Classroom /></ProtectedRoute>} />
-              <Route path="/ai-practice" element={<AIPractice />} />
-              <Route path="/messages" element={<ProtectedRoute requiredRole="student"><Messages /></ProtectedRoute>} />
-              <Route path="/my-lessons" element={<ProtectedRoute requiredRole="student"><MyLessons /></ProtectedRoute>} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/for-business" element={<ForBusiness />} />
-              <Route path="/become-tutor" element={<BecomeTutor />} />
-              <Route path="/tutor-apply" element={<TutorApply />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/signup/student" element={<StudentSignup />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/profile" element={<ProtectedRoute requiredRole="student"><ProfileSettings /></ProtectedRoute>} />
-              <Route path="/tutor-settings" element={<ProtectedRoute requiredRole="tutor"><TutorSettings /></ProtectedRoute>} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/cookie-policy" element={<CookiePolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
-              <Route path="/lesson-planner" element={<ProtectedRoute requiredRole="tutor"><LessonPlanner /></ProtectedRoute>} />
-              <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
-              <Route path="/tutor-dashboard" element={<ProtectedRoute requiredRole="tutor"><TutorDashboard /></ProtectedRoute>} />
-              <Route path="/tutor-messages" element={<ProtectedRoute requiredRole="tutor"><TutorMessages /></ProtectedRoute>} />
-              <Route path="/tutor-schedule" element={<ProtectedRoute requiredRole="tutor"><TutorSchedule /></ProtectedRoute>} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
+        <AppLocaleProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/search" element={<TutorSearch />} />
+                <Route path="/tutor/:id" element={<TutorProfile />} />
+                <Route path="/booking/:id" element={<Booking />} />
+                <Route path="/booking-confirmation" element={<ProtectedRoute requiredRole="student"><BookingConfirmation /></ProtectedRoute>} />
+                <Route path="/dashboard" element={<ProtectedRoute requiredRole="student"><Dashboard /></ProtectedRoute>} />
+                <Route path="/classroom" element={<ProtectedRoute requiredRole="student"><Classroom /></ProtectedRoute>} />
+                <Route path="/ai-practice" element={<AIPractice />} />
+                <Route path="/messages" element={<ProtectedRoute requiredRole="student"><Messages /></ProtectedRoute>} />
+                <Route path="/my-lessons" element={<ProtectedRoute requiredRole="student"><MyLessons /></ProtectedRoute>} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/for-business" element={<ForBusiness />} />
+                <Route path="/become-tutor" element={<BecomeTutor />} />
+                <Route path="/tutor-apply" element={<TutorApply />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/signup/student" element={<StudentSignup />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/profile" element={<ProtectedRoute requiredRole="student"><ProfileSettings /></ProtectedRoute>} />
+                <Route path="/tutor-settings" element={<ProtectedRoute requiredRole="tutor"><TutorSettings /></ProtectedRoute>} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+                <Route path="/lesson-planner" element={<ProtectedRoute requiredRole="tutor"><LessonPlanner /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
+                <Route path="/tutor-dashboard" element={<ProtectedRoute requiredRole="tutor"><TutorDashboard /></ProtectedRoute>} />
+                <Route path="/tutor-messages" element={<ProtectedRoute requiredRole="tutor"><TutorMessages /></ProtectedRoute>} />
+                <Route path="/tutor-schedule" element={<ProtectedRoute requiredRole="tutor"><TutorSchedule /></ProtectedRoute>} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </AppLocaleProvider>
       </AuthProvider>
     </LanguageProvider>
   </QueryClientProvider>

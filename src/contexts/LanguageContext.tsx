@@ -43,6 +43,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.account": "Account",
     "profile.settings.password": "Password",
     "profile.settings.emailSection": "Email",
+    "profile.settings.localization": "Localization",
     "profile.settings.calendar": "Calendar",
     "profile.settings.notifications": "Notifications",
     "profile.settings.deleteAccount": "Delete account",
@@ -65,6 +66,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.invalidCurrentPassword": "Current password is incorrect.",
     "profile.settings.emailTitle": "Email",
     "profile.settings.emailDesc": "Your login email is managed here.",
+    "profile.settings.localizationTitle": "Language, currency & timezone",
+    "profile.settings.localizationDesc": "Choose how LearnEazy displays language, prices, and lesson times for your account.",
+    "profile.settings.language": "Language",
+    "profile.settings.currency": "Currency",
+    "profile.settings.timezone": "Timezone",
+    "profile.settings.localizationSaved": "Localization preferences saved!",
     "profile.settings.calendarTitle": "Google Calendar",
     "profile.settings.calendarDesc": "Calendar integration will be available soon.",
     "profile.settings.connectCalendar": "Connect Google Calendar",
@@ -1027,6 +1034,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.account": "ანგარიში",
     "profile.settings.password": "პაროლი",
     "profile.settings.emailSection": "ელ-ფოსტა",
+    "profile.settings.localization": "ლოკალიზაცია",
     "profile.settings.calendar": "კალენდარი",
     "profile.settings.notifications": "შეტყობინებები",
     "profile.settings.deleteAccount": "ანგარიშის წაშლა",
@@ -1049,6 +1057,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.invalidCurrentPassword": "მიმდინარე პაროლი არასწორია.",
     "profile.settings.emailTitle": "ელ-ფოსტა",
     "profile.settings.emailDesc": "თქვენი შესვლის ელ-ფოსტა აქ იმართება.",
+    "profile.settings.localizationTitle": "ენა, ვალუტა და დროის სარტყელი",
+    "profile.settings.localizationDesc": "აირჩიეთ როგორ გამოჩნდეს LearnEazy-ში ენა, ფასები და გაკვეთილის დრო.",
+    "profile.settings.language": "ენა",
+    "profile.settings.currency": "ვალუტა",
+    "profile.settings.timezone": "დროის სარტყელი",
+    "profile.settings.localizationSaved": "ლოკალიზაციის პარამეტრები შენახულია!",
     "profile.settings.calendarTitle": "Google Calendar",
     "profile.settings.calendarDesc": "კალენდრის ინტეგრაცია მალე იქნება ხელმისაწვდომი.",
     "profile.settings.connectCalendar": "Google Calendar-ის დაკავშირება",
@@ -2007,6 +2021,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.account": "Аккаунт",
     "profile.settings.password": "Пароль",
     "profile.settings.emailSection": "Эл. почта",
+    "profile.settings.localization": "Локализация",
     "profile.settings.calendar": "Календарь",
     "profile.settings.notifications": "Уведомления",
     "profile.settings.deleteAccount": "Удалить аккаунт",
@@ -2029,6 +2044,12 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.invalidCurrentPassword": "Текущий пароль неверен.",
     "profile.settings.emailTitle": "Эл. почта",
     "profile.settings.emailDesc": "Здесь отображается ваша почта для входа.",
+    "profile.settings.localizationTitle": "Язык, валюта и часовой пояс",
+    "profile.settings.localizationDesc": "Выберите, как LearnEazy показывает язык, цены и время уроков в вашем аккаунте.",
+    "profile.settings.language": "Язык",
+    "profile.settings.currency": "Валюта",
+    "profile.settings.timezone": "Часовой пояс",
+    "profile.settings.localizationSaved": "Настройки локализации сохранены!",
     "profile.settings.calendarTitle": "Google Calendar",
     "profile.settings.calendarDesc": "Интеграция с календарём скоро появится.",
     "profile.settings.connectCalendar": "Подключить Google Calendar",
@@ -2960,7 +2981,7 @@ export const translations: Record<Language, Record<string, string>> = {
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Language>(() => {
     const saved = localStorage.getItem("learneazy-lang");
-    return (saved as Language) || "ka";
+    return (saved as Language) || "en";
   });
 
   const handleSetLang = (newLang: Language) => {
