@@ -85,9 +85,10 @@ export default function Dashboard() {
                   <span>{lastTutor.currency}{lastTutor.price_amount.toFixed(2)}</span>
                   <span className="text-muted-foreground">{t("dash.perLesson")}</span>
                 </div>
-                <Button className="hero-gradient text-primary-foreground border-0 px-8" asChild>
-                  <Link to="/search">{t("dash.subscribeContinue")}</Link>
-                </Button>
+                <SubscribePlansDialog
+                  buttonVariant="default"
+                  buttonClassName="hero-gradient border-0 px-8 text-primary-foreground"
+                />
               </div>
 
               {/* Continue learning */}
