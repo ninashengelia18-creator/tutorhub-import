@@ -20,6 +20,7 @@ import BecomeTutor from "./pages/BecomeTutor.tsx";
 import TutorApply from "./pages/TutorApply.tsx";
 import Login from "./pages/Login.tsx";
 import Signup from "./pages/Signup.tsx";
+import StudentSignup from "./pages/StudentSignup.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import ProfileSettings from "./pages/ProfileSettings.tsx";
