@@ -128,13 +128,19 @@ export default function AdminDashboard() {
   };
 
   const handleApproveTutor = async (app: TutorApplication) => {
-    const { error } = await supabase.from("tutor_applications").update({ status: "approved" }).eq("id", app.id);
+    const { error } = await (supabase as typeof supabase & {
+      rpc: (fn: string, args?: Record<string, unknown>) => Promise<{ error: { message: string } | null }>;
+    }).rpc("approve_tutor_application", { _application_id: app.id });
+
     if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
     else { toast({ title: t("admin.tutorApproved") }); fetchApplications(); }
   };
 
   const handleRejectTutor = async (app: TutorApplication) => {
-    const { error } = await supabase.from("tutor_applications").update({ status: "rejected" }).eq("id", app.id);
+    const { error } = await (supabase as typeof supabase & {
+      rpc: (fn: string, args?: Record<string, unknown>) => Promise<{ error: { message: string } | null }>;
+    }).rpc("reject_tutor_application", { _application_id: app.id });
+
     if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
     else { toast({ title: t("admin.tutorRejected") }); fetchApplications(); }
   };
