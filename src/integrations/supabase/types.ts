@@ -104,6 +104,51 @@ export type Database = {
         }
         Relationships: []
       }
+      lesson_plans: {
+        Row: {
+          created_at: string
+          duration: string
+          id: string
+          language: string
+          learning_goals: string | null
+          num_students: string
+          plan_content: string
+          plan_title: string | null
+          student_level: string
+          subject: string
+          tutor_id: string
+          weak_points: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration: string
+          id?: string
+          language?: string
+          learning_goals?: string | null
+          num_students: string
+          plan_content: string
+          plan_title?: string | null
+          student_level: string
+          subject: string
+          tutor_id: string
+          weak_points?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration?: string
+          id?: string
+          language?: string
+          learning_goals?: string | null
+          num_students?: string
+          plan_content?: string
+          plan_title?: string | null
+          student_level?: string
+          subject?: string
+          tutor_id?: string
+          weak_points?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
