@@ -239,7 +239,7 @@ export default function LessonPlanner() {
 
   const handleGenerate = async () => {
     if (!subject || !studentLevel || !duration || !numStudents) {
-      toast({ title: "⚠️", description: "Please fill all required fields.", variant: "destructive" });
+      toast({ title: "⚠️", description: l.fillRequired, variant: "destructive" });
       return;
     }
     setGenerating(true);
@@ -253,7 +253,7 @@ export default function LessonPlanner() {
       if (data?.error) throw new Error(data.error);
       setPlan(data.plan);
     } catch (e: any) {
-      toast({ title: "Error", description: e.message || "Generation failed", variant: "destructive" });
+      toast({ title: "⚠️", description: e.message || l.generationFailed, variant: "destructive" });
     } finally {
       setGenerating(false);
     }
