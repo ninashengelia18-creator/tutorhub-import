@@ -1885,6 +1885,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "Доступ запрещён",
     "admin.adminOnly": "Эта страница доступна только администраторам.",
     "nav.admin": "Админ",
+    "admin.bookingsTab": "Бронирования",
+    "admin.tutorAppsTab": "Заявки репетиторов",
+    "admin.totalApps": "Всего заявок",
+    "admin.pendingApps": "На рассмотрении",
+    "admin.approvedApps": "Одобренные",
+    "admin.searchTutors": "Поиск по имени, email или предмету...",
+    "admin.approveTutor": "Одобрить",
+    "admin.rejectTutor": "Отклонить",
+    "admin.tutorApproved": "Репетитор одобрен!",
+    "admin.tutorRejected": "Репетитор отклонён.",
+    "admin.noApps": "Заявок репетиторов пока нет",
     "nav.tutorSchedule": "Моё расписание",
 
     // Tutor Schedule
