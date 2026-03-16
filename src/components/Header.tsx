@@ -1,10 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, LayoutDashboard, UserCircle, ChevronDown, Globe, BookOpen } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard, UserCircle, ChevronDown, Globe, BookOpen, Shield } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/owl-logo.png";
 
 const langLabels: Record<Language, string> = { ka: "ქარ", en: "EN", ru: "РУ" };
