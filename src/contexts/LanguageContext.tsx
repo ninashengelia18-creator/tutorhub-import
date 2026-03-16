@@ -1075,7 +1075,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.tipsDesc": "მიიღეთ სასწავლო რესურსები და ექსკლუზიური შეთავაზებები.",
     "profile.settings.surveysTitle": "გამოკითხვები და ინტერვიუები",
     "profile.settings.surveysDesc": "დაგვეხმარეთ სტუდენტური გამოცდილების გაუმჯობესებაში.",
-    "profile.settings.notificationsSaved": "შეტყობინებების პარამეტრები შენახულია!"
+    "profile.settings.notificationsSaved": "შეტყობინებების პარამეტრები შენახულია!",
     "profile.settings.deleteTitle": "ანგარიშის წაშლა",
     "profile.settings.deleteDesc": "ანგარიშის წაშლა მუდმივია და თქვენი ყველა ინფორმაცია წაიშლება.",
     "profile.settings.deleteWarning": "ანგარიშის წასაშლელად შეიყვანეთ თქვენი ელ-ფოსტა.",
