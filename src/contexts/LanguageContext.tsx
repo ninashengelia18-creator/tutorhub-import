@@ -1257,6 +1257,23 @@ export const translations: Record<Language, Record<string, string>> = {
     // Messages
     "msg.search": "შეტყობინებების ძიება...",
     "msg.typePlaceholder": "დაწერეთ შეტყობინება...",
+    "msg.send": "შეტყობინების გაგზავნა",
+    "msg.attach": "ფაილის მიმაგრება",
+    "msg.emoji": "ემოჯის ამორჩევა",
+    "msg.removeAttachment": "მიმაგრებული ფაილის წაშლა",
+    "msg.deleteConversation": "საუბრის წაშლა",
+    "msg.deleteConversationDesc": "ნამდვილად გსურთ ამ საუბრის წაშლა? ეს მოქმედება შეუქცევადია.",
+    "msg.cancel": "გაუქმება",
+    "msg.delete": "წაშლა",
+    "msg.messageSent": "შეტყობინება გაიგზავნა",
+    "msg.messageFailed": "შეტყობინების გაგზავნა ვერ მოხერხდა",
+    "msg.attachmentFailed": "ფაილის ატვირთვა ვერ მოხერხდა",
+    "msg.attachmentTooLarge": "ფაილი 10 მბ-ზე ნაკლები უნდა იყოს.",
+    "msg.deleted": "საუბარი წაიშალა",
+    "msg.deleteFailed": "საუბრის წაშლა ვერ მოხერხდა",
+    "msg.file": "ფაილი",
+    "msg.emptyComposer": "დაწერეთ შეტყობინება ან მიამაგრეთ ფაილი.",
+    "msg.markedRead": "მონიშნულია წაკითხულად"
 
     // For Business
     "biz.title": "LearnEazy ბიზნესისთვის",
