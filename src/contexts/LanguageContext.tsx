@@ -2021,9 +2021,10 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.account": "Аккаунт",
     "profile.settings.password": "Пароль",
     "profile.settings.emailSection": "Эл. почта",
+    "profile.settings.localization": "Локализация",
     "profile.settings.calendar": "Календарь",
     "profile.settings.notifications": "Уведомления",
-    "profile.settings.deleteAccount": "Удалить аккаунт",
+    "profile.settings.deleteAccount": "Удалить аккаунт"
     "profile.settings.accountTitle": "Настройки аккаунта",
     "profile.settings.profileImage": "Фото профиля",
     "profile.settings.edit": "Редактировать",
