@@ -1196,6 +1196,21 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "წვდომა აკრძალულია",
     "admin.adminOnly": "ეს გვერდი მხოლოდ ადმინისტრატორებისთვისაა.",
     "nav.admin": "ადმინი",
+    "nav.tutorSchedule": "ჩემი განრიგი",
+
+    // Tutor Schedule
+    "tutorSchedule.title": "ჩემი განრიგი",
+    "tutorSchedule.subtitle": "თქვენი მომავალი დადასტურებული გაკვეთილები სტუდენტებთან",
+    "tutorSchedule.upcomingCount": "მომავალი გაკვეთილები",
+    "tutorSchedule.daysScheduled": "დაგეგმილი დღეები",
+    "tutorSchedule.totalTime": "სწავლების დრო სულ",
+    "tutorSchedule.noLessons": "მომავალი გაკვეთილები არ არის",
+    "tutorSchedule.noLessonsDesc": "როცა სტუდენტები დაჯავშნიან გაკვეთილებს, ისინი აქ გამოჩნდება.",
+    "tutorSchedule.joinMeet": "Meet-ში შესვლა",
+    "tutorSchedule.noMeetLink": "Meet ლინკი მოლოდინში",
+    "tutorSchedule.unknownStudent": "სტუდენტი",
+    "tutorSchedule.setName": "დააყენეთ სახელი",
+    "tutorSchedule.setNameDesc": "გთხოვთ დააყენოთ სახელი პროფილის პარამეტრებში, რომელიც ემთხვევა ჯავშნებში გამოყენებულ სახელს.",
   },
   ru: {
     // Nav
