@@ -90,12 +90,19 @@ export function Header() {
   const dashboardPath = isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks = user && !isTutor ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/faq"].includes(link.href)) : navLinks;
   const headerNavLinks = user
-    ? [
-        { href: "/", label: t("nav.home") },
-        { href: "/search", label: t("nav.findTutors") },
-        { href: dashboardPath, label: t("auth.dashboard") },
-        { href: profilePath, label: t("nav.profile") },
-      ]
+    ? isTutor
+      ? [
+          { href: "/", label: t("nav.home") },
+          { href: "/search", label: t("nav.findTutors") },
+          { href: dashboardPath, label: t("auth.dashboard") },
+          { href: profilePath, label: t("nav.profile") },
+        ]
+      : [
+          { href: "/", label: t("nav.home") },
+          { href: "/search", label: t("nav.findTutors") },
+          { href: dashboardPath, label: t("auth.dashboard") },
+          { href: "/my-lessons", label: t("msg.myLessons") },
+        ]
     : visibleNavLinks.map((link) => ({ href: link.href, label: t(link.labelKey) }));
   const authDisplayName = user?.email?.split("@")[0] || "User";
 
