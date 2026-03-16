@@ -257,7 +257,7 @@ export function Header() {
                       transition={{ duration: 0.15 }}
                       className="absolute right-0 mt-1 w-28 rounded-lg border bg-card shadow-lg overflow-hidden z-50"
                     >
-                      {(Object.keys(langLabels) as Language[]).map((l) => (
+                      {(["en", "ru", "ka"] as Language[]).map((l) => (
                         <button
                           key={l}
                           onClick={() => { setLang(l); setLangOpen(false); }}
