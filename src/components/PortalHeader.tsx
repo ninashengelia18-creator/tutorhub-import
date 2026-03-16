@@ -168,13 +168,6 @@ export function PortalHeader() {
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-3">
-            {!isTutor ? (
-              <SubscribePlansDialog
-                buttonVariant="outline"
-                buttonSize="sm"
-                buttonClassName="rounded-full border-border bg-background px-4 font-semibold text-foreground hover:bg-accent"
-              />
-            ) : null}
 
             <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
               <Link to={isTutor ? "/tutor-messages" : "/messages"} aria-label={t("msg.messages")}>
