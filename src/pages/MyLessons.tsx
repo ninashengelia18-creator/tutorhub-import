@@ -226,13 +226,13 @@ export default function MyLessons() {
     setCancelling(true);
     const { error } = await supabase
       .from("bookings")
-      .update({ status: "cancelled", notes: `Cancel reason: ${cancelReason}. ${cancelMessage}` })
+      .update({ status: "cancelled", notes: `Cancel reason: ${t(cancelReason)}. ${cancelMessage}` })
       .eq("id", cancelBooking.id);
     setCancelling(false);
     if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Lesson cancelled" });
+      toast({ title: t("myLessons.lessonCancelled") });
       setCancelBooking(null);
       setCancelMessage("");
       fetchBookings();

@@ -244,7 +244,7 @@ export default function Booking() {
                       duration === d.value ? "border-primary bg-primary/5 text-primary" : "border-border hover:bg-muted/50"
                     }`}
                   >
-                    {d.label}
+                    {t(d.labelKey)}
                   </button>
                 ))}
               </div>
