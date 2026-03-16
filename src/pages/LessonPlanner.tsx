@@ -573,7 +573,7 @@ export default function LessonPlanner() {
               {viewingPlan ? (
                 <div className="mx-auto max-w-3xl">
                   <Button variant="ghost" onClick={() => setViewingPlan(null)} className="mb-4">
-                    ← {l.savedPlans}
+                    ← {l.backToSavedPlans}
                   </Button>
                   <div className="mb-4 flex flex-wrap gap-2">
                     <Button onClick={handleCopy} variant="secondary" size="sm" className="gap-1">
