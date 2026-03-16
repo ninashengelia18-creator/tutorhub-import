@@ -142,10 +142,6 @@ export function PortalHeader() {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="border-b border-border/60">
         <div className="container flex min-h-16 items-center justify-between gap-3 py-3">
-          <Link to="/search" className="hidden text-sm font-semibold text-foreground transition-opacity hover:opacity-80 sm:inline-flex">
-            {t("nav.findTutors")}
-          </Link>
-
           <button
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent sm:hidden"
