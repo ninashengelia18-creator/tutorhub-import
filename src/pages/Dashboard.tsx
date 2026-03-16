@@ -185,7 +185,7 @@ export default function Dashboard() {
                     {formatTime(upcomingBookings[0].start_time)} – {formatTime(upcomingBookings[0].end_time)}
                   </p>
                   <p className="text-sm text-muted-foreground mb-4">
-                    {upcomingBookings[0].subject} {t("dash.withTutor")} {upcomingBookings[0].tutor_name}
+                    {localizeSubjectLabel(upcomingBookings[0].subject, t)} {t("dash.withTutor")} {upcomingBookings[0].tutor_name}
                   </p>
 
                   <Button variant="outline" size="lg" asChild>
