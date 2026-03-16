@@ -210,6 +210,7 @@ export default function LessonPlanner() {
   const planRef = useRef<HTMLDivElement>(null);
 
   const l = labels[lang] || labels.en;
+  const options = optionsByLanguage[lang] || optionsByLanguage.en;
 
   const [subject, setSubject] = useState("");
   const [studentLevel, setStudentLevel] = useState("");
