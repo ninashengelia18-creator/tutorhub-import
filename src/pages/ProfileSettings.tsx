@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Camera, User, Loader2 } from "lucide-react";
+import { Camera, User, Loader2, Wallet } from "lucide-react";
 
 export default function ProfileSettings() {
   const { user } = useAuth();
@@ -20,6 +20,7 @@ export default function ProfileSettings() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [displayName, setDisplayName] = useState("");
+  const [hourlyRate, setHourlyRate] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -37,13 +38,14 @@ export default function ProfileSettings() {
     if (!user) return;
     const { data } = await supabase
       .from("profiles")
-      .select("display_name, avatar_url")
+      .select("display_name, avatar_url, hourly_rate")
       .eq("id", user.id)
       .single();
 
     if (data) {
       setDisplayName(data.display_name || "");
       setAvatarUrl(data.avatar_url);
+      setHourlyRate(data.hourly_rate != null ? String(data.hourly_rate) : "");
     }
     setInitialLoading(false);
   };
@@ -102,9 +104,11 @@ export default function ProfileSettings() {
     if (!user) return;
     setLoading(true);
 
+    const rate = hourlyRate.trim() ? parseFloat(hourlyRate) : null;
+
     const { error } = await supabase
       .from("profiles")
-      .update({ display_name: displayName, updated_at: new Date().toISOString() })
+      .update({ display_name: displayName, hourly_rate: rate, updated_at: new Date().toISOString() })
       .eq("id", user.id);
 
     if (error) {
@@ -184,6 +188,23 @@ export default function ProfileSettings() {
                     className="pl-9"
                   />
                 </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hourlyRate">{t("profile.settings.hourlyRate")}</Label>
+                <div className="relative">
+                  <Wallet className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="hourlyRate"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    value={hourlyRate}
+                    onChange={(e) => setHourlyRate(e.target.value)}
+                    placeholder={t("profile.settings.hourlyRatePlaceholder")}
+                    className="pl-9"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">{t("profile.settings.hourlyRateHint")}</p>
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? t("profile.settings.saving") : t("profile.settings.save")}

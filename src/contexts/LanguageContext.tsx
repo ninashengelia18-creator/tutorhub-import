@@ -35,6 +35,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.error": "Error",
     "profile.settings.imageOnly": "Please select an image file.",
     "profile.settings.fileTooLarge": "File must be under 2 MB.",
+    "profile.settings.hourlyRate": "Hourly Rate (₾)",
+    "profile.settings.hourlyRatePlaceholder": "e.g. 25",
+    "profile.settings.hourlyRateHint": "Set your price per hour in Georgian Lari (₾). This will be visible to students.",
 
     // Hero
     "hero.badge": "Join 500+ students learning today",
@@ -635,6 +638,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.error": "შეცდომა",
     "profile.settings.imageOnly": "გთხოვთ აირჩიოთ სურათის ფაილი.",
     "profile.settings.fileTooLarge": "ფაილი უნდა იყოს 2 მბ-ზე ნაკლები.",
+    "profile.settings.hourlyRate": "საათობრივი ტარიფი (₾)",
+    "profile.settings.hourlyRatePlaceholder": "მაგ. 25",
+    "profile.settings.hourlyRateHint": "დააყენეთ თქვენი ფასი საათში ქართულ ლარში (₾). სტუდენტებისთვის ხილული იქნება.",
 
     // Hero
     "hero.badge": "500+ სტუდენტი უკვე სწავლობს",
@@ -1240,6 +1246,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.error": "Ошибка",
     "profile.settings.imageOnly": "Выберите файл изображения.",
     "profile.settings.fileTooLarge": "Файл должен быть менее 2 МБ.",
+    "profile.settings.hourlyRate": "Почасовая ставка (₾)",
+    "profile.settings.hourlyRatePlaceholder": "напр. 25",
+    "profile.settings.hourlyRateHint": "Укажите цену за час в грузинских лари (₾). Будет видна студентам.",
 
     // Hero
     "hero.badge": "500+ студентов уже учатся",
