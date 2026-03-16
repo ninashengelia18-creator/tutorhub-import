@@ -46,11 +46,13 @@ interface StudentSettingsPanelsProps {
   onAvatarUpload: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
+  onEmailChange: (value: string) => void;
   onCurrentPasswordChange: (value: string) => void;
   onNewPasswordChange: (value: string) => void;
   onConfirmPasswordChange: (value: string) => void;
   onDeleteEmailChange: (value: string) => void;
   onSaveAccount: (event: React.FormEvent) => Promise<void>;
+  onSaveEmail: (event: React.FormEvent) => Promise<void>;
   onSavePassword: (event: React.FormEvent) => Promise<void>;
   onSaveNotifications: () => Promise<void>;
   onToggleNotification: (key: "email_transactional" | "email_tips_discount" | "email_surveys", value: boolean) => void;
