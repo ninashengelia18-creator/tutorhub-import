@@ -238,7 +238,7 @@ export function PortalHeader() {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
+                  className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-border bg-primary text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
                   aria-label={t("nav.profile")}
                 >
                   <Avatar className="h-11 w-11 rounded-2xl">
