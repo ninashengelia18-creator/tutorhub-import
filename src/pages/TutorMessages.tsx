@@ -51,6 +51,8 @@ export default function TutorMessages() {
   const [message, setMessage] = useState("");
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [msgFilter, setMsgFilter] = useState<MessageFilter>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [subjectFilter, setSubjectFilter] = useState("all");
   const [showTip, setShowTip] = useState(true);
   const [sending, setSending] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<ConversationListItem | null>(null);
