@@ -180,6 +180,12 @@ export function PortalHeader() {
               </Button>
             ) : null}
 
+            <Button variant="ghost" size="icon" className="rounded-full" asChild>
+              <Link to="/faq" aria-label="FAQ">
+                <CircleHelp className="h-4 w-4" />
+              </Link>
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative rounded-full" aria-label="Notifications">
