@@ -66,25 +66,7 @@ export default function Messages() {
 
   return (
     <Layout hideFooter>
-      {/* Sub-navigation */}
-      <div className="border-b bg-card">
-        <div className="container flex items-center gap-8 overflow-x-auto">
-          <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            {t("msg.home")}
-          </Link>
-          <Link to="/messages" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">
-            {t("msg.messages")}
-          </Link>
-          <Link to="/my-lessons" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            {t("msg.myLessons")}
-          </Link>
-          <Link to="/for-business" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            {t("msg.forBusiness")}
-          </Link>
-        </div>
-      </div>
-
-      <div className="flex h-[calc(100vh-7rem)]">
+      <div className="flex h-[calc(100vh-8.5rem)]">
         {/* Left: Contacts List */}
         <div className="w-80 border-r bg-card hidden md:flex flex-col shrink-0">
           {/* Filter tabs */}
