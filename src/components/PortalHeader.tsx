@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Bell, ChevronDown, Heart, LifeBuoy, LogOut, Mail, Menu, UserCircle } from "lucide-react";
+import { Bell, ChevronDown, Heart, HelpCircle, LogOut, Mail, Menu, UserCircle } from "lucide-react";
 
 import logo from "@/assets/owl-logo.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -141,25 +141,25 @@ export function PortalHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="border-b border-border/60">
-        <div className="container flex min-h-16 items-center justify-between gap-3 py-3">
+        <div className="container flex min-h-24 items-center justify-between gap-3 py-3">
           <div className="flex items-center gap-3 sm:gap-4">
             <button
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent sm:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary sm:hidden"
               onClick={() => setMobileMenuOpen((value) => !value)}
               aria-label="Toggle portal menu"
             >
               <Menu className="h-5 w-5" />
             </button>
 
-            <Link to={isTutor ? "/tutor-dashboard" : "/dashboard"} className="flex items-center gap-3">
+            <Link to={isTutor ? "/tutor-dashboard" : "/dashboard"} className="flex items-center gap-4">
               <div className="flex flex-col items-center gap-1">
-                <img src={logo} alt="LearnEazy owl" className="h-12 w-auto sm:h-14" loading="eager" decoding="async" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-foreground sm:text-xs" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
+                <span className="text-base font-semibold uppercase tracking-[0.25em] text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
                   LearnEazy
                 </span>
               </div>
-              <span className="hidden lg:flex flex-col border-l border-border pl-3 text-xs font-semibold leading-tight tracking-wide text-muted-foreground">
+              <span className="hidden lg:flex flex-col border-l border-border pl-4 text-sm font-semibold leading-tight tracking-wide text-muted-foreground">
                 {t("brand.tagline").split(". ").map((line, i, arr) => (
                   <span key={i}>{line}{i < arr.length - 1 ? "." : ""}</span>
                 ))}
@@ -167,11 +167,11 @@ export function PortalHeader() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
 
-            <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
+            <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
               <Link to={isTutor ? "/tutor-messages" : "/messages"} aria-label={t("msg.messages")}>
-                <Mail className="h-4 w-4" />
+                <Mail className="h-5 w-5" />
                 {unreadCount > 0 ? (
                   <span className="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
                     {Math.min(unreadCount, 9)}
@@ -181,24 +181,24 @@ export function PortalHeader() {
             </Button>
 
             {!isTutor ? (
-              <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
+              <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
                 <Link to="/saved-tutors" aria-label="Saved tutors">
-                  <Heart className="h-4 w-4" />
+                  <Heart className="h-5 w-5" />
                   {savedCount > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
                 </Link>
               </Button>
             ) : null}
 
-            <Button variant="ghost" size="icon" className="rounded-full" asChild>
+            <Button variant="ghost" size="icon" className="h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
               <Link to="/faq" aria-label="FAQ">
-                <LifeBuoy className="h-4 w-4" />
+                <HelpCircle className="h-5 w-5" />
               </Link>
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative rounded-full" aria-label="Notifications">
-                  <Bell className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" aria-label="Notifications">
+                  <Bell className="h-5 w-5" />
                   {notifications.length > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
                 </Button>
               </DropdownMenuTrigger>
@@ -219,7 +219,7 @@ export function PortalHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-2 rounded-full px-3 text-foreground hover:bg-accent">
+                <Button variant="ghost" size="sm" className="h-11 rounded-2xl border border-border bg-secondary/60 px-4 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground">
                   <span className="hidden sm:inline">{lang === "en" ? "English" : lang === "ka" ? "ქართული" : "Русский"}</span>
                   <span className="sm:hidden">{lang.toUpperCase()}</span>
                   <ChevronDown className="h-4 w-4" />
@@ -238,7 +238,7 @@ export function PortalHeader() {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
+                  className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-border bg-primary text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
                   aria-label={t("nav.profile")}
                 >
                   <Avatar className="h-11 w-11 rounded-2xl">
