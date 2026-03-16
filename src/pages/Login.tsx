@@ -34,7 +34,7 @@ export default function Login() {
       });
     } else {
       toast({ title: t("auth.welcomeBack") });
-      navigate("/dashboard");
+      navigate(redirect || "/dashboard");
     }
     setLoading(false);
   };
