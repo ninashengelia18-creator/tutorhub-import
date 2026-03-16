@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Bell, ChevronDown, Heart, LogOut, Mail, Menu, UserCircle } from "lucide-react";
+import { Bell, ChevronDown, CircleHelp, Heart, LogOut, Mail, Menu, UserCircle } from "lucide-react";
 
 import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
