@@ -170,6 +170,7 @@ export default function Messages() {
       const unread = relatedMessages.filter((item) => item.sender_type === "tutor" && !item.read_at).length;
 
       conversationMap.set(conversation.tutor_name, {
+        id: conversation.tutor_name,
         name: conversation.tutor_name,
         avatar_url: null,
         subject: "",
