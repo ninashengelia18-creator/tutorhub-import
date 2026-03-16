@@ -43,30 +43,28 @@ const availabilityKeys = ["search.any", "search.morning", "search.afternoon", "s
 
 export default function TutorSearch() {
   const [searchParams] = useSearchParams();
-  const initialSubject = searchParams.get("subject") || "All";
+  const initialSubject = normalizeSubjectValue(searchParams.get("subject") || "All");
   const [search, setSearch] = useState("");
   const [selectedSubject, setSelectedSubject] = useState(initialSubject);
   const [priceRange, setPriceRange] = useState([0, 50]);
   const [selectedRating, setSelectedRating] = useState("search.any");
   const [selectedAvailability, setSelectedAvailability] = useState("search.any");
-  const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
 
-  // Build a map of subject value -> translated label for search matching
-  const subjectTranslationMap = Object.fromEntries(
-    subjectEntries.map((s) => [s.value, t(s.labelKey).toLowerCase()])
+  const subjectSearchMap = useMemo(
+    () => Object.fromEntries(allTutors.map((tutor) => [tutor.id, getSubjectSearchTerms(tutor.subject)])),
+    [],
   );
 
   const filtered = allTutors.filter((tutor) => {
-    if (selectedSubject !== "All" && tutor.subject !== selectedSubject) return false;
+    if (selectedSubject !== "all" && normalizeSubjectValue(tutor.subject) !== selectedSubject) return false;
     if (search) {
-      const q = search.toLowerCase();
+      const q = search.trim().toLowerCase();
       const nameMatch = tutor.name.toLowerCase().includes(q);
-      const subjectEngMatch = tutor.subject.toLowerCase().includes(q);
-      const subjectTransMatch = (subjectTranslationMap[tutor.subject] || "").includes(q);
+      const subjectMatch = (subjectSearchMap[tutor.id] || []).some((term) => term.includes(q));
       const subjectKeyMatch = t(tutor.subjectKey).toLowerCase().includes(q);
-      if (!nameMatch && !subjectEngMatch && !subjectTransMatch && !subjectKeyMatch) return false;
+      if (!nameMatch && !subjectMatch && !subjectKeyMatch) return false;
     }
     if (tutor.price < priceRange[0] || tutor.price > priceRange[1]) return false;
     if (selectedRating === "4.5+" && tutor.rating < 4.5) return false;
@@ -76,7 +74,7 @@ export default function TutorSearch() {
       const avMap: Record<string, string> = { "search.morning": "morning", "search.afternoon": "afternoon", "search.evening": "evening" };
       if (tutor.availability !== avMap[selectedAvailability]) return false;
     }
-    
+
     return true;
   });
 
