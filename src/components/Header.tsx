@@ -75,7 +75,7 @@ export function Header() {
         </div>
 
         <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
+          {visibleNavLinks.map((link) => (
             <Link
               key={link.href}
               to={link.href}
