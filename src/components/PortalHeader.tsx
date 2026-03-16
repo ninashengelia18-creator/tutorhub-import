@@ -26,10 +26,10 @@ const studentPrimaryNav = [
 ] as const;
 
 const tutorPrimaryNav = [
-  { to: "/tutor-dashboard", label: "Dashboard" },
-  { to: "/tutor-messages", label: "Messages" },
-  { to: "/tutor-schedule", label: "Schedule" },
-  { to: "/lesson-planner", label: "Lesson planner" },
+  { to: "/tutor-dashboard", labelKey: "nav.dashboard" },
+  { to: "/tutor-messages", labelKey: "msg.messages" },
+  { to: "/tutor-schedule", labelKey: "nav.schedule" },
+  { to: "/lesson-planner", labelKey: "nav.lessonPlanner" },
 ] as const;
 
 function initialsFromName(name: string) {
@@ -135,7 +135,7 @@ export function PortalHeader() {
   };
 
   const primaryNav = isTutor
-    ? tutorPrimaryNav.map((item) => ({ to: item.to, label: item.label }))
+    ? tutorPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }))
     : studentPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }));
 
   return (

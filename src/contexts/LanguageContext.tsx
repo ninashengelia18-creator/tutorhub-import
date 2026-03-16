@@ -22,6 +22,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "Log in",
     "nav.signup": "Sign up",
     "nav.profile": "Profile",
+    "nav.dashboard": "Dashboard",
+    "nav.schedule": "Schedule",
     "nav.lessonPlanner": "Lesson Planner",
 
     // Profile Settings
@@ -999,6 +1001,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "შესვლა",
     "nav.signup": "რეგისტრაცია",
     "nav.profile": "პროფილი",
+    "nav.dashboard": "დეშბორდი",
+    "nav.schedule": "განრიგი",
     "nav.lessonPlanner": "გაკვეთილის გეგმა",
 
     // Profile Settings
@@ -1972,6 +1976,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "Войти",
     "nav.signup": "Регистрация",
     "nav.profile": "Профиль",
+    "nav.dashboard": "Панель",
+    "nav.schedule": "Расписание",
     "nav.lessonPlanner": "Планировщик уроков",
 
     // Profile Settings
