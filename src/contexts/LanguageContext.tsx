@@ -1273,7 +1273,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "msg.deleteFailed": "საუბრის წაშლა ვერ მოხერხდა",
     "msg.file": "ფაილი",
     "msg.emptyComposer": "დაწერეთ შეტყობინება ან მიამაგრეთ ფაილი.",
-    "msg.markedRead": "მონიშნულია წაკითხულად"
+    "msg.markedRead": "მონიშნულია წაკითხულად",
 
     // For Business
     "biz.title": "LearnEazy ბიზნესისთვის",
