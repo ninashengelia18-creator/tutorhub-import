@@ -306,7 +306,7 @@ export default function MyLessons() {
                 className="gap-2 text-destructive focus:text-destructive"
                 onClick={() => setCancelBooking(booking)}
               >
-                <Ban className="h-4 w-4" /> Cancel
+                <Ban className="h-4 w-4" /> {t("myLessons.cancel")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
