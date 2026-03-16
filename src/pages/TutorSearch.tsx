@@ -39,8 +39,8 @@ const subjectEntries: { value: string; labelKey: string }[] = [
   { value: "Programming", labelKey: "home.subj.programming" },
   { value: "Art", labelKey: "home.subj.art" },
 ];
-const ratings = ["Any", "4.5+", "4.7+", "4.9+"];
-const availabilityOptions = ["Any", "Morning", "Afternoon", "Evening"];
+const ratingKeys = ["search.any", "4.5+", "4.7+", "4.9+"];
+const availabilityKeys = ["search.any", "search.morning", "search.afternoon", "search.evening"];
 
 export default function TutorSearch() {
   const [searchParams] = useSearchParams();
@@ -48,8 +48,8 @@ export default function TutorSearch() {
   const [search, setSearch] = useState("");
   const [selectedSubject, setSelectedSubject] = useState(initialSubject);
   const [priceRange, setPriceRange] = useState([0, 50]);
-  const [selectedRating, setSelectedRating] = useState("Any");
-  const [selectedAvailability, setSelectedAvailability] = useState("Any");
+  const [selectedRating, setSelectedRating] = useState("search.any");
+  const [selectedAvailability, setSelectedAvailability] = useState("search.any");
   const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
@@ -72,7 +72,10 @@ export default function TutorSearch() {
     if (selectedRating === "4.5+" && tutor.rating < 4.5) return false;
     if (selectedRating === "4.7+" && tutor.rating < 4.7) return false;
     if (selectedRating === "4.9+" && tutor.rating < 4.9) return false;
-    if (selectedAvailability !== "Any" && tutor.availability !== selectedAvailability.toLowerCase()) return false;
+    if (selectedAvailability !== "search.any") {
+      const avMap: Record<string, string> = { "search.morning": "morning", "search.afternoon": "afternoon", "search.evening": "evening" };
+      if (tutor.availability !== avMap[selectedAvailability]) return false;
+    }
     
     return true;
   });
@@ -89,7 +92,7 @@ export default function TutorSearch() {
               value === opt ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
             }`}
           >
-            {opt}
+            {opt.startsWith("search.") ? t(opt) : opt}
           </button>
         ))}
       </div>
@@ -158,8 +161,8 @@ export default function TutorSearch() {
                 </div>
               </div>
 
-              <FilterSection title={t("search.rating")} options={ratings} value={selectedRating} onChange={setSelectedRating} />
-              <FilterSection title={t("search.availability")} options={availabilityOptions} value={selectedAvailability} onChange={setSelectedAvailability} />
+              <FilterSection title={t("search.rating")} options={ratingKeys} value={selectedRating} onChange={setSelectedRating} />
+              <FilterSection title={t("search.availability")} options={availabilityKeys} value={selectedAvailability} onChange={setSelectedAvailability} />
 
             </div>
           </aside>
@@ -183,7 +186,7 @@ export default function TutorSearch() {
                           <p className="text-sm text-primary font-medium">{tutor.subject}</p>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-xl font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">/hr</span></p>
+                          <p className="text-xl font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">{t("search.perHour")}</span></p>
                         </div>
                       </div>
                       <p className="text-sm text-muted-foreground mt-1 line-clamp-1">{tutor.bio}</p>

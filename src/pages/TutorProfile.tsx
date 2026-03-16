@@ -187,9 +187,9 @@ export default function TutorProfile() {
       <div className="container py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
-          <Link to="/search" className="hover:text-primary transition-colors">Find Tutors</Link>
+          <Link to="/search" className="hover:text-primary transition-colors">{t("tp.findTutors")}</Link>
           <ChevronRight className="h-3.5 w-3.5" />
-          <Link to="/search" className="hover:text-primary transition-colors">{tutor.subject} Tutors Online</Link>
+          <Link to="/search" className="hover:text-primary transition-colors">{tutor.subject} {t("tp.tutorsOnline")}</Link>
           <ChevronRight className="h-3.5 w-3.5" />
           <span className="text-foreground font-medium">{tutor.name}</span>
         </nav>
@@ -204,7 +204,7 @@ export default function TutorProfile() {
                 <div className="flex-1 min-w-0">
                   <h1 className="text-2xl font-bold text-foreground">{tutor.name}</h1>
                   <p className="text-muted-foreground text-sm mt-0.5">
-                    {tutor.subject} tutor <span className="mx-1">·</span> From {tutor.origin}
+                    {tutor.subject} {t("tp.tutorFrom")} <span className="mx-1">·</span> {t("tp.from")} {tutor.origin}
                   </p>
                   <p className="text-sm text-foreground/80 mt-3 leading-relaxed">{tutor.headline}</p>
                 </div>
@@ -213,8 +213,8 @@ export default function TutorProfile() {
 
             {/* Highlights */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-8">
-              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Highlights</h2>
-              <p className="text-xs text-muted-foreground mb-3">Based on tutor data and real student reviews</p>
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">{t("tp.highlights")}</h2>
+              <p className="text-xs text-muted-foreground mb-3">{t("tp.basedOnData")}</p>
               <div className="flex flex-wrap gap-2 mb-3">
                 {tutor.highlights.map((h: string) => (
                   <Badge key={h} variant="secondary" className="px-3 py-1.5 text-sm font-medium">{h}</Badge>
@@ -224,8 +224,8 @@ export default function TutorProfile() {
                 <div className="flex items-start gap-2 mt-4 p-3 rounded-lg bg-accent/50 border border-accent">
                   <Shield className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Super Tutor</p>
-                    <p className="text-xs text-muted-foreground">{tutor.superTutorDesc} <Link to="#" className="text-primary hover:underline">Learn more</Link></p>
+                    <p className="text-sm font-semibold text-foreground">{t("tp.superTutor")}</p>
+                    <p className="text-xs text-muted-foreground">{tutor.superTutorDesc} <Link to="#" className="text-primary hover:underline">{t("tp.learnMore")}</Link></p>
                   </div>
                 </div>
               )}
@@ -233,13 +233,13 @@ export default function TutorProfile() {
 
             {/* Teaches */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="mb-8">
-              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2">Teaches</h2>
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2">{t("tp.teaches")}</h2>
               <p className="text-sm text-foreground">{tutor.teaches}</p>
             </motion.div>
 
             {/* About me */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-3">About me</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-3">{t("tp.aboutMe")}</h2>
               <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
                 {tutor.bio}
               </div>
@@ -247,7 +247,7 @@ export default function TutorProfile() {
 
             {/* I speak */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-3">I speak</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-3">{t("tp.iSpeak")}</h2>
               <div className="space-y-1.5">
                 {tutor.languages.map((lang: { name: string; level: string }) => (
                   <div key={lang.name} className="flex items-center gap-3">
@@ -260,13 +260,13 @@ export default function TutorProfile() {
 
             {/* Lesson rating */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-4">Lesson rating</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-4">{t("tp.lessonRating")}</h2>
               <div className="space-y-3">
                 {[
-                  { label: "Reassurance", value: tutor.lessonRating.reassurance },
-                  { label: "Clarity", value: tutor.lessonRating.clarity },
-                  { label: "Progress", value: tutor.lessonRating.progress },
-                  { label: "Preparation", value: tutor.lessonRating.preparation },
+                  { label: t("tp.reassurance"), value: tutor.lessonRating.reassurance },
+                  { label: t("tp.clarity"), value: tutor.lessonRating.clarity },
+                  { label: t("tp.progress"), value: tutor.lessonRating.progress },
+                  { label: t("tp.preparation"), value: tutor.lessonRating.preparation },
                 ].map((item) => (
                   <div key={item.label} className="flex items-center gap-4">
                     <span className="text-sm text-foreground w-28 shrink-0">{item.label}</span>
@@ -275,18 +275,18 @@ export default function TutorProfile() {
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground mt-3">Based on {tutor.ratingReviewCount} anonymous student reviews</p>
+              <p className="text-xs text-muted-foreground mt-3">{t("tp.basedOnReviews").replace("{count}", String(tutor.ratingReviewCount))}</p>
             </motion.div>
 
             {/* Reviews */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-1">What my students say</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-1">{t("tp.whatStudentsSay")}</h2>
               <div className="flex items-center gap-2 mb-5">
                 <div className="flex items-center gap-1">
                   <Star className="h-4 w-4 fill-warning text-warning" />
                   <span className="font-bold text-lg">{tutor.rating}</span>
                 </div>
-                <span className="text-sm text-muted-foreground">Based on {tutor.reviewCount} student reviews</span>
+                <span className="text-sm text-muted-foreground">{t("tp.basedOnStudentReviews").replace("{count}", String(tutor.reviewCount))}</span>
               </div>
               <div className="space-y-5">
                 {reviewsData.map((review, i) => (
@@ -298,8 +298,8 @@ export default function TutorProfile() {
                       <div>
                         <span className="text-sm font-semibold text-foreground">{review.name}</span>
                         <p className="text-xs text-muted-foreground">
-                          {review.lessonsCount} lessons · {review.date}
-                          {review.edited && <span className="ml-1 italic">(edited)</span>}
+                          {review.lessonsCount} {t("tp.lessons")} · {review.date}
+                          {review.edited && <span className="ml-1 italic">{t("tp.edited")}</span>}
                         </p>
                       </div>
                     </div>
@@ -311,8 +311,8 @@ export default function TutorProfile() {
 
             {/* Schedule */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-1">Schedule</h2>
-              <p className="text-sm text-muted-foreground mb-4">Choose the time for your first lesson. The timings are displayed in your local timezone.</p>
+              <h2 className="text-lg font-semibold text-foreground mb-1">{t("tp.schedule")}</h2>
+              <p className="text-sm text-muted-foreground mb-4">{t("tp.scheduleDesc")}</p>
               <div className="rounded-xl border bg-card overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
                   <p className="text-sm font-medium text-foreground">Mar 14 – 20, 2026</p>
@@ -343,7 +343,7 @@ export default function TutorProfile() {
 
             {/* Resume */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-4">Resume</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-4">{t("tp.resume")}</h2>
               <div className="space-y-4">
                 {tutor.resume.map((item: { period: string; org: string; role: string }, i: number) => (
                   <div key={i} className="flex gap-4">
@@ -359,7 +359,7 @@ export default function TutorProfile() {
 
             {/* Specialties */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-3">My specialties</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-3">{t("tp.mySpecialties")}</h2>
               <div className="flex flex-wrap gap-2">
                 {tutor.specialties.map((s: string) => (
                   <Badge key={s} variant="outline" className="px-3 py-1.5 text-sm">{s}</Badge>
@@ -369,7 +369,7 @@ export default function TutorProfile() {
 
             {/* Similar tutors */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-4">You might also like</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-4">{t("tp.youMightLike")}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {similarTutors
                   .filter((st) => st.id !== id)
@@ -392,7 +392,7 @@ export default function TutorProfile() {
                         </div>
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{st.headline}</p>
-                      <p className="text-sm font-bold text-foreground mt-2">₾{st.price}<span className="text-xs font-normal text-muted-foreground">/ lesson</span></p>
+                      <p className="text-sm font-bold text-foreground mt-2">₾{st.price}<span className="text-xs font-normal text-muted-foreground">{t("tp.perLesson")}</span></p>
                     </Link>
                   ))}
               </div>
@@ -414,14 +414,14 @@ export default function TutorProfile() {
                   <span className="text-xl font-bold">{tutor.rating}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mb-4">
-                  {tutor.reviewCount} reviews · {tutor.lessons.toLocaleString()} lessons
+                  {tutor.reviewCount} {t("tp.reviews")} · {tutor.lessons.toLocaleString()} {t("tp.lessons")}
                 </p>
 
                 {/* Price */}
                 <div className="pb-4 mb-4 border-b">
                   <p className="text-2xl font-bold text-foreground tabular-nums">
                     ₾{tutor.price}
-                    <span className="text-sm font-normal text-muted-foreground ml-1">{tutor.lessonLength} lesson</span>
+                    <span className="text-sm font-normal text-muted-foreground ml-1">{tutor.lessonLength} {t("tp.lesson")}</span>
                   </p>
                 </div>
 
@@ -430,30 +430,30 @@ export default function TutorProfile() {
                   <Button className="w-full hero-gradient text-primary-foreground border-0" asChild>
                     <Link to={`/booking/${id}`}>
                       <Video className="mr-2 h-4 w-4" />
-                      Book trial lesson
+                      {t("tp.bookTrialLesson")}
                     </Link>
                   </Button>
                   <Button variant="outline" className="w-full">
                     <MessageSquare className="mr-2 h-4 w-4" />
-                    Send message
+                    {t("tp.sendMessage")}
                   </Button>
                   <div className="flex gap-2">
                     <Button variant="ghost" size="sm" className="flex-1 text-muted-foreground">
                       <Heart className="mr-1.5 h-4 w-4" />
-                      Save
+                      {t("tp.save")}
                     </Button>
                     <Button variant="ghost" size="sm" className="flex-1 text-muted-foreground">
                       <Share2 className="mr-1.5 h-4 w-4" />
-                      Share
+                      {t("tp.share")}
                     </Button>
                   </div>
                 </div>
 
                 {/* Free switch */}
                 <div className="mt-4 p-3 rounded-lg bg-accent/50 border border-accent">
-                  <p className="text-xs font-semibold text-foreground mb-0.5">Free switch</p>
+                  <p className="text-xs font-semibold text-foreground mb-0.5">{t("tp.freeSwitch")}</p>
                   <p className="text-xs text-muted-foreground">
-                    If {tutor.name} isn't a match, get 2 more free trials to find the right tutor.
+                    {t("tp.freeSwitchDesc").replace("{name}", tutor.name)}
                   </p>
                 </div>
 
