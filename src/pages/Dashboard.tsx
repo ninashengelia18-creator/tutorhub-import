@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
+import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { localizeSubjectLabel } from "@/lib/localization";
 
@@ -51,25 +52,7 @@ export default function Dashboard() {
   const formatTime = (time: string) => time.slice(0, 5);
 
   return (
-    <Layout>
-      {/* Sub-navigation */}
-      <div className="border-b bg-card">
-        <div className="container flex items-center gap-8 overflow-x-auto">
-          <Link to="/dashboard" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">
-            {t("msg.home")}
-          </Link>
-          <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            {t("msg.messages")}
-          </Link>
-          <Link to="/my-lessons" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            {t("msg.myLessons")}
-          </Link>
-          <Link to="/for-business" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            {t("msg.forBusiness")}
-          </Link>
-        </div>
-      </div>
-
+    <Layout hideFooter>
       <div className="container py-8">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           {/* Returning user with tutor */}
@@ -102,9 +85,10 @@ export default function Dashboard() {
                   <span>{lastTutor.currency}{lastTutor.price_amount.toFixed(2)}</span>
                   <span className="text-muted-foreground">{t("dash.perLesson")}</span>
                 </div>
-                <Button className="hero-gradient text-primary-foreground border-0 px-8" asChild>
-                  <Link to="/search">{t("dash.subscribeContinue")}</Link>
-                </Button>
+                <SubscribePlansDialog
+                  buttonVariant="default"
+                  buttonClassName="hero-gradient border-0 px-8 text-primary-foreground"
+                />
               </div>
 
               {/* Continue learning */}
@@ -126,7 +110,7 @@ export default function Dashboard() {
                       <p className="text-xs text-primary">{t("dash.trialBooked")}</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">{t("dash.subscribe")}</Button>
+                  <SubscribePlansDialog buttonVariant="outline" />
                 </div>
               </div>
             </div>

@@ -317,15 +317,7 @@ export default function MyLessons() {
   };
 
   return (
-    <Layout>
-      <div className="border-b bg-card">
-        <div className="container flex items-center gap-8 overflow-x-auto">
-          <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">{t("msg.home")}</Link>
-          <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">{t("msg.messages")}</Link>
-          <Link to="/my-lessons" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">{t("myLessons.title")}</Link>
-        </div>
-      </div>
-
+    <Layout hideFooter>
       <div className="container py-8">
         {lastTutor && upcoming.length === 0 && !loading && (
           <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}

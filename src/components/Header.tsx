@@ -7,7 +7,7 @@ import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/owl-logo.png";
-import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
+import { PortalHeader } from "@/components/PortalHeader";
 
 const langLabels: Record<Language, string> = { ka: "ქარ", en: "EN", ru: "РУ" };
 
@@ -50,6 +50,12 @@ export function Header() {
       setIsAdmin(!!data);
     });
   }, [user]);
+
+  const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/tutor-schedule"].includes(location.pathname);
+
+  if (isPortalHeaderRoute) {
+    return <PortalHeader />;
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -122,11 +128,6 @@ export function Header() {
             </AnimatePresence>
           </div>
 
-          <SubscribePlansDialog
-            buttonVariant="outline"
-            buttonSize="sm"
-            buttonClassName="rounded-full border-primary/35 bg-primary/10 px-4 text-primary hover:bg-primary hover:text-primary-foreground"
-          />
 
           {user ? (
             <>
@@ -215,11 +216,6 @@ export function Header() {
                     </button>
                   ))}
                 </div>
-                <SubscribePlansDialog
-                  buttonVariant="outline"
-                  buttonSize="sm"
-                  buttonClassName="rounded-full border-primary/35 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground"
-                />
               </div>
 
               {navLinks.map((link) => (
