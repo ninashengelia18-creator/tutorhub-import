@@ -151,14 +151,12 @@ export default function FAQ() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
-          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-[1.75rem] hero-gradient shadow-lg md:h-24 md:w-24">
+          <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-[1.75rem] hero-gradient shadow-lg md:h-24 md:w-24">
             <HelpCircle className="h-10 w-10 text-primary-foreground md:h-12 md:w-12" strokeWidth={2.5} />
           </div>
-          <h1 className="mb-2 flex justify-center" aria-label="FAQ">
-            <HelpCircle className="h-16 w-16 text-primary md:h-20 md:w-20" aria-hidden="true" strokeWidth={2.5} />
-            <span className="sr-only">FAQ</span>
+          <h1 className="mb-4 text-center text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+            Frequently Asked Questions
           </h1>
-          <p className="mb-4 text-muted-foreground">LearnEazy — Frequently Asked Questions</p>
 
           <div className="inline-flex items-center gap-1 rounded-2xl border border-border bg-muted p-1.5">
             {(Object.keys(langLabels) as Language[]).map((l) => (
