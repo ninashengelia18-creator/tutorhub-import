@@ -1806,7 +1806,20 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.logout": "Выйти",
     "auth.dashboard": "Панель",
 
-    // Booking flow (new)
+    // Signup role selection
+    "signup.chooseRole": "Присоединяйтесь к LearnEazy",
+    "signup.chooseRoleDesc": "Выберите, как вы хотите использовать платформу",
+    "signup.iAmStudent": "Я студент",
+    "signup.studentDesc": "Найдите репетитора, забронируйте урок и начните учиться.",
+    "signup.signupAsStudent": "Зарегистрироваться как студент",
+    "signup.iAmTutor": "Я репетитор",
+    "signup.tutorDesc": "Делитесь знаниями и зарабатывайте, обучая студентов.",
+    "signup.applyAsTutor": "Подать заявку",
+    "signup.studentTitle": "Создать аккаунт студента",
+    "signup.studentSubtitle": "Зарегистрируйтесь для бронирования уроков.",
+    "signup.createStudentAccount": "Создать аккаунт",
+
+    // Booking flow
     "booking.subject": "Предмет",
     "booking.duration": "Длительность урока",
     "booking.selectDate": "Выберите дату",
@@ -1814,6 +1827,10 @@ export const translations: Record<Language, Record<string, string>> = {
     "booking.messageToTutor": "Сообщение репетитору (необязательно)",
     "booking.lessonWith": "урок с",
     "booking.thankYouMsg": "Спасибо за бронирование! Наша команда свяжется с вами через чат в течение 24 часов, чтобы предоставить реквизиты для оплаты и подтвердить вашу сессию.",
+    "booking.loginRequired": "Создайте аккаунт для бронирования урока",
+    "booking.loginRequiredDesc": "Зарегистрируйтесь бесплатно для завершения бронирования.",
+    "booking.signupToBook": "Регистрация для бронирования",
+    "booking.viewLessons": "Мои уроки",
 
     // My Lessons
     "myLessons.title": "Мои уроки",
