@@ -72,7 +72,10 @@ export default function TutorSearch() {
     if (selectedRating === "4.5+" && tutor.rating < 4.5) return false;
     if (selectedRating === "4.7+" && tutor.rating < 4.7) return false;
     if (selectedRating === "4.9+" && tutor.rating < 4.9) return false;
-    if (selectedAvailability !== "Any" && tutor.availability !== selectedAvailability.toLowerCase()) return false;
+    if (selectedAvailability !== "search.any") {
+      const avMap: Record<string, string> = { "search.morning": "morning", "search.afternoon": "afternoon", "search.evening": "evening" };
+      if (tutor.availability !== avMap[selectedAvailability]) return false;
+    }
     
     return true;
   });
