@@ -40,11 +40,14 @@ function normalizeCurrency(currency?: string | null) {
   return currency === "GEL" ? "₾" : currency;
 }
 
-export function SubscribePlansDialog({
-  buttonClassName,
-  buttonSize = "sm",
-  buttonVariant = "default",
-}: SubscribePlansDialogProps) {
+const SubscribePlansDialog = forwardRef<HTMLButtonElement, SubscribePlansDialogProps>(function SubscribePlansDialog(
+  {
+    buttonClassName,
+    buttonSize = "sm",
+    buttonVariant = "default",
+  },
+  ref,
+) {
   const { user } = useAuth();
   const { lang, t } = useLanguage();
   const [open, setOpen] = useState(false);
@@ -148,7 +151,7 @@ export function SubscribePlansDialog({
 
   return (
     <>
-      <Button variant={buttonVariant} size={buttonSize} className={buttonClassName} onClick={() => setOpen(true)}>
+      <Button ref={ref} variant={buttonVariant} size={buttonSize} className={buttonClassName} onClick={() => setOpen(true)}>
         <Crown className="h-4 w-4" />
         {t("dash.subscribe")}
       </Button>
@@ -309,4 +312,8 @@ export function SubscribePlansDialog({
       </Dialog>
     </>
   );
-}
+});
+
+SubscribePlansDialog.displayName = "SubscribePlansDialog";
+
+export { SubscribePlansDialog };
