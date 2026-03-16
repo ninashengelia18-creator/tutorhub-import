@@ -47,15 +47,28 @@ export default function TutorSchedule() {
 
   async function fetchBookings(tutorName: string) {
     const today = new Date().toISOString().split("T")[0];
-    const { data } = await supabase
-      .from("bookings")
-      .select("id, student_name, subject, lesson_date, start_time, end_time, duration_minutes, status, google_meet_link")
-      .eq("tutor_name", tutorName)
-      .in("status", ["confirmed", "completed"])
-      .gte("lesson_date", today)
-      .order("lesson_date", { ascending: true })
-      .order("start_time", { ascending: true });
-    setBookings((data as TutorBooking[]) || []);
+    const selectFields = "id, student_name, subject, lesson_date, start_time, end_time, duration_minutes, status, google_meet_link, price_amount, currency";
+
+    // Fetch upcoming + all confirmed/completed in parallel
+    const [upcomingRes, allRes] = await Promise.all([
+      supabase
+        .from("bookings")
+        .select(selectFields)
+        .eq("tutor_name", tutorName)
+        .in("status", ["confirmed", "completed"])
+        .gte("lesson_date", today)
+        .order("lesson_date", { ascending: true })
+        .order("start_time", { ascending: true }),
+      supabase
+        .from("bookings")
+        .select(selectFields)
+        .eq("tutor_name", tutorName)
+        .in("status", ["confirmed", "completed"])
+        .order("lesson_date", { ascending: false }),
+    ]);
+
+    setBookings((upcomingRes.data as TutorBooking[]) || []);
+    setAllBookings((allRes.data as TutorBooking[]) || []);
     setLoading(false);
   }
 
