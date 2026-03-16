@@ -276,7 +276,7 @@ export default function Messages() {
   };
 
   const handleSend = async () => {
-    if (!user || !selectedTutorName || sending) return;
+    if (!user || !selectedTutorId || sending) return;
     if (!message.trim() && !attachedFile) {
       toast({ title: t("msg.emptyComposer"), variant: "destructive" });
       return;
@@ -291,7 +291,7 @@ export default function Messages() {
         return;
       }
 
-      const conversationReady = await ensureConversation(selectedTutorName, false);
+      const conversationReady = await ensureConversation(selectedTutorId, false);
       if (!conversationReady) {
         toast({ title: t("msg.messageFailed"), variant: "destructive" });
         setSending(false);
@@ -300,7 +300,7 @@ export default function Messages() {
 
       const payload = {
         student_id: user.id,
-        tutor_name: selectedTutorName,
+        tutor_name: selectedTutorId,
         sender_id: user.id,
         sender_type: "student",
         sender_display_name: profile?.display_name ?? user.email ?? null,
