@@ -184,7 +184,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
 export default function MyLessons() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"lessons" | "calendar" | "tutors">("lessons");
