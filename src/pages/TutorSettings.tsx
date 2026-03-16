@@ -5,7 +5,7 @@ import { StudentSettingsSidebar } from "@/components/profile/StudentSettingsSide
 import { Layout } from "@/components/Layout";
 import { useProfileSettings } from "@/hooks/useProfileSettings";
 
-export default function ProfileSettings() {
+export default function TutorSettings() {
   const {
     user,
     fileInputRef,
@@ -30,13 +30,12 @@ export default function ProfileSettings() {
     setDeleteEmail,
     setDeleteDialogOpen,
     setNotificationPreferences,
-    setDisplayName,
     handleAvatarUpload,
     handleSaveAccount,
     handleSavePassword,
     handleSaveNotifications,
     handleDeleteAccount,
-  } = useProfileSettings("/login?redirect=/profile");
+  } = useProfileSettings("/login?redirect=/tutor-settings");
 
   if (initialLoading) {
     return <Layout hideFooter><div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div></Layout>;
@@ -64,8 +63,8 @@ export default function ProfileSettings() {
             deleteDialogOpen={deleteDialogOpen}
             notificationPreferences={notificationPreferences}
             onAvatarUpload={handleAvatarUpload}
-            onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
-            onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}
+            onFirstNameChange={(value) => setCurrentDisplayName(value, lastName, setActiveSection)}
+            onLastNameChange={(value) => setLastNameValue(firstName, value, setActiveSection)}
             onCurrentPasswordChange={setCurrentPassword}
             onNewPasswordChange={setNewPassword}
             onConfirmPasswordChange={setConfirmPassword}
@@ -81,4 +80,16 @@ export default function ProfileSettings() {
       </div>
     </Layout>
   );
+}
+
+function setCurrentDisplayName(value: string, lastName: string, setActiveSection: (value: never) => void) {
+  void setActiveSection;
+  throw new Error("placeholder");
+}
+
+function setLastNameValue(firstName: string, value: string, setActiveSection: (value: never) => void) {
+  void firstName;
+  void value;
+  void setActiveSection;
+  throw new Error("placeholder");
 }
