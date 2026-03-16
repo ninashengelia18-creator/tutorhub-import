@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LogIn, Mail, Lock } from "lucide-react";
+import { PasswordInput } from "@/components/auth/PasswordInput";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -23,30 +24,24 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
 
     if (error) {
-      toast({
-        title: t("auth.error"),
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      toast({ title: t("auth.welcomeBack") });
-      navigate(redirect || "/dashboard");
+      toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
+      return;
     }
-    setLoading(false);
+
+    toast({ title: t("auth.welcomeBack") });
+    navigate(redirect || "/dashboard", { replace: true });
   };
 
   return (
     <Layout>
       <div className="flex min-h-[70vh] items-center justify-center px-4 py-12">
         <Card className="w-full max-w-md border-border shadow-lg">
-          <CardHeader className="text-center space-y-2">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <LogIn className="h-6 w-6 text-primary" />
-            </div>
+          <CardHeader className="space-y-2 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10"><LogIn className="h-6 w-6 text-primary" /></div>
             <CardTitle className="text-2xl">{t("auth.login")}</CardTitle>
             <CardDescription>{t("auth.loginDesc")}</CardDescription>
           </CardHeader>
@@ -54,50 +49,16 @@ export default function Login() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">{t("auth.email")}</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="pl-9"
-                  />
-                </div>
+                <div className="relative"><Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" /><Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="pl-9" /></div>
               </div>
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">{t("auth.password")}</Label>
-                  <Link to="/forgot-password" className="text-xs text-primary hover:underline">
-                    {t("auth.forgotPassword")}
-                  </Link>
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="pl-9"
-                  />
-                </div>
+                <div className="flex items-center justify-between"><Label htmlFor="password">{t("auth.password")}</Label><Link to="/forgot-password" className="text-xs text-primary hover:underline">{t("auth.forgotPassword")}</Link></div>
+                <PasswordInput id="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required toggleLabel={t("auth.togglePassword")} icon={<Lock className="h-4 w-4" />} />
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? t("auth.signingIn") : t("auth.login")}
-              </Button>
-              <p className="text-sm text-muted-foreground text-center">
-                {t("auth.noAccount")}{" "}
-                <Link to="/signup" className="text-primary hover:underline font-medium">
-                  {t("auth.signupLink")}
-                </Link>
-              </p>
+              <Button type="submit" className="w-full" disabled={loading}>{loading ? t("auth.signingIn") : t("auth.login")}</Button>
+              <p className="text-center text-sm text-muted-foreground">{t("auth.noAccount")} <Link to="/signup" className="font-medium text-primary hover:underline">{t("auth.signupLink")}</Link></p>
             </CardFooter>
           </form>
         </Card>
