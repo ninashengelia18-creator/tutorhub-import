@@ -2173,7 +2173,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "msg.deleteFailed": "Не удалось удалить беседу",
     "msg.file": "Вложение",
     "msg.emptyComposer": "Введите сообщение или прикрепите файл.",
-    "msg.markedRead": "Помечено как прочитанное"
+    "msg.markedRead": "Помечено как прочитанное",
 
     // For Business
     "biz.title": "LearnEazy для бизнеса",
