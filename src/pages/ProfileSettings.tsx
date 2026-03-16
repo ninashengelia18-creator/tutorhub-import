@@ -20,8 +20,6 @@ export default function ProfileSettings() {
     deleteEmail,
     deleteDialogOpen,
     notificationPreferences,
-    localePreferences,
-    timezoneOptions,
     initials,
     firstName,
     lastName,
@@ -32,13 +30,11 @@ export default function ProfileSettings() {
     setDeleteEmail,
     setDeleteDialogOpen,
     setNotificationPreferences,
-    setLocalePreferences,
     setDisplayName,
     handleAvatarUpload,
     handleSaveAccount,
     handleSavePassword,
     handleSaveNotifications,
-    handleSaveLocalization,
     handleDeleteAccount,
   } = useProfileSettings("/login?redirect=/profile");
 
@@ -67,8 +63,6 @@ export default function ProfileSettings() {
             deleteEmail={deleteEmail}
             deleteDialogOpen={deleteDialogOpen}
             notificationPreferences={notificationPreferences}
-            localePreferences={localePreferences}
-            timezoneOptions={timezoneOptions}
             onAvatarUpload={handleAvatarUpload}
             onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
             onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}
@@ -76,11 +70,9 @@ export default function ProfileSettings() {
             onNewPasswordChange={setNewPassword}
             onConfirmPasswordChange={setConfirmPassword}
             onDeleteEmailChange={setDeleteEmail}
-            onLocalePreferenceChange={(key, value) => setLocalePreferences((current) => ({ ...current, [key]: value }))}
             onSaveAccount={handleSaveAccount}
             onSavePassword={handleSavePassword}
             onSaveNotifications={handleSaveNotifications}
-            onSaveLocalization={handleSaveLocalization}
             onToggleNotification={(key, value) => setNotificationPreferences((current) => ({ ...current, [key]: value }))}
             onDeleteAccount={handleDeleteAccount}
             onDeleteDialogOpenChange={setDeleteDialogOpen}
