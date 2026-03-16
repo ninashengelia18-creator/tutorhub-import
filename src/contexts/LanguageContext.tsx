@@ -1530,6 +1530,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.passwordUpdated": "პაროლი წარმატებით განახლდა!",
     "auth.logout": "გასვლა",
     "auth.dashboard": "პანელი",
+    "auth.togglePassword": "პაროლის ჩვენება ან დამალვა",
 
     // Signup role selection
     "signup.chooseRole": "შეუერთდი LearnEazy-ს",
