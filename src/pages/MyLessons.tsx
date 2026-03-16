@@ -116,7 +116,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={goToToday}>Today</Button>
+          <Button variant="outline" size="sm" onClick={goToToday}>{t("myLessons.today")}</Button>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigateWeek(-1)}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
