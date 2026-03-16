@@ -1728,6 +1728,47 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.passwordUpdated": "Пароль успешно обновлён!",
     "auth.logout": "Выйти",
     "auth.dashboard": "Панель",
+
+    // Booking flow (new)
+    "booking.subject": "Предмет",
+    "booking.duration": "Длительность урока",
+    "booking.selectDate": "Выберите дату",
+    "booking.bookingWith": "Бронирование урока с",
+    "booking.messageToTutor": "Сообщение репетитору (необязательно)",
+    "booking.lessonWith": "урок с",
+    "booking.thankYouMsg": "Спасибо за бронирование! Наша команда свяжется с вами через чат в течение 24 часов, чтобы предоставить реквизиты для оплаты и подтвердить вашу сессию.",
+
+    // My Lessons
+    "myLessons.title": "Мои уроки",
+    "myLessons.lessons": "Уроки",
+    "myLessons.calendar": "Календарь",
+    "myLessons.tutors": "Репетиторы",
+    "myLessons.upcoming": "Предстоящие уроки",
+    "myLessons.past": "Прошедшие уроки",
+    "myLessons.cancelled": "Отменённые",
+    "myLessons.noUpcoming": "Нет предстоящих уроков",
+    "myLessons.scheduleNow": "Запланируйте следующий урок!",
+    "myLessons.scheduleLesson": "Запланировать урок",
+    "myLessons.joinMeet": "Войти в Google Meet",
+
+    // Admin
+    "admin.title": "Панель администратора",
+    "admin.subtitle": "Управление бронированиями, платежами и уроками",
+    "admin.totalBookings": "Всего бронирований",
+    "admin.pendingPayment": "Ожидают оплаты",
+    "admin.confirmed": "Подтверждённые",
+    "admin.completedStat": "Завершённые",
+    "admin.searchPlaceholder": "Поиск по студенту, репетитору или предмету...",
+    "admin.markPaid": "Отметить оплату",
+    "admin.markCompleted": "Отметить завершённым",
+    "admin.addMeetLink": "Добавить ссылку Google Meet",
+    "admin.saveMeetLink": "Сохранить ссылку",
+    "admin.meetLinkSaved": "Ссылка Google Meet сохранена!",
+    "admin.markedPaid": "Бронирование подтверждено! Оплата получена.",
+    "admin.noBookings": "Бронирований пока нет",
+    "admin.accessDenied": "Доступ запрещён",
+    "admin.adminOnly": "Эта страница доступна только администраторам.",
+    "nav.admin": "Админ",
   },
 };
 
