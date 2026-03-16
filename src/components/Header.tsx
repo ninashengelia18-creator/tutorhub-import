@@ -53,6 +53,7 @@ function initialsFromValue(value: string) {
     .slice(0, 2) || "U";
 }
 
+export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
