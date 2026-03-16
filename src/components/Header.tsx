@@ -1,6 +1,21 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, LayoutDashboard, UserCircle, ChevronDown, Globe, BookOpen, Shield, CalendarDays } from "lucide-react";
+import {
+  Bell,
+  BookOpen,
+  CalendarDays,
+  ChevronDown,
+  Globe,
+  Heart,
+  HelpCircle,
+  LayoutDashboard,
+  LogOut,
+  Mail,
+  Menu,
+  Shield,
+  UserCircle,
+  X,
+} from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
@@ -8,6 +23,15 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/owl-logo.png";
 import { PortalHeader } from "@/components/PortalHeader";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const langLabels: Record<Language, string> = { ka: "ქარ", en: "EN", ru: "РУ" };
 
