@@ -231,7 +231,7 @@ export default function Dashboard() {
                               {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              {booking.subject} {t("dash.withTutor")} {booking.tutor_name}
+                              {localizeSubjectLabel(booking.subject, t)} {t("dash.withTutor")} {booking.tutor_name}
                             </p>
                           </div>
                           <button className="text-muted-foreground hover:text-foreground">

@@ -422,7 +422,7 @@ export default function MyLessons() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-primary">{tutor.tutor_name}</p>
-                      <p className="text-sm text-muted-foreground">{tutor.subject}</p>
+                      <p className="text-sm text-muted-foreground">{localizeSubjectLabel(tutor.subject, t)}</p>
                     </div>
                     <Button variant="outline" asChild>
                       <Link to="/search">{t("myLessons.bookAgain")}</Link>

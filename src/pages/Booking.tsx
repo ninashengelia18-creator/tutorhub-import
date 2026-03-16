@@ -207,7 +207,7 @@ export default function Booking() {
                     className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : t("booking.selectDate")}
+                    {date ? formatLocalizedDate(date, lang) : t("booking.selectDate")}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
