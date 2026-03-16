@@ -274,7 +274,7 @@ export default function MyLessons() {
             {formatDate(booking.lesson_date)} · {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
           </p>
           <p className="text-sm text-muted-foreground">
-            {booking.tutor_name}, {booking.subject}
+            {booking.tutor_name}, {localizeSubjectLabel(booking.subject, t)}
           </p>
           {booking.google_meet_link && booking.status === "confirmed" && (
             <a href={booking.google_meet_link} target="_blank" rel="noopener noreferrer"
