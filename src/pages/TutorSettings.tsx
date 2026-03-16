@@ -23,6 +23,7 @@ export default function TutorSettings() {
     initials,
     firstName,
     lastName,
+    email,
     setActiveSection,
     setCurrentPassword,
     setNewPassword,
@@ -31,8 +32,10 @@ export default function TutorSettings() {
     setDeleteDialogOpen,
     setNotificationPreferences,
     setDisplayName,
+    setEmail,
     handleAvatarUpload,
     handleSaveAccount,
+    handleSaveEmail,
     handleSavePassword,
     handleSaveNotifications,
     handleDeleteAccount,
@@ -49,7 +52,7 @@ export default function TutorSettings() {
           <StudentSettingsSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
           <StudentSettingsPanels
             activeSection={activeSection}
-            email={user?.email || ""}
+            email={email}
             avatarUrl={avatarUrl}
             initials={initials}
             firstName={firstName}
@@ -66,11 +69,13 @@ export default function TutorSettings() {
             onAvatarUpload={handleAvatarUpload}
             onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
             onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}
+            onEmailChange={setEmail}
             onCurrentPasswordChange={setCurrentPassword}
             onNewPasswordChange={setNewPassword}
             onConfirmPasswordChange={setConfirmPassword}
             onDeleteEmailChange={setDeleteEmail}
             onSaveAccount={handleSaveAccount}
+            onSaveEmail={handleSaveEmail}
             onSavePassword={handleSavePassword}
             onSaveNotifications={handleSaveNotifications}
             onToggleNotification={(key, value) => setNotificationPreferences((current) => ({ ...current, [key]: value }))}

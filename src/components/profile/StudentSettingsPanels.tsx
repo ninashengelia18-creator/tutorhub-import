@@ -46,11 +46,13 @@ interface StudentSettingsPanelsProps {
   onAvatarUpload: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
+  onEmailChange: (value: string) => void;
   onCurrentPasswordChange: (value: string) => void;
   onNewPasswordChange: (value: string) => void;
   onConfirmPasswordChange: (value: string) => void;
   onDeleteEmailChange: (value: string) => void;
   onSaveAccount: (event: React.FormEvent) => Promise<void>;
+  onSaveEmail: (event: React.FormEvent) => Promise<void>;
   onSavePassword: (event: React.FormEvent) => Promise<void>;
   onSaveNotifications: () => Promise<void>;
   onToggleNotification: (key: "email_transactional" | "email_tips_discount" | "email_surveys", value: boolean) => void;
@@ -91,11 +93,13 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
     onAvatarUpload,
     onFirstNameChange,
     onLastNameChange,
+    onEmailChange,
     onCurrentPasswordChange,
     onNewPasswordChange,
     onConfirmPasswordChange,
     onDeleteEmailChange,
     onSaveAccount,
+    onSaveEmail,
     onSavePassword,
     onSaveNotifications,
     onToggleNotification,
@@ -128,10 +132,13 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
   if (activeSection === "email") {
     return (
       <SectionShell title={t("profile.settings.emailTitle")} description={t("profile.settings.emailDesc")}>
-        <div className="space-y-3">
-          <Label htmlFor="accountEmail">{t("profile.settings.accountEmail")}</Label>
-          <Input id="accountEmail" value={email} disabled className="h-16 rounded-2xl border-border bg-background px-6 text-lg" />
-        </div>
+        <form className="space-y-6" onSubmit={(event) => void onSaveEmail(event)}>
+          <div className="space-y-3">
+            <Label htmlFor="accountEmail">{t("profile.settings.accountEmail")}</Label>
+            <Input id="accountEmail" type="email" value={email} onChange={(e) => onEmailChange(e.target.value)} className="h-16 rounded-2xl border-border bg-background px-6 text-lg" />
+          </div>
+          <Button type="submit" className="h-16 w-full rounded-2xl text-lg font-semibold" disabled={loading}>{loading ? t("profile.settings.saving") : t("profile.settings.save")}</Button>
+        </form>
       </SectionShell>
     );
   }
