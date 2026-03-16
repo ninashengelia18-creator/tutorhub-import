@@ -593,6 +593,21 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "Access Denied",
     "admin.adminOnly": "This page is only accessible to administrators.",
     "nav.admin": "Admin",
+    "nav.tutorSchedule": "My Schedule",
+
+    // Tutor Schedule
+    "tutorSchedule.title": "My Schedule",
+    "tutorSchedule.subtitle": "Your upcoming confirmed lessons with students",
+    "tutorSchedule.upcomingCount": "Upcoming lessons",
+    "tutorSchedule.daysScheduled": "Days scheduled",
+    "tutorSchedule.totalTime": "Total teaching time",
+    "tutorSchedule.noLessons": "No upcoming lessons",
+    "tutorSchedule.noLessonsDesc": "When students book lessons with you, they'll appear here.",
+    "tutorSchedule.joinMeet": "Join Meet",
+    "tutorSchedule.noMeetLink": "Meet link pending",
+    "tutorSchedule.unknownStudent": "Student",
+    "tutorSchedule.setName": "Set your display name",
+    "tutorSchedule.setNameDesc": "Please set your display name in Profile Settings to match the name used in bookings.",
   },
   ka: {
     // Nav
@@ -1181,6 +1196,21 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "წვდომა აკრძალულია",
     "admin.adminOnly": "ეს გვერდი მხოლოდ ადმინისტრატორებისთვისაა.",
     "nav.admin": "ადმინი",
+    "nav.tutorSchedule": "ჩემი განრიგი",
+
+    // Tutor Schedule
+    "tutorSchedule.title": "ჩემი განრიგი",
+    "tutorSchedule.subtitle": "თქვენი მომავალი დადასტურებული გაკვეთილები სტუდენტებთან",
+    "tutorSchedule.upcomingCount": "მომავალი გაკვეთილები",
+    "tutorSchedule.daysScheduled": "დაგეგმილი დღეები",
+    "tutorSchedule.totalTime": "სწავლების დრო სულ",
+    "tutorSchedule.noLessons": "მომავალი გაკვეთილები არ არის",
+    "tutorSchedule.noLessonsDesc": "როცა სტუდენტები დაჯავშნიან გაკვეთილებს, ისინი აქ გამოჩნდება.",
+    "tutorSchedule.joinMeet": "Meet-ში შესვლა",
+    "tutorSchedule.noMeetLink": "Meet ლინკი მოლოდინში",
+    "tutorSchedule.unknownStudent": "სტუდენტი",
+    "tutorSchedule.setName": "დააყენეთ სახელი",
+    "tutorSchedule.setNameDesc": "გთხოვთ დააყენოთ სახელი პროფილის პარამეტრებში, რომელიც ემთხვევა ჯავშნებში გამოყენებულ სახელს.",
   },
   ru: {
     // Nav
@@ -1769,6 +1799,21 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "Доступ запрещён",
     "admin.adminOnly": "Эта страница доступна только администраторам.",
     "nav.admin": "Админ",
+    "nav.tutorSchedule": "Моё расписание",
+
+    // Tutor Schedule
+    "tutorSchedule.title": "Моё расписание",
+    "tutorSchedule.subtitle": "Ваши предстоящие подтверждённые уроки со студентами",
+    "tutorSchedule.upcomingCount": "Предстоящие уроки",
+    "tutorSchedule.daysScheduled": "Запланированные дни",
+    "tutorSchedule.totalTime": "Общее время обучения",
+    "tutorSchedule.noLessons": "Нет предстоящих уроков",
+    "tutorSchedule.noLessonsDesc": "Когда студенты забронируют уроки с вами, они появятся здесь.",
+    "tutorSchedule.joinMeet": "Войти в Meet",
+    "tutorSchedule.noMeetLink": "Ссылка на Meet ожидается",
+    "tutorSchedule.unknownStudent": "Студент",
+    "tutorSchedule.setName": "Укажите имя",
+    "tutorSchedule.setNameDesc": "Пожалуйста, укажите отображаемое имя в настройках профиля, соответствующее имени в бронированиях.",
   },
 };
 
