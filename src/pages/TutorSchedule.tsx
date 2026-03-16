@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock } from "lucide-react";
+import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TutorBooking {
