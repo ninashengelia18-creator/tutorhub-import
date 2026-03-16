@@ -2157,6 +2157,23 @@ export const translations: Record<Language, Record<string, string>> = {
     // Messages
     "msg.search": "Поиск сообщений...",
     "msg.typePlaceholder": "Введите сообщение...",
+    "msg.send": "Отправить сообщение",
+    "msg.attach": "Прикрепить файл",
+    "msg.emoji": "Открыть эмодзи",
+    "msg.removeAttachment": "Удалить вложение",
+    "msg.deleteConversation": "Удалить беседу",
+    "msg.deleteConversationDesc": "Вы уверены, что хотите удалить эту беседу? Это действие нельзя отменить.",
+    "msg.cancel": "Отмена",
+    "msg.delete": "Удалить",
+    "msg.messageSent": "Сообщение отправлено",
+    "msg.messageFailed": "Не удалось отправить сообщение",
+    "msg.attachmentFailed": "Не удалось загрузить вложение",
+    "msg.attachmentTooLarge": "Размер вложения должен быть меньше 10 МБ.",
+    "msg.deleted": "Беседа удалена",
+    "msg.deleteFailed": "Не удалось удалить беседу",
+    "msg.file": "Вложение",
+    "msg.emptyComposer": "Введите сообщение или прикрепите файл.",
+    "msg.markedRead": "Помечено как прочитанное"
 
     // For Business
     "biz.title": "LearnEazy для бизнеса",
