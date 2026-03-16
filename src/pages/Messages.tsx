@@ -1,60 +1,356 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Search, Send, Paperclip, Smile, Mic, Star, Monitor, Clock, MoreHorizontal, X, Info } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Layout } from "@/components/Layout";
-import { motion } from "framer-motion";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect, useMemo, useState } from "react";
+import { Info } from "lucide-react";
 
-interface TutorContact {
-  name: string;
-  avatar_url: string | null;
-  subject: string;
-  lastMessage: string;
-  time: string;
-  unread: number;
-}
+import { Layout } from "@/components/Layout";
+import { ChatComposer } from "@/components/messages/ChatComposer";
+import { ChatMessages } from "@/components/messages/ChatMessages";
+import { ConversationDetails } from "@/components/messages/ConversationDetails";
+import { ConversationList } from "@/components/messages/ConversationList";
+import type {
+  BookingContactRecord,
+  ConversationListItem,
+  ConversationRecord,
+  MessageFilter,
+  MessageRecord,
+} from "@/components/messages/types";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
+import { sanitizeFileName } from "@/components/messages/utils";
 
 export default function Messages() {
-  const { user } = useAuth();
-  const { t } = useLanguage();
-  const [contacts, setContacts] = useState<TutorContact[]>([]);
-  const [selectedContact, setSelectedContact] = useState<TutorContact | null>(null);
+  const { user, profile } = useAuth();
+  const { t, lang } = useLanguage();
+  const { toast } = useToast();
+
+  const [contacts, setContacts] = useState<BookingContactRecord[]>([]);
+  const [conversations, setConversations] = useState<ConversationRecord[]>([]);
+  const [messages, setMessages] = useState<MessageRecord[]>([]);
+  const [selectedTutorName, setSelectedTutorName] = useState<string | null>(null);
   const [message, setMessage] = useState("");
-  const [msgFilter, setMsgFilter] = useState<"all" | "unread" | "archived">("all");
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const [msgFilter, setMsgFilter] = useState<MessageFilter>("all");
   const [showDetails, setShowDetails] = useState(true);
   const [showTip, setShowTip] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<ConversationListItem | null>(null);
 
   useEffect(() => {
-    async function loadContacts() {
-      const { data } = await supabase
-        .from("bookings")
-        .select("tutor_name, tutor_avatar_url, subject")
-        .order("created_at", { ascending: false });
+    if (!user) return;
 
-      if (data) {
-        const unique = new Map<string, TutorContact>();
-        data.forEach(b => {
-          if (!unique.has(b.tutor_name)) {
-            unique.set(b.tutor_name, {
-              name: b.tutor_name,
-              avatar_url: b.tutor_avatar_url,
-              subject: b.subject,
-              lastMessage: t("msg.noMessages"),
-              time: "",
-              unread: 0,
+    const loadData = async () => {
+      const [{ data: bookingsData }, { data: conversationsData }, { data: messagesData }] = await Promise.all([
+        supabase
+          .from("bookings")
+          .select("tutor_name, tutor_avatar_url, subject, created_at")
+          .eq("student_id", user.id)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("message_conversations")
+          .select("tutor_name, archived_by_student, deleted_by_student, updated_at")
+          .eq("student_id", user.id)
+          .order("updated_at", { ascending: false }),
+        supabase
+          .from("messages")
+          .select("id, tutor_name, content, created_at, sender_type, sender_display_name, read_at, attachment_url, attachment_name, attachment_type, attachment_size")
+          .eq("student_id", user.id)
+          .order("created_at", { ascending: true }),
+      ]);
+
+      setContacts((bookingsData as BookingContactRecord[] | null) ?? []);
+      setConversations((conversationsData as ConversationRecord[] | null) ?? []);
+      setMessages((messagesData as MessageRecord[] | null) ?? []);
+    };
+
+    void loadData();
+
+    const messagesChannel = supabase
+      .channel(`messages-student-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "messages", filter: `student_id=eq.${user.id}` },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            setMessages((current) => {
+              const next = [...current, payload.new as MessageRecord];
+              next.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+              return next;
             });
+            return;
           }
-        });
-        const list = Array.from(unique.values());
-        setContacts(list);
+
+          if (payload.eventType === "UPDATE") {
+            setMessages((current) => current.map((item) => (item.id === payload.new.id ? (payload.new as MessageRecord) : item)));
+          }
+        },
+      )
+      .subscribe();
+
+    const conversationsChannel = supabase
+      .channel(`message-conversations-student-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "message_conversations", filter: `student_id=eq.${user.id}` },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            setConversations((current) => {
+              const exists = current.some((item) => item.tutor_name === payload.new.tutor_name);
+              if (exists) {
+                return current.map((item) =>
+                  item.tutor_name === payload.new.tutor_name ? (payload.new as ConversationRecord) : item,
+                );
+              }
+              return [payload.new as ConversationRecord, ...current];
+            });
+            return;
+          }
+
+          if (payload.eventType === "UPDATE") {
+            setConversations((current) =>
+              current.map((item) => (item.tutor_name === payload.new.tutor_name ? (payload.new as ConversationRecord) : item)),
+            );
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(messagesChannel);
+      void supabase.removeChannel(conversationsChannel);
+    };
+  }, [user]);
+
+  const conversationItems = useMemo<ConversationListItem[]>(() => {
+    const contactMap = new Map<string, BookingContactRecord>();
+
+    contacts.forEach((contact) => {
+      if (!contactMap.has(contact.tutor_name)) {
+        contactMap.set(contact.tutor_name, contact);
       }
+    });
+
+    const conversationMap = new Map<string, ConversationListItem>();
+
+    contactMap.forEach((contact, tutorName) => {
+      const conversation = conversations.find((item) => item.tutor_name === tutorName);
+      const relatedMessages = messages.filter((item) => item.tutor_name === tutorName);
+      const latestMessage = relatedMessages[relatedMessages.length - 1];
+      const unread = relatedMessages.filter((item) => item.sender_type === "tutor" && !item.read_at).length;
+
+      if (conversation?.deleted_by_student) return;
+
+      conversationMap.set(tutorName, {
+        name: tutorName,
+        avatar_url: contact.tutor_avatar_url,
+        subject: contact.subject,
+        lastMessage: latestMessage?.content || latestMessage?.attachment_name || t("msg.noMessages"),
+        unread,
+        archived: conversation?.archived_by_student ?? false,
+        updatedAt: conversation?.updated_at ?? latestMessage?.created_at ?? contact.created_at,
+      });
+    });
+
+    conversations.forEach((conversation) => {
+      if (conversation.deleted_by_student || conversationMap.has(conversation.tutor_name)) return;
+      const relatedMessages = messages.filter((item) => item.tutor_name === conversation.tutor_name);
+      const latestMessage = relatedMessages[relatedMessages.length - 1];
+      const unread = relatedMessages.filter((item) => item.sender_type === "tutor" && !item.read_at).length;
+
+      conversationMap.set(conversation.tutor_name, {
+        name: conversation.tutor_name,
+        avatar_url: null,
+        subject: "",
+        lastMessage: latestMessage?.content || latestMessage?.attachment_name || t("msg.noMessages"),
+        unread,
+        archived: conversation.archived_by_student,
+        updatedAt: conversation.updated_at ?? latestMessage?.created_at ?? new Date().toISOString(),
+      });
+    });
+
+    return Array.from(conversationMap.values())
+      .filter((item) => {
+        if (msgFilter === "unread") return item.unread > 0 && !item.archived;
+        if (msgFilter === "archived") return item.archived;
+        return !item.archived;
+      })
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+  }, [contacts, conversations, messages, msgFilter, t]);
+
+  useEffect(() => {
+    if (!selectedTutorName && conversationItems.length > 0) {
+      setSelectedTutorName(conversationItems[0].name);
+      return;
     }
-    loadContacts();
-  }, []);
+
+    if (selectedTutorName && !conversationItems.some((item) => item.name === selectedTutorName)) {
+      setSelectedTutorName(conversationItems[0]?.name ?? null);
+    }
+  }, [conversationItems, selectedTutorName]);
+
+  const selectedConversation = useMemo(
+    () => conversationItems.find((item) => item.name === selectedTutorName) ?? null,
+    [conversationItems, selectedTutorName],
+  );
+
+  const selectedMessages = useMemo(
+    () => messages.filter((item) => item.tutor_name === selectedTutorName),
+    [messages, selectedTutorName],
+  );
+
+  useEffect(() => {
+    if (!user || !selectedTutorName) return;
+
+    const unreadTutorMessages = selectedMessages.filter((item) => item.sender_type === "tutor" && !item.read_at);
+    if (unreadTutorMessages.length === 0) return;
+
+    const markAsRead = async () => {
+      const ids = unreadTutorMessages.map((item) => item.id);
+      const now = new Date().toISOString();
+      const { error } = await supabase.from("messages").update({ read_at: now }).in("id", ids);
+      if (!error) {
+        setMessages((current) => current.map((item) => (ids.includes(item.id) ? { ...item, read_at: now } : item)));
+      }
+    };
+
+    void markAsRead();
+  }, [selectedMessages, selectedTutorName, user]);
+
+  const ensureConversation = async (tutorName: string, archived = false) => {
+    if (!user) return false;
+
+    const { error } = await supabase.from("message_conversations").upsert(
+      {
+        student_id: user.id,
+        tutor_name: tutorName,
+        archived_by_student: archived,
+        deleted_by_student: false,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "student_id,tutor_name" },
+    );
+
+    return !error;
+  };
+
+  const uploadAttachment = async () => {
+    if (!attachedFile || !user || !selectedTutorName) return null;
+
+    if (attachedFile.size > 10 * 1024 * 1024) {
+      toast({ title: t("msg.attachmentTooLarge"), variant: "destructive" });
+      return null;
+    }
+
+    const filePath = `${user.id}/${selectedTutorName}/${Date.now()}-${sanitizeFileName(attachedFile.name)}`;
+    const { error } = await supabase.storage.from("message-attachments").upload(filePath, attachedFile, {
+      upsert: false,
+      contentType: attachedFile.type || undefined,
+    });
+
+    if (error) {
+      toast({ title: t("msg.attachmentFailed"), variant: "destructive" });
+      return null;
+    }
+
+    const { data } = supabase.storage.from("message-attachments").getPublicUrl(filePath);
+
+    return {
+      attachment_url: data.publicUrl,
+      attachment_name: attachedFile.name,
+      attachment_type: attachedFile.type || null,
+      attachment_size: attachedFile.size,
+    };
+  };
+
+  const handleSend = async () => {
+    if (!user || !selectedTutorName || sending) return;
+    if (!message.trim() && !attachedFile) {
+      toast({ title: t("msg.emptyComposer"), variant: "destructive" });
+      return;
+    }
+
+    setSending(true);
+
+    try {
+      const attachment = await uploadAttachment();
+      if (attachedFile && !attachment) {
+        setSending(false);
+        return;
+      }
+
+      const conversationReady = await ensureConversation(selectedTutorName, false);
+      if (!conversationReady) {
+        toast({ title: t("msg.messageFailed"), variant: "destructive" });
+        setSending(false);
+        return;
+      }
+
+      const payload = {
+        student_id: user.id,
+        tutor_name: selectedTutorName,
+        sender_id: user.id,
+        sender_type: "student",
+        sender_display_name: profile?.display_name ?? user.email ?? null,
+        content: message.trim() || attachment?.attachment_name || t("msg.file"),
+        ...(attachment ?? {
+          attachment_url: null,
+          attachment_name: null,
+          attachment_type: null,
+          attachment_size: null,
+        }),
+      };
+
+      const { error } = await supabase.from("messages").insert(payload);
+      if (error) {
+        toast({ title: t("msg.messageFailed"), variant: "destructive" });
+        setSending(false);
+        return;
+      }
+
+      setMessage("");
+      setAttachedFile(null);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleDeleteConversation = async () => {
+    if (!user || !pendingDelete) return;
+
+    const { error } = await supabase.from("message_conversations").upsert(
+      {
+        student_id: user.id,
+        tutor_name: pendingDelete.name,
+        archived_by_student: false,
+        deleted_by_student: true,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "student_id,tutor_name" },
+    );
+
+    if (error) {
+      toast({ title: t("msg.deleteFailed"), variant: "destructive" });
+      return;
+    }
+
+    if (selectedTutorName === pendingDelete.name) {
+      setSelectedTutorName(null);
+    }
+
+    setPendingDelete(null);
+    toast({ title: t("msg.deleted") });
+  };
 
   const filters = [
     { key: "all" as const, label: t("msg.all") },
@@ -62,164 +358,114 @@ export default function Messages() {
     { key: "archived" as const, label: t("msg.archived") },
   ];
 
-  const getInitials = (name: string) => name.split(" ").map(n => n[0]).join("");
-
   return (
     <Layout hideFooter>
-      <div className="flex h-[calc(100vh-8.5rem)]">
-        {/* Left: Contacts List */}
-        <div className="w-80 border-r bg-card hidden md:flex flex-col shrink-0">
-          {/* Filter tabs */}
-          <div className="flex items-center gap-4 px-4 pt-4 pb-2">
-            {filters.map(f => (
-              <button
-                key={f.key}
-                onClick={() => setMsgFilter(f.key)}
-                className={`text-sm font-medium pb-1 border-b-2 transition-colors ${
-                  msgFilter === f.key
-                    ? "border-primary text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
+      <>
+        <div className="flex h-[calc(100vh-8.5rem)]">
+          <div className="hidden w-80 shrink-0 flex-col border-r bg-card md:flex">
+            <div className="flex items-center gap-4 px-4 pb-2 pt-4">
+              {filters.map((filter) => (
+                <button
+                  key={filter.key}
+                  onClick={() => setMsgFilter(filter.key)}
+                  className={`border-b-2 pb-1 text-sm font-medium transition-colors ${
+                    msgFilter === filter.key
+                      ? "border-primary text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
+
+            <ConversationList
+              conversations={conversationItems}
+              selectedName={selectedTutorName}
+              lang={lang}
+              emptyLabel={t("msg.noConversations")}
+              continueLabel={(name) => t("msg.continueWith").replace("{name}", name)}
+              onSelect={(name) => setSelectedTutorName(name)}
+              onDelete={(conversation) => setPendingDelete(conversation)}
+            />
           </div>
 
-          {/* Contact list */}
-          <div className="flex-1 overflow-y-auto">
-            {contacts.length === 0 && (
-              <p className="text-sm text-muted-foreground p-4">{t("msg.noConversations")}</p>
-            )}
-            {contacts.map((contact) => (
-              <button
-                key={contact.name}
-                onClick={() => setSelectedContact(contact)}
-                className={`w-full flex items-start gap-3 px-4 py-3 text-left transition-colors border-b hover:bg-muted/50 ${
-                  selectedContact?.name === contact.name ? "bg-muted/50" : ""
-                }`}
-              >
-                <div className="h-10 w-10 rounded-full bg-muted overflow-hidden flex items-center justify-center text-primary text-sm font-bold shrink-0">
-                  {contact.avatar_url ? (
-                    <img src={contact.avatar_url} alt={contact.name} className="h-full w-full object-cover" />
-                  ) : (
-                    getInitials(contact.name)
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold truncate">{contact.name}</p>
-                    <button className="text-muted-foreground hover:text-foreground shrink-0">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </button>
+          <div className="flex min-w-0 flex-1 flex-col">
+            {selectedConversation ? (
+              <>
+                <div className="flex items-center justify-between border-b bg-card px-4 py-3">
+                  <div>
+                    <p className="font-semibold">{selectedConversation.name.split(" ")[0]}</p>
+                    {selectedConversation.subject && <p className="text-xs text-muted-foreground">{selectedConversation.subject}</p>}
                   </div>
-                  <p className="text-xs text-muted-foreground truncate">{contact.lastMessage}</p>
-                  <p className="text-xs text-primary mt-0.5">{t("msg.continueWith").replace("{name}", contact.name.split(" ")[0])}</p>
+                  <Button variant="ghost" size="icon" onClick={() => setShowDetails((current) => !current)}>
+                    <Info className="h-4 w-4" />
+                  </Button>
                 </div>
-              </button>
-            ))}
-          </div>
-        </div>
 
-        {/* Center: Chat area */}
-        <div className="flex-1 flex flex-col min-w-0">
-          {selectedContact ? (
-            <>
-              {/* Chat header */}
-              <div className="border-b px-4 py-3 flex items-center justify-between bg-card">
-                <p className="font-semibold">{selectedContact.name.split(" ")[0]}</p>
-                <Button variant="ghost" size="icon" onClick={() => setShowDetails(!showDetails)}>
-                  <Info className="h-4 w-4" />
-                </Button>
-              </div>
-
-              {/* Chat messages */}
-              <div className="flex-1 overflow-y-auto p-4">
-                {showTip && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-accent/50 rounded-lg p-3 flex items-start gap-3 mb-4"
-                  >
-                    <Info className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-                    <p className="text-sm text-muted-foreground flex-1">
-                      {t("msg.tipReaction")}
-                    </p>
-                    <button onClick={() => setShowTip(false)} className="text-muted-foreground hover:text-foreground shrink-0">
-                      <X className="h-4 w-4" />
-                    </button>
-                  </motion.div>
-                )}
-                {/* Empty chat state */}
-                <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
-                  {t("msg.startConversation").replace("{name}", selectedContact.name.split(" ")[0])}
-                </div>
-              </div>
-
-              {/* Message input */}
-              <div className="border-t p-3">
-                <div className="rounded-lg border p-3">
-                  <input
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder={t("msg.yourMessage")}
-                    className="w-full bg-transparent outline-none text-sm mb-2"
-                  />
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <button className="text-muted-foreground hover:text-foreground">
-                        <Paperclip className="h-4 w-4" />
-                      </button>
-                      <button className="text-muted-foreground hover:text-foreground">
-                        <Smile className="h-4 w-4" />
+                <div className="flex-1 overflow-y-auto p-4">
+                  {showTip && (
+                    <div className="mb-4 flex items-start gap-3 rounded-lg bg-accent/50 p-3">
+                      <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                      <p className="flex-1 text-sm text-muted-foreground">{t("msg.tipReaction")}</p>
+                      <button onClick={() => setShowTip(false)} className="shrink-0 text-muted-foreground hover:text-foreground">
+                        ×
                       </button>
                     </div>
-                    <button className="text-muted-foreground hover:text-foreground">
-                      <Mic className="h-4 w-4" />
-                    </button>
-                  </div>
+                  )}
+                  <ChatMessages
+                    messages={selectedMessages}
+                    currentSenderType="student"
+                    lang={lang}
+                    emptyLabel={t("msg.startConversation").replace("{name}", selectedConversation.name.split(" ")[0])}
+                  />
                 </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex-1 flex items-center justify-center text-muted-foreground">
-              {t("msg.selectTutor")}
-            </div>
+
+                <ChatComposer
+                  message={message}
+                  attachedFile={attachedFile}
+                  sending={sending}
+                  placeholder={t("msg.typePlaceholder")}
+                  sendLabel={t("msg.send")}
+                  attachLabel={t("msg.attach")}
+                  emojiLabel={t("msg.emoji")}
+                  removeAttachmentLabel={t("msg.removeAttachment")}
+                  onMessageChange={setMessage}
+                  onSend={() => void handleSend()}
+                  onEmojiSelect={(emoji) => setMessage((current) => `${current}${emoji}`)}
+                  onFileSelect={setAttachedFile}
+                  onRemoveAttachment={() => setAttachedFile(null)}
+                />
+              </>
+            ) : (
+              <div className="flex flex-1 items-center justify-center text-muted-foreground">{t("msg.selectTutor")}</div>
+            )}
+          </div>
+
+          {selectedConversation && showDetails && (
+            <ConversationDetails
+              name={selectedConversation.name}
+              avatarUrl={selectedConversation.avatar_url}
+              subject={selectedConversation.subject}
+              detailsLabel={t("msg.details")}
+              enterClassroomLabel={t("msg.enterClassroom")}
+            />
           )}
         </div>
 
-        {/* Right: Details sidebar */}
-        {selectedContact && showDetails && (
-          <div className="w-72 border-l bg-card hidden lg:flex flex-col items-center py-6 px-4 shrink-0">
-            <p className="text-sm font-medium text-muted-foreground mb-4 self-start">{t("msg.details")}</p>
-            <div className="h-32 w-32 rounded-lg bg-muted overflow-hidden flex items-center justify-center mb-4">
-              {selectedContact.avatar_url ? (
-                <img src={selectedContact.avatar_url} alt={selectedContact.name} className="h-full w-full object-cover" />
-              ) : (
-                <span className="text-3xl font-bold text-primary">
-                  {getInitials(selectedContact.name)}
-                </span>
-              )}
-            </div>
-            <h3 className="text-xl font-bold mb-1">{selectedContact.name}</h3>
-            <div className="flex items-center gap-1 text-sm mb-4">
-              <Star className="h-4 w-4 fill-foreground" />
-              <span className="font-medium">5</span>
-              <span className="text-muted-foreground">(0)</span>
-            </div>
-            <SubscribePlansDialog
-              buttonVariant="default"
-              buttonClassName="mb-2 w-full hero-gradient border-0 text-primary-foreground"
-            />
-            <Button variant="outline" className="w-full" asChild>
-              <Link to="/classroom">
-                <Monitor className="h-4 w-4 mr-2" />
-                {t("msg.enterClassroom")}
-              </Link>
-            </Button>
-          </div>
-        )}
-      </div>
+        <AlertDialog open={!!pendingDelete} onOpenChange={(open) => !open && setPendingDelete(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t("msg.deleteConversation")}</AlertDialogTitle>
+              <AlertDialogDescription>{t("msg.deleteConversationDesc")}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t("msg.cancel")}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => void handleDeleteConversation()}>{t("msg.delete")}</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </>
     </Layout>
   );
 }
