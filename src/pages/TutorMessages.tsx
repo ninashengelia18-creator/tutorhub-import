@@ -190,14 +190,19 @@ export default function TutorMessages() {
       });
     });
 
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
     return Array.from(conversationMap.values())
       .filter((item) => {
-        if (msgFilter === "unread") return item.unread > 0 && !item.archived;
-        if (msgFilter === "archived") return item.archived;
-        return !item.archived;
+        if (msgFilter === "unread" && (item.unread === 0 || item.archived)) return false;
+        if (msgFilter === "archived" && !item.archived) return false;
+        if (msgFilter === "all" && item.archived) return false;
+        if (subjectFilter !== "all" && item.subject !== subjectFilter) return false;
+        if (normalizedQuery && !item.name.toLowerCase().includes(normalizedQuery)) return false;
+        return true;
       })
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-  }, [contacts, conversations, messages, msgFilter]);
+  }, [contacts, conversations, messages, msgFilter, searchQuery, subjectFilter]);
 
   useEffect(() => {
     if (!selectedStudentId && conversationItems.length > 0) {
