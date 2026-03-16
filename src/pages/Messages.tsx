@@ -191,19 +191,19 @@ export default function Messages() {
   }, [contacts, conversations, messages, msgFilter, t]);
 
   useEffect(() => {
-    if (!selectedTutorName && conversationItems.length > 0) {
-      setSelectedTutorName(conversationItems[0].name);
+    if (!selectedTutorId && conversationItems.length > 0) {
+      setSelectedTutorId(conversationItems[0].id);
       return;
     }
 
-    if (selectedTutorName && !conversationItems.some((item) => item.name === selectedTutorName)) {
-      setSelectedTutorName(conversationItems[0]?.name ?? null);
+    if (selectedTutorId && !conversationItems.some((item) => item.id === selectedTutorId)) {
+      setSelectedTutorId(conversationItems[0]?.id ?? null);
     }
-  }, [conversationItems, selectedTutorName]);
+  }, [conversationItems, selectedTutorId]);
 
   const selectedConversation = useMemo(
-    () => conversationItems.find((item) => item.name === selectedTutorName) ?? null,
-    [conversationItems, selectedTutorName],
+    () => conversationItems.find((item) => item.id === selectedTutorId) ?? null,
+    [conversationItems, selectedTutorId],
   );
 
   const selectedMessages = useMemo(
