@@ -117,122 +117,161 @@ function initialsFromValue(value: string) {
           </span>
         </div>
 
-        <nav className="hidden md:flex items-center gap-6">
-          {visibleNavLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === link.href ? "text-primary" : "text-foreground/90"
-              }`}
-            >
-              {t(link.labelKey)}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hidden md:flex items-center gap-3">
-          <div className="relative" ref={langRef}>
-            <button
-              onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-secondary transition-colors"
-            >
-              <Globe className="h-4 w-4" />
-              {langLabels[lang]}
-              <ChevronDown className={`h-3 w-3 transition-transform ${langOpen ? "rotate-180" : ""}`} />
-            </button>
-            <AnimatePresence>
-              {langOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-1 w-28 rounded-lg border bg-card shadow-lg overflow-hidden z-50"
-                >
-                  {(Object.keys(langLabels) as Language[]).map((l) => (
-                    <button
-                      key={l}
-                      onClick={() => { setLang(l); setLangOpen(false); }}
-                      className={`w-full px-3 py-2 text-sm text-left transition-colors ${
-                        lang === l ? "bg-primary/20 text-primary font-semibold" : "text-foreground hover:bg-secondary"
-                      }`}
-                    >
-                      {langLabels[l]}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+        <div className="hidden md:flex items-center gap-10">
+          <nav className="flex items-center gap-6">
+            {headerNavLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  location.pathname === link.href ? "text-primary" : "text-foreground/90"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
           {user ? (
-            <>
-              {isTutor ? (
-                <>
-                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                    <Link to="/tutor-dashboard">
-                      <LayoutDashboard className="h-4 w-4 mr-1" />
-                      {t("auth.dashboard")}
-                    </Link>
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                    <Link to="/tutor-schedule">
-                      <CalendarDays className="h-4 w-4 mr-1" />
-                      {t("nav.tutorSchedule")}
-                    </Link>
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                    <Link to="/lesson-planner">
-                      <BookOpen className="h-4 w-4 mr-1" />
-                      {t("nav.lessonPlanner")}
-                    </Link>
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                    <Link to={profilePath}>
-                      <UserCircle className="h-4 w-4 mr-1" />
-                      {t("nav.profile")}
-                    </Link>
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                    <Link to="/dashboard">
-                      <LayoutDashboard className="h-4 w-4 mr-1" />
-                      {t("auth.dashboard")}
-                    </Link>
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                    <Link to={profilePath}>
-                      <UserCircle className="h-4 w-4 mr-1" />
-                      {t("nav.profile")}
-                    </Link>
-                  </Button>
-                </>
-              )}
-              {isAdmin && (
-                <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                  <Link to="/admin">
-                    <Shield className="h-4 w-4 mr-1" />
-                    {t("nav.admin")}
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" className="h-14 w-14 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
+                <Link to={isTutor ? "/tutor-messages" : "/messages"} aria-label={t("msg.messages")}>
+                  <Mail className="h-5 w-5" />
+                </Link>
+              </Button>
+
+              {!isTutor ? (
+                <Button variant="ghost" size="icon" className="h-14 w-14 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
+                  <Link to="/saved-tutors" aria-label="Saved tutors">
+                    <Heart className="h-5 w-5" />
                   </Link>
                 </Button>
-              )}
-              <Button variant="outline" size="sm" className="border-border text-foreground hover:bg-secondary" onClick={handleSignOut}>
-                <LogOut className="h-4 w-4 mr-1" />
-                {t("auth.logout")}
+              ) : null}
+
+              <Button variant="ghost" size="icon" className="h-14 w-14 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
+                <Link to="/faq" aria-label="FAQ">
+                  <HelpCircle className="h-5 w-5" />
+                </Link>
               </Button>
-            </>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-14 w-14 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" aria-label="Notifications">
+                    <Bell className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 rounded-2xl border-border/70 bg-popover p-2">
+                  <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="rounded-xl px-3 py-3 text-sm text-muted-foreground">No new notifications</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <div className="relative" ref={langRef}>
+                <button
+                  onClick={() => setLangOpen(!langOpen)}
+                  className="flex h-14 items-center gap-2 rounded-2xl border border-border bg-secondary/60 px-5 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary"
+                >
+                  <Globe className="h-5 w-5" />
+                  <span>{lang === "en" ? "English" : lang === "ka" ? "ქართული" : "Русский"}</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform ${langOpen ? "rotate-180" : ""}`} />
+                </button>
+                <AnimatePresence>
+                  {langOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 z-50 mt-1 w-36 overflow-hidden rounded-2xl border bg-card shadow-lg"
+                    >
+                      {(Object.keys(langLabels) as Language[]).map((l) => (
+                        <button
+                          key={l}
+                          onClick={() => {
+                            setLang(l);
+                            setLangOpen(false);
+                          }}
+                          className={`w-full px-4 py-3 text-left text-sm transition-colors ${
+                            lang === l ? "bg-primary/20 text-primary font-semibold" : "text-foreground hover:bg-secondary"
+                          }`}
+                        >
+                          {l === "en" ? "English" : l === "ka" ? "ქართული" : "Русский"}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-border bg-primary text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
+                    aria-label={t("nav.profile")}
+                  >
+                    <Avatar className="h-14 w-14">
+                      <AvatarFallback className="bg-primary text-sm font-semibold text-primary-foreground">
+                        {initialsFromValue(authDisplayName)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 rounded-2xl border-border/70 bg-popover p-2">
+                  <DropdownMenuLabel className="truncate px-3 py-2">{authDisplayName}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {isAdmin ? <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/admin")}>{t("nav.admin")}</DropdownMenuItem> : null}
+                  <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {t("auth.logout")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           ) : (
-            <>
+            <div className="flex items-center gap-3">
+              <div className="relative" ref={langRef}>
+                <button
+                  onClick={() => setLangOpen(!langOpen)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-secondary transition-colors"
+                >
+                  <Globe className="h-4 w-4" />
+                  {langLabels[lang]}
+                  <ChevronDown className={`h-3 w-3 transition-transform ${langOpen ? "rotate-180" : ""}`} />
+                </button>
+                <AnimatePresence>
+                  {langOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-1 w-28 rounded-lg border bg-card shadow-lg overflow-hidden z-50"
+                    >
+                      {(Object.keys(langLabels) as Language[]).map((l) => (
+                        <button
+                          key={l}
+                          onClick={() => { setLang(l); setLangOpen(false); }}
+                          className={`w-full px-3 py-2 text-sm text-left transition-colors ${
+                            lang === l ? "bg-primary/20 text-primary font-semibold" : "text-foreground hover:bg-secondary"
+                          }`}
+                        >
+                          {langLabels[l]}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <Button variant="outline" size="sm" className="border-foreground/30 text-foreground hover:bg-foreground/10 rounded-full px-5" asChild>
                 <Link to="/login">{t("nav.login")}</Link>
               </Button>
               <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary-hover rounded-full px-5 font-semibold" asChild>
                 <Link to="/signup">{t("nav.signup")}</Link>
               </Button>
-            </>
+            </div>
           )}
         </div>
 
