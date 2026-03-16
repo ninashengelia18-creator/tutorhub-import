@@ -223,7 +223,7 @@ export function Header() {
                 </div>
               </div>
 
-              {navLinks.map((link) => (
+              {visibleNavLinks.map((link) => (
                 <Link key={link.href} to={link.href} className="py-2 text-sm font-medium text-foreground/90 hover:text-primary" onClick={() => setMobileOpen(false)}>
                   {t(link.labelKey)}
                 </Link>
