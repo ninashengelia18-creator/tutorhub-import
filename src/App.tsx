@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import Classroom from "./pages/Classroom.tsx";
 import AIPractice from "./pages/AIPractice.tsx";
 import Messages from "./pages/Messages.tsx";
+import TutorMessages from "./pages/TutorMessages.tsx";
 import FAQ from "./pages/FAQ.tsx";
 import ForBusiness from "./pages/ForBusiness.tsx";
 import BecomeTutor from "./pages/BecomeTutor.tsx";
@@ -76,6 +77,7 @@ const App = () => (
               <Route path="/lesson-planner" element={<ProtectedRoute requiredRole="tutor"><LessonPlanner /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
               <Route path="/tutor-dashboard" element={<ProtectedRoute requiredRole="tutor"><TutorDashboard /></ProtectedRoute>} />
+              <Route path="/tutor-messages" element={<ProtectedRoute requiredRole="tutor"><TutorMessages /></ProtectedRoute>} />
               <Route path="/tutor-schedule" element={<ProtectedRoute requiredRole="tutor"><TutorSchedule /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>

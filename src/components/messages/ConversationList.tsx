@@ -7,17 +7,17 @@ import type { Language } from "@/contexts/LanguageContext";
 
 interface ConversationListProps {
   conversations: ConversationListItem[];
-  selectedName: string | null;
+  selectedId: string | null;
   lang: Language;
   emptyLabel: string;
   continueLabel: (name: string) => string;
-  onSelect: (name: string) => void;
+  onSelect: (id: string) => void;
   onDelete: (conversation: ConversationListItem) => void;
 }
 
 export function ConversationList({
   conversations,
-  selectedName,
+  selectedId,
   lang,
   emptyLabel,
   continueLabel,
@@ -30,10 +30,10 @@ export function ConversationList({
 
       {conversations.map((conversation) => (
         <button
-          key={conversation.name}
-          onClick={() => onSelect(conversation.name)}
+          key={conversation.id}
+          onClick={() => onSelect(conversation.id)}
           className={`flex w-full items-start gap-3 border-b px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
-            selectedName === conversation.name ? "bg-muted/50" : ""
+            selectedId === conversation.id ? "bg-muted/50" : ""
           }`}
         >
           <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-sm font-bold text-primary">
@@ -47,7 +47,7 @@ export function ConversationList({
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-2">
               <p className="truncate text-sm font-semibold">{conversation.name}</p>
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex shrink-0 items-center gap-2">
                 <span className="text-xs text-muted-foreground">{formatConversationTime(conversation.updatedAt, lang)}</span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
