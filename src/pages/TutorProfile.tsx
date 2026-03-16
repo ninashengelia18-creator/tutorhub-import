@@ -15,7 +15,7 @@ const tutorData: Record<string, {
   rating: number;
   reviewCount: number;
   price: number;
-  lessonLength: string;
+  lessonLengthKey: string;
   photo: string;
   languages: { nameKey: string; levelKey: string }[];
   headlineKey: string;
