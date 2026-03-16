@@ -20,23 +20,18 @@ const allTutors = [
 ];
 
 const subjectEntries: { value: string; labelKey: string }[] = [
-  { value: "All", labelKey: "search.all" },
-  { value: "GeorgianLit", labelKey: "home.subj.georgianLit" },
-  { value: "Mathematics", labelKey: "home.subj.math" },
-  { value: "English", labelKey: "home.subj.english" },
-  { value: "ForeignLanguages", labelKey: "home.subj.foreignLangs" },
-  { value: "History", labelKey: "home.subj.history" },
-  { value: "Geography", labelKey: "home.subj.geography" },
-  { value: "Biology", labelKey: "home.subj.biology" },
-  { value: "Physics", labelKey: "home.subj.physics" },
-  { value: "Chemistry", labelKey: "home.subj.chemistry" },
-  { value: "ExamGeorgianLit", labelKey: "home.subj.examGeorgianLit" },
-  { value: "ExamForeignLang", labelKey: "home.subj.examForeignLang" },
-  { value: "ExamHistoryMath", labelKey: "home.subj.examHistoryMath" },
-  { value: "GeneralAptitude", labelKey: "home.subj.generalAptitude" },
-  { value: "Robotics", labelKey: "home.subj.robotics" },
-  { value: "Programming", labelKey: "home.subj.programming" },
-  { value: "Art", labelKey: "home.subj.art" },
+  { value: "all", labelKey: "search.all" },
+  { value: "georgian", labelKey: "td.georgian" },
+  { value: "mathematics", labelKey: "home.subj.math" },
+  { value: "english", labelKey: "home.subj.english" },
+  { value: "history", labelKey: "home.subj.history" },
+  { value: "geography", labelKey: "home.subj.geography" },
+  { value: "biology", labelKey: "home.subj.biology" },
+  { value: "physics", labelKey: "home.subj.physics" },
+  { value: "chemistry", labelKey: "home.subj.chemistry" },
+  { value: "programming", labelKey: "home.subj.programming" },
+  { value: "russian", labelKey: "td.russian" },
+  { value: "music", labelKey: "td.music" },
 ];
 const ratingKeys = ["search.any", "4.5+", "4.7+", "4.9+"];
 const availabilityKeys = ["search.any", "search.morning", "search.afternoon", "search.evening"];
