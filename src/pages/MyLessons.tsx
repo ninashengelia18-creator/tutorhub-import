@@ -409,7 +409,7 @@ export default function MyLessons() {
           {activeTab === "tutors" && (
             <div>
               {tutors.length === 0 && (
-                <p className="text-sm text-muted-foreground">No tutors yet. Book a lesson to get started!</p>
+                <p className="text-sm text-muted-foreground">{t("myLessons.noTutors")}</p>
               )}
               <div className="space-y-4">
                 {tutors.map(tutor => (
