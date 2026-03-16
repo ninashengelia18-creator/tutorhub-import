@@ -293,7 +293,7 @@ export default function Booking() {
             {/* Price summary */}
             <div className="rounded-lg bg-muted/50 p-4">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">{duration} min {t("booking.lessonWith")} {tutor.name}</span>
+                <span className="text-muted-foreground">{t(`booking.duration${duration}`)} {t("booking.lessonWith")} {tutor.name}</span>
                 <span className="font-semibold tabular-nums">₾{price.toFixed(2)}</span>
               </div>
             </div>

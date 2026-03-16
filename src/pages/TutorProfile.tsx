@@ -433,7 +433,7 @@ export default function TutorProfile() {
                 <div className="pb-4 mb-4 border-b">
                   <p className="text-2xl font-bold text-foreground tabular-nums">
                     ₾{tutor.price}
-                    <span className="text-sm font-normal text-muted-foreground ml-1">{tutor.lessonLength} {t("tp.lesson")}</span>
+                    <span className="text-sm font-normal text-muted-foreground ml-1">{t(tutor.lessonLengthKey)} {t("tp.lesson")}</span>
                   </p>
                 </div>
 
