@@ -21,6 +21,7 @@ const navLinks = [
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
