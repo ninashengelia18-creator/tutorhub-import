@@ -731,7 +731,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "search.perHour": "/hr",
 
   },
-  },
   ka: {
     // Nav
     "nav.home": "მთავარი",
