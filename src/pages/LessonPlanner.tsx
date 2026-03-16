@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { getLocaleForLanguage } from "@/lib/localization";
 import { Loader2, Download, Copy, Save, RefreshCw, Trash2, Eye, BookOpen, Sparkles } from "lucide-react";
 import { Navigate } from "react-router-dom";
 import html2canvas from "html2canvas";
