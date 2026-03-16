@@ -299,7 +299,7 @@ export default function MyLessons() {
               )}
               <DropdownMenuItem className="gap-2" asChild>
                 <Link to="/messages">
-                  <MessageSquare className="h-4 w-4" /> Message tutor
+                  <MessageSquare className="h-4 w-4" /> {t("myLessons.messageTutor")}
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
