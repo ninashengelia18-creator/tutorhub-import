@@ -17,7 +17,7 @@ const navLinks = [
   { labelKey: "nav.forBusiness", href: "/for-business" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
   { labelKey: "nav.faq", href: "/faq" },
-];
+] as const;
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -53,6 +53,7 @@ export function Header() {
 
   const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/saved-tutors", "/tutor-settings", "/tutor-dashboard", "/tutor-messages", "/tutor-schedule", "/lesson-planner"].includes(location.pathname);
   const profilePath = isTutor ? "/tutor-settings" : "/profile";
+  const visibleNavLinks = user && !isTutor ? navLinks.filter((link) => !["/for-business", "/become-tutor"].includes(link.href)) : navLinks;
 
   if (isPortalHeaderRoute) {
     return <PortalHeader />;
@@ -74,7 +75,7 @@ export function Header() {
         </div>
 
         <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
+          {visibleNavLinks.map((link) => (
             <Link
               key={link.href}
               to={link.href}
@@ -222,7 +223,7 @@ export function Header() {
                 </div>
               </div>
 
-              {navLinks.map((link) => (
+              {visibleNavLinks.map((link) => (
                 <Link key={link.href} to={link.href} className="py-2 text-sm font-medium text-foreground/90 hover:text-primary" onClick={() => setMobileOpen(false)}>
                   {t(link.labelKey)}
                 </Link>
