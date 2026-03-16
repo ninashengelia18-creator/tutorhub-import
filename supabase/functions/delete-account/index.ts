@@ -16,6 +16,7 @@ serve(async (req) => {
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     const authHeader = req.headers.get("Authorization");
+    const formspreeEndpoint = "https://formspree.io/f/mojknpqp";
 
     if (!supabaseUrl || !supabaseAnonKey || !serviceRoleKey) {
       throw new Error("Backend configuration is missing.");
@@ -33,6 +34,15 @@ serve(async (req) => {
     });
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims?.sub) {
+      return new Response(JSON.stringify({ error: "Unauthorized." }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const { data: userData, error: userError } = await userClient.auth.getUser();
     if (userError || !userData.user) {
@@ -53,7 +63,23 @@ serve(async (req) => {
       });
     }
 
-    const userId = userData.user.id;
+    const userId = claimsData.claims.sub;
+    const accountCreatedAt = userData.user.created_at ?? null;
+    const notificationPromise = fetch(formspreeEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subject: "LearnEazy account deleted",
+        message: "A user deleted their LearnEazy account.",
+        account_email: accountEmail,
+        user_id: userId,
+        created_at: accountCreatedAt,
+        deleted_at: new Date().toISOString(),
+      }),
+    }).catch((notificationError) => {
+      console.error("delete-account notification error", notificationError);
+      return null;
+    });
 
     const mutations = [
       adminClient.from("messages").delete().eq("student_id", userId),
@@ -74,6 +100,8 @@ serve(async (req) => {
     if (deleteUserError) {
       throw deleteUserError;
     }
+
+    await notificationPromise;
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,

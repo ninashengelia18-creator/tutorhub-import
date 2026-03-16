@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
@@ -12,7 +12,7 @@ import { sanitizeFileName } from "@/components/messages/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ProfileSettings() {
-  const { user, refreshProfile, updateProfileState } = useAuth();
+  const { user, refreshProfile, updateProfileState, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLanguage();
@@ -31,16 +31,12 @@ export default function ProfileSettings() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [notificationPreferences, setNotificationPreferences] = useState({ email_transactional: true, email_tips_discount: false, email_surveys: false });
 
-  useEffect(() => {
+  const fetchProfile = useCallback(async () => {
     if (!user) {
-      navigate("/login?redirect=/profile");
+      setInitialLoading(false);
       return;
     }
-    void fetchProfile();
-  }, [user, navigate]);
 
-  const fetchProfile = async () => {
-    if (!user) return;
     const [{ data: profileData }, { data: preferenceData }] = await Promise.all([
       supabase.from("profiles").select("display_name, avatar_url").eq("id", user.id).single(),
       supabase.from("notification_preferences").select("email_transactional, email_tips_discount, email_surveys").eq("user_id", user.id).maybeSingle(),
@@ -50,17 +46,32 @@ export default function ProfileSettings() {
       setDisplayName(profileData.display_name || "");
       setAvatarUrl(profileData.avatar_url);
     }
-    if (preferenceData) setNotificationPreferences(preferenceData);
+
+    if (preferenceData) {
+      setNotificationPreferences(preferenceData);
+    }
+
     setInitialLoading(false);
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login?redirect=/profile", { replace: true });
+      return;
+    }
+
+    void fetchProfile();
+  }, [fetchProfile, navigate, user]);
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
+
     if (!file.type.startsWith("image/")) {
       toast({ title: t("profile.settings.error"), description: t("profile.settings.imageOnly"), variant: "destructive" });
       return;
     }
+
     if (file.size > 2 * 1024 * 1024) {
       toast({ title: t("profile.settings.error"), description: t("profile.settings.fileTooLarge"), variant: "destructive" });
       return;
@@ -69,19 +80,23 @@ export default function ProfileSettings() {
     setUploading(true);
     const filePath = `${user.id}/${Date.now()}-${sanitizeFileName(file.name)}`;
     const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file, { upsert: true });
+
     if (uploadError) {
       setUploading(false);
       toast({ title: t("profile.settings.error"), description: uploadError.message, variant: "destructive" });
       return;
     }
+
     const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
     const url = `${data.publicUrl}?t=${Date.now()}`;
     const { error } = await supabase.from("profiles").update({ avatar_url: url, updated_at: new Date().toISOString() }).eq("id", user.id);
     setUploading(false);
+
     if (error) {
       toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
       return;
     }
+
     setAvatarUrl(url);
     updateProfileState({ avatar_url: url });
     await refreshProfile();
@@ -91,14 +106,17 @@ export default function ProfileSettings() {
   const handleSaveAccount = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!user) return;
+
     setLoading(true);
     const cleanName = displayName.trim();
     const { error } = await supabase.from("profiles").update({ display_name: cleanName, updated_at: new Date().toISOString() }).eq("id", user.id);
     setLoading(false);
+
     if (error) {
       toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
       return;
     }
+
     updateProfileState({ display_name: cleanName });
     await refreshProfile();
     toast({ title: t("profile.settings.saved") });
@@ -107,14 +125,17 @@ export default function ProfileSettings() {
   const handleSavePassword = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!user) return;
+
     if (newPassword.length < 6) {
       toast({ title: t("auth.error"), description: t("auth.passwordMin"), variant: "destructive" });
       return;
     }
+
     if (newPassword !== confirmPassword) {
       toast({ title: t("auth.error"), description: t("profile.settings.passwordMismatch"), variant: "destructive" });
       return;
     }
+
     setLoading(true);
     const { error: signInError } = await supabase.auth.signInWithPassword({ email: user.email || "", password: currentPassword });
     if (signInError) {
@@ -122,12 +143,15 @@ export default function ProfileSettings() {
       toast({ title: t("auth.error"), description: t("profile.settings.invalidCurrentPassword"), variant: "destructive" });
       return;
     }
+
     const { error } = await supabase.auth.updateUser({ password: newPassword });
     setLoading(false);
+
     if (error) {
       toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
       return;
     }
+
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
@@ -136,6 +160,7 @@ export default function ProfileSettings() {
 
   const handleSaveNotifications = async () => {
     if (!user) return;
+
     setLoading(true);
     const { data: existing } = await supabase.from("notification_preferences").select("user_id").eq("user_id", user.id).maybeSingle();
     const payload = { ...notificationPreferences, updated_at: new Date().toISOString() };
@@ -143,33 +168,43 @@ export default function ProfileSettings() {
       ? await supabase.from("notification_preferences").update(payload).eq("user_id", user.id)
       : await supabase.from("notification_preferences").insert({ user_id: user.id, ...notificationPreferences });
     setLoading(false);
+
     if (result.error) {
       toast({ title: t("profile.settings.error"), description: result.error.message, variant: "destructive" });
       return;
     }
+
     toast({ title: t("profile.settings.notificationsSaved") });
   };
 
   const handleDeleteAccount = async () => {
     if (!user) return;
+
+    setLoading(true);
     const { error } = await supabase.functions.invoke("delete-account", { body: { email: deleteEmail } });
     if (error) {
-      toast({ title: t("profile.settings.error"), description: t("profile.settings.deleteFailed"), variant: "destructive" });
+      setLoading(false);
+      toast({ title: t("profile.settings.error"), description: error.message || t("profile.settings.deleteFailed"), variant: "destructive" });
       return;
     }
-    await supabase.auth.signOut({ scope: "local" });
+
+    await signOut();
+    setLoading(false);
     toast({ title: t("profile.settings.accountDeleted") });
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   const initials = useMemo(() => {
     if (!displayName.trim()) return user?.email?.[0]?.toUpperCase() || "?";
     return displayName.split(" ").filter(Boolean).map((part) => part[0]).join("").toUpperCase().slice(0, 2);
   }, [displayName, user?.email]);
+
   const firstName = displayName.split(" ")[0] || "";
   const lastName = displayName.split(" ").slice(1).join(" ");
 
-  if (initialLoading) return <Layout hideFooter><div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div></Layout>;
+  if (initialLoading) {
+    return <Layout hideFooter><div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div></Layout>;
+  }
 
   return (
     <Layout hideFooter>
