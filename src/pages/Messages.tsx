@@ -212,7 +212,7 @@ export default function Messages() {
   );
 
   useEffect(() => {
-    if (!user || !selectedTutorName) return;
+    if (!user || !selectedTutorId) return;
 
     const unreadTutorMessages = selectedMessages.filter((item) => item.sender_type === "tutor" && !item.read_at);
     if (unreadTutorMessages.length === 0) return;
@@ -227,7 +227,7 @@ export default function Messages() {
     };
 
     void markAsRead();
-  }, [selectedMessages, selectedTutorName, user]);
+  }, [selectedMessages, selectedTutorId, user]);
 
   const ensureConversation = async (tutorName: string, archived = false) => {
     if (!user) return false;
