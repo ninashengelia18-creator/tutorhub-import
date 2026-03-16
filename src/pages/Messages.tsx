@@ -207,8 +207,8 @@ export default function Messages() {
   );
 
   const selectedMessages = useMemo(
-    () => messages.filter((item) => item.tutor_name === selectedTutorName),
-    [messages, selectedTutorName],
+    () => messages.filter((item) => item.tutor_name === selectedTutorId),
+    [messages, selectedTutorId],
   );
 
   useEffect(() => {
