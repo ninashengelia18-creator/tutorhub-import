@@ -411,20 +411,51 @@ export default function TutorMessages() {
               <h1 className="mt-2 text-xl font-semibold text-foreground">Student messages</h1>
             </div>
 
-            <div className="flex items-center gap-4 px-4 pb-2 pt-4">
-              {filters.map((filter) => (
-                <button
-                  key={filter.key}
-                  onClick={() => setMsgFilter(filter.key)}
-                  className={`border-b-2 pb-1 text-sm font-medium transition-colors ${
-                    msgFilter === filter.key
-                      ? "border-primary text-foreground"
-                      : "border-transparent text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {filter.label}
-                </button>
-              ))}
+            <div className="space-y-4 px-4 pb-3 pt-4">
+              <div className="flex items-center gap-4">
+                {filters.map((filter) => (
+                  <button
+                    key={filter.key}
+                    onClick={() => setMsgFilter(filter.key)}
+                    className={`border-b-2 pb-1 text-sm font-medium transition-colors ${
+                      msgFilter === filter.key
+                        ? "border-primary text-foreground"
+                        : "border-transparent text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="space-y-3">
+                <div className="relative">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Search by student name"
+                    className="rounded-xl pl-9"
+                    aria-label="Search conversations by student name"
+                  />
+                </div>
+
+                <Select value={subjectFilter} onValueChange={setSubjectFilter}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue placeholder="Filter by subject" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All subjects</SelectItem>
+                    {subjectOptions
+                      .filter((subject) => subject !== "all")
+                      .map((subject) => (
+                        <SelectItem key={subject} value={subject}>
+                          {subject}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <ConversationList
