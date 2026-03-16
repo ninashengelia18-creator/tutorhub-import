@@ -339,6 +339,23 @@ export const translations: Record<Language, Record<string, string>> = {
     // Messages
     "msg.search": "Search messages...",
     "msg.typePlaceholder": "Type a message...",
+    "msg.send": "Send message",
+    "msg.attach": "Attach file",
+    "msg.emoji": "Open emoji picker",
+    "msg.removeAttachment": "Remove attachment",
+    "msg.deleteConversation": "Delete conversation",
+    "msg.deleteConversationDesc": "Are you sure you want to delete this conversation? This action cannot be undone.",
+    "msg.cancel": "Cancel",
+    "msg.delete": "Delete",
+    "msg.messageSent": "Message sent",
+    "msg.messageFailed": "Unable to send message",
+    "msg.attachmentFailed": "Unable to upload attachment",
+    "msg.attachmentTooLarge": "Attachment must be under 10 MB.",
+    "msg.deleted": "Conversation deleted",
+    "msg.deleteFailed": "Unable to delete conversation",
+    "msg.file": "Attachment",
+    "msg.emptyComposer": "Write a message or attach a file.",
+    "msg.markedRead": "Marked as read"
 
     // For Business
     "biz.title": "LearnEazy for Business",
