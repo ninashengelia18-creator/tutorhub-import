@@ -110,7 +110,7 @@ export default function TutorSchedule() {
           <p className="text-muted-foreground mb-8">{t("tutorSchedule.subtitle")}</p>
 
           {/* Stats row */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div className="rounded-xl border bg-card p-4">
               <p className="text-2xl font-bold text-foreground">{bookings.length}</p>
               <p className="text-xs text-muted-foreground">{t("tutorSchedule.upcomingCount")}</p>
@@ -119,11 +119,20 @@ export default function TutorSchedule() {
               <p className="text-2xl font-bold text-primary">{Object.keys(grouped).length}</p>
               <p className="text-xs text-muted-foreground">{t("tutorSchedule.daysScheduled")}</p>
             </div>
-            <div className="rounded-xl border bg-card p-4 hidden md:block">
-              <p className="text-2xl font-bold text-green-600">
-                {bookings.reduce((sum, b) => sum + b.duration_minutes, 0)} min
+            <div className="rounded-xl border bg-card p-4">
+              <div className="flex items-center gap-1.5">
+                <Wallet className="h-5 w-5 text-primary" />
+                <p className="text-2xl font-bold text-foreground">
+                  ₾{allBookings.filter(b => b.status === "completed").reduce((s, b) => s + b.price_amount, 0).toFixed(0)}
+                </p>
+              </div>
+              <p className="text-xs text-muted-foreground">{t("tutorSchedule.earnedTotal")}</p>
+            </div>
+            <div className="rounded-xl border bg-card p-4">
+              <p className="text-2xl font-bold text-foreground">
+                ₾{bookings.reduce((s, b) => s + b.price_amount, 0).toFixed(0)}
               </p>
-              <p className="text-xs text-muted-foreground">{t("tutorSchedule.totalTime")}</p>
+              <p className="text-xs text-muted-foreground">{t("tutorSchedule.upcomingRevenue")}</p>
             </div>
           </div>
 
