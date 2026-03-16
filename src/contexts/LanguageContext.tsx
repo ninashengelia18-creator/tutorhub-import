@@ -1206,6 +1206,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutorSchedule.upcomingCount": "მომავალი გაკვეთილები",
     "tutorSchedule.daysScheduled": "დაგეგმილი დღეები",
     "tutorSchedule.totalTime": "სწავლების დრო სულ",
+    "tutorSchedule.earnedTotal": "სულ მიღებული (დასრულებული)",
+    "tutorSchedule.upcomingRevenue": "მომავალი შემოსავალი",
     "tutorSchedule.noLessons": "მომავალი გაკვეთილები არ არის",
     "tutorSchedule.noLessonsDesc": "როცა სტუდენტები დაჯავშნიან გაკვეთილებს, ისინი აქ გამოჩნდება.",
     "tutorSchedule.joinMeet": "Meet-ში შესვლა",
