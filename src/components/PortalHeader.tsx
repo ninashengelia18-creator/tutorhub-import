@@ -1,18 +1,23 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, LogOut, Menu, UserCircle } from "lucide-react";
+import { Bell, ChevronDown, Heart, LogOut, Mail, Menu, UserCircle } from "lucide-react";
 
 import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
 import { Language, useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
+import { getSavedTutors, subscribeToSavedTutors } from "@/lib/savedTutors";
 
 const languageLabels: Record<Language, string> = {
   en: "English",
@@ -24,30 +29,90 @@ const primaryNav = [
   { to: "/dashboard", labelKey: "msg.home" },
   { to: "/messages", labelKey: "msg.messages" },
   { to: "/my-lessons", labelKey: "msg.myLessons" },
-  { to: "/for-business", labelKey: "msg.forBusiness" },
 ] as const;
+
+function initialsFromName(name: string) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2) || "U";
+}
 
 export function PortalHeader() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, signOut, profile } = useAuth();
   const { lang, setLang, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [savedCount, setSavedCount] = useState(0);
+  const [notifications, setNotifications] = useState<string[]>([]);
 
   const displayName = useMemo(() => {
-    const source = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "";
+    const source = profile?.display_name || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "";
     return source.trim();
-  }, [user]);
+  }, [profile?.display_name, user]);
 
-  const initials = useMemo(() => {
-    if (!displayName) return "U";
-    return displayName
-      .split(" ")
-      .map((part: string) => part[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  }, [displayName]);
+  const initials = useMemo(() => initialsFromName(displayName), [displayName]);
+
+  useEffect(() => {
+    const syncSaved = () => setSavedCount(getSavedTutors().length);
+    syncSaved();
+    return subscribeToSavedTutors(syncSaved);
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const loadUnread = async () => {
+      const { count } = await supabase
+        .from("messages" as never)
+        .select("id", { count: "exact", head: true })
+        .eq("student_id", user.id)
+        .eq("sender_type", "tutor")
+        .is("read_at", null);
+
+      setUnreadCount(count ?? 0);
+    };
+
+    const loadNotifications = async () => {
+      const today = new Date().toISOString().split("T")[0];
+      const { data } = await supabase
+        .from("bookings")
+        .select("tutor_name, subject, lesson_date, start_time")
+        .eq("student_id", user.id)
+        .gte("lesson_date", today)
+        .in("status", ["pending", "confirmed"])
+        .order("lesson_date", { ascending: true })
+        .order("start_time", { ascending: true })
+        .limit(3);
+
+      setNotifications(
+        (data ?? []).map((booking) => `${booking.subject} · ${booking.tutor_name} · ${booking.lesson_date} ${booking.start_time.slice(0, 5)}`),
+      );
+    };
+
+    void loadUnread();
+    void loadNotifications();
+
+    const channel = supabase
+      .channel(`portal-header-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "messages", filter: `student_id=eq.${user.id}` },
+        () => {
+          void loadUnread();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [user]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -76,12 +141,52 @@ export function PortalHeader() {
             <Menu className="h-5 w-5" />
           </button>
 
-          <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <div className="ml-auto flex items-center gap-1.5 sm:gap-3">
             <SubscribePlansDialog
               buttonVariant="outline"
               buttonSize="sm"
               buttonClassName="rounded-full border-border bg-background px-4 font-semibold text-foreground hover:bg-accent"
             />
+
+            <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
+              <Link to="/messages" aria-label={t("msg.messages")}>
+                <Mail className="h-4 w-4" />
+                {unreadCount > 0 ? (
+                  <span className="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                    {Math.min(unreadCount, 9)}
+                  </span>
+                ) : null}
+              </Link>
+            </Button>
+
+            <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
+              <Link to="/saved-tutors" aria-label="Saved tutors">
+                <Heart className="h-4 w-4" />
+                {savedCount > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
+              </Link>
+            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative rounded-full" aria-label="Notifications">
+                  <Bell className="h-4 w-4" />
+                  {notifications.length > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80 rounded-2xl border-border/70 bg-popover p-2">
+                <DropdownMenuLabel>{t("nav.home")}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {notifications.length > 0 ? (
+                  notifications.map((item) => (
+                    <DropdownMenuItem key={item} className="whitespace-normal rounded-xl px-3 py-3 text-sm">
+                      {item}
+                    </DropdownMenuItem>
+                  ))
+                ) : (
+                  <DropdownMenuItem className="rounded-xl px-3 py-3 text-sm text-muted-foreground">No new notifications</DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -93,11 +198,7 @@ export function PortalHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40 rounded-2xl border-border/70 bg-popover p-1">
                 {(Object.keys(languageLabels) as Language[]).map((language) => (
-                  <DropdownMenuItem
-                    key={language}
-                    className="rounded-xl px-3 py-2"
-                    onClick={() => setLang(language)}
-                  >
+                  <DropdownMenuItem key={language} className="rounded-xl px-3 py-2" onClick={() => setLang(language)}>
                     {languageLabels[language]}
                   </DropdownMenuItem>
                 ))}
@@ -108,31 +209,30 @@ export function PortalHeader() {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
+                  className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
                   aria-label={t("nav.profile")}
                 >
-                  <span className="text-sm font-semibold">{initials}</span>
+                  <Avatar className="h-11 w-11 rounded-2xl">
+                    <AvatarImage src={profile?.avatar_url || undefined} alt={displayName || user?.email || "User"} className="object-cover" />
+                    <AvatarFallback className="rounded-2xl bg-primary text-sm font-semibold text-primary-foreground">{initials}</AvatarFallback>
+                  </Avatar>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64 rounded-3xl border-border/70 bg-popover p-2 shadow-xl">
                 <div className="flex items-center gap-3 px-3 py-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-                    <span className="text-base font-semibold">{initials}</span>
-                  </div>
+                  <Avatar className="h-12 w-12 rounded-2xl">
+                    <AvatarImage src={profile?.avatar_url || undefined} alt={displayName || user?.email || "User"} className="object-cover" />
+                    <AvatarFallback className="rounded-2xl bg-primary text-base font-semibold text-primary-foreground">{initials}</AvatarFallback>
+                  </Avatar>
                   <div className="min-w-0">
                     <p className="truncate text-base font-semibold text-foreground">{displayName || user?.email}</p>
                   </div>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/dashboard")}>
-                  {t("msg.home")}
-                </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/messages")}>
-                  {t("msg.messages")}
-                </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/my-lessons")}>
-                  {t("msg.myLessons")}
-                </DropdownMenuItem>
+                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/dashboard")}>{t("msg.home")}</DropdownMenuItem>
+                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/messages")}>{t("msg.messages")}</DropdownMenuItem>
+                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/my-lessons")}>{t("msg.myLessons")}</DropdownMenuItem>
+                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/saved-tutors")}>Saved tutors</DropdownMenuItem>
                 <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/profile")}>
                   <UserCircle className="mr-2 h-4 w-4" />
                   {t("nav.profile")}
@@ -158,9 +258,7 @@ export function PortalHeader() {
                   key={item.to}
                   to={item.to}
                   className={`border-b-2 px-1 py-4 text-sm font-semibold transition-colors ${
-                    active
-                      ? "border-primary text-foreground"
-                      : "border-transparent text-muted-foreground hover:text-foreground"
+                    active ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {t(item.labelKey)}
@@ -171,11 +269,14 @@ export function PortalHeader() {
         </div>
       </div>
 
-      {mobileMenuOpen && (
+      {mobileMenuOpen ? (
         <div className="border-b border-border/60 bg-background sm:hidden">
           <div className="container flex flex-col gap-2 py-4">
             <Link to="/search" className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
               {t("nav.findTutors")}
+            </Link>
+            <Link to="/saved-tutors" className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
+              Saved tutors
             </Link>
             <Link to="/profile" className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
               {t("nav.profile")}
@@ -192,7 +293,7 @@ export function PortalHeader() {
             </button>
           </div>
         </div>
-      )}
+      ) : null}
     </header>
   );
 }
