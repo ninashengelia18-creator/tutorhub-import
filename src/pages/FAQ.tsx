@@ -159,7 +159,7 @@ export default function FAQ() {
           </h1>
 
           <div className="inline-flex items-center gap-1 rounded-2xl border border-border bg-muted p-1.5">
-            {(Object.keys(langLabels) as Language[]).map((l) => (
+            {(["en", "ru", "ka"] as Language[]).map((l) => (
               <button
                 key={l}
                 onClick={() => setLang(l)}

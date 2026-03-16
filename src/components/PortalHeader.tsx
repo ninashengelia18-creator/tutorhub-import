@@ -226,9 +226,9 @@ export function PortalHeader() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40 rounded-2xl border-border/70 bg-popover p-1">
-                {(["en", "ka", "ru"] as const).map((language) => (
+                {(["en", "ru", "ka"] as const).map((language) => (
                   <DropdownMenuItem key={language} className="rounded-xl px-3 py-2" onClick={() => setLang(language)}>
-                    {language === "en" ? "English" : language === "ka" ? "ქართული" : "Русский"}
+                    {language === "en" ? "English" : language === "ru" ? "Русский" : "ქართული"}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

@@ -299,7 +299,7 @@ export function Header() {
             <div className="container py-4 flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2 self-start">
                 <div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
-                  {(Object.keys(langLabels) as Language[]).map((l) => (
+                  {(["en", "ru", "ka"] as Language[]).map((l) => (
                     <button
                       key={l}
                       onClick={() => setLang(l)}
