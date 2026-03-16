@@ -391,12 +391,72 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      approve_tutor_application: {
+        Args: { _application_id: string }
+        Returns: {
+          about_teaching: string | null
+          availability: string
+          bio: string
+          certifications: string | null
+          country: string | null
+          created_at: string
+          education: string | null
+          email: string
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id: string
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          phone: string | null
+          status: string
+          subjects: string[]
+          timezone: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "tutor_applications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      reject_tutor_application: {
+        Args: { _application_id: string }
+        Returns: {
+          about_teaching: string | null
+          availability: string
+          bio: string
+          certifications: string | null
+          country: string | null
+          created_at: string
+          education: string | null
+          email: string
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id: string
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          phone: string | null
+          status: string
+          subjects: string[]
+          timezone: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "tutor_applications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {
