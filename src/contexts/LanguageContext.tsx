@@ -556,7 +556,20 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.logout": "Log out",
     "auth.dashboard": "Dashboard",
 
-    // Booking flow (new)
+    // Signup role selection
+    "signup.chooseRole": "Join LearnEazy",
+    "signup.chooseRoleDesc": "Choose how you'd like to use the platform",
+    "signup.iAmStudent": "I am a Student",
+    "signup.studentDesc": "Find tutors, book lessons, and start learning today.",
+    "signup.signupAsStudent": "Sign up as Student",
+    "signup.iAmTutor": "I am a Tutor",
+    "signup.tutorDesc": "Share your knowledge and earn by teaching students.",
+    "signup.applyAsTutor": "Apply as Tutor",
+    "signup.studentTitle": "Create Student Account",
+    "signup.studentSubtitle": "Sign up to book lessons and start learning.",
+    "signup.createStudentAccount": "Create Account",
+
+    // Booking flow
     "booking.subject": "Subject",
     "booking.duration": "Lesson Duration",
     "booking.selectDate": "Select a date",
@@ -564,6 +577,10 @@ export const translations: Record<Language, Record<string, string>> = {
     "booking.messageToTutor": "Message to Tutor (optional)",
     "booking.lessonWith": "lesson with",
     "booking.thankYouMsg": "Thank you for booking! Our team will contact you via chat within 24 hours to provide payment details and confirm your session.",
+    "booking.loginRequired": "Create an account to book this lesson",
+    "booking.loginRequiredDesc": "Sign up for free to complete your booking and track your lessons.",
+    "booking.signupToBook": "Sign up to Book",
+    "booking.viewLessons": "View My Lessons",
 
     // My Lessons
     "myLessons.title": "My Lessons",
