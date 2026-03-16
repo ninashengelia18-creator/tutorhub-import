@@ -352,7 +352,7 @@ export default function LessonPlanner() {
               onClick={() => { setTab("generator"); setViewingPlan(null); }}
               className="gap-2"
             >
-              <Sparkles className="h-4 w-4" /> {l.pageTitle.split(" ")[0] === "AI" ? "Generator" : l.generate}
+              <Sparkles className="h-4 w-4" /> {l.generatorTab}
             </Button>
             <Button
               variant={tab === "saved" ? "default" : "secondary"}
