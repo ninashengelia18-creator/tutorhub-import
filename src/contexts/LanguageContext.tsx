@@ -1246,6 +1246,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.error": "Ошибка",
     "profile.settings.imageOnly": "Выберите файл изображения.",
     "profile.settings.fileTooLarge": "Файл должен быть менее 2 МБ.",
+    "profile.settings.hourlyRate": "Почасовая ставка (₾)",
+    "profile.settings.hourlyRatePlaceholder": "напр. 25",
+    "profile.settings.hourlyRateHint": "Укажите цену за час в грузинских лари (₾). Будет видна студентам.",
 
     // Hero
     "hero.badge": "500+ студентов уже учатся",
