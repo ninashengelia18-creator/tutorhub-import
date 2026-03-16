@@ -133,7 +133,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
             const isToday = date.toISOString().split("T")[0] === todayStr;
             return (
               <div key={i} className={`p-2 text-center border-l ${isToday ? "bg-primary/5" : ""}`}>
-                <p className="text-xs text-muted-foreground">{date.toLocaleDateString("en-US", { weekday: "short" })}</p>
+                <p className="text-xs text-muted-foreground">{date.toLocaleDateString(lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US", { weekday: "short" })}</p>
                 <p className={`text-sm font-semibold ${isToday ? "text-primary" : ""}`}>{date.getDate()}</p>
                 {isToday && <div className="h-0.5 bg-primary mt-1 rounded-full" />}
               </div>
