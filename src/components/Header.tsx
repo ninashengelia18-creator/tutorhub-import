@@ -86,7 +86,17 @@ function initialsFromValue(value: string) {
 
   const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/saved-tutors", "/tutor-settings", "/tutor-dashboard", "/tutor-messages", "/tutor-schedule", "/lesson-planner"].includes(location.pathname);
   const profilePath = isTutor ? "/tutor-settings" : "/profile";
-  const visibleNavLinks = user && !isTutor ? navLinks.filter((link) => !["/for-business", "/become-tutor"].includes(link.href)) : navLinks;
+  const dashboardPath = isTutor ? "/tutor-dashboard" : "/dashboard";
+  const visibleNavLinks = user && !isTutor ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/faq"].includes(link.href)) : navLinks;
+  const headerNavLinks = user
+    ? [
+        { href: "/", label: t("nav.home") },
+        { href: "/search", label: t("nav.findTutors") },
+        { href: dashboardPath, label: t("auth.dashboard") },
+        { href: profilePath, label: t("nav.profile") },
+      ]
+    : visibleNavLinks.map((link) => ({ href: link.href, label: t(link.labelKey) }));
+  const authDisplayName = user?.email?.split("@")[0] || "User";
 
   if (isPortalHeaderRoute) {
     return <PortalHeader />;
