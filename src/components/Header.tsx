@@ -27,7 +27,7 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { lang, setLang, t } = useLanguage();
-  const { user, signOut, isTutor, defaultRoute } = useAuth();
+  const { user, signOut, isTutor } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -51,7 +51,8 @@ export function Header() {
     });
   }, [user]);
 
-  const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/saved-tutors"].includes(location.pathname);
+  const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/saved-tutors", "/tutor-settings", "/tutor-dashboard", "/tutor-schedule", "/lesson-planner"].includes(location.pathname);
+  const profilePath = isTutor ? "/tutor-settings" : "/profile";
 
   if (isPortalHeaderRoute) {
     return <PortalHeader />;
@@ -143,6 +144,12 @@ export function Header() {
                       {t("nav.lessonPlanner")}
                     </Link>
                   </Button>
+                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
+                    <Link to={profilePath}>
+                      <UserCircle className="h-4 w-4 mr-1" />
+                      {t("nav.profile")}
+                    </Link>
+                  </Button>
                 </>
               ) : (
                 <>
@@ -153,7 +160,7 @@ export function Header() {
                     </Link>
                   </Button>
                   <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                    <Link to="/profile">
+                    <Link to={profilePath}>
                       <UserCircle className="h-4 w-4 mr-1" />
                       {t("nav.profile")}
                     </Link>
@@ -235,6 +242,9 @@ export function Header() {
                         <Button variant="ghost" size="sm" className="flex-1" asChild>
                           <Link to="/lesson-planner" onClick={() => setMobileOpen(false)}>{t("nav.lessonPlanner")}</Link>
                         </Button>
+                        <Button variant="ghost" size="sm" className="flex-1" asChild>
+                          <Link to={profilePath} onClick={() => setMobileOpen(false)}>{t("nav.profile")}</Link>
+                        </Button>
                       </>
                     ) : (
                       <>
@@ -242,7 +252,7 @@ export function Header() {
                           <Link to="/dashboard" onClick={() => setMobileOpen(false)}>{t("auth.dashboard")}</Link>
                         </Button>
                         <Button variant="ghost" size="sm" className="flex-1" asChild>
-                          <Link to="/profile" onClick={() => setMobileOpen(false)}>{t("nav.profile")}</Link>
+                          <Link to={profilePath} onClick={() => setMobileOpen(false)}>{t("nav.profile")}</Link>
                         </Button>
                       </>
                     )}

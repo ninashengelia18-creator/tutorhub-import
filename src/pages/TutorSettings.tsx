@@ -5,7 +5,7 @@ import { StudentSettingsSidebar } from "@/components/profile/StudentSettingsSide
 import { Layout } from "@/components/Layout";
 import { useProfileSettings } from "@/hooks/useProfileSettings";
 
-export default function ProfileSettings() {
+export default function TutorSettings() {
   const {
     user,
     fileInputRef,
@@ -36,7 +36,7 @@ export default function ProfileSettings() {
     handleSavePassword,
     handleSaveNotifications,
     handleDeleteAccount,
-  } = useProfileSettings("/login?redirect=/profile");
+  } = useProfileSettings("/login?redirect=/tutor-settings");
 
   if (initialLoading) {
     return <Layout hideFooter><div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div></Layout>;

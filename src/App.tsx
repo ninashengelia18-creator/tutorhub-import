@@ -24,6 +24,7 @@ import StudentSignup from "./pages/StudentSignup.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import ProfileSettings from "./pages/ProfileSettings.tsx";
+import TutorSettings from "./pages/TutorSettings.tsx";
 import BookingConfirmation from "./pages/BookingConfirmation.tsx";
 import MyLessons from "./pages/MyLessons.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
@@ -68,6 +69,7 @@ const App = () => (
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/profile" element={<ProtectedRoute requiredRole="student"><ProfileSettings /></ProtectedRoute>} />
+              <Route path="/tutor-settings" element={<ProtectedRoute requiredRole="tutor"><TutorSettings /></ProtectedRoute>} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/cookie-policy" element={<CookiePolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
