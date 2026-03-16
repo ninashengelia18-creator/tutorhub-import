@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { forwardRef, useEffect, useMemo, useState } from "react";
 import { Check, ChevronRight, Crown, MessageCircleMore } from "lucide-react";
 
 import { useAuth } from "@/contexts/AuthContext";
