@@ -191,7 +191,7 @@ export function PortalHeader() {
 
             <Button variant="ghost" size="icon" className="rounded-full" asChild>
               <Link to="/faq" aria-label="FAQ">
-                <CircleHelp className="h-4 w-4" />
+                <LifeBuoy className="h-4 w-4" />
               </Link>
             </Button>
 
