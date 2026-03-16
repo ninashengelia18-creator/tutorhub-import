@@ -100,11 +100,12 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
     const first = weekDates[0];
     const last = weekDates[6];
     const sameMonth = first.getMonth() === last.getMonth();
+    const locale = lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US";
     if (sameMonth) {
-      return `${first.toLocaleDateString("en-US", { month: "short" })} ${first.getDate()} – ${last.getDate()}, ${last.getFullYear()}`;
+      return `${first.toLocaleDateString(locale, { month: "short" })} ${first.getDate()} – ${last.getDate()}, ${last.getFullYear()}`;
     }
-    return `${first.toLocaleDateString("en-US", { month: "short" })} ${first.getDate()} – ${last.toLocaleDateString("en-US", { month: "short" })} ${last.getDate()}, ${last.getFullYear()}`;
-  }, [weekDates]);
+    return `${first.toLocaleDateString(locale, { month: "short" })} ${first.getDate()} – ${last.toLocaleDateString(locale, { month: "short" })} ${last.getDate()}, ${last.getFullYear()}`;
+  }, [weekDates, lang]);
 
   const tzOffset = new Date().getTimezoneOffset();
   const tzHours = -tzOffset / 60;
