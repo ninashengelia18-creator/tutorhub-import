@@ -424,7 +424,7 @@ export default function MyLessons() {
                       <p className="text-sm text-muted-foreground">{tutor.subject}</p>
                     </div>
                     <Button variant="outline" asChild>
-                      <Link to="/search">Book Again</Link>
+                      <Link to="/search">{t("myLessons.bookAgain")}</Link>
                     </Button>
                   </div>
                 ))}
