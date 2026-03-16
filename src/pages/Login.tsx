@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -32,7 +34,7 @@ export default function Login() {
       });
     } else {
       toast({ title: t("auth.welcomeBack") });
-      navigate("/dashboard");
+      navigate(redirect || "/dashboard");
     }
     setLoading(false);
   };

@@ -556,7 +556,20 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.logout": "Log out",
     "auth.dashboard": "Dashboard",
 
-    // Booking flow (new)
+    // Signup role selection
+    "signup.chooseRole": "Join LearnEazy",
+    "signup.chooseRoleDesc": "Choose how you'd like to use the platform",
+    "signup.iAmStudent": "I am a Student",
+    "signup.studentDesc": "Find tutors, book lessons, and start learning today.",
+    "signup.signupAsStudent": "Sign up as Student",
+    "signup.iAmTutor": "I am a Tutor",
+    "signup.tutorDesc": "Share your knowledge and earn by teaching students.",
+    "signup.applyAsTutor": "Apply as Tutor",
+    "signup.studentTitle": "Create Student Account",
+    "signup.studentSubtitle": "Sign up to book lessons and start learning.",
+    "signup.createStudentAccount": "Create Account",
+
+    // Booking flow
     "booking.subject": "Subject",
     "booking.duration": "Lesson Duration",
     "booking.selectDate": "Select a date",
@@ -564,6 +577,10 @@ export const translations: Record<Language, Record<string, string>> = {
     "booking.messageToTutor": "Message to Tutor (optional)",
     "booking.lessonWith": "lesson with",
     "booking.thankYouMsg": "Thank you for booking! Our team will contact you via chat within 24 hours to provide payment details and confirm your session.",
+    "booking.loginRequired": "Create an account to book this lesson",
+    "booking.loginRequiredDesc": "Sign up for free to complete your booking and track your lessons.",
+    "booking.signupToBook": "Sign up to Book",
+    "booking.viewLessons": "View My Lessons",
 
     // My Lessons
     "myLessons.title": "My Lessons",
@@ -596,6 +613,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "Access Denied",
     "admin.adminOnly": "This page is only accessible to administrators.",
     "nav.admin": "Admin",
+    "admin.bookingsTab": "Bookings",
+    "admin.tutorAppsTab": "Tutor Applications",
+    "admin.totalApps": "Total Applications",
+    "admin.pendingApps": "Pending Review",
+    "admin.approvedApps": "Approved",
+    "admin.searchTutors": "Search by name, email, or subject...",
+    "admin.approveTutor": "Approve",
+    "admin.rejectTutor": "Reject",
+    "admin.tutorApproved": "Tutor approved!",
+    "admin.tutorRejected": "Tutor rejected.",
+    "admin.noApps": "No tutor applications yet",
     "nav.tutorSchedule": "My Schedule",
 
     // Tutor Schedule
@@ -1164,7 +1192,20 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.logout": "გასვლა",
     "auth.dashboard": "პანელი",
 
-    // Booking flow (new)
+    // Signup role selection
+    "signup.chooseRole": "შეუერთდი LearnEazy-ს",
+    "signup.chooseRoleDesc": "აირჩიეთ როგორ გსურთ პლატფორმის გამოყენება",
+    "signup.iAmStudent": "მე ვარ სტუდენტი",
+    "signup.studentDesc": "იპოვეთ რეპეტიტორი, დაჯავშნეთ გაკვეთილი და დაიწყეთ სწავლა.",
+    "signup.signupAsStudent": "რეგისტრაცია სტუდენტად",
+    "signup.iAmTutor": "მე ვარ რეპეტიტორი",
+    "signup.tutorDesc": "გაუზიარეთ ცოდნა და მიიღეთ შემოსავალი სწავლებით.",
+    "signup.applyAsTutor": "განაცხადის გაგზავნა",
+    "signup.studentTitle": "სტუდენტის ანგარიშის შექმნა",
+    "signup.studentSubtitle": "დარეგისტრირდით გაკვეთილების დასაჯავშნად.",
+    "signup.createStudentAccount": "ანგარიშის შექმნა",
+
+    // Booking flow
     "booking.subject": "საგანი",
     "booking.duration": "გაკვეთილის ხანგრძლივობა",
     "booking.selectDate": "აირჩიეთ თარიღი",
@@ -1172,6 +1213,10 @@ export const translations: Record<Language, Record<string, string>> = {
     "booking.messageToTutor": "შეტყობინება რეპეტიტორისთვის (არასავალდებულო)",
     "booking.lessonWith": "გაკვეთილი",
     "booking.thankYouMsg": "მადლობა დაჯავშნისთვის! ჩვენი გუნდი დაგიკავშირდებათ ჩატით 24 საათის განმავლობაში გადახდის დეტალებისა და სესიის დასადასტურებლად.",
+    "booking.loginRequired": "შექმენით ანგარიში გაკვეთილის დასაჯავშნად",
+    "booking.loginRequiredDesc": "უფასოდ დარეგისტრირდით ჯავშნის დასასრულებლად.",
+    "booking.signupToBook": "რეგისტრაცია დაჯავშნისთვის",
+    "booking.viewLessons": "ჩემი გაკვეთილები",
 
     // My Lessons
     "myLessons.title": "ჩემი გაკვეთილები",
@@ -1204,6 +1249,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "წვდომა აკრძალულია",
     "admin.adminOnly": "ეს გვერდი მხოლოდ ადმინისტრატორებისთვისაა.",
     "nav.admin": "ადმინი",
+    "admin.bookingsTab": "ჯავშნები",
+    "admin.tutorAppsTab": "რეპეტიტორების განაცხადები",
+    "admin.totalApps": "სულ განაცხადები",
+    "admin.pendingApps": "განხილვის მოლოდინში",
+    "admin.approvedApps": "დამტკიცებული",
+    "admin.searchTutors": "მოძებნეთ სახელით, ელ-ფოსტით ან საგნით...",
+    "admin.approveTutor": "დამტკიცება",
+    "admin.rejectTutor": "უარყოფა",
+    "admin.tutorApproved": "რეპეტიტორი დამტკიცებულია!",
+    "admin.tutorRejected": "რეპეტიტორი უარყოფილია.",
+    "admin.noApps": "რეპეტიტორების განაცხადები ჯერ არ არის",
     "nav.tutorSchedule": "ჩემი განრიგი",
 
     // Tutor Schedule
@@ -1772,7 +1828,20 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.logout": "Выйти",
     "auth.dashboard": "Панель",
 
-    // Booking flow (new)
+    // Signup role selection
+    "signup.chooseRole": "Присоединяйтесь к LearnEazy",
+    "signup.chooseRoleDesc": "Выберите, как вы хотите использовать платформу",
+    "signup.iAmStudent": "Я студент",
+    "signup.studentDesc": "Найдите репетитора, забронируйте урок и начните учиться.",
+    "signup.signupAsStudent": "Зарегистрироваться как студент",
+    "signup.iAmTutor": "Я репетитор",
+    "signup.tutorDesc": "Делитесь знаниями и зарабатывайте, обучая студентов.",
+    "signup.applyAsTutor": "Подать заявку",
+    "signup.studentTitle": "Создать аккаунт студента",
+    "signup.studentSubtitle": "Зарегистрируйтесь для бронирования уроков.",
+    "signup.createStudentAccount": "Создать аккаунт",
+
+    // Booking flow
     "booking.subject": "Предмет",
     "booking.duration": "Длительность урока",
     "booking.selectDate": "Выберите дату",
@@ -1780,6 +1849,10 @@ export const translations: Record<Language, Record<string, string>> = {
     "booking.messageToTutor": "Сообщение репетитору (необязательно)",
     "booking.lessonWith": "урок с",
     "booking.thankYouMsg": "Спасибо за бронирование! Наша команда свяжется с вами через чат в течение 24 часов, чтобы предоставить реквизиты для оплаты и подтвердить вашу сессию.",
+    "booking.loginRequired": "Создайте аккаунт для бронирования урока",
+    "booking.loginRequiredDesc": "Зарегистрируйтесь бесплатно для завершения бронирования.",
+    "booking.signupToBook": "Регистрация для бронирования",
+    "booking.viewLessons": "Мои уроки",
 
     // My Lessons
     "myLessons.title": "Мои уроки",
@@ -1812,6 +1885,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "Доступ запрещён",
     "admin.adminOnly": "Эта страница доступна только администраторам.",
     "nav.admin": "Админ",
+    "admin.bookingsTab": "Бронирования",
+    "admin.tutorAppsTab": "Заявки репетиторов",
+    "admin.totalApps": "Всего заявок",
+    "admin.pendingApps": "На рассмотрении",
+    "admin.approvedApps": "Одобренные",
+    "admin.searchTutors": "Поиск по имени, email или предмету...",
+    "admin.approveTutor": "Одобрить",
+    "admin.rejectTutor": "Отклонить",
+    "admin.tutorApproved": "Репетитор одобрен!",
+    "admin.tutorRejected": "Репетитор отклонён.",
+    "admin.noApps": "Заявок репетиторов пока нет",
     "nav.tutorSchedule": "Моё расписание",
 
     // Tutor Schedule

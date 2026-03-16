@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, CheckCircle, Shield, Calendar as CalendarIcon } from "lucide-react";
+import { ChevronLeft, CheckCircle, Shield, Calendar as CalendarIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -51,6 +51,12 @@ export default function Booking() {
   const price = (tutor.price / 60) * duration;
 
   const handleSubmit = async () => {
+    // If not logged in, redirect to login with return URL
+    if (!user) {
+      navigate(`/login?redirect=/booking/${id}`);
+      return;
+    }
+
     if (!date || !time || !studentName.trim() || !studentEmail.trim()) {
       toast({ title: t("booking.failed"), description: "Please fill in all required fields.", variant: "destructive" });
       return;
@@ -64,25 +70,22 @@ export default function Booking() {
     const endTime = `${String(Math.floor(endMinutes / 60)).padStart(2, "0")}:${String(endMinutes % 60).padStart(2, "0")}`;
 
     try {
-      // Save to database if user is logged in
-      if (user) {
-        const { error } = await supabase.from("bookings").insert({
-          student_id: user.id,
-          tutor_name: tutor.name,
-          subject,
-          lesson_date: lessonDate,
-          start_time: time,
-          end_time: endTime,
-          duration_minutes: duration,
-          price_amount: price,
-          status: "pending",
-          student_name: studentName.trim(),
-          student_email: studentEmail.trim(),
-          student_message: message.trim() || null,
-          notes: message.trim() || null,
-        });
-        if (error) throw error;
-      }
+      const { error } = await supabase.from("bookings").insert({
+        student_id: user.id,
+        tutor_name: tutor.name,
+        subject,
+        lesson_date: lessonDate,
+        start_time: time,
+        end_time: endTime,
+        duration_minutes: duration,
+        price_amount: price,
+        status: "pending",
+        student_name: studentName.trim(),
+        student_email: studentEmail.trim(),
+        student_message: message.trim() || null,
+        notes: message.trim() || null,
+      });
+      if (error) throw error;
 
       // Send email via Formspree
       await fetch(FORMSPREE_URL, {
@@ -138,7 +141,7 @@ export default function Booking() {
                 <Link to="/">{t("booking.backHome")}</Link>
               </Button>
               <Button asChild variant="outline" className="flex-1">
-                <Link to="/search">{t("booking.viewTutors")}</Link>
+                <Link to="/my-lessons">{t("booking.viewLessons")}</Link>
               </Button>
             </div>
           </motion.div>
@@ -160,6 +163,25 @@ export default function Booking() {
           <p className="text-muted-foreground mb-6">
             {t("booking.bookingWith")} {tutor.name}
           </p>
+
+          {/* Auth prompt banner for guests */}
+          {!user && (
+            <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3">
+              <LogIn className="h-5 w-5 text-primary shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">{t("booking.loginRequired")}</p>
+                <p className="text-xs text-muted-foreground">{t("booking.loginRequiredDesc")}</p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <Button size="sm" asChild>
+                  <Link to={`/signup/student?redirect=/booking/${id}`}>{t("auth.signup")}</Link>
+                </Button>
+                <Button size="sm" variant="outline" asChild>
+                  <Link to={`/login?redirect=/booking/${id}`}>{t("auth.login")}</Link>
+                </Button>
+              </div>
+            </div>
+          )}
 
           <div className="rounded-xl border bg-card p-6 space-y-5">
             {/* Subject */}
@@ -276,10 +298,10 @@ export default function Booking() {
 
             <Button
               onClick={handleSubmit}
-              disabled={submitting || !date || !time || !studentName.trim() || !studentEmail.trim()}
+              disabled={submitting}
               className="w-full h-12 text-base font-semibold hero-gradient text-primary-foreground border-0"
             >
-              {submitting ? t("booking.submitting") : t("booking.submitRequest")}
+              {!user ? t("booking.signupToBook") : submitting ? t("booking.submitting") : t("booking.submitRequest")}
             </Button>
 
             <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">

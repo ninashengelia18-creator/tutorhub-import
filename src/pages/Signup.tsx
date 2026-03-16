@@ -1,133 +1,63 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { UserPlus, Mail, Lock, User } from "lucide-react";
+import { motion } from "framer-motion";
+import { GraduationCap, BookOpen } from "lucide-react";
 
 export default function Signup() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
   const { t } = useLanguage();
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password.length < 6) {
-      toast({
-        title: t("auth.error"),
-        description: t("auth.passwordMin"),
-        variant: "destructive",
-      });
-      return;
-    }
-    setLoading(true);
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
-        data: { display_name: displayName },
-      },
-    });
-
-    if (error) {
-      toast({
-        title: t("auth.error"),
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: t("auth.checkEmail"),
-        description: t("auth.verifyEmail"),
-      });
-    }
-    setLoading(false);
-  };
 
   return (
     <Layout>
       <div className="flex min-h-[70vh] items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md border-border shadow-lg">
-          <CardHeader className="text-center space-y-2">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <UserPlus className="h-6 w-6 text-primary" />
-            </div>
-            <CardTitle className="text-2xl">{t("auth.signup")}</CardTitle>
-            <CardDescription>{t("auth.signupDesc")}</CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSignup}>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">{t("auth.displayName")}</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder={t("auth.displayNamePlaceholder")}
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    required
-                    className="pl-9"
-                  />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-2xl"
+        >
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold mb-2">{t("signup.chooseRole")}</h1>
+            <p className="text-muted-foreground">{t("signup.chooseRoleDesc")}</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            {/* Student Card */}
+            <Link to="/signup/student" className="group">
+              <div className="rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02]">
+                <div className="mx-auto mb-5 h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <BookOpen className="h-8 w-8 text-primary" />
                 </div>
+                <h2 className="text-xl font-bold mb-2">{t("signup.iAmStudent")}</h2>
+                <p className="text-sm text-muted-foreground mb-6">{t("signup.studentDesc")}</p>
+                <Button className="w-full hero-gradient text-primary-foreground border-0">
+                  {t("signup.signupAsStudent")}
+                </Button>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">{t("auth.email")}</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="pl-9"
-                  />
+            </Link>
+
+            {/* Tutor Card */}
+            <Link to="/tutor-apply" className="group">
+              <div className="rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02]">
+                <div className="mx-auto mb-5 h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <GraduationCap className="h-8 w-8 text-primary" />
                 </div>
+                <h2 className="text-xl font-bold mb-2">{t("signup.iAmTutor")}</h2>
+                <p className="text-sm text-muted-foreground mb-6">{t("signup.tutorDesc")}</p>
+                <Button variant="outline" className="w-full">
+                  {t("signup.applyAsTutor")}
+                </Button>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">{t("auth.password")}</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={6}
-                    className="pl-9"
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground">{t("auth.passwordMin")}</p>
-              </div>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? t("auth.creatingAccount") : t("auth.signup")}
-              </Button>
-              <p className="text-sm text-muted-foreground text-center">
-                {t("auth.hasAccount")}{" "}
-                <Link to="/login" className="text-primary hover:underline font-medium">
-                  {t("auth.loginLink")}
-                </Link>
-              </p>
-            </CardFooter>
-          </form>
-        </Card>
+            </Link>
+          </div>
+
+          <p className="text-sm text-muted-foreground text-center mt-8">
+            {t("auth.hasAccount")}{" "}
+            <Link to="/login" className="text-primary hover:underline font-medium">
+              {t("auth.loginLink")}
+            </Link>
+          </p>
+        </motion.div>
       </div>
     </Layout>
   );
