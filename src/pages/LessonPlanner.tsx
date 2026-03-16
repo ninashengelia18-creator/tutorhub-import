@@ -176,13 +176,27 @@ const labels: Record<string, Record<string, string>> = {
   },
 };
 
-const subjects = [
-  "Math", "English", "Science", "History", "Georgian", "Russian",
-  "SAT Prep", "IELTS", "National Exam Prep", "Other",
-];
-const levels = ["6-8", "9-11", "12-14", "15-17", "University", "Adult/Professional"];
-const durations = ["30 min", "45 min", "60 min", "90 min"];
-const studentCounts = ["1", "2-5", "6-10", "10+"];
+const optionsByLanguage: Record<string, { subjects: string[]; levels: string[]; durations: string[]; studentCounts: string[] }> = {
+  en: {
+    subjects: ["Math", "English", "Science", "History", "Georgian", "Russian", "SAT Prep", "IELTS", "National Exam Prep", "Other"],
+    levels: ["6-8", "9-11", "12-14", "15-17", "University", "Adult/Professional"],
+    durations: ["30 min", "45 min", "60 min", "90 min"],
+    studentCounts: ["1", "2-5", "6-10", "10+"],
+  },
+  ka: {
+    subjects: ["მათემატიკა", "ინგლისური", "მეცნიერება", "ისტორია", "ქართული", "რუსული", "SAT მოსამზადებელი", "IELTS", "ეროვნული გამოცდებისთვის მომზადება", "სხვა"],
+    levels: ["6-8", "9-11", "12-14", "15-17", "უნივერსიტეტი", "ზრდასრული / პროფესიული"],
+    durations: ["30 წთ", "45 წთ", "60 წთ", "90 წთ"],
+    studentCounts: ["1", "2-5", "6-10", "10+"],
+  },
+  ru: {
+    subjects: ["Математика", "Английский", "Наука", "История", "Грузинский", "Русский", "Подготовка к SAT", "IELTS", "Подготовка к национальным экзаменам", "Другое"],
+    levels: ["6-8", "9-11", "12-14", "15-17", "Университет", "Взрослый / Профессиональный"],
+    durations: ["30 мин", "45 мин", "60 мин", "90 мин"],
+    studentCounts: ["1", "2-5", "6-10", "10+"],
+  },
+};
+
 const planLanguages = [
   { value: "ka", label: "ქართული" },
   { value: "en", label: "English" },
