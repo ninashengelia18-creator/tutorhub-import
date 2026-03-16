@@ -122,7 +122,7 @@ export default function Dashboard() {
                       )}
                     </div>
                     <div>
-                      <p className="font-semibold text-sm">{lastTutor.tutor_name} · {lastTutor.subject}</p>
+                      <p className="font-semibold text-sm">{lastTutor.tutor_name} · {localizeSubjectLabel(lastTutor.subject, t)}</p>
                       <p className="text-xs text-primary">{t("dash.trialBooked")}</p>
                     </div>
                   </div>
