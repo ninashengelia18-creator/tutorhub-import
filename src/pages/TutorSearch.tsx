@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Search, Star, Filter, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getSubjectSearchTerms, normalizeSubjectValue } from "@/lib/localization";
 
 const allTutors = [
   { id: 1, name: "Nino Beridze", subject: "Mathematics", subjectKey: "td.math", rating: 4.9, reviews: 127, price: 25, avatar: "NB", languageKeys: ["td.lang.georgian", "td.lang.english"], bioKey: "td.search.nino.bio", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face" },
