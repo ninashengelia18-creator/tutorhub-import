@@ -22,6 +22,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "Log in",
     "nav.signup": "Sign up",
     "nav.profile": "Profile",
+    "nav.lessonPlanner": "Lesson Planner",
 
     // Profile Settings
     "profile.settings.title": "Profile Settings",
