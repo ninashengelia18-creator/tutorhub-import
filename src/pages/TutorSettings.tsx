@@ -20,6 +20,8 @@ export default function TutorSettings() {
     deleteEmail,
     deleteDialogOpen,
     notificationPreferences,
+    localePreferences,
+    timezoneOptions,
     initials,
     firstName,
     lastName,
@@ -30,11 +32,13 @@ export default function TutorSettings() {
     setDeleteEmail,
     setDeleteDialogOpen,
     setNotificationPreferences,
+    setLocalePreferences,
     setDisplayName,
     handleAvatarUpload,
     handleSaveAccount,
     handleSavePassword,
     handleSaveNotifications,
+    handleSaveLocalization,
     handleDeleteAccount,
   } = useProfileSettings("/login?redirect=/tutor-settings");
 
@@ -63,6 +67,8 @@ export default function TutorSettings() {
             deleteEmail={deleteEmail}
             deleteDialogOpen={deleteDialogOpen}
             notificationPreferences={notificationPreferences}
+            localePreferences={localePreferences}
+            timezoneOptions={timezoneOptions}
             onAvatarUpload={handleAvatarUpload}
             onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
             onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}
@@ -70,9 +76,11 @@ export default function TutorSettings() {
             onNewPasswordChange={setNewPassword}
             onConfirmPasswordChange={setConfirmPassword}
             onDeleteEmailChange={setDeleteEmail}
+            onLocalePreferenceChange={(key, value) => setLocalePreferences((current) => ({ ...current, [key]: value }))}
             onSaveAccount={handleSaveAccount}
             onSavePassword={handleSavePassword}
             onSaveNotifications={handleSaveNotifications}
+            onSaveLocalization={handleSaveLocalization}
             onToggleNotification={(key, value) => setNotificationPreferences((current) => ({ ...current, [key]: value }))}
             onDeleteAccount={handleDeleteAccount}
             onDeleteDialogOpenChange={setDeleteDialogOpen}

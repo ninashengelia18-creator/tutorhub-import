@@ -5,6 +5,7 @@ export type StudentSettingsSection =
   | "account"
   | "password"
   | "email"
+  | "localization"
   | "calendar"
   | "notifications"
   | "delete";
@@ -22,6 +23,7 @@ export function StudentSettingsSidebar({
     { id: "account", label: t("profile.settings.account") },
     { id: "password", label: t("profile.settings.password") },
     { id: "email", label: t("profile.settings.emailSection") },
+    { id: "localization", label: t("profile.settings.localization") },
     { id: "calendar", label: t("profile.settings.calendar") },
     { id: "notifications", label: t("profile.settings.notifications") },
     { id: "delete", label: t("profile.settings.deleteAccount") },
