@@ -1140,6 +1140,47 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.passwordUpdated": "პაროლი წარმატებით განახლდა!",
     "auth.logout": "გასვლა",
     "auth.dashboard": "პანელი",
+
+    // Booking flow (new)
+    "booking.subject": "საგანი",
+    "booking.duration": "გაკვეთილის ხანგრძლივობა",
+    "booking.selectDate": "აირჩიეთ თარიღი",
+    "booking.bookingWith": "გაკვეთილის დაჯავშნა",
+    "booking.messageToTutor": "შეტყობინება რეპეტიტორისთვის (არასავალდებულო)",
+    "booking.lessonWith": "გაკვეთილი",
+    "booking.thankYouMsg": "მადლობა დაჯავშნისთვის! ჩვენი გუნდი დაგიკავშირდებათ ჩატით 24 საათის განმავლობაში გადახდის დეტალებისა და სესიის დასადასტურებლად.",
+
+    // My Lessons
+    "myLessons.title": "ჩემი გაკვეთილები",
+    "myLessons.lessons": "გაკვეთილები",
+    "myLessons.calendar": "კალენდარი",
+    "myLessons.tutors": "რეპეტიტორები",
+    "myLessons.upcoming": "მომავალი გაკვეთილები",
+    "myLessons.past": "გასული გაკვეთილები",
+    "myLessons.cancelled": "გაუქმებული",
+    "myLessons.noUpcoming": "მომავალი გაკვეთილები არ არის",
+    "myLessons.scheduleNow": "დაჯავშნეთ შემდეგი გაკვეთილი!",
+    "myLessons.scheduleLesson": "გაკვეთილის დაჯავშნა",
+    "myLessons.joinMeet": "Google Meet-ში შესვლა",
+
+    // Admin
+    "admin.title": "ადმინ პანელი",
+    "admin.subtitle": "მართეთ ყველა ჯავშანი, გადახდა და გაკვეთილი",
+    "admin.totalBookings": "სულ ჯავშნები",
+    "admin.pendingPayment": "გადახდის მოლოდინში",
+    "admin.confirmed": "დადასტურებული",
+    "admin.completedStat": "დასრულებული",
+    "admin.searchPlaceholder": "მოძებნეთ სტუდენტით, რეპეტიტორით ან საგნით...",
+    "admin.markPaid": "გადახდილად მონიშვნა",
+    "admin.markCompleted": "დასრულებულად მონიშვნა",
+    "admin.addMeetLink": "Google Meet ლინკის დამატება",
+    "admin.saveMeetLink": "ლინკის შენახვა",
+    "admin.meetLinkSaved": "Google Meet ლინკი შენახულია!",
+    "admin.markedPaid": "ჯავშანი დადასტურებულია! გადახდა მიღებულია.",
+    "admin.noBookings": "ჯავშნები ჯერ არ არის",
+    "admin.accessDenied": "წვდომა აკრძალულია",
+    "admin.adminOnly": "ეს გვერდი მხოლოდ ადმინისტრატორებისთვისაა.",
+    "nav.admin": "ადმინი",
   },
   ru: {
     // Nav
