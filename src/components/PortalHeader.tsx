@@ -27,6 +27,7 @@ const studentPrimaryNav = [
 
 const tutorPrimaryNav = [
   { to: "/tutor-dashboard", label: "Dashboard" },
+  { to: "/tutor-messages", label: "Messages" },
   { to: "/tutor-schedule", label: "Schedule" },
   { to: "/lesson-planner", label: "Lesson planner" },
 ] as const;

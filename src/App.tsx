@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import Classroom from "./pages/Classroom.tsx";
 import AIPractice from "./pages/AIPractice.tsx";
 import Messages from "./pages/Messages.tsx";
+import TutorMessages from "./pages/TutorMessages.tsx";
 import FAQ from "./pages/FAQ.tsx";
 import ForBusiness from "./pages/ForBusiness.tsx";
 import BecomeTutor from "./pages/BecomeTutor.tsx";
