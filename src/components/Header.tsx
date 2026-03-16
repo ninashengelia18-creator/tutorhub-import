@@ -27,7 +27,7 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { lang, setLang, t } = useLanguage();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isTutor, defaultRoute } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -51,7 +51,7 @@ export function Header() {
     });
   }, [user]);
 
-  const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/tutor-schedule"].includes(location.pathname);
+  const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/saved-tutors"].includes(location.pathname);
 
   if (isPortalHeaderRoute) {
     return <PortalHeader />;
@@ -60,11 +60,10 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container flex h-18 items-center justify-between py-2">
-        {/* Logo + Tagline */}
         <div className="flex items-center gap-4">
           <Link to="/" className="flex flex-col items-center gap-1">
             <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
-            <span className="text-foreground tracking-[0.25em] uppercase" style={{ fontFamily: "'Playfair Display', serif", fontSize: '16px', fontWeight: 600 }}>LearnEazy</span>
+            <span className="text-foreground tracking-[0.25em] uppercase" style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}>LearnEazy</span>
           </Link>
           <span className="hidden lg:flex flex-col text-sm font-semibold text-muted-foreground border-l border-border pl-4 tracking-wide leading-tight">
             {t("brand.tagline").split(". ").map((line, i, arr) => (
@@ -73,16 +72,13 @@ export function Header() {
           </span>
         </div>
 
-        {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               to={link.href}
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === link.href
-                  ? "text-primary"
-                  : "text-foreground/90"
+                location.pathname === link.href ? "text-primary" : "text-foreground/90"
               }`}
             >
               {t(link.labelKey)}
@@ -91,7 +87,6 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          {/* Language dropdown */}
           <div className="relative" ref={langRef}>
             <button
               onClick={() => setLangOpen(!langOpen)}
@@ -115,9 +110,7 @@ export function Header() {
                       key={l}
                       onClick={() => { setLang(l); setLangOpen(false); }}
                       className={`w-full px-3 py-2 text-sm text-left transition-colors ${
-                        lang === l
-                          ? "bg-primary/20 text-primary font-semibold"
-                          : "text-foreground hover:bg-secondary"
+                        lang === l ? "bg-primary/20 text-primary font-semibold" : "text-foreground hover:bg-secondary"
                       }`}
                     >
                       {langLabels[l]}
@@ -128,21 +121,45 @@ export function Header() {
             </AnimatePresence>
           </div>
 
-
           {user ? (
             <>
-              <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                <Link to="/tutor-schedule">
-                  <CalendarDays className="h-4 w-4 mr-1" />
-                  {t("nav.tutorSchedule")}
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                <Link to="/lesson-planner">
-                  <BookOpen className="h-4 w-4 mr-1" />
-                  {t("nav.lessonPlanner")}
-                </Link>
-              </Button>
+              {isTutor ? (
+                <>
+                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
+                    <Link to="/tutor-dashboard">
+                      <LayoutDashboard className="h-4 w-4 mr-1" />
+                      {t("auth.dashboard")}
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
+                    <Link to="/tutor-schedule">
+                      <CalendarDays className="h-4 w-4 mr-1" />
+                      {t("nav.tutorSchedule")}
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
+                    <Link to="/lesson-planner">
+                      <BookOpen className="h-4 w-4 mr-1" />
+                      {t("nav.lessonPlanner")}
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
+                    <Link to="/dashboard">
+                      <LayoutDashboard className="h-4 w-4 mr-1" />
+                      {t("auth.dashboard")}
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
+                    <Link to="/profile">
+                      <UserCircle className="h-4 w-4 mr-1" />
+                      {t("nav.profile")}
+                    </Link>
+                  </Button>
+                </>
+              )}
               {isAdmin && (
                 <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
                   <Link to="/admin">
@@ -151,18 +168,6 @@ export function Header() {
                   </Link>
                 </Button>
               )}
-              <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                <Link to="/dashboard">
-                  <LayoutDashboard className="h-4 w-4 mr-1" />
-                  {t("auth.dashboard")}
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
-                <Link to="/profile">
-                  <UserCircle className="h-4 w-4 mr-1" />
-                  {t("nav.profile")}
-                </Link>
-              </Button>
               <Button variant="outline" size="sm" className="border-border text-foreground hover:bg-secondary" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4 mr-1" />
                 {t("auth.logout")}
@@ -180,16 +185,11 @@ export function Header() {
           )}
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden p-2 text-foreground"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
+        <button className="md:hidden p-2 text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -199,7 +199,6 @@ export function Header() {
             className="md:hidden border-t border-border/50 bg-background"
           >
             <div className="container py-4 flex flex-col gap-3">
-              {/* Mobile language switcher */}
               <div className="flex flex-wrap items-center gap-2 self-start">
                 <div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
                   {(Object.keys(langLabels) as Language[]).map((l) => (
@@ -207,9 +206,7 @@ export function Header() {
                       key={l}
                       onClick={() => setLang(l)}
                       className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                        lang === l
-                          ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:text-foreground"
+                        lang === l ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       {langLabels[l]}
@@ -219,36 +216,42 @@ export function Header() {
               </div>
 
               {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="py-2 text-sm font-medium text-foreground/90 hover:text-primary"
-                  onClick={() => setMobileOpen(false)}
-                >
+                <Link key={link.href} to={link.href} className="py-2 text-sm font-medium text-foreground/90 hover:text-primary" onClick={() => setMobileOpen(false)}>
                   {t(link.labelKey)}
                 </Link>
               ))}
+
               <div className="flex gap-3 pt-2 border-t border-border/50">
                 {user ? (
                   <>
-                    <Button variant="ghost" size="sm" className="flex-1" asChild>
-                      <Link to="/tutor-schedule" onClick={() => setMobileOpen(false)}>{t("nav.tutorSchedule")}</Link>
-                    </Button>
-                    <Button variant="ghost" size="sm" className="flex-1" asChild>
-                      <Link to="/lesson-planner" onClick={() => setMobileOpen(false)}>{t("nav.lessonPlanner")}</Link>
-                    </Button>
+                    {isTutor ? (
+                      <>
+                        <Button variant="ghost" size="sm" className="flex-1" asChild>
+                          <Link to="/tutor-dashboard" onClick={() => setMobileOpen(false)}>{t("auth.dashboard")}</Link>
+                        </Button>
+                        <Button variant="ghost" size="sm" className="flex-1" asChild>
+                          <Link to="/tutor-schedule" onClick={() => setMobileOpen(false)}>{t("nav.tutorSchedule")}</Link>
+                        </Button>
+                        <Button variant="ghost" size="sm" className="flex-1" asChild>
+                          <Link to="/lesson-planner" onClick={() => setMobileOpen(false)}>{t("nav.lessonPlanner")}</Link>
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button variant="ghost" size="sm" className="flex-1" asChild>
+                          <Link to="/dashboard" onClick={() => setMobileOpen(false)}>{t("auth.dashboard")}</Link>
+                        </Button>
+                        <Button variant="ghost" size="sm" className="flex-1" asChild>
+                          <Link to="/profile" onClick={() => setMobileOpen(false)}>{t("nav.profile")}</Link>
+                        </Button>
+                      </>
+                    )}
                     {isAdmin && (
                       <Button variant="ghost" size="sm" className="flex-1" asChild>
                         <Link to="/admin" onClick={() => setMobileOpen(false)}>{t("nav.admin")}</Link>
                       </Button>
                     )}
-                    <Button variant="ghost" size="sm" className="flex-1" asChild>
-                      <Link to="/dashboard" onClick={() => setMobileOpen(false)}>{t("auth.dashboard")}</Link>
-                    </Button>
-                    <Button variant="ghost" size="sm" className="flex-1" asChild>
-                      <Link to="/profile" onClick={() => setMobileOpen(false)}>{t("nav.profile")}</Link>
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex-1" onClick={() => { handleSignOut(); setMobileOpen(false); }}>
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => { void handleSignOut(); setMobileOpen(false); }}>
                       {t("auth.logout")}
                     </Button>
                   </>

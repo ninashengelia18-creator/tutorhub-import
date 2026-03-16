@@ -156,7 +156,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAdmin = roles.includes("admin");
   const isTutor = roles.includes("tutor");
   const isStudent = user !== null && !isTutor && !isAdmin;
-  const defaultRoute = isAdmin ? "/admin" : isTutor ? "/tutor-schedule" : "/dashboard";
+  const defaultRoute = isAdmin ? "/admin" : isTutor ? "/tutor-dashboard" : "/dashboard";
 
   const value = useMemo<AuthContextType>(
     () => ({
