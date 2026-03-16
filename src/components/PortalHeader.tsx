@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Bell, ChevronDown, CircleHelp, Heart, LogOut, Mail, Menu, UserCircle } from "lucide-react";
 
+import logo from "@/assets/owl-logo.png";
 import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -142,16 +143,32 @@ export function PortalHeader() {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
       <div className="border-b border-border/60">
         <div className="container flex min-h-16 items-center justify-between gap-3 py-3">
-          <button
-            type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent sm:hidden"
-            onClick={() => setMobileMenuOpen((value) => !value)}
-            aria-label="Toggle portal menu"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent sm:hidden"
+              onClick={() => setMobileMenuOpen((value) => !value)}
+              aria-label="Toggle portal menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
 
-          <div className="ml-auto flex items-center gap-1.5 sm:gap-3">
+            <Link to={isTutor ? "/tutor-dashboard" : "/dashboard"} className="flex items-center gap-3">
+              <div className="flex flex-col items-center gap-1">
+                <img src={logo} alt="LearnEazy owl" className="h-12 w-auto sm:h-14" loading="eager" decoding="async" />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-foreground sm:text-xs" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  LearnEazy
+                </span>
+              </div>
+              <span className="hidden lg:flex flex-col border-l border-border pl-3 text-xs font-semibold leading-tight tracking-wide text-muted-foreground">
+                {t("brand.tagline").split(". ").map((line, i, arr) => (
+                  <span key={i}>{line}{i < arr.length - 1 ? "." : ""}</span>
+                ))}
+              </span>
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-1.5 sm:gap-3">
             {!isTutor ? (
               <SubscribePlansDialog
                 buttonVariant="outline"
@@ -292,6 +309,12 @@ export function PortalHeader() {
       {mobileMenuOpen ? (
         <div className="border-b border-border/60 bg-background sm:hidden">
           <div className="container flex flex-col gap-2 py-4">
+            <div className="mb-2 border-b border-border/60 pb-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
+                LearnEazy
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t("brand.tagline")}</p>
+            </div>
             <Link to={profilePath} className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
               {t("nav.profile")}
             </Link>
