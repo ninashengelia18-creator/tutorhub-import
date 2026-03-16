@@ -248,7 +248,8 @@ export default function MyLessons() {
   ];
 
   const renderBookingCard = (booking: Booking, showActions = true) => {
-    const sb = statusBadge[booking.status] || statusBadge.pending;
+    const badges = getStatusBadge(t);
+    const sb = badges[booking.status as keyof typeof badges] || badges.pending;
     const StatusIcon = sb.icon;
     return (
       <div key={booking.id} className={`rounded-xl border bg-card p-4 flex items-center gap-4 ${booking.status === "cancelled" ? "opacity-50" : ""}`}>
