@@ -19,16 +19,16 @@ import { Language, useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSavedTutors, subscribeToSavedTutors } from "@/lib/savedTutors";
 
-const languageLabels: Record<Language, string> = {
-  en: "English",
-  ka: "ქართული",
-  ru: "Русский",
-};
-
-const primaryNav = [
+const studentPrimaryNav = [
   { to: "/dashboard", labelKey: "msg.home" },
   { to: "/messages", labelKey: "msg.messages" },
   { to: "/my-lessons", labelKey: "msg.myLessons" },
+] as const;
+
+const tutorPrimaryNav = [
+  { to: "/tutor-dashboard", label: "Dashboard" },
+  { to: "/tutor-schedule", label: "Schedule" },
+  { to: "/lesson-planner", label: "Lesson planner" },
 ] as const;
 
 function initialsFromName(name: string) {
@@ -44,7 +44,7 @@ function initialsFromName(name: string) {
 export function PortalHeader() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut, profile } = useAuth();
+  const { user, signOut, profile, isTutor } = useAuth();
   const { lang, setLang, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -57,6 +57,7 @@ export function PortalHeader() {
   }, [profile?.display_name, user]);
 
   const initials = useMemo(() => initialsFromName(displayName), [displayName]);
+  const profilePath = isTutor ? "/tutor-settings" : "/profile";
 
   useEffect(() => {
     const syncSaved = () => setSavedCount(getSavedTutors().length);
@@ -68,30 +69,38 @@ export function PortalHeader() {
     if (!user) return;
 
     const loadUnread = async () => {
-      const { count } = await supabase
+      const unreadQuery = supabase
         .from("messages" as never)
         .select("id", { count: "exact", head: true })
-        .eq("student_id", user.id)
-        .eq("sender_type", "tutor")
+        .eq(isTutor ? "tutor_name" : "student_id", isTutor ? displayName : user.id)
+        .eq("sender_type", isTutor ? "student" : "tutor")
         .is("read_at", null);
 
+      const { count } = await unreadQuery;
       setUnreadCount(count ?? 0);
     };
 
     const loadNotifications = async () => {
       const today = new Date().toISOString().split("T")[0];
-      const { data } = await supabase
+      const bookingsQuery = supabase
         .from("bookings")
-        .select("tutor_name, subject, lesson_date, start_time")
-        .eq("student_id", user.id)
+        .select("tutor_name, student_name, subject, lesson_date, start_time")
         .gte("lesson_date", today)
         .in("status", ["pending", "confirmed"])
         .order("lesson_date", { ascending: true })
         .order("start_time", { ascending: true })
         .limit(3);
 
+      const { data } = await (isTutor
+        ? bookingsQuery.eq("tutor_name", displayName)
+        : bookingsQuery.eq("student_id", user.id));
+
       setNotifications(
-        (data ?? []).map((booking) => `${booking.subject} · ${booking.tutor_name} · ${booking.lesson_date} ${booking.start_time.slice(0, 5)}`),
+        (data ?? []).map((booking) =>
+          isTutor
+            ? `${booking.subject} · ${booking.student_name || "Student"} · ${booking.lesson_date} ${booking.start_time.slice(0, 5)}`
+            : `${booking.subject} · ${booking.tutor_name} · ${booking.lesson_date} ${booking.start_time.slice(0, 5)}`,
+        ),
       );
     };
 
@@ -102,7 +111,7 @@ export function PortalHeader() {
       .channel(`portal-header-${user.id}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "messages", filter: `student_id=eq.${user.id}` },
+        { event: "*", schema: "public", table: "messages", filter: isTutor ? `tutor_name=eq.${displayName}` : `student_id=eq.${user.id}` },
         () => {
           void loadUnread();
         },
@@ -112,7 +121,7 @@ export function PortalHeader() {
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [user]);
+  }, [displayName, isTutor, user]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -120,9 +129,13 @@ export function PortalHeader() {
   };
 
   const isActive = (path: string) => {
-    if (path === "/dashboard") return location.pathname === "/dashboard";
+    if (path === "/dashboard" || path === "/tutor-dashboard") return location.pathname === path;
     return location.pathname.startsWith(path);
   };
+
+  const primaryNav = isTutor
+    ? tutorPrimaryNav.map((item) => ({ to: item.to, label: item.label }))
+    : studentPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }));
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
@@ -142,11 +155,13 @@ export function PortalHeader() {
           </button>
 
           <div className="ml-auto flex items-center gap-1.5 sm:gap-3">
-            <SubscribePlansDialog
-              buttonVariant="outline"
-              buttonSize="sm"
-              buttonClassName="rounded-full border-border bg-background px-4 font-semibold text-foreground hover:bg-accent"
-            />
+            {!isTutor ? (
+              <SubscribePlansDialog
+                buttonVariant="outline"
+                buttonSize="sm"
+                buttonClassName="rounded-full border-border bg-background px-4 font-semibold text-foreground hover:bg-accent"
+              />
+            ) : null}
 
             <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
               <Link to="/messages" aria-label={t("msg.messages")}>
@@ -159,12 +174,14 @@ export function PortalHeader() {
               </Link>
             </Button>
 
-            <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
-              <Link to="/saved-tutors" aria-label="Saved tutors">
-                <Heart className="h-4 w-4" />
-                {savedCount > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
-              </Link>
-            </Button>
+            {!isTutor ? (
+              <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
+                <Link to="/saved-tutors" aria-label="Saved tutors">
+                  <Heart className="h-4 w-4" />
+                  {savedCount > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
+                </Link>
+              </Button>
+            ) : null}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -174,7 +191,7 @@ export function PortalHeader() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-80 rounded-2xl border-border/70 bg-popover p-2">
-                <DropdownMenuLabel>{t("nav.home")}</DropdownMenuLabel>
+                <DropdownMenuLabel>{isTutor ? "Tutor updates" : t("nav.home")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {notifications.length > 0 ? (
                   notifications.map((item) => (
@@ -191,15 +208,15 @@ export function PortalHeader() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2 rounded-full px-3 text-foreground hover:bg-accent">
-                  <span className="hidden sm:inline">{languageLabels[lang]}</span>
+                  <span className="hidden sm:inline">{lang === "en" ? "English" : lang === "ka" ? "ქართული" : "Русский"}</span>
                   <span className="sm:hidden">{lang.toUpperCase()}</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40 rounded-2xl border-border/70 bg-popover p-1">
-                {(Object.keys(languageLabels) as Language[]).map((language) => (
+                {(["en", "ka", "ru"] as const).map((language) => (
                   <DropdownMenuItem key={language} className="rounded-xl px-3 py-2" onClick={() => setLang(language)}>
-                    {languageLabels[language]}
+                    {language === "en" ? "English" : language === "ka" ? "ქართული" : "Русский"}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -229,11 +246,11 @@ export function PortalHeader() {
                   </div>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/dashboard")}>{t("msg.home")}</DropdownMenuItem>
-                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/messages")}>{t("msg.messages")}</DropdownMenuItem>
-                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/my-lessons")}>{t("msg.myLessons")}</DropdownMenuItem>
-                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/saved-tutors")}>Saved tutors</DropdownMenuItem>
-                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/profile")}>
+                {primaryNav.map((item) => (
+                  <DropdownMenuItem key={item.to} className="rounded-xl px-3 py-3" onClick={() => navigate(item.to)}>{item.label}</DropdownMenuItem>
+                ))}
+                {!isTutor ? <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/saved-tutors")}>Saved tutors</DropdownMenuItem> : null}
+                <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(profilePath)}>
                   <UserCircle className="mr-2 h-4 w-4" />
                   {t("nav.profile")}
                 </DropdownMenuItem>
@@ -261,7 +278,7 @@ export function PortalHeader() {
                     active ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {t(item.labelKey)}
+                  {item.label}
                 </Link>
               );
             })}
@@ -275,10 +292,12 @@ export function PortalHeader() {
             <Link to="/search" className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
               {t("nav.findTutors")}
             </Link>
-            <Link to="/saved-tutors" className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
-              Saved tutors
-            </Link>
-            <Link to="/profile" className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
+            {!isTutor ? (
+              <Link to="/saved-tutors" className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
+                Saved tutors
+              </Link>
+            ) : null}
+            <Link to={profilePath} className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
               {t("nav.profile")}
             </Link>
             <button
