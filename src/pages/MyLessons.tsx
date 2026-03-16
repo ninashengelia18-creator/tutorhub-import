@@ -46,21 +46,21 @@ interface Booking {
   google_meet_link: string | null;
 }
 
-const statusBadge: Record<string, { class: string; label: string; icon: typeof Clock }> = {
-  pending: { class: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30", label: "Pending", icon: Clock },
-  confirmed: { class: "bg-green-500/10 text-green-600 border-green-500/30", label: "Confirmed", icon: CheckCircle },
-  completed: { class: "bg-blue-500/10 text-blue-600 border-blue-500/30", label: "Completed", icon: Check },
-  cancelled: { class: "bg-red-500/10 text-red-600 border-red-500/30", label: "Cancelled", icon: XCircle },
-};
+const getStatusBadge = (t: (key: string) => string) => ({
+  pending: { class: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30", labelKey: "myLessons.statusPending", icon: Clock },
+  confirmed: { class: "bg-green-500/10 text-green-600 border-green-500/30", labelKey: "myLessons.statusConfirmed", icon: CheckCircle },
+  completed: { class: "bg-blue-500/10 text-blue-600 border-blue-500/30", labelKey: "myLessons.statusCompleted", icon: Check },
+  cancelled: { class: "bg-red-500/10 text-red-600 border-red-500/30", labelKey: "myLessons.statusCancelled", icon: XCircle },
+});
 
-const CANCEL_REASONS = [
-  "This time doesn't work for me anymore",
-  "I have a technical issue",
-  "The tutor rescheduled to a time when I'm not available",
-  "The tutor asked me to cancel",
-  "I want to learn with a different tutor",
-  "I'm not ready to start learning yet",
-  "Other",
+const CANCEL_REASON_KEYS = [
+  "myLessons.cancelReason1",
+  "myLessons.cancelReason2",
+  "myLessons.cancelReason3",
+  "myLessons.cancelReason4",
+  "myLessons.cancelReason5",
+  "myLessons.cancelReason6",
+  "myLessons.cancelReason7",
 ];
 
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
