@@ -189,6 +189,23 @@ export default function ProfileSettings() {
                   />
                 </div>
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="hourlyRate">{t("profile.settings.hourlyRate")}</Label>
+                <div className="relative">
+                  <Wallet className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="hourlyRate"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    value={hourlyRate}
+                    onChange={(e) => setHourlyRate(e.target.value)}
+                    placeholder={t("profile.settings.hourlyRatePlaceholder")}
+                    className="pl-9"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">{t("profile.settings.hourlyRateHint")}</p>
+              </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? t("profile.settings.saving") : t("profile.settings.save")}
               </Button>
