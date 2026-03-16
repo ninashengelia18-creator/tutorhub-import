@@ -15,7 +15,7 @@ const tutorData: Record<string, {
   rating: number;
   reviewCount: number;
   price: number;
-  lessonLength: string;
+  lessonLengthKey: string;
   photo: string;
   languages: { nameKey: string; levelKey: string }[];
   headlineKey: string;
@@ -40,7 +40,7 @@ const tutorData: Record<string, {
     rating: 4.9,
     reviewCount: 127,
     price: 25,
-    lessonLength: "50-min",
+    lessonLengthKey: "booking.duration50",
     photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face",
     languages: [
       { nameKey: "td.lang.georgian", levelKey: "td.level.native" },
@@ -71,7 +71,7 @@ const tutorData: Record<string, {
     rating: 4.8,
     reviewCount: 98,
     price: 30,
-    lessonLength: "50-min",
+    lessonLengthKey: "booking.duration50",
     photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face",
     languages: [
       { nameKey: "td.lang.georgian", levelKey: "td.level.native" },
@@ -102,7 +102,7 @@ const tutorData: Record<string, {
     rating: 5.0,
     reviewCount: 215,
     price: 20,
-    lessonLength: "50-min",
+    lessonLengthKey: "booking.duration50",
     photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face",
     languages: [
       { nameKey: "td.lang.english", levelKey: "td.level.native" },
@@ -133,7 +133,7 @@ const tutorData: Record<string, {
     rating: 4.9,
     reviewCount: 164,
     price: 35,
-    lessonLength: "50-min",
+    lessonLengthKey: "booking.duration50",
     photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
     languages: [
       { nameKey: "td.lang.english", levelKey: "td.level.upperIntB2" },
@@ -433,7 +433,7 @@ export default function TutorProfile() {
                 <div className="pb-4 mb-4 border-b">
                   <p className="text-2xl font-bold text-foreground tabular-nums">
                     ₾{tutor.price}
-                    <span className="text-sm font-normal text-muted-foreground ml-1">{tutor.lessonLength} {t("tp.lesson")}</span>
+                    <span className="text-sm font-normal text-muted-foreground ml-1">{t(tutor.lessonLengthKey)} {t("tp.lesson")}</span>
                   </p>
                 </div>
 
