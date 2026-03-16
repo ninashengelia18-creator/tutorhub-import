@@ -247,14 +247,14 @@ export default function Messages() {
   };
 
   const uploadAttachment = async () => {
-    if (!attachedFile || !user || !selectedTutorName) return null;
+    if (!attachedFile || !user || !selectedTutorId) return null;
 
     if (attachedFile.size > 10 * 1024 * 1024) {
       toast({ title: t("msg.attachmentTooLarge"), variant: "destructive" });
       return null;
     }
 
-    const filePath = `${user.id}/${selectedTutorName}/${Date.now()}-${sanitizeFileName(attachedFile.name)}`;
+    const filePath = `${user.id}/${selectedTutorId}/${Date.now()}-${sanitizeFileName(attachedFile.name)}`;
     const { error } = await supabase.storage.from("message-attachments").upload(filePath, attachedFile, {
       upsert: false,
       contentType: attachedFile.type || undefined,
