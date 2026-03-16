@@ -29,6 +29,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import CookiePolicy from "./pages/CookiePolicy.tsx";
 import TermsOfService from "./pages/TermsOfService.tsx";
 import LessonPlanner from "./pages/LessonPlanner.tsx";
+import AdminDashboard from "./pages/AdminDashboard.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
@@ -67,6 +68,7 @@ const App = () => (
               <Route path="/cookie-policy" element={<CookiePolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/lesson-planner" element={<ProtectedRoute><LessonPlanner /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
