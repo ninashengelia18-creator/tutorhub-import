@@ -161,8 +161,8 @@ export default function TutorSearch() {
                 </div>
               </div>
 
-              <FilterSection title={t("search.rating")} options={ratings} value={selectedRating} onChange={setSelectedRating} />
-              <FilterSection title={t("search.availability")} options={availabilityOptions} value={selectedAvailability} onChange={setSelectedAvailability} />
+              <FilterSection title={t("search.rating")} options={ratingKeys} value={selectedRating} onChange={setSelectedRating} />
+              <FilterSection title={t("search.availability")} options={availabilityKeys} value={selectedAvailability} onChange={setSelectedAvailability} />
 
             </div>
           </aside>
