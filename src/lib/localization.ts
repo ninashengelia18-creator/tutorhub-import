@@ -1,4 +1,5 @@
 import type { Language } from "@/contexts/LanguageContext";
+import { translations } from "@/contexts/LanguageContext";
 
 const SUBJECT_TRANSLATION_KEYS: Record<string, string> = {
   mathematics: "home.subj.math",
@@ -18,11 +19,43 @@ const SUBJECT_TRANSLATION_KEYS: Record<string, string> = {
   "georgian language & literature": "home.subj.georgianLit",
 };
 
+const SUBJECT_CANONICAL_VALUES: Record<string, string> = {
+  ...Object.fromEntries(Object.keys(SUBJECT_TRANSLATION_KEYS).map((key) => [key, key])),
+  ქართული: "georgian",
+  ქართული_ენა: "georgian",
+  грузинский: "georgian",
+  русული: "russian",
+  русский: "russian",
+  რუსული: "russian",
+  математика: "mathematics",
+  მათემატიკა: "mathematics",
+  физика: "physics",
+  ფიზიკა: "physics",
+  английский: "english",
+  ინგლისური: "english",
+  программирование: "programming",
+  პროგრამირება: "programming",
+  химия: "chemistry",
+  ქიმია: "chemistry",
+  биология: "biology",
+  ბიოლოგია: "biology",
+  история: "history",
+  ისტორია: "history",
+  география: "geography",
+  გეოგრაფია: "geography",
+  музыка: "music",
+  მუსიკა: "music",
+};
+
 const DATE_LOCALES: Record<Language, string> = {
   en: "en-US",
   ka: "ka-GE",
   ru: "ru-RU",
 };
+
+function normalizeTerm(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, " ");
+}
 
 export function getLocaleForLanguage(lang: Language) {
   return DATE_LOCALES[lang] ?? DATE_LOCALES.en;
@@ -32,9 +65,33 @@ export function localizeSubjectLabel(
   subject: string,
   t: (key: string) => string,
 ) {
-  const normalized = subject.trim().toLowerCase();
-  const key = SUBJECT_TRANSLATION_KEYS[normalized];
+  const normalized = normalizeTerm(subject);
+  const canonical = SUBJECT_CANONICAL_VALUES[normalized] ?? normalized;
+  const key = SUBJECT_TRANSLATION_KEYS[canonical];
   return key ? t(key) : subject;
+}
+
+export function getSubjectSearchTerms(subject: string) {
+  const normalized = normalizeTerm(subject);
+  const canonical = SUBJECT_CANONICAL_VALUES[normalized] ?? normalized;
+  const translationKey = SUBJECT_TRANSLATION_KEYS[canonical];
+  const terms = new Set<string>([normalized, canonical]);
+
+  if (translationKey) {
+    for (const locale of Object.keys(translations) as Language[]) {
+      const translated = translations[locale][translationKey];
+      if (translated) {
+        terms.add(normalizeTerm(translated));
+      }
+    }
+  }
+
+  return Array.from(terms);
+}
+
+export function normalizeSubjectValue(subject: string) {
+  const normalized = normalizeTerm(subject);
+  return SUBJECT_CANONICAL_VALUES[normalized] ?? normalized;
 }
 
 export function formatLocalizedDate(date: Date, lang: Language) {
@@ -44,3 +101,4 @@ export function formatLocalizedDate(date: Date, lang: Language) {
     day: "numeric",
   });
 }
+

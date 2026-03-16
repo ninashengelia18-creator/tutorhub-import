@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Search, Star, Filter, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getSubjectSearchTerms, normalizeSubjectValue } from "@/lib/localization";
 
 const allTutors = [
   { id: 1, name: "Nino Beridze", subject: "Mathematics", subjectKey: "td.math", rating: 4.9, reviews: 127, price: 25, avatar: "NB", languageKeys: ["td.lang.georgian", "td.lang.english"], bioKey: "td.search.nino.bio", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face" },
@@ -21,53 +20,46 @@ const allTutors = [
 ];
 
 const subjectEntries: { value: string; labelKey: string }[] = [
-  { value: "All", labelKey: "search.all" },
-  { value: "GeorgianLit", labelKey: "home.subj.georgianLit" },
-  { value: "Mathematics", labelKey: "home.subj.math" },
-  { value: "English", labelKey: "home.subj.english" },
-  { value: "ForeignLanguages", labelKey: "home.subj.foreignLangs" },
-  { value: "History", labelKey: "home.subj.history" },
-  { value: "Geography", labelKey: "home.subj.geography" },
-  { value: "Biology", labelKey: "home.subj.biology" },
-  { value: "Physics", labelKey: "home.subj.physics" },
-  { value: "Chemistry", labelKey: "home.subj.chemistry" },
-  { value: "ExamGeorgianLit", labelKey: "home.subj.examGeorgianLit" },
-  { value: "ExamForeignLang", labelKey: "home.subj.examForeignLang" },
-  { value: "ExamHistoryMath", labelKey: "home.subj.examHistoryMath" },
-  { value: "GeneralAptitude", labelKey: "home.subj.generalAptitude" },
-  { value: "Robotics", labelKey: "home.subj.robotics" },
-  { value: "Programming", labelKey: "home.subj.programming" },
-  { value: "Art", labelKey: "home.subj.art" },
+  { value: "all", labelKey: "search.all" },
+  { value: "georgian", labelKey: "td.georgian" },
+  { value: "mathematics", labelKey: "home.subj.math" },
+  { value: "english", labelKey: "home.subj.english" },
+  { value: "history", labelKey: "home.subj.history" },
+  { value: "geography", labelKey: "home.subj.geography" },
+  { value: "biology", labelKey: "home.subj.biology" },
+  { value: "physics", labelKey: "home.subj.physics" },
+  { value: "chemistry", labelKey: "home.subj.chemistry" },
+  { value: "programming", labelKey: "home.subj.programming" },
+  { value: "russian", labelKey: "td.russian" },
+  { value: "music", labelKey: "td.music" },
 ];
 const ratingKeys = ["search.any", "4.5+", "4.7+", "4.9+"];
 const availabilityKeys = ["search.any", "search.morning", "search.afternoon", "search.evening"];
 
 export default function TutorSearch() {
   const [searchParams] = useSearchParams();
-  const initialSubject = searchParams.get("subject") || "All";
+  const initialSubject = normalizeSubjectValue(searchParams.get("subject") || "All");
   const [search, setSearch] = useState("");
   const [selectedSubject, setSelectedSubject] = useState(initialSubject);
   const [priceRange, setPriceRange] = useState([0, 50]);
   const [selectedRating, setSelectedRating] = useState("search.any");
   const [selectedAvailability, setSelectedAvailability] = useState("search.any");
-  const [nativeSpeakerOnly, setNativeSpeakerOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
 
-  // Build a map of subject value -> translated label for search matching
-  const subjectTranslationMap = Object.fromEntries(
-    subjectEntries.map((s) => [s.value, t(s.labelKey).toLowerCase()])
+  const subjectSearchMap = useMemo(
+    () => Object.fromEntries(allTutors.map((tutor) => [tutor.id, getSubjectSearchTerms(tutor.subject)])),
+    [],
   );
 
   const filtered = allTutors.filter((tutor) => {
-    if (selectedSubject !== "All" && tutor.subject !== selectedSubject) return false;
+    if (selectedSubject !== "all" && normalizeSubjectValue(tutor.subject) !== selectedSubject) return false;
     if (search) {
-      const q = search.toLowerCase();
+      const q = search.trim().toLowerCase();
       const nameMatch = tutor.name.toLowerCase().includes(q);
-      const subjectEngMatch = tutor.subject.toLowerCase().includes(q);
-      const subjectTransMatch = (subjectTranslationMap[tutor.subject] || "").includes(q);
+      const subjectMatch = (subjectSearchMap[tutor.id] || []).some((term) => term.includes(q));
       const subjectKeyMatch = t(tutor.subjectKey).toLowerCase().includes(q);
-      if (!nameMatch && !subjectEngMatch && !subjectTransMatch && !subjectKeyMatch) return false;
+      if (!nameMatch && !subjectMatch && !subjectKeyMatch) return false;
     }
     if (tutor.price < priceRange[0] || tutor.price > priceRange[1]) return false;
     if (selectedRating === "4.5+" && tutor.rating < 4.5) return false;
@@ -77,7 +69,7 @@ export default function TutorSearch() {
       const avMap: Record<string, string> = { "search.morning": "morning", "search.afternoon": "afternoon", "search.evening": "evening" };
       if (tutor.availability !== avMap[selectedAvailability]) return false;
     }
-    
+
     return true;
   });
 
