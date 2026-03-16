@@ -129,6 +129,14 @@ export function Header() {
                   {t("nav.lessonPlanner")}
                 </Link>
               </Button>
+              {isAdmin && (
+                <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
+                  <Link to="/admin">
+                    <Shield className="h-4 w-4 mr-1" />
+                    {t("nav.admin")}
+                  </Link>
+                </Button>
+              )}
               <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
                 <Link to="/dashboard">
                   <LayoutDashboard className="h-4 w-4 mr-1" />
