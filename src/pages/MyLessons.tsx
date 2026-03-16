@@ -165,7 +165,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
                         }`}
                         style={{ minHeight: `${(b.duration_minutes / 60) * 48 - 4}px` }}
                       >
-                        <p className="text-[10px] font-medium truncate">{b.subject}</p>
+                        <p className="text-[10px] font-medium truncate">{localizeSubjectLabel(b.subject, t)}</p>
                         <p className="text-[10px] opacity-70 truncate tabular-nums">
                           {formatTime(b.start_time)} – {formatTime(b.end_time)}
                         </p>
