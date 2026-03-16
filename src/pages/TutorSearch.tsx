@@ -186,7 +186,7 @@ export default function TutorSearch() {
                           <p className="text-sm text-primary font-medium">{tutor.subject}</p>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-xl font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">/hr</span></p>
+                          <p className="text-xl font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">{t("search.perHour")}</span></p>
                         </div>
                       </div>
                       <p className="text-sm text-muted-foreground mt-1 line-clamp-1">{tutor.bio}</p>
