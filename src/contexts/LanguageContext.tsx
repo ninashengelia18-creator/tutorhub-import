@@ -1181,7 +1181,20 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.logout": "გასვლა",
     "auth.dashboard": "პანელი",
 
-    // Booking flow (new)
+    // Signup role selection
+    "signup.chooseRole": "შეუერთდი LearnEazy-ს",
+    "signup.chooseRoleDesc": "აირჩიეთ როგორ გსურთ პლატფორმის გამოყენება",
+    "signup.iAmStudent": "მე ვარ სტუდენტი",
+    "signup.studentDesc": "იპოვეთ რეპეტიტორი, დაჯავშნეთ გაკვეთილი და დაიწყეთ სწავლა.",
+    "signup.signupAsStudent": "რეგისტრაცია სტუდენტად",
+    "signup.iAmTutor": "მე ვარ რეპეტიტორი",
+    "signup.tutorDesc": "გაუზიარეთ ცოდნა და მიიღეთ შემოსავალი სწავლებით.",
+    "signup.applyAsTutor": "განაცხადის გაგზავნა",
+    "signup.studentTitle": "სტუდენტის ანგარიშის შექმნა",
+    "signup.studentSubtitle": "დარეგისტრირდით გაკვეთილების დასაჯავშნად.",
+    "signup.createStudentAccount": "ანგარიშის შექმნა",
+
+    // Booking flow
     "booking.subject": "საგანი",
     "booking.duration": "გაკვეთილის ხანგრძლივობა",
     "booking.selectDate": "აირჩიეთ თარიღი",
@@ -1189,6 +1202,10 @@ export const translations: Record<Language, Record<string, string>> = {
     "booking.messageToTutor": "შეტყობინება რეპეტიტორისთვის (არასავალდებულო)",
     "booking.lessonWith": "გაკვეთილი",
     "booking.thankYouMsg": "მადლობა დაჯავშნისთვის! ჩვენი გუნდი დაგიკავშირდებათ ჩატით 24 საათის განმავლობაში გადახდის დეტალებისა და სესიის დასადასტურებლად.",
+    "booking.loginRequired": "შექმენით ანგარიში გაკვეთილის დასაჯავშნად",
+    "booking.loginRequiredDesc": "უფასოდ დარეგისტრირდით ჯავშნის დასასრულებლად.",
+    "booking.signupToBook": "რეგისტრაცია დაჯავშნისთვის",
+    "booking.viewLessons": "ჩემი გაკვეთილები",
 
     // My Lessons
     "myLessons.title": "ჩემი გაკვეთილები",
