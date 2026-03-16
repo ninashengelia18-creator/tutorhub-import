@@ -382,8 +382,8 @@ export default function LessonPlanner() {
                     <div>
                       <label className="mb-1 block text-sm text-muted-foreground">{l.studentLevel} *</label>
                       <Select value={studentLevel} onValueChange={setStudentLevel}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>{levels.map((lv) => <SelectItem key={lv} value={lv}>{lv}</SelectItem>)}</SelectContent>
+                        <SelectTrigger><SelectValue placeholder={l.studentLevelPlaceholder} /></SelectTrigger>
+                        <SelectContent>{options.levels.map((lv) => <SelectItem key={lv} value={lv}>{lv}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
                     <div>
