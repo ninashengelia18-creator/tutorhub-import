@@ -1799,6 +1799,21 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "Доступ запрещён",
     "admin.adminOnly": "Эта страница доступна только администраторам.",
     "nav.admin": "Админ",
+    "nav.tutorSchedule": "Моё расписание",
+
+    // Tutor Schedule
+    "tutorSchedule.title": "Моё расписание",
+    "tutorSchedule.subtitle": "Ваши предстоящие подтверждённые уроки со студентами",
+    "tutorSchedule.upcomingCount": "Предстоящие уроки",
+    "tutorSchedule.daysScheduled": "Запланированные дни",
+    "tutorSchedule.totalTime": "Общее время обучения",
+    "tutorSchedule.noLessons": "Нет предстоящих уроков",
+    "tutorSchedule.noLessonsDesc": "Когда студенты забронируют уроки с вами, они появятся здесь.",
+    "tutorSchedule.joinMeet": "Войти в Meet",
+    "tutorSchedule.noMeetLink": "Ссылка на Meet ожидается",
+    "tutorSchedule.unknownStudent": "Студент",
+    "tutorSchedule.setName": "Укажите имя",
+    "tutorSchedule.setNameDesc": "Пожалуйста, укажите отображаемое имя в настройках профиля, соответствующее имени в бронированиях.",
   },
 };
 
