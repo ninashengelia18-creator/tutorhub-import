@@ -319,9 +319,9 @@ export default function MyLessons() {
     <Layout>
       <div className="border-b bg-card">
         <div className="container flex items-center gap-8 overflow-x-auto">
-          <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">Home</Link>
-          <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">Messages</Link>
-          <Link to="/my-lessons" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">My lessons</Link>
+          <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">{t("msg.home")}</Link>
+          <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">{t("msg.messages")}</Link>
+          <Link to="/my-lessons" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">{t("myLessons.title")}</Link>
         </div>
       </div>
 
