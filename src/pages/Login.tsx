@@ -21,13 +21,13 @@ export default function Login() {
   const redirect = searchParams.get("redirect");
   const { toast } = useToast();
   const { t } = useLanguage();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, defaultRoute } = useAuth();
 
   useEffect(() => {
     if (!authLoading && user) {
-      navigate(redirect || "/dashboard", { replace: true });
+      navigate(redirect || defaultRoute, { replace: true });
     }
-  }, [authLoading, navigate, redirect, user]);
+  }, [authLoading, defaultRoute, navigate, redirect, user]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +41,7 @@ export default function Login() {
     }
 
     toast({ title: t("auth.welcomeBack") });
-    navigate(redirect || "/dashboard", { replace: true });
+    navigate(redirect || defaultRoute, { replace: true });
   };
 
   return (

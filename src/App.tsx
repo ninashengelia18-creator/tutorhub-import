@@ -51,12 +51,12 @@ const App = () => (
               <Route path="/search" element={<TutorSearch />} />
               <Route path="/tutor/:id" element={<TutorProfile />} />
               <Route path="/booking/:id" element={<Booking />} />
-              <Route path="/booking-confirmation" element={<ProtectedRoute><BookingConfirmation /></ProtectedRoute>} />
-              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/classroom" element={<ProtectedRoute><Classroom /></ProtectedRoute>} />
+              <Route path="/booking-confirmation" element={<ProtectedRoute requiredRole="student"><BookingConfirmation /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute requiredRole="student"><Dashboard /></ProtectedRoute>} />
+              <Route path="/classroom" element={<ProtectedRoute requiredRole="student"><Classroom /></ProtectedRoute>} />
               <Route path="/ai-practice" element={<AIPractice />} />
-              <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-              <Route path="/my-lessons" element={<ProtectedRoute><MyLessons /></ProtectedRoute>} />
+              <Route path="/messages" element={<ProtectedRoute requiredRole="student"><Messages /></ProtectedRoute>} />
+              <Route path="/my-lessons" element={<ProtectedRoute requiredRole="student"><MyLessons /></ProtectedRoute>} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/for-business" element={<ForBusiness />} />
               <Route path="/become-tutor" element={<BecomeTutor />} />
@@ -66,13 +66,13 @@ const App = () => (
               <Route path="/signup/student" element={<StudentSignup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/profile" element={<ProfileSettings />} />
+              <Route path="/profile" element={<ProtectedRoute requiredRole="student"><ProfileSettings /></ProtectedRoute>} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/cookie-policy" element={<CookiePolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
-              <Route path="/lesson-planner" element={<ProtectedRoute><LessonPlanner /></ProtectedRoute>} />
-              <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-              <Route path="/tutor-schedule" element={<ProtectedRoute><TutorSchedule /></ProtectedRoute>} />
+              <Route path="/lesson-planner" element={<ProtectedRoute requiredRole="tutor"><LessonPlanner /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
+              <Route path="/tutor-schedule" element={<ProtectedRoute requiredRole="tutor"><TutorSchedule /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

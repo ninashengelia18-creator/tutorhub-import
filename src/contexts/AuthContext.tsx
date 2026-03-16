@@ -2,6 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Enums } from "@/integrations/supabase/types";
+
+type AppRole = Enums<"app_role">;
 
 interface UserProfile {
   display_name: string | null;
@@ -13,8 +16,14 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   profile: UserProfile | null;
+  roles: AppRole[];
+  isAdmin: boolean;
+  isTutor: boolean;
+  isStudent: boolean;
+  defaultRoute: string;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  refreshRoles: () => Promise<void>;
   updateProfileState: (profile: Partial<UserProfile>) => void;
 }
 
@@ -25,6 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [roles, setRoles] = useState<AppRole[]>([]);
 
   const applySession = useCallback((nextSession: Session | null) => {
     setSession(nextSession);
@@ -33,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (!nextSession) {
       setProfile(null);
+      setRoles([]);
     }
   }, []);
 
@@ -52,6 +63,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(data ?? { display_name: null, avatar_url: null });
   }, [session?.user?.id]);
 
+  const refreshRoles = useCallback(async () => {
+    const userId = session?.user?.id;
+    if (!userId) {
+      setRoles([]);
+      return;
+    }
+
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId);
+
+    setRoles((data ?? []).map((entry) => entry.role));
+  }, [session?.user?.id]);
+
   useEffect(() => {
     const handleAuthChange = (_event: AuthChangeEvent, nextSession: Session | null) => {
       applySession(nextSession);
@@ -67,15 +93,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [applySession]);
 
   useEffect(() => {
-    void refreshProfile();
-  }, [refreshProfile]);
+    void Promise.all([refreshProfile(), refreshRoles()]);
+  }, [refreshProfile, refreshRoles]);
 
   useEffect(() => {
     const userId = session?.user?.id;
     if (!userId) return;
 
     const channel = supabase
-      .channel("auth-profile-sync")
+      .channel(`auth-sync-${userId}`)
       .on(
         "postgres_changes",
         {
@@ -93,15 +119,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         },
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "user_roles",
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          void refreshRoles();
+        },
+      )
       .subscribe();
 
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [session?.user?.id]);
+  }, [refreshRoles, session?.user?.id]);
 
   const signOut = useCallback(async () => {
     setProfile(null);
+    setRoles([]);
     applySession(null);
     await supabase.auth.signOut();
   }, [applySession]);
@@ -114,9 +153,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
+  const isAdmin = roles.includes("admin");
+  const isTutor = roles.includes("tutor");
+  const isStudent = user !== null && !isTutor && !isAdmin;
+  const defaultRoute = isAdmin ? "/admin" : isTutor ? "/tutor-schedule" : "/dashboard";
+
   const value = useMemo<AuthContextType>(
-    () => ({ user, session, loading, profile, signOut, refreshProfile, updateProfileState }),
-    [user, session, loading, profile, signOut, refreshProfile, updateProfileState],
+    () => ({
+      user,
+      session,
+      loading,
+      profile,
+      roles,
+      isAdmin,
+      isTutor,
+      isStudent,
+      defaultRoute,
+      signOut,
+      refreshProfile,
+      refreshRoles,
+      updateProfileState,
+    }),
+    [user, session, loading, profile, roles, isAdmin, isTutor, isStudent, defaultRoute, signOut, refreshProfile, refreshRoles, updateProfileState],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
