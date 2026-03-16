@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,89 +28,65 @@ export default function TutorSchedule() {
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [allBookings, setAllBookings] = useState<TutorBooking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [displayName, setDisplayName] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
-    supabase
-      .from("profiles")
-      .select("display_name")
-      .eq("id", user.id)
-      .single()
-      .then(({ data }) => {
-        const name = data?.display_name;
-        setDisplayName(name);
-        if (name) fetchBookings(name);
-        else setLoading(false);
-      });
+
+    const fetchBookings = async () => {
+      setLoading(true);
+
+      const today = new Date().toISOString().split("T")[0];
+      const selectFields = "id, student_name, subject, lesson_date, start_time, end_time, duration_minutes, status, google_meet_link, price_amount, currency";
+
+      const [upcomingRes, allRes] = await Promise.all([
+        supabase
+          .from("bookings")
+          .select(selectFields)
+          .in("status", ["confirmed", "completed"])
+          .gte("lesson_date", today)
+          .order("lesson_date", { ascending: true })
+          .order("start_time", { ascending: true }),
+        supabase
+          .from("bookings")
+          .select(selectFields)
+          .in("status", ["confirmed", "completed"])
+          .order("lesson_date", { ascending: false })
+          .order("start_time", { ascending: false }),
+      ]);
+
+      setBookings((upcomingRes.data as TutorBooking[]) ?? []);
+      setAllBookings((allRes.data as TutorBooking[]) ?? []);
+      setLoading(false);
+    };
+
+    void fetchBookings();
   }, [user]);
 
-  async function fetchBookings(tutorName: string) {
-    const today = new Date().toISOString().split("T")[0];
-    const selectFields = "id, student_name, subject, lesson_date, start_time, end_time, duration_minutes, status, google_meet_link, price_amount, currency";
-
-    // Fetch upcoming + all confirmed/completed in parallel
-    const [upcomingRes, allRes] = await Promise.all([
-      supabase
-        .from("bookings")
-        .select(selectFields)
-        .eq("tutor_name", tutorName)
-        .in("status", ["confirmed", "completed"])
-        .gte("lesson_date", today)
-        .order("lesson_date", { ascending: true })
-        .order("start_time", { ascending: true }),
-      supabase
-        .from("bookings")
-        .select(selectFields)
-        .eq("tutor_name", tutorName)
-        .in("status", ["confirmed", "completed"])
-        .order("lesson_date", { ascending: false }),
-    ]);
-
-    setBookings((upcomingRes.data as TutorBooking[]) || []);
-    setAllBookings((allRes.data as TutorBooking[]) || []);
-    setLoading(false);
-  }
-
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr + "T00:00:00");
+    const date = new Date(`${dateStr}T00:00:00`);
     const todayStr = new Date().toISOString().split("T")[0];
     const prefix = dateStr === todayStr ? "Today, " : "";
     return prefix + date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
   };
 
-  const formatTime = (t: string) => t.slice(0, 5);
+  const formatTime = (timeValue: string) => timeValue.slice(0, 5);
 
-  // Group bookings by date
-  const grouped = bookings.reduce<Record<string, TutorBooking[]>>((acc, b) => {
-    (acc[b.lesson_date] ||= []).push(b);
+  const grouped = bookings.reduce<Record<string, TutorBooking[]>>((acc, booking) => {
+    (acc[booking.lesson_date] ||= []).push(booking);
     return acc;
   }, {});
-
-  if (!displayName && !loading) {
-    return (
-      <Layout>
-        <div className="container py-16 text-center">
-          <User className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">{t("tutorSchedule.setName")}</h1>
-          <p className="text-muted-foreground">{t("tutorSchedule.setNameDesc")}</p>
-        </div>
-      </Layout>
-    );
-  }
 
   return (
     <Layout hideFooter>
       <div className="container py-8">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center gap-3 mb-2">
+          <div className="mb-2 flex items-center gap-3">
             <CalendarDays className="h-6 w-6 text-primary" />
             <h1 className="text-2xl font-bold">{t("tutorSchedule.title")}</h1>
           </div>
-          <p className="text-muted-foreground mb-8">{t("tutorSchedule.subtitle")}</p>
+          <p className="mb-8 text-muted-foreground">{t("tutorSchedule.subtitle")}</p>
 
-          {/* Stats row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="rounded-xl border bg-card p-4">
               <p className="text-2xl font-bold text-foreground">{bookings.length}</p>
               <p className="text-xs text-muted-foreground">{t("tutorSchedule.upcomingCount")}</p>
@@ -123,32 +99,32 @@ export default function TutorSchedule() {
               <div className="flex items-center gap-1.5">
                 <Wallet className="h-5 w-5 text-primary" />
                 <p className="text-2xl font-bold text-foreground">
-                  ₾{allBookings.filter(b => b.status === "completed").reduce((s, b) => s + b.price_amount, 0).toFixed(0)}
+                  ₾{allBookings.filter((booking) => booking.status === "completed").reduce((sum, booking) => sum + booking.price_amount, 0).toFixed(0)}
                 </p>
               </div>
               <p className="text-xs text-muted-foreground">{t("tutorSchedule.earnedTotal")}</p>
             </div>
             <div className="rounded-xl border bg-card p-4">
               <p className="text-2xl font-bold text-foreground">
-                ₾{bookings.reduce((s, b) => s + b.price_amount, 0).toFixed(0)}
+                ₾{bookings.reduce((sum, booking) => sum + booking.price_amount, 0).toFixed(0)}
               </p>
               <p className="text-xs text-muted-foreground">{t("tutorSchedule.upcomingRevenue")}</p>
             </div>
           </div>
 
           {loading ? (
-            <div className="text-center py-12 text-muted-foreground">Loading...</div>
+            <div className="py-12 text-center text-muted-foreground">Loading...</div>
           ) : bookings.length === 0 ? (
-            <div className="text-center py-16">
-              <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-lg font-bold mb-1">{t("tutorSchedule.noLessons")}</p>
+            <div className="py-16 text-center">
+              <BookOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+              <p className="mb-1 text-lg font-bold">{t("tutorSchedule.noLessons")}</p>
               <p className="text-sm text-muted-foreground">{t("tutorSchedule.noLessonsDesc")}</p>
             </div>
           ) : (
             <div className="space-y-6">
               {Object.entries(grouped).map(([date, lessons]) => (
                 <div key={date}>
-                  <h2 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                  <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
                     <CalendarDays className="h-4 w-4" />
                     {formatDate(date)}
                     <Badge variant="outline" className="ml-auto text-xs">
@@ -156,14 +132,14 @@ export default function TutorSchedule() {
                     </Badge>
                   </h2>
                   <div className="space-y-3">
-                    {lessons.map(booking => (
-                      <div key={booking.id} className="rounded-xl border bg-card p-4 flex flex-col sm:flex-row sm:items-center gap-4">
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    {lessons.map((booking) => (
+                      <div key={booking.id} className="flex flex-col gap-4 rounded-xl border bg-card p-4 sm:flex-row sm:items-center">
+                        <div className="flex min-w-0 flex-1 items-center gap-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
                             <User className="h-5 w-5 text-primary" />
                           </div>
                           <div className="min-w-0">
-                            <p className="font-semibold text-sm truncate">
+                            <p className="truncate text-sm font-semibold">
                               {booking.student_name || t("tutorSchedule.unknownStudent")}
                             </p>
                             <p className="text-sm text-muted-foreground">
@@ -172,7 +148,7 @@ export default function TutorSchedule() {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground shrink-0">
+                        <div className="flex shrink-0 items-center gap-2 text-sm text-muted-foreground">
                           <Clock className="h-4 w-4" />
                           <span className="tabular-nums">
                             {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
@@ -185,8 +161,7 @@ export default function TutorSchedule() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className={cn(
-                              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium shrink-0 transition-colors",
-                              "bg-primary/10 text-primary hover:bg-primary/20"
+                              "inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20",
                             )}
                           >
                             <Video className="h-3.5 w-3.5" />
@@ -194,7 +169,7 @@ export default function TutorSchedule() {
                             <ExternalLink className="h-3 w-3" />
                           </a>
                         ) : (
-                          <span className="text-xs text-muted-foreground italic shrink-0">
+                          <span className="shrink-0 text-xs italic text-muted-foreground">
                             {t("tutorSchedule.noMeetLink")}
                           </span>
                         )}
