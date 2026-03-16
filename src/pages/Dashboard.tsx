@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Booking {
   id: string;
@@ -25,9 +26,10 @@ interface Booking {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const displayName = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Student";
+  const displayName = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "";
 
   useEffect(() => {
     async function fetchBookings() {
@@ -53,16 +55,16 @@ export default function Dashboard() {
       <div className="border-b bg-card">
         <div className="container flex items-center gap-8 overflow-x-auto">
           <Link to="/dashboard" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">
-            Home
+            {t("msg.home")}
           </Link>
           <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            Messages
+            {t("msg.messages")}
           </Link>
           <Link to="/my-lessons" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            My lessons
+            {t("msg.myLessons")}
           </Link>
           <Link to="/for-business" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            For business
+            {t("msg.forBusiness")}
           </Link>
         </div>
       </div>
@@ -73,10 +75,10 @@ export default function Dashboard() {
           {lastTutor && upcomingBookings.length === 0 && !loading && (
             <div className="text-center py-8">
               <p className="text-muted-foreground mb-1">
-                {displayName === "Student" ? "Welcome back!" : `Welcome back, ${displayName}!`}
+                {displayName ? t("dash.welcomeBackName").replace("{name}", displayName) : t("dash.welcomeBack")}
               </p>
               <h1 className="text-2xl md:text-3xl font-bold mb-8">
-                Ready to continue learning with {lastTutor.tutor_name.split(" ")[0]}?
+                {t("dash.readyContinue").replace("{name}", lastTutor.tutor_name.split(" ")[0])}
               </h1>
 
               {/* Tutor card */}
@@ -95,18 +97,18 @@ export default function Dashboard() {
                   <span className="flex items-center gap-1">
                     <Star className="h-4 w-4 fill-foreground" /> 5
                   </span>
-                  <span className="text-muted-foreground">0 reviews</span>
+                  <span className="text-muted-foreground">{t("dash.reviews0")}</span>
                   <span>{lastTutor.currency}{lastTutor.price_amount.toFixed(2)}</span>
-                  <span className="text-muted-foreground">per lesson</span>
+                  <span className="text-muted-foreground">{t("dash.perLesson")}</span>
                 </div>
                 <Button className="hero-gradient text-primary-foreground border-0 px-8" asChild>
-                  <Link to="/search">Subscribe to continue</Link>
+                  <Link to="/search">{t("dash.subscribeContinue")}</Link>
                 </Button>
               </div>
 
               {/* Continue learning */}
               <div className="mt-12 text-left max-w-2xl mx-auto">
-                <h3 className="font-semibold text-lg mb-4">Continue learning</h3>
+                <h3 className="font-semibold text-lg mb-4">{t("dash.continueLearning")}</h3>
                 <div className="rounded-xl border bg-card p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex items-center justify-center shrink-0">
@@ -120,10 +122,10 @@ export default function Dashboard() {
                     </div>
                     <div>
                       <p className="font-semibold text-sm">{lastTutor.tutor_name} · {lastTutor.subject}</p>
-                      <p className="text-xs text-primary">Trial lesson booked</p>
+                      <p className="text-xs text-primary">{t("dash.trialBooked")}</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">Subscribe</Button>
+                  <Button variant="outline" size="sm">{t("dash.subscribe")}</Button>
                 </div>
               </div>
             </div>
@@ -133,18 +135,18 @@ export default function Dashboard() {
           {bookings.length === 0 && !loading && (
             <div className="text-center py-12">
               <p className="text-muted-foreground mb-1">
-                {displayName === "Student" ? "What's new?" : `What's new, ${displayName}?`}
+                {displayName ? t("dash.whatsNewName").replace("{name}", displayName) : t("dash.whatsNew")}
               </p>
-              <h1 className="text-2xl md:text-3xl font-bold mb-8">Find your perfect tutor</h1>
+              <h1 className="text-2xl md:text-3xl font-bold mb-8">{t("dash.findPerfect")}</h1>
               <Card className="max-w-md mx-auto">
                 <CardContent className="p-8 text-center">
                   <BookOpen className="h-12 w-12 text-primary/40 mx-auto mb-4" />
-                  <p className="font-semibold mb-2">No lessons yet</p>
-                  <p className="text-sm text-muted-foreground mb-4">Book a lesson with a tutor to get started</p>
+                  <p className="font-semibold mb-2">{t("dash.noLessonsYet")}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{t("dash.bookToStart")}</p>
                   <Button className="hero-gradient text-primary-foreground border-0" asChild>
                     <Link to="/search">
                       <Search className="h-4 w-4 mr-2" />
-                      Find a tutor
+                      {t("dash.findTutor")}
                     </Link>
                   </Button>
                 </CardContent>
@@ -155,8 +157,8 @@ export default function Dashboard() {
           {/* Has upcoming lessons */}
           {upcomingBookings.length > 0 && (
             <div>
-              <p className="text-muted-foreground mb-1">Good to see you, {displayName}!</p>
-              <h1 className="text-2xl md:text-3xl font-bold mb-6">Your next lesson is coming up</h1>
+              <p className="text-muted-foreground mb-1">{t("dash.goodToSee").replace("{name}", displayName)}</p>
+              <h1 className="text-2xl md:text-3xl font-bold mb-6">{t("dash.nextLesson")}</h1>
 
               {/* Next lesson card */}
               <Card className="max-w-2xl">
@@ -182,28 +184,28 @@ export default function Dashboard() {
                     {formatTime(upcomingBookings[0].start_time)} – {formatTime(upcomingBookings[0].end_time)}
                   </p>
                   <p className="text-sm text-muted-foreground mb-4">
-                    {upcomingBookings[0].subject} with {upcomingBookings[0].tutor_name}
+                    {upcomingBookings[0].subject} {t("dash.withTutor")} {upcomingBookings[0].tutor_name}
                   </p>
 
                   <Button variant="outline" size="lg" asChild>
                     <Link to="/classroom">
                       <Video className="h-4 w-4 mr-2" />
-                      Join lesson
+                      {t("dash.joinLesson")}
                     </Link>
                   </Button>
 
                   {/* Before your lesson section */}
                   <div className="mt-6 pt-4 border-t">
-                    <p className="font-semibold text-sm mb-3">Before your lesson</p>
+                    <p className="font-semibold text-sm mb-3">{t("dash.beforeLesson")}</p>
                     <div className="space-y-2">
                       <button className="w-full flex items-center gap-3 rounded-lg border p-3 text-left hover:bg-muted/50 transition-colors">
                         <TrendingUp className="h-5 w-5 text-muted-foreground" />
-                        <span className="text-sm flex-1">Share your learning needs</span>
+                        <span className="text-sm flex-1">{t("dash.shareLearning")}</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </button>
                       <button className="w-full flex items-center gap-3 rounded-lg border p-3 text-left hover:bg-muted/50 transition-colors">
                         <Monitor className="h-5 w-5 text-muted-foreground" />
-                        <span className="text-sm flex-1">Test your classroom</span>
+                        <span className="text-sm flex-1">{t("dash.testClassroom")}</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </button>
                     </div>
@@ -214,7 +216,7 @@ export default function Dashboard() {
               {/* Up next timeline */}
               {upcomingBookings.length > 1 && (
                 <div className="mt-8">
-                  <h2 className="text-xl font-bold mb-4">Up next</h2>
+                  <h2 className="text-xl font-bold mb-4">{t("dash.upNext")}</h2>
                   <div className="space-y-4">
                     {upcomingBookings.slice(1).map((booking) => (
                       <div key={booking.id} className="flex items-start gap-4">
@@ -228,7 +230,7 @@ export default function Dashboard() {
                               {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              {booking.subject} with {booking.tutor_name}
+                              {booking.subject} {t("dash.withTutor")} {booking.tutor_name}
                             </p>
                           </div>
                           <button className="text-muted-foreground hover:text-foreground">

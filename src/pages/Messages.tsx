@@ -6,6 +6,7 @@ import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface TutorContact {
   name: string;
@@ -18,6 +19,7 @@ interface TutorContact {
 
 export default function Messages() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [contacts, setContacts] = useState<TutorContact[]>([]);
   const [selectedContact, setSelectedContact] = useState<TutorContact | null>(null);
   const [message, setMessage] = useState("");
@@ -40,7 +42,7 @@ export default function Messages() {
               name: b.tutor_name,
               avatar_url: b.tutor_avatar_url,
               subject: b.subject,
-              lastMessage: "No messages yet",
+              lastMessage: t("msg.noMessages"),
               time: "",
               unread: 0,
             });
@@ -54,9 +56,9 @@ export default function Messages() {
   }, []);
 
   const filters = [
-    { key: "all" as const, label: "All" },
-    { key: "unread" as const, label: "Unread" },
-    { key: "archived" as const, label: "Archived" },
+    { key: "all" as const, label: t("msg.all") },
+    { key: "unread" as const, label: t("msg.unread") },
+    { key: "archived" as const, label: t("msg.archived") },
   ];
 
   const getInitials = (name: string) => name.split(" ").map(n => n[0]).join("");
@@ -67,16 +69,16 @@ export default function Messages() {
       <div className="border-b bg-card">
         <div className="container flex items-center gap-8 overflow-x-auto">
           <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            Home
+            {t("msg.home")}
           </Link>
           <Link to="/messages" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">
-            Messages
+            {t("msg.messages")}
           </Link>
           <Link to="/my-lessons" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            My lessons
+            {t("msg.myLessons")}
           </Link>
           <Link to="/for-business" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            For business
+            {t("msg.forBusiness")}
           </Link>
         </div>
       </div>
@@ -104,7 +106,7 @@ export default function Messages() {
           {/* Contact list */}
           <div className="flex-1 overflow-y-auto">
             {contacts.length === 0 && (
-              <p className="text-sm text-muted-foreground p-4">No conversations yet</p>
+              <p className="text-sm text-muted-foreground p-4">{t("msg.noConversations")}</p>
             )}
             {contacts.map((contact) => (
               <button
@@ -129,7 +131,7 @@ export default function Messages() {
                     </button>
                   </div>
                   <p className="text-xs text-muted-foreground truncate">{contact.lastMessage}</p>
-                  <p className="text-xs text-primary mt-0.5">Continue learning with {contact.name.split(" ")[0]}.</p>
+                  <p className="text-xs text-primary mt-0.5">{t("msg.continueWith").replace("{name}", contact.name.split(" ")[0])}</p>
                 </div>
               </button>
             ))}
@@ -158,7 +160,7 @@ export default function Messages() {
                   >
                     <Info className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
                     <p className="text-sm text-muted-foreground flex-1">
-                      To add a reaction to a message, hover your cursor over it and click on the three dots icon
+                      {t("msg.tipReaction")}
                     </p>
                     <button onClick={() => setShowTip(false)} className="text-muted-foreground hover:text-foreground shrink-0">
                       <X className="h-4 w-4" />
@@ -167,7 +169,7 @@ export default function Messages() {
                 )}
                 {/* Empty chat state */}
                 <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
-                  Start a conversation with {selectedContact.name.split(" ")[0]}
+                  {t("msg.startConversation").replace("{name}", selectedContact.name.split(" ")[0])}
                 </div>
               </div>
 
@@ -177,7 +179,7 @@ export default function Messages() {
                   <input
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Your message"
+                    placeholder={t("msg.yourMessage")}
                     className="w-full bg-transparent outline-none text-sm mb-2"
                   />
                   <div className="flex items-center justify-between">
@@ -198,7 +200,7 @@ export default function Messages() {
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-muted-foreground">
-              Select a tutor to start a conversation
+              {t("msg.selectTutor")}
             </div>
           )}
         </div>
@@ -206,7 +208,7 @@ export default function Messages() {
         {/* Right: Details sidebar */}
         {selectedContact && showDetails && (
           <div className="w-72 border-l bg-card hidden lg:flex flex-col items-center py-6 px-4 shrink-0">
-            <p className="text-sm font-medium text-muted-foreground mb-4 self-start">Details</p>
+            <p className="text-sm font-medium text-muted-foreground mb-4 self-start">{t("msg.details")}</p>
             <div className="h-32 w-32 rounded-lg bg-muted overflow-hidden flex items-center justify-center mb-4">
               {selectedContact.avatar_url ? (
                 <img src={selectedContact.avatar_url} alt={selectedContact.name} className="h-full w-full object-cover" />
@@ -224,12 +226,12 @@ export default function Messages() {
             </div>
             <Button className="w-full hero-gradient text-primary-foreground border-0 mb-2">
               <Clock className="h-4 w-4 mr-2" />
-              Subscribe
+              {t("msg.subscribe")}
             </Button>
             <Button variant="outline" className="w-full" asChild>
               <Link to="/classroom">
                 <Monitor className="h-4 w-4 mr-2" />
-                Enter classroom
+                {t("msg.enterClassroom")}
               </Link>
             </Button>
           </div>
