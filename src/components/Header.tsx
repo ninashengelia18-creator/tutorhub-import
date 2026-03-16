@@ -128,11 +128,6 @@ export function Header() {
             </AnimatePresence>
           </div>
 
-          <SubscribePlansDialog
-            buttonVariant="outline"
-            buttonSize="sm"
-            buttonClassName="rounded-full border-primary/35 bg-primary/10 px-4 text-primary hover:bg-primary hover:text-primary-foreground"
-          />
 
           {user ? (
             <>
