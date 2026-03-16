@@ -26,6 +26,7 @@ export default function TutorSchedule() {
   const { user } = useAuth();
   const { t } = useLanguage();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
+  const [allBookings, setAllBookings] = useState<TutorBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [displayName, setDisplayName] = useState<string | null>(null);
 
