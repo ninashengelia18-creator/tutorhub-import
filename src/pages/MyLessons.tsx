@@ -214,8 +214,9 @@ export default function MyLessons() {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr + "T00:00:00");
     const todayStr2 = new Date().toISOString().split("T")[0];
-    const prefix = dateStr === todayStr2 ? "Today, " : "";
-    return prefix + date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const locale = lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US";
+    const prefix = dateStr === todayStr2 ? t("myLessons.today") + ", " : "";
+    return prefix + date.toLocaleDateString(locale, { month: "short", day: "numeric" });
   };
 
   const formatTime = (t: string) => t.slice(0, 5);
