@@ -20,6 +20,7 @@ export type Database = {
           currency: string
           duration_minutes: number
           end_time: string
+          google_meet_link: string | null
           id: string
           is_trial: boolean
           lesson_date: string
@@ -27,7 +28,10 @@ export type Database = {
           price_amount: number
           start_time: string
           status: string
+          student_email: string | null
           student_id: string
+          student_message: string | null
+          student_name: string | null
           subject: string
           tutor_avatar_url: string | null
           tutor_name: string
@@ -38,6 +42,7 @@ export type Database = {
           currency?: string
           duration_minutes?: number
           end_time: string
+          google_meet_link?: string | null
           id?: string
           is_trial?: boolean
           lesson_date: string
@@ -45,7 +50,10 @@ export type Database = {
           price_amount: number
           start_time: string
           status?: string
+          student_email?: string | null
           student_id: string
+          student_message?: string | null
+          student_name?: string | null
           subject: string
           tutor_avatar_url?: string | null
           tutor_name: string
@@ -56,6 +64,7 @@ export type Database = {
           currency?: string
           duration_minutes?: number
           end_time?: string
+          google_meet_link?: string | null
           id?: string
           is_trial?: boolean
           lesson_date?: string
@@ -63,7 +72,10 @@ export type Database = {
           price_amount?: number
           start_time?: string
           status?: string
+          student_email?: string | null
           student_id?: string
+          student_message?: string | null
+          student_name?: string | null
           subject?: string
           tutor_avatar_url?: string | null
           tutor_name?: string
