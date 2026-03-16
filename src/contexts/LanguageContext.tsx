@@ -613,6 +613,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "Access Denied",
     "admin.adminOnly": "This page is only accessible to administrators.",
     "nav.admin": "Admin",
+    "admin.bookingsTab": "Bookings",
+    "admin.tutorAppsTab": "Tutor Applications",
+    "admin.totalApps": "Total Applications",
+    "admin.pendingApps": "Pending Review",
+    "admin.approvedApps": "Approved",
+    "admin.searchTutors": "Search by name, email, or subject...",
+    "admin.approveTutor": "Approve",
+    "admin.rejectTutor": "Reject",
+    "admin.tutorApproved": "Tutor approved!",
+    "admin.tutorRejected": "Tutor rejected.",
+    "admin.noApps": "No tutor applications yet",
     "nav.tutorSchedule": "My Schedule",
 
     // Tutor Schedule
