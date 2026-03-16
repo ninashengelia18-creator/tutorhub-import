@@ -638,6 +638,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.error": "შეცდომა",
     "profile.settings.imageOnly": "გთხოვთ აირჩიოთ სურათის ფაილი.",
     "profile.settings.fileTooLarge": "ფაილი უნდა იყოს 2 მბ-ზე ნაკლები.",
+    "profile.settings.hourlyRate": "საათობრივი ტარიფი (₾)",
+    "profile.settings.hourlyRatePlaceholder": "მაგ. 25",
+    "profile.settings.hourlyRateHint": "დააყენეთ თქვენი ფასი საათში ქართულ ლარში (₾). სტუდენტებისთვის ხილული იქნება.",
 
     // Hero
     "hero.badge": "500+ სტუდენტი უკვე სწავლობს",
