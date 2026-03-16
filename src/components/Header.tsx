@@ -51,6 +51,12 @@ export function Header() {
     });
   }, [user]);
 
+  const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/tutor-schedule"].includes(location.pathname);
+
+  if (isPortalHeaderRoute) {
+    return <PortalHeader />;
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container flex h-18 items-center justify-between py-2">
