@@ -43,7 +43,16 @@ const navLinks = [
   { labelKey: "nav.faq", href: "/faq" },
 ] as const;
 
-export function Header() {
+function initialsFromValue(value: string) {
+  return value
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2) || "U";
+}
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
