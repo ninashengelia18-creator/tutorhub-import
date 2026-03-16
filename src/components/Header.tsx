@@ -115,6 +115,12 @@ export function Header() {
           {user ? (
             <>
               <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
+                <Link to="/lesson-planner">
+                  <BookOpen className="h-4 w-4 mr-1" />
+                  {t("nav.lessonPlanner")}
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
                 <Link to="/dashboard">
                   <LayoutDashboard className="h-4 w-4 mr-1" />
                   {t("auth.dashboard")}
