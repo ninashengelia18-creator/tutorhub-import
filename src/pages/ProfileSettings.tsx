@@ -45,6 +45,7 @@ export default function ProfileSettings() {
     if (data) {
       setDisplayName(data.display_name || "");
       setAvatarUrl(data.avatar_url);
+      setHourlyRate(data.hourly_rate != null ? String(data.hourly_rate) : "");
     }
     setInitialLoading(false);
   };
