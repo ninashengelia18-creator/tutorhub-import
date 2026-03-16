@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { localizeSubjectLabel } from "@/lib/localization";
 
 interface Booking {
   id: string;

@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { formatLocalizedDate, localizeSubjectLabel } from "@/lib/localization";
 
 const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
 
