@@ -355,7 +355,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "msg.deleteFailed": "Unable to delete conversation",
     "msg.file": "Attachment",
     "msg.emptyComposer": "Write a message or attach a file.",
-    "msg.markedRead": "Marked as read"
+    "msg.markedRead": "Marked as read",
 
     // For Business
     "biz.title": "LearnEazy for Business",
