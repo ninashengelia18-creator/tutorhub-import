@@ -53,6 +53,7 @@ export function Header() {
 
   const isPortalHeaderRoute = user && ["/dashboard", "/messages", "/my-lessons", "/profile", "/saved-tutors", "/tutor-settings", "/tutor-dashboard", "/tutor-messages", "/tutor-schedule", "/lesson-planner"].includes(location.pathname);
   const profilePath = isTutor ? "/tutor-settings" : "/profile";
+  const visibleNavLinks = user && !isTutor ? navLinks.filter((link) => !["/for-business", "/become-tutor"].includes(link.href)) : navLinks;
 
   if (isPortalHeaderRoute) {
     return <PortalHeader />;
