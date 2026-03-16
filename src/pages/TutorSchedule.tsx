@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock } from "lucide-react";
+import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TutorBooking {
@@ -18,12 +18,15 @@ interface TutorBooking {
   duration_minutes: number;
   status: string;
   google_meet_link: string | null;
+  price_amount: number;
+  currency: string;
 }
 
 export default function TutorSchedule() {
   const { user } = useAuth();
   const { t } = useLanguage();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
+  const [allBookings, setAllBookings] = useState<TutorBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [displayName, setDisplayName] = useState<string | null>(null);
 
@@ -44,15 +47,28 @@ export default function TutorSchedule() {
 
   async function fetchBookings(tutorName: string) {
     const today = new Date().toISOString().split("T")[0];
-    const { data } = await supabase
-      .from("bookings")
-      .select("id, student_name, subject, lesson_date, start_time, end_time, duration_minutes, status, google_meet_link")
-      .eq("tutor_name", tutorName)
-      .in("status", ["confirmed", "completed"])
-      .gte("lesson_date", today)
-      .order("lesson_date", { ascending: true })
-      .order("start_time", { ascending: true });
-    setBookings((data as TutorBooking[]) || []);
+    const selectFields = "id, student_name, subject, lesson_date, start_time, end_time, duration_minutes, status, google_meet_link, price_amount, currency";
+
+    // Fetch upcoming + all confirmed/completed in parallel
+    const [upcomingRes, allRes] = await Promise.all([
+      supabase
+        .from("bookings")
+        .select(selectFields)
+        .eq("tutor_name", tutorName)
+        .in("status", ["confirmed", "completed"])
+        .gte("lesson_date", today)
+        .order("lesson_date", { ascending: true })
+        .order("start_time", { ascending: true }),
+      supabase
+        .from("bookings")
+        .select(selectFields)
+        .eq("tutor_name", tutorName)
+        .in("status", ["confirmed", "completed"])
+        .order("lesson_date", { ascending: false }),
+    ]);
+
+    setBookings((upcomingRes.data as TutorBooking[]) || []);
+    setAllBookings((allRes.data as TutorBooking[]) || []);
     setLoading(false);
   }
 
@@ -94,7 +110,7 @@ export default function TutorSchedule() {
           <p className="text-muted-foreground mb-8">{t("tutorSchedule.subtitle")}</p>
 
           {/* Stats row */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div className="rounded-xl border bg-card p-4">
               <p className="text-2xl font-bold text-foreground">{bookings.length}</p>
               <p className="text-xs text-muted-foreground">{t("tutorSchedule.upcomingCount")}</p>
@@ -103,11 +119,20 @@ export default function TutorSchedule() {
               <p className="text-2xl font-bold text-primary">{Object.keys(grouped).length}</p>
               <p className="text-xs text-muted-foreground">{t("tutorSchedule.daysScheduled")}</p>
             </div>
-            <div className="rounded-xl border bg-card p-4 hidden md:block">
-              <p className="text-2xl font-bold text-green-600">
-                {bookings.reduce((sum, b) => sum + b.duration_minutes, 0)} min
+            <div className="rounded-xl border bg-card p-4">
+              <div className="flex items-center gap-1.5">
+                <Wallet className="h-5 w-5 text-primary" />
+                <p className="text-2xl font-bold text-foreground">
+                  ₾{allBookings.filter(b => b.status === "completed").reduce((s, b) => s + b.price_amount, 0).toFixed(0)}
+                </p>
+              </div>
+              <p className="text-xs text-muted-foreground">{t("tutorSchedule.earnedTotal")}</p>
+            </div>
+            <div className="rounded-xl border bg-card p-4">
+              <p className="text-2xl font-bold text-foreground">
+                ₾{bookings.reduce((s, b) => s + b.price_amount, 0).toFixed(0)}
               </p>
-              <p className="text-xs text-muted-foreground">{t("tutorSchedule.totalTime")}</p>
+              <p className="text-xs text-muted-foreground">{t("tutorSchedule.upcomingRevenue")}</p>
             </div>
           </div>
 
@@ -142,7 +167,7 @@ export default function TutorSchedule() {
                               {booking.student_name || t("tutorSchedule.unknownStudent")}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                              {booking.subject} · {booking.duration_minutes} min
+                              {booking.subject} · {booking.duration_minutes} min · <span className="font-medium text-foreground">{booking.currency}{booking.price_amount.toFixed(2)}</span>
                             </p>
                           </div>
                         </div>
