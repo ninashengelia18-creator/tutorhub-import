@@ -151,26 +151,27 @@ export default function FAQ() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl hero-gradient md:h-20 md:w-20">
-            <HelpCircle className="h-9 w-9 text-primary-foreground md:h-12 md:w-12" />
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-[1.75rem] hero-gradient shadow-lg md:h-24 md:w-24">
+            <HelpCircle className="h-10 w-10 text-primary-foreground md:h-12 md:w-12" strokeWidth={2.5} />
           </div>
           <h1 className="mb-2 flex justify-center" aria-label="FAQ">
-            <HelpCircle className="h-14 w-14 text-foreground md:h-20 md:w-20" aria-hidden="true" />
+            <HelpCircle className="h-16 w-16 text-primary md:h-20 md:w-20" aria-hidden="true" strokeWidth={2.5} />
             <span className="sr-only">FAQ</span>
           </h1>
-          <p className="text-muted-foreground mb-4">LearnEazy — Frequently Asked Questions</p>
+          <p className="mb-4 text-muted-foreground">LearnEazy — Frequently Asked Questions</p>
 
-          {/* Language switcher */}
-          <div className="inline-flex items-center gap-1 bg-muted rounded-lg p-1">
+          <div className="inline-flex items-center gap-1 rounded-2xl border border-border bg-muted p-1.5">
             {(Object.keys(langLabels) as Language[]).map((l) => (
               <button
                 key={l}
                 onClick={() => setLang(l)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  lang === l ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
+                  lang === l
+                    ? "hero-gradient text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <Globe className="h-3.5 w-3.5" />
+                <Globe className={`h-4 w-4 ${lang === l ? "text-primary-foreground" : "text-primary"}`} strokeWidth={2.25} />
                 {langLabels[l]}
               </button>
             ))}
