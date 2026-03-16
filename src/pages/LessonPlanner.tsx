@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { getLocaleForLanguage } from "@/lib/localization";
 import { Loader2, Download, Copy, Save, RefreshCw, Trash2, Eye, BookOpen, Sparkles } from "lucide-react";
 import { Navigate } from "react-router-dom";
 import html2canvas from "html2canvas";
@@ -41,6 +42,7 @@ const labels: Record<string, Record<string, string>> = {
   en: {
     pageTitle: "AI Lesson Plan Generator",
     pageDesc: "Generate professional, detailed lesson plans in seconds using AI.",
+    generatorTab: "Generator",
     subject: "Subject",
     studentLevel: "Student Age / Level",
     duration: "Lesson Duration",
@@ -50,6 +52,10 @@ const labels: Record<string, Record<string, string>> = {
     weakPoints: "Student Weak Points",
     weakPointsPlaceholder: "Describe areas where students struggle...",
     planLanguage: "Language of Lesson Plan",
+    subjectPlaceholder: "Select subject",
+    studentLevelPlaceholder: "Select age or level",
+    durationPlaceholder: "Select duration",
+    numStudentsPlaceholder: "Select student count",
     generate: "Generate Lesson Plan",
     generating: "Generating...",
     objectives: "Learning Objectives",
@@ -66,7 +72,10 @@ const labels: Record<string, Record<string, string>> = {
     savePlan: "Save to My Plans",
     regenerate: "Regenerate",
     savedPlans: "My Saved Plans",
+    backToSavedPlans: "Back to saved plans",
     noSavedPlans: "No saved plans yet. Generate and save your first lesson plan!",
+    fillRequired: "Please fill all required fields.",
+    generationFailed: "Generation failed. Please try again.",
     copied: "Copied to clipboard!",
     saved: "Plan saved successfully!",
     deleted: "Plan deleted!",
@@ -78,6 +87,7 @@ const labels: Record<string, Record<string, string>> = {
   ka: {
     pageTitle: "AI გაკვეთილის გეგმის გენერატორი",
     pageDesc: "შექმენით პროფესიონალური, დეტალური გაკვეთილის გეგმები წამებში AI-ის დახმარებით.",
+    generatorTab: "გენერატორი",
     subject: "საგანი",
     studentLevel: "მოსწავლის ასაკი / დონე",
     duration: "გაკვეთილის ხანგრძლივობა",
@@ -87,6 +97,10 @@ const labels: Record<string, Record<string, string>> = {
     weakPoints: "მოსწავლის სუსტი მხარეები",
     weakPointsPlaceholder: "აღწერეთ სფეროები, სადაც მოსწავლეს უჭირს...",
     planLanguage: "გეგმის ენა",
+    subjectPlaceholder: "აირჩიეთ საგანი",
+    studentLevelPlaceholder: "აირჩიეთ ასაკი ან დონე",
+    durationPlaceholder: "აირჩიეთ ხანგრძლივობა",
+    numStudentsPlaceholder: "აირჩიეთ მოსწავლეთა რაოდენობა",
     generate: "გეგმის გენერაცია",
     generating: "გენერაცია...",
     objectives: "სწავლის მიზნები",
@@ -103,7 +117,10 @@ const labels: Record<string, Record<string, string>> = {
     savePlan: "შენახვა",
     regenerate: "ხელახლა გენერაცია",
     savedPlans: "ჩემი შენახული გეგმები",
+    backToSavedPlans: "უკან შენახულ გეგმებზე",
     noSavedPlans: "ჯერ არ გაქვთ შენახული გეგმები. შექმენით და შეინახეთ პირველი გეგმა!",
+    fillRequired: "გთხოვთ შეავსოთ ყველა სავალდებულო ველი.",
+    generationFailed: "გეგმის გენერაცია ვერ მოხერხდა. სცადეთ თავიდან.",
     copied: "კოპირებულია!",
     saved: "გეგმა შენახულია!",
     deleted: "გეგმა წაშლილია!",
@@ -115,6 +132,7 @@ const labels: Record<string, Record<string, string>> = {
   ru: {
     pageTitle: "AI Генератор Плана Урока",
     pageDesc: "Создавайте профессиональные, детальные планы уроков за секунды с помощью AI.",
+    generatorTab: "Генератор",
     subject: "Предмет",
     studentLevel: "Возраст / Уровень ученика",
     duration: "Длительность урока",
@@ -124,6 +142,10 @@ const labels: Record<string, Record<string, string>> = {
     weakPoints: "Слабые стороны ученика",
     weakPointsPlaceholder: "Опишите области, в которых ученик испытывает трудности...",
     planLanguage: "Язык плана урока",
+    subjectPlaceholder: "Выберите предмет",
+    studentLevelPlaceholder: "Выберите возраст или уровень",
+    durationPlaceholder: "Выберите длительность",
+    numStudentsPlaceholder: "Выберите количество учеников",
     generate: "Сгенерировать план",
     generating: "Генерация...",
     objectives: "Учебные цели",
@@ -140,7 +162,10 @@ const labels: Record<string, Record<string, string>> = {
     savePlan: "Сохранить",
     regenerate: "Перегенерировать",
     savedPlans: "Мои сохранённые планы",
+    backToSavedPlans: "Назад к сохранённым планам",
     noSavedPlans: "Сохранённых планов пока нет. Создайте и сохраните свой первый план!",
+    fillRequired: "Пожалуйста, заполните все обязательные поля.",
+    generationFailed: "Не удалось сгенерировать план. Попробуйте ещё раз.",
     copied: "Скопировано!",
     saved: "План сохранён!",
     deleted: "План удалён!",
@@ -151,13 +176,27 @@ const labels: Record<string, Record<string, string>> = {
   },
 };
 
-const subjects = [
-  "Math", "English", "Science", "History", "Georgian", "Russian",
-  "SAT Prep", "IELTS", "National Exam Prep", "Other",
-];
-const levels = ["6-8", "9-11", "12-14", "15-17", "University", "Adult/Professional"];
-const durations = ["30 min", "45 min", "60 min", "90 min"];
-const studentCounts = ["1", "2-5", "6-10", "10+"];
+const optionsByLanguage: Record<string, { subjects: string[]; levels: string[]; durations: string[]; studentCounts: string[] }> = {
+  en: {
+    subjects: ["Math", "English", "Science", "History", "Georgian", "Russian", "SAT Prep", "IELTS", "National Exam Prep", "Other"],
+    levels: ["6-8", "9-11", "12-14", "15-17", "University", "Adult/Professional"],
+    durations: ["30 min", "45 min", "60 min", "90 min"],
+    studentCounts: ["1", "2-5", "6-10", "10+"],
+  },
+  ka: {
+    subjects: ["მათემატიკა", "ინგლისური", "მეცნიერება", "ისტორია", "ქართული", "რუსული", "SAT მოსამზადებელი", "IELTS", "ეროვნული გამოცდებისთვის მომზადება", "სხვა"],
+    levels: ["6-8", "9-11", "12-14", "15-17", "უნივერსიტეტი", "ზრდასრული / პროფესიული"],
+    durations: ["30 წთ", "45 წთ", "60 წთ", "90 წთ"],
+    studentCounts: ["1", "2-5", "6-10", "10+"],
+  },
+  ru: {
+    subjects: ["Математика", "Английский", "Наука", "История", "Грузинский", "Русский", "Подготовка к SAT", "IELTS", "Подготовка к национальным экзаменам", "Другое"],
+    levels: ["6-8", "9-11", "12-14", "15-17", "Университет", "Взрослый / Профессиональный"],
+    durations: ["30 мин", "45 мин", "60 мин", "90 мин"],
+    studentCounts: ["1", "2-5", "6-10", "10+"],
+  },
+};
+
 const planLanguages = [
   { value: "ka", label: "ქართული" },
   { value: "en", label: "English" },
@@ -171,6 +210,7 @@ export default function LessonPlanner() {
   const planRef = useRef<HTMLDivElement>(null);
 
   const l = labels[lang] || labels.en;
+  const options = optionsByLanguage[lang] || optionsByLanguage.en;
 
   const [subject, setSubject] = useState("");
   const [studentLevel, setStudentLevel] = useState("");
@@ -199,7 +239,7 @@ export default function LessonPlanner() {
 
   const handleGenerate = async () => {
     if (!subject || !studentLevel || !duration || !numStudents) {
-      toast({ title: "⚠️", description: "Please fill all required fields.", variant: "destructive" });
+      toast({ title: "⚠️", description: l.fillRequired, variant: "destructive" });
       return;
     }
     setGenerating(true);
@@ -213,7 +253,7 @@ export default function LessonPlanner() {
       if (data?.error) throw new Error(data.error);
       setPlan(data.plan);
     } catch (e: any) {
-      toast({ title: "Error", description: e.message || "Generation failed", variant: "destructive" });
+      toast({ title: "⚠️", description: e.message || l.generationFailed, variant: "destructive" });
     } finally {
       setGenerating(false);
     }
@@ -312,7 +352,7 @@ export default function LessonPlanner() {
               onClick={() => { setTab("generator"); setViewingPlan(null); }}
               className="gap-2"
             >
-              <Sparkles className="h-4 w-4" /> {l.pageTitle.split(" ")[0] === "AI" ? "Generator" : l.generate}
+              <Sparkles className="h-4 w-4" /> {l.generatorTab}
             </Button>
             <Button
               variant={tab === "saved" ? "default" : "secondary"}
@@ -335,29 +375,29 @@ export default function LessonPlanner() {
                     <div>
                       <label className="mb-1 block text-sm text-muted-foreground">{l.subject} *</label>
                       <Select value={subject} onValueChange={setSubject}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>{subjects.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                        <SelectTrigger><SelectValue placeholder={l.subjectPlaceholder} /></SelectTrigger>
+                        <SelectContent>{options.subjects.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
                     <div>
                       <label className="mb-1 block text-sm text-muted-foreground">{l.studentLevel} *</label>
                       <Select value={studentLevel} onValueChange={setStudentLevel}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>{levels.map((lv) => <SelectItem key={lv} value={lv}>{lv}</SelectItem>)}</SelectContent>
+                        <SelectTrigger><SelectValue placeholder={l.studentLevelPlaceholder} /></SelectTrigger>
+                        <SelectContent>{options.levels.map((lv) => <SelectItem key={lv} value={lv}>{lv}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
                     <div>
                       <label className="mb-1 block text-sm text-muted-foreground">{l.duration} *</label>
                       <Select value={duration} onValueChange={setDuration}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>{durations.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
+                        <SelectTrigger><SelectValue placeholder={l.durationPlaceholder} /></SelectTrigger>
+                        <SelectContent>{options.durations.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
                     <div>
                       <label className="mb-1 block text-sm text-muted-foreground">{l.numStudents} *</label>
                       <Select value={numStudents} onValueChange={setNumStudents}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>{studentCounts.map((n) => <SelectItem key={n} value={n}>{n}</SelectItem>)}</SelectContent>
+                        <SelectTrigger><SelectValue placeholder={l.numStudentsPlaceholder} /></SelectTrigger>
+                        <SelectContent>{options.studentCounts.map((n) => <SelectItem key={n} value={n}>{n}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
                   </div>
@@ -533,7 +573,7 @@ export default function LessonPlanner() {
               {viewingPlan ? (
                 <div className="mx-auto max-w-3xl">
                   <Button variant="ghost" onClick={() => setViewingPlan(null)} className="mb-4">
-                    ← {l.savedPlans}
+                    ← {l.backToSavedPlans}
                   </Button>
                   <div className="mb-4 flex flex-wrap gap-2">
                     <Button onClick={handleCopy} variant="secondary" size="sm" className="gap-1">
