@@ -38,7 +38,7 @@ export default function ProfileSettings() {
     if (!user) return;
     const { data } = await supabase
       .from("profiles")
-      .select("display_name, avatar_url")
+      .select("display_name, avatar_url, hourly_rate")
       .eq("id", user.id)
       .single();
 
