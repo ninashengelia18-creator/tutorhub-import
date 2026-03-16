@@ -38,8 +38,9 @@ export default function Booking() {
   const { toast } = useToast();
 
   const tutor = tutorData[id || "1"] || tutorData["1"];
+  const localizedTutorSubject = localizeSubjectLabel(tutor.subject, t);
 
-  const [subject, setSubject] = useState(tutor.subject);
+  const [subject, setSubject] = useState(localizedTutorSubject);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [time, setTime] = useState("");
   const [duration, setDuration] = useState(60);
