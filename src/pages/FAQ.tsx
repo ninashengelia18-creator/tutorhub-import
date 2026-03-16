@@ -11,7 +11,7 @@ import {
 
 type Language = "en" | "ka" | "ru";
 
-const langLabels: Record<Language, string> = { ka: "ქართული", en: "English", ru: "Русский" };
+const langLabels: Record<Language, string> = { en: "English", ru: "Русский", ka: "ქართული" };
 
 const faqData: Record<Language, { category: string; questions: { q: string; a: string }[] }[]> = {
   en: [
@@ -159,7 +159,7 @@ export default function FAQ() {
           </h1>
 
           <div className="inline-flex items-center gap-1 rounded-2xl border border-border bg-muted p-1.5">
-            {(Object.keys(langLabels) as Language[]).map((l) => (
+            {(["en", "ru", "ka"] as Language[]).map((l) => (
               <button
                 key={l}
                 onClick={() => setLang(l)}

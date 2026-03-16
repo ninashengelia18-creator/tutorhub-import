@@ -33,7 +33,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const langLabels: Record<Language, string> = { ka: "ქარ", en: "EN", ru: "РУ" };
+const langLabels: Record<Language, string> = { en: "EN", ru: "РУ", ka: "ქარ" };
 
 const navLinks = [
   { labelKey: "nav.home", href: "/" },
@@ -193,7 +193,7 @@ export function Header() {
                       transition={{ duration: 0.15 }}
                       className="absolute right-0 z-50 mt-1 w-36 overflow-hidden rounded-2xl border bg-card shadow-lg"
                     >
-                      {(Object.keys(langLabels) as Language[]).map((l) => (
+                      {(["en", "ru", "ka"] as Language[]).map((l) => (
                         <button
                           key={l}
                           onClick={() => {
@@ -204,7 +204,7 @@ export function Header() {
                             lang === l ? "bg-primary/20 text-primary font-semibold" : "text-foreground hover:bg-secondary"
                           }`}
                         >
-                          {l === "en" ? "English" : l === "ka" ? "ქართული" : "Русский"}
+                          {l === "en" ? "English" : l === "ru" ? "Русский" : "ქართული"}
                         </button>
                       ))}
                     </motion.div>
@@ -257,7 +257,7 @@ export function Header() {
                       transition={{ duration: 0.15 }}
                       className="absolute right-0 mt-1 w-28 rounded-lg border bg-card shadow-lg overflow-hidden z-50"
                     >
-                      {(Object.keys(langLabels) as Language[]).map((l) => (
+                      {(["en", "ru", "ka"] as Language[]).map((l) => (
                         <button
                           key={l}
                           onClick={() => { setLang(l); setLangOpen(false); }}
@@ -299,7 +299,7 @@ export function Header() {
             <div className="container py-4 flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2 self-start">
                 <div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
-                  {(Object.keys(langLabels) as Language[]).map((l) => (
+                  {(["en", "ru", "ka"] as Language[]).map((l) => (
                     <button
                       key={l}
                       onClick={() => setLang(l)}
