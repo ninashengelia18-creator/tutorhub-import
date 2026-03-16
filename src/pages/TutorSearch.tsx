@@ -39,8 +39,8 @@ const subjectEntries: { value: string; labelKey: string }[] = [
   { value: "Programming", labelKey: "home.subj.programming" },
   { value: "Art", labelKey: "home.subj.art" },
 ];
-const ratings = ["Any", "4.5+", "4.7+", "4.9+"];
-const availabilityOptions = ["Any", "Morning", "Afternoon", "Evening"];
+const ratingKeys = ["search.any", "4.5+", "4.7+", "4.9+"];
+const availabilityKeys = ["search.any", "search.morning", "search.afternoon", "search.evening"];
 
 export default function TutorSearch() {
   const [searchParams] = useSearchParams();
