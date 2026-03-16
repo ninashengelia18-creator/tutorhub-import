@@ -286,14 +286,6 @@ export function PortalHeader() {
       {mobileMenuOpen ? (
         <div className="border-b border-border/60 bg-background sm:hidden">
           <div className="container flex flex-col gap-2 py-4">
-            <Link to="/search" className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
-              {t("nav.findTutors")}
-            </Link>
-            {!isTutor ? (
-              <Link to="/saved-tutors" className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
-                Saved tutors
-              </Link>
-            ) : null}
             <Link to={profilePath} className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
               {t("nav.profile")}
             </Link>
