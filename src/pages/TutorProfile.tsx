@@ -7,165 +7,174 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
-const tutorData: Record<string, any> = {
+// Translation key-based tutor data
+const tutorData: Record<string, {
+  name: string;
+  subjectKey: string;
+  originKey: string;
+  rating: number;
+  reviewCount: number;
+  price: number;
+  lessonLength: string;
+  photo: string;
+  languages: { nameKey: string; levelKey: string }[];
+  headlineKey: string;
+  highlightKeys: string[];
+  superTutor: boolean;
+  superTutorDescKey: string;
+  teachesKey: string;
+  bioKey: string;
+  experience: string;
+  students: number;
+  lessons: number;
+  lessonRating: { overall: number; reassurance: number; clarity: number; progress: number; preparation: number };
+  ratingReviewCount: number;
+  resume: { period: string; orgKey: string; roleKey: string }[];
+  specialtyKeys: string[];
+  responsivenessKey: string;
+}> = {
   "1": {
     name: "Nino B.",
-    subject: "Mathematics",
-    origin: "Georgia",
+    subjectKey: "td.math",
+    originKey: "td.georgia",
     rating: 4.9,
     reviewCount: 127,
     price: 25,
     lessonLength: "50-min",
-    avatar: "NB",
     photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face",
     languages: [
-      { name: "Georgian", level: "Native" },
-      { name: "English", level: "Upper-Intermediate B2" },
+      { nameKey: "td.lang.georgian", levelKey: "td.level.native" },
+      { nameKey: "td.lang.english", levelKey: "td.level.upperIntB2" },
     ],
-    headline: "Expert Mathematics tutor with 10+ years helping students master algebra, calculus, and exam prep. Personalized approach for every learner!",
-    highlights: ["Patient", "Structured", "Goal-Focused"],
+    headlineKey: "td.nino.headline",
+    highlightKeys: ["td.hl.patient", "td.hl.structured", "td.hl.goalFocused"],
     superTutor: true,
-    superTutorDesc: "Nino B. is a highly rated and experienced tutor.",
-    teaches: "Mathematics lessons",
-    bio: `Hello! My name is Nino, and I'm a passionate mathematics teacher from Georgia.
-
-With over 10 years of experience teaching mathematics, I specialize in making complex concepts accessible and engaging. From algebra to calculus, I tailor each lesson to your learning style and goals.
-
-I have helped hundreds of students improve their grades, pass university entrance exams, and build genuine confidence in math. Whether you're a complete beginner or preparing for advanced exams, I'm here to guide you every step of the way.
-
-Together, we will explore the beauty of mathematics. I am dedicated to your growth and success, ensuring that each lesson is engaging and tailored to your needs. Let's embark on this learning journey together!`,
-    experience: "10+ years",
+    superTutorDescKey: "td.nino.superDesc",
+    teachesKey: "td.nino.teaches",
+    bioKey: "td.nino.bio",
+    experience: "10+",
     students: 340,
     lessons: 2800,
     lessonRating: { overall: 4.9, reassurance: 5.0, clarity: 4.9, progress: 4.8, preparation: 5.0 },
     ratingReviewCount: 42,
     resume: [
-      { period: "2014 — Present", org: "LearnEazy", role: "Senior Mathematics Tutor" },
-      { period: "2010 — 2014", org: "Tbilisi State University", role: "Teaching Assistant" },
+      { period: "2014 — Present", orgKey: "td.org.learneazy", roleKey: "td.role.seniorMathTutor" },
+      { period: "2010 — 2014", orgKey: "td.org.tsu", roleKey: "td.role.teachingAssistant" },
     ],
-    specialties: ["Algebra", "Calculus", "Exam Prep"],
-    responsiveness: "Usually responds in less than an hour",
+    specialtyKeys: ["td.spec.algebra", "td.spec.calculus", "td.spec.examPrep"],
+    responsivenessKey: "td.responds1hr",
   },
   "2": {
     name: "Giorgi K.",
-    subject: "Physics",
-    origin: "Georgia",
+    subjectKey: "td.physics",
+    originKey: "td.georgia",
     rating: 4.8,
     reviewCount: 98,
     price: 30,
     lessonLength: "50-min",
-    avatar: "GK",
     photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face",
     languages: [
-      { name: "Georgian", level: "Native" },
-      { name: "Russian", level: "Native" },
+      { nameKey: "td.lang.georgian", levelKey: "td.level.native" },
+      { nameKey: "td.lang.russian", levelKey: "td.level.native" },
     ],
-    headline: "PhD in Physics — making physics intuitive, not intimidating. Consistent grade improvements guaranteed!",
-    highlights: ["Encouraging", "Adaptable", "Clear"],
+    headlineKey: "td.giorgi.headline",
+    highlightKeys: ["td.hl.encouraging", "td.hl.adaptable", "td.hl.clear"],
     superTutor: true,
-    superTutorDesc: "Giorgi K. is a highly rated and experienced tutor.",
-    teaches: "Physics lessons",
-    bio: `PhD in Physics from Tbilisi State University. I believe physics should be intuitive, not intimidating. My students consistently improve their grades and develop a genuine curiosity for science.
-
-I use real-world examples and visual demonstrations to make abstract concepts concrete. Every lesson is tailored to your current level and goals.`,
-    experience: "8 years",
+    superTutorDescKey: "td.giorgi.superDesc",
+    teachesKey: "td.giorgi.teaches",
+    bioKey: "td.giorgi.bio",
+    experience: "8",
     students: 210,
     lessons: 1900,
     lessonRating: { overall: 4.8, reassurance: 4.9, clarity: 4.8, progress: 4.7, preparation: 4.9 },
     ratingReviewCount: 30,
     resume: [
-      { period: "2016 — Present", org: "Freelance", role: "Physics Tutor" },
-      { period: "2012 — 2016", org: "Tbilisi State University", role: "PhD Researcher" },
+      { period: "2016 — Present", orgKey: "td.org.freelance", roleKey: "td.role.physicsTutor" },
+      { period: "2012 — 2016", orgKey: "td.org.tsu", roleKey: "td.role.phdResearcher" },
     ],
-    specialties: ["Mechanics", "Thermodynamics", "Exam Prep"],
-    responsiveness: "Usually responds in less than an hour",
+    specialtyKeys: ["td.spec.mechanics", "td.spec.thermodynamics", "td.spec.examPrep"],
+    responsivenessKey: "td.responds1hr",
   },
   "3": {
     name: "Ana M.",
-    subject: "English",
-    origin: "Georgia",
+    subjectKey: "td.english",
+    originKey: "td.georgia",
     rating: 5.0,
     reviewCount: 215,
     price: 20,
     lessonLength: "50-min",
-    avatar: "AM",
     photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face",
     languages: [
-      { name: "English", level: "Native" },
-      { name: "Georgian", level: "Native" },
+      { nameKey: "td.lang.english", levelKey: "td.level.native" },
+      { nameKey: "td.lang.georgian", levelKey: "td.level.native" },
     ],
-    headline: "IELTS & TOEFL specialist with Cambridge CELTA certification. Achieve your target scores with structured preparation and real exam practice!",
-    highlights: ["Structured", "Patient", "Goal-Focused", "Encouraging"],
+    headlineKey: "td.ana.headline",
+    highlightKeys: ["td.hl.structured", "td.hl.patient", "td.hl.goalFocused", "td.hl.encouraging"],
     superTutor: true,
-    superTutorDesc: "Ana M. is a highly rated and experienced tutor.",
-    teaches: "English lessons",
-    bio: `IELTS & TOEFL specialist with a Cambridge CELTA certification. I help students achieve their target scores with structured preparation and real exam practice.
-
-With 12 years of experience, I've guided over 500 students to their language goals. My lessons are dynamic, practical, and always tailored to your needs.`,
-    experience: "12 years",
+    superTutorDescKey: "td.ana.superDesc",
+    teachesKey: "td.ana.teaches",
+    bioKey: "td.ana.bio",
+    experience: "12",
     students: 520,
     lessons: 4100,
     lessonRating: { overall: 5.0, reassurance: 5.0, clarity: 5.0, progress: 5.0, preparation: 5.0 },
     ratingReviewCount: 85,
     resume: [
-      { period: "2012 — Present", org: "LearnEazy", role: "Senior English Tutor" },
-      { period: "2010 — 2012", org: "British Council", role: "English Instructor" },
+      { period: "2012 — Present", orgKey: "td.org.learneazy", roleKey: "td.role.seniorEngTutor" },
+      { period: "2010 — 2012", orgKey: "td.org.britishCouncil", roleKey: "td.role.engInstructor" },
     ],
-    specialties: ["IELTS Prep", "TOEFL Prep", "Business English", "Conversational English"],
-    responsiveness: "Usually responds in less than an hour",
+    specialtyKeys: ["td.spec.ielts", "td.spec.toefl", "td.spec.businessEng", "td.spec.conversationalEng"],
+    responsivenessKey: "td.responds1hr",
   },
   "4": {
     name: "Luka T.",
-    subject: "Programming",
-    origin: "Georgia",
+    subjectKey: "td.programming",
+    originKey: "td.georgia",
     rating: 4.9,
     reviewCount: 164,
     price: 35,
     lessonLength: "50-min",
-    avatar: "LT",
     photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
     languages: [
-      { name: "English", level: "Upper-Intermediate B2" },
-      { name: "Georgian", level: "Native" },
+      { nameKey: "td.lang.english", levelKey: "td.level.upperIntB2" },
+      { nameKey: "td.lang.georgian", levelKey: "td.level.native" },
     ],
-    headline: "Full-stack developer from top tech companies. Learn Python, JavaScript, React, and data science with project-based lessons!",
-    highlights: ["Structured", "Adaptable", "Patient"],
+    headlineKey: "td.luka.headline",
+    highlightKeys: ["td.hl.structured", "td.hl.adaptable", "td.hl.patient"],
     superTutor: false,
-    superTutorDesc: "",
-    teaches: "Programming lessons",
-    bio: `Full-stack developer with experience at top tech companies. I teach Python, JavaScript, React, and data science. Project-based learning approach.
-
-I believe the best way to learn programming is by building real projects. Every lesson includes hands-on coding exercises.`,
-    experience: "6 years",
+    superTutorDescKey: "",
+    teachesKey: "td.luka.teaches",
+    bioKey: "td.luka.bio",
+    experience: "6",
     students: 280,
     lessons: 2200,
     lessonRating: { overall: 4.9, reassurance: 4.8, clarity: 4.9, progress: 4.9, preparation: 4.8 },
     ratingReviewCount: 55,
     resume: [
-      { period: "2020 — Present", org: "Freelance", role: "Programming Tutor" },
-      { period: "2018 — 2020", org: "TBC Bank", role: "Software Developer" },
+      { period: "2020 — Present", orgKey: "td.org.freelance", roleKey: "td.role.progTutor" },
+      { period: "2018 — 2020", orgKey: "td.org.tbcBank", roleKey: "td.role.softwareDev" },
     ],
-    specialties: ["Python", "JavaScript", "React", "Data Science"],
-    responsiveness: "Usually responds within 2 hours",
+    specialtyKeys: ["td.spec.python", "td.spec.javascript", "td.spec.react", "td.spec.dataScience"],
+    responsivenessKey: "td.responds2hr",
   },
 };
 
-const reviewsData = [
-  { name: "Sandro M.", lessonsCount: 39, date: "Jul 4, 2025", text: "Another great lesson! Thank you so much! The explanations are always clear and the pace is perfect.", rating: 5 },
-  { name: "Natia K.", lessonsCount: 25, date: "Aug 19, 2025", text: "An amazing teacher. Wonderful personality — always cheerful, supportive, and encouraging. Very kind and patient, and always makes sure to meet all my learning needs. I'm learning faster and getting better every day.", rating: 5, edited: true },
-  { name: "Alex T.", lessonsCount: 19, date: "Nov 6, 2025", text: "Extremely professional instructor. Lectures are very clear, the teaching materials are highly engaging, and the methods are flexibly adjusted according to students' individual situations. I have gained a great deal and strongly recommend this teacher.", rating: 5 },
-  { name: "Anonymous", lessonsCount: 16, date: "Jun 22, 2025", text: "Top Tutor. I highly recommend to everyone who wants to learn in a very structured way.", rating: 5, edited: true },
-  { name: "Mariam D.", lessonsCount: 9, date: "Jul 21, 2025", text: "Excellent teacher!", rating: 5 },
-  { name: "Tamta G.", lessonsCount: 7, date: "Feb 25, 2026", text: "Very good tutor. Explains everything clearly and corrects me when I'm wrong. Lessons are engaging and tailored to my needs. I've seen great progress thanks to the guidance ☺️", rating: 5 },
+const reviewKeys = [
+  { nameKey: "td.rev.sandro", lessonsCount: 39, date: "Jul 4, 2025", textKey: "td.rev.sandro.text", rating: 5 },
+  { nameKey: "td.rev.natia", lessonsCount: 25, date: "Aug 19, 2025", textKey: "td.rev.natia.text", rating: 5, edited: true },
+  { nameKey: "td.rev.alex", lessonsCount: 19, date: "Nov 6, 2025", textKey: "td.rev.alex.text", rating: 5 },
+  { nameKey: "td.rev.anonymous", lessonsCount: 16, date: "Jun 22, 2025", textKey: "td.rev.anonymous.text", rating: 5, edited: true },
+  { nameKey: "td.rev.mariam", lessonsCount: 9, date: "Jul 21, 2025", textKey: "td.rev.mariam.text", rating: 5 },
+  { nameKey: "td.rev.tamta", lessonsCount: 7, date: "Feb 25, 2026", textKey: "td.rev.tamta.text", rating: 5 },
 ];
 
 const similarTutors = [
-  { id: "2", name: "Giorgi K.", rating: 5.0, reviewCount: 98, headline: "PhD in Physics — making physics intuitive, not intimidating.", price: 30, photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" },
-  { id: "3", name: "Ana M.", rating: 5.0, reviewCount: 215, headline: "IELTS & TOEFL specialist with Cambridge CELTA. Achieve your target scores!", price: 20, photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" },
-  { id: "4", name: "Luka T.", rating: 4.9, reviewCount: 164, headline: "Full-stack developer. Learn Python, JavaScript, React with project-based lessons!", price: 35, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
+  { id: "2", name: "Giorgi K.", rating: 5.0, reviewCount: 98, headlineKey: "td.giorgi.headline", price: 30, photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" },
+  { id: "3", name: "Ana M.", rating: 5.0, reviewCount: 215, headlineKey: "td.ana.headline", price: 20, photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" },
+  { id: "4", name: "Luka T.", rating: 4.9, reviewCount: 164, headlineKey: "td.luka.headline", price: 35, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
 ];
 
-const days = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+const dayKeys = ["td.day.sat", "td.day.sun", "td.day.mon", "td.day.tue", "td.day.wed", "td.day.thu", "td.day.fri"];
 const dates = [14, 15, 16, 17, 18, 19, 20];
 const scheduleSlots: Record<number, string[]> = {
   14: ["18:30", "19:00", "19:30", "20:00", "20:30"],
@@ -189,7 +198,7 @@ export default function TutorProfile() {
         <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-6">
           <Link to="/search" className="hover:text-primary transition-colors">{t("tp.findTutors")}</Link>
           <ChevronRight className="h-3.5 w-3.5" />
-          <Link to="/search" className="hover:text-primary transition-colors">{tutor.subject} {t("tp.tutorsOnline")}</Link>
+          <Link to="/search" className="hover:text-primary transition-colors">{t(tutor.subjectKey)} {t("tp.tutorsOnline")}</Link>
           <ChevronRight className="h-3.5 w-3.5" />
           <span className="text-foreground font-medium">{tutor.name}</span>
         </nav>
@@ -204,9 +213,9 @@ export default function TutorProfile() {
                 <div className="flex-1 min-w-0">
                   <h1 className="text-2xl font-bold text-foreground">{tutor.name}</h1>
                   <p className="text-muted-foreground text-sm mt-0.5">
-                    {tutor.subject} {t("tp.tutorFrom")} <span className="mx-1">·</span> {t("tp.from")} {tutor.origin}
+                    {t(tutor.subjectKey)} {t("tp.tutorFrom")} <span className="mx-1">·</span> {t("tp.from")} {t(tutor.originKey)}
                   </p>
-                  <p className="text-sm text-foreground/80 mt-3 leading-relaxed">{tutor.headline}</p>
+                  <p className="text-sm text-foreground/80 mt-3 leading-relaxed">{t(tutor.headlineKey)}</p>
                 </div>
               </div>
             </motion.div>
@@ -216,8 +225,8 @@ export default function TutorProfile() {
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">{t("tp.highlights")}</h2>
               <p className="text-xs text-muted-foreground mb-3">{t("tp.basedOnData")}</p>
               <div className="flex flex-wrap gap-2 mb-3">
-                {tutor.highlights.map((h: string) => (
-                  <Badge key={h} variant="secondary" className="px-3 py-1.5 text-sm font-medium">{h}</Badge>
+                {tutor.highlightKeys.map((hk) => (
+                  <Badge key={hk} variant="secondary" className="px-3 py-1.5 text-sm font-medium">{t(hk)}</Badge>
                 ))}
               </div>
               {tutor.superTutor && (
@@ -225,7 +234,7 @@ export default function TutorProfile() {
                   <Shield className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-semibold text-foreground">{t("tp.superTutor")}</p>
-                    <p className="text-xs text-muted-foreground">{tutor.superTutorDesc} <Link to="#" className="text-primary hover:underline">{t("tp.learnMore")}</Link></p>
+                    <p className="text-xs text-muted-foreground">{t(tutor.superTutorDescKey)} <Link to="#" className="text-primary hover:underline">{t("tp.learnMore")}</Link></p>
                   </div>
                 </div>
               )}
@@ -234,14 +243,14 @@ export default function TutorProfile() {
             {/* Teaches */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="mb-8">
               <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2">{t("tp.teaches")}</h2>
-              <p className="text-sm text-foreground">{tutor.teaches}</p>
+              <p className="text-sm text-foreground">{t(tutor.teachesKey)}</p>
             </motion.div>
 
             {/* About me */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-8">
               <h2 className="text-lg font-semibold text-foreground mb-3">{t("tp.aboutMe")}</h2>
               <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-                {tutor.bio}
+                {t(tutor.bioKey)}
               </div>
             </motion.div>
 
@@ -249,10 +258,10 @@ export default function TutorProfile() {
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="mb-8">
               <h2 className="text-lg font-semibold text-foreground mb-3">{t("tp.iSpeak")}</h2>
               <div className="space-y-1.5">
-                {tutor.languages.map((lang: { name: string; level: string }) => (
-                  <div key={lang.name} className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-foreground">{lang.name}</span>
-                    <span className="text-xs text-muted-foreground">{lang.level}</span>
+                {tutor.languages.map((lang) => (
+                  <div key={lang.nameKey} className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-foreground">{t(lang.nameKey)}</span>
+                    <span className="text-xs text-muted-foreground">{t(lang.levelKey)}</span>
                   </div>
                 ))}
               </div>
@@ -289,23 +298,26 @@ export default function TutorProfile() {
                 <span className="text-sm text-muted-foreground">{t("tp.basedOnStudentReviews").replace("{count}", String(tutor.reviewCount))}</span>
               </div>
               <div className="space-y-5">
-                {reviewsData.map((review, i) => (
-                  <div key={i} className="pb-5 border-b last:border-b-0 last:pb-0">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground">
-                        {review.name === "Anonymous" ? "?" : review.name.charAt(0)}
+                {reviewKeys.map((review, i) => {
+                  const name = t(review.nameKey);
+                  return (
+                    <div key={i} className="pb-5 border-b last:border-b-0 last:pb-0">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground">
+                          {name === t("td.rev.anonymous") ? "?" : name.charAt(0)}
+                        </div>
+                        <div>
+                          <span className="text-sm font-semibold text-foreground">{name}</span>
+                          <p className="text-xs text-muted-foreground">
+                            {review.lessonsCount} {t("tp.lessons")} · {review.date}
+                            {review.edited && <span className="ml-1 italic">{t("tp.edited")}</span>}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-sm font-semibold text-foreground">{review.name}</span>
-                        <p className="text-xs text-muted-foreground">
-                          {review.lessonsCount} {t("tp.lessons")} · {review.date}
-                          {review.edited && <span className="ml-1 italic">{t("tp.edited")}</span>}
-                        </p>
-                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{t(review.textKey)}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{review.text}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </motion.div>
 
@@ -315,14 +327,14 @@ export default function TutorProfile() {
               <p className="text-sm text-muted-foreground mb-4">{t("tp.scheduleDesc")}</p>
               <div className="rounded-xl border bg-card overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
-                  <p className="text-sm font-medium text-foreground">Mar 14 – 20, 2026</p>
+                  <p className="text-sm font-medium text-foreground">{t("td.scheduleRange")}</p>
                   <p className="text-xs text-muted-foreground">Asia/Tbilisi · GMT +4:00</p>
                 </div>
                 <div className="grid grid-cols-7 divide-x">
-                  {days.map((day, i) => (
-                    <div key={day} className="text-center">
+                  {dayKeys.map((dayKey, i) => (
+                    <div key={dayKey} className="text-center">
                       <div className="py-2 border-b bg-muted/20">
-                        <p className="text-xs text-muted-foreground">{day}</p>
+                        <p className="text-xs text-muted-foreground">{t(dayKey)}</p>
                         <p className="text-sm font-semibold text-foreground">{dates[i]}</p>
                       </div>
                       <div className="p-1 space-y-1 max-h-48 overflow-y-auto">
@@ -345,12 +357,12 @@ export default function TutorProfile() {
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-8">
               <h2 className="text-lg font-semibold text-foreground mb-4">{t("tp.resume")}</h2>
               <div className="space-y-4">
-                {tutor.resume.map((item: { period: string; org: string; role: string }, i: number) => (
+                {tutor.resume.map((item, i) => (
                   <div key={i} className="flex gap-4">
                     <span className="text-xs text-muted-foreground w-28 shrink-0 pt-0.5">{item.period}</span>
                     <div>
-                      <p className="text-sm font-medium text-foreground">{item.org}</p>
-                      <p className="text-xs text-muted-foreground">{item.role}</p>
+                      <p className="text-sm font-medium text-foreground">{t(item.orgKey)}</p>
+                      <p className="text-xs text-muted-foreground">{t(item.roleKey)}</p>
                     </div>
                   </div>
                 ))}
@@ -361,8 +373,8 @@ export default function TutorProfile() {
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="mb-8">
               <h2 className="text-lg font-semibold text-foreground mb-3">{t("tp.mySpecialties")}</h2>
               <div className="flex flex-wrap gap-2">
-                {tutor.specialties.map((s: string) => (
-                  <Badge key={s} variant="outline" className="px-3 py-1.5 text-sm">{s}</Badge>
+                {tutor.specialtyKeys.map((sk) => (
+                  <Badge key={sk} variant="outline" className="px-3 py-1.5 text-sm">{t(sk)}</Badge>
                 ))}
               </div>
             </motion.div>
@@ -391,7 +403,7 @@ export default function TutorProfile() {
                           </div>
                         </div>
                       </div>
-                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{st.headline}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{t(st.headlineKey)}</p>
                       <p className="text-sm font-bold text-foreground mt-2">₾{st.price}<span className="text-xs font-normal text-muted-foreground">{t("tp.perLesson")}</span></p>
                     </Link>
                   ))}
@@ -458,7 +470,7 @@ export default function TutorProfile() {
                 </div>
 
                 {/* Responsiveness */}
-                <p className="text-xs text-muted-foreground mt-4 text-center">{tutor.responsiveness}</p>
+                <p className="text-xs text-muted-foreground mt-4 text-center">{t(tutor.responsivenessKey)}</p>
               </div>
             </div>
           </motion.aside>

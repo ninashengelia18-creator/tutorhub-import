@@ -10,14 +10,14 @@ import { Slider } from "@/components/ui/slider";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const allTutors = [
-  { id: 1, name: "Nino Beridze", subject: "Mathematics", rating: 4.9, reviews: 127, price: 25, avatar: "NB", languages: ["Georgian", "English"], bio: "10+ years teaching mathematics. Specializing in calculus and algebra.", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face" },
-  { id: 2, name: "Giorgi Kharadze", subject: "Physics", rating: 4.8, reviews: 98, price: 30, avatar: "GK", languages: ["Georgian", "Russian"], bio: "PhD in Physics. Making complex concepts simple and fun.", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" },
-  { id: 3, name: "Ana Melikishvili", subject: "English", rating: 5.0, reviews: 215, price: 20, avatar: "AM", languages: ["English", "Georgian"], bio: "IELTS & TOEFL specialist. Native-level English teacher.", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" },
-  { id: 4, name: "Luka Tsiklauri", subject: "Programming", rating: 4.9, reviews: 164, price: 35, avatar: "LT", languages: ["English", "Georgian"], bio: "Full-stack developer teaching Python, JavaScript, and more.", nativeSpeaker: false, availability: "evening", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
-  { id: 5, name: "Mariam Jashi", subject: "Chemistry", rating: 4.7, reviews: 89, price: 22, avatar: "MJ", languages: ["Georgian", "English"], bio: "University professor with a passion for organic chemistry.", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face" },
-  { id: 6, name: "Davit Lomidze", subject: "Georgian", rating: 4.9, reviews: 201, price: 15, avatar: "DL", languages: ["Georgian", "Russian", "English"], bio: "Georgian language specialist for foreigners and native speakers.", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" },
-  { id: 7, name: "Elena Ivanova", subject: "Russian", rating: 4.8, reviews: 156, price: 18, avatar: "EI", languages: ["Russian", "English"], bio: "Certified Russian teacher with 8 years of experience.", nativeSpeaker: true, availability: "evening", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" },
-  { id: 8, name: "Tamta Gogua", subject: "Music", rating: 5.0, reviews: 73, price: 40, avatar: "TG", languages: ["Georgian", "English"], bio: "Conservatory graduate. Piano and vocal lessons for all levels.", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face" },
+  { id: 1, name: "Nino Beridze", subject: "Mathematics", subjectKey: "td.math", rating: 4.9, reviews: 127, price: 25, avatar: "NB", languageKeys: ["td.lang.georgian", "td.lang.english"], bioKey: "td.search.nino.bio", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face" },
+  { id: 2, name: "Giorgi Kharadze", subject: "Physics", subjectKey: "td.physics", rating: 4.8, reviews: 98, price: 30, avatar: "GK", languageKeys: ["td.lang.georgian", "td.lang.russian"], bioKey: "td.search.giorgi.bio", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" },
+  { id: 3, name: "Ana Melikishvili", subject: "English", subjectKey: "td.english", rating: 5.0, reviews: 215, price: 20, avatar: "AM", languageKeys: ["td.lang.english", "td.lang.georgian"], bioKey: "td.search.ana.bio", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" },
+  { id: 4, name: "Luka Tsiklauri", subject: "Programming", subjectKey: "td.programming", rating: 4.9, reviews: 164, price: 35, avatar: "LT", languageKeys: ["td.lang.english", "td.lang.georgian"], bioKey: "td.search.luka.bio", nativeSpeaker: false, availability: "evening", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
+  { id: 5, name: "Mariam Jashi", subject: "Chemistry", subjectKey: "td.chemistry", rating: 4.7, reviews: 89, price: 22, avatar: "MJ", languageKeys: ["td.lang.georgian", "td.lang.english"], bioKey: "td.search.mariam.bio", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face" },
+  { id: 6, name: "Davit Lomidze", subject: "Georgian", subjectKey: "td.georgian", rating: 4.9, reviews: 201, price: 15, avatar: "DL", languageKeys: ["td.lang.georgian", "td.lang.russian", "td.lang.english"], bioKey: "td.search.davit.bio", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" },
+  { id: 7, name: "Elena Ivanova", subject: "Russian", subjectKey: "td.russian", rating: 4.8, reviews: 156, price: 18, avatar: "EI", languageKeys: ["td.lang.russian", "td.lang.english"], bioKey: "td.search.elena.bio", nativeSpeaker: true, availability: "evening", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" },
+  { id: 8, name: "Tamta Gogua", subject: "Music", subjectKey: "td.music", rating: 5.0, reviews: 73, price: 40, avatar: "TG", languageKeys: ["td.lang.georgian", "td.lang.english"], bioKey: "td.search.tamta.bio", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face" },
 ];
 
 const subjectEntries: { value: string; labelKey: string }[] = [
@@ -66,7 +66,8 @@ export default function TutorSearch() {
       const nameMatch = tutor.name.toLowerCase().includes(q);
       const subjectEngMatch = tutor.subject.toLowerCase().includes(q);
       const subjectTransMatch = (subjectTranslationMap[tutor.subject] || "").includes(q);
-      if (!nameMatch && !subjectEngMatch && !subjectTransMatch) return false;
+      const subjectKeyMatch = t(tutor.subjectKey).toLowerCase().includes(q);
+      if (!nameMatch && !subjectEngMatch && !subjectTransMatch && !subjectKeyMatch) return false;
     }
     if (tutor.price < priceRange[0] || tutor.price > priceRange[1]) return false;
     if (selectedRating === "4.5+" && tutor.rating < 4.5) return false;
@@ -183,20 +184,20 @@ export default function TutorSearch() {
                       <div className="flex items-start justify-between">
                         <div>
                           <h3 className="font-semibold group-hover:text-primary transition-colors">{tutor.name}</h3>
-                          <p className="text-sm text-primary font-medium">{tutor.subject}</p>
+                          <p className="text-sm text-primary font-medium">{t(tutor.subjectKey)}</p>
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-xl font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">{t("search.perHour")}</span></p>
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1 line-clamp-1">{tutor.bio}</p>
+                      <p className="text-sm text-muted-foreground mt-1 line-clamp-1">{t(tutor.bioKey)}</p>
                       <div className="flex items-center gap-3 mt-2">
                         <div className="flex items-center gap-1">
                           <Star className="h-3.5 w-3.5 fill-warning text-warning" />
                           <span className="text-sm font-medium tabular-nums">{tutor.rating}</span>
                           <span className="text-xs text-muted-foreground">({tutor.reviews})</span>
                         </div>
-                        <span className="text-xs text-muted-foreground">{tutor.languages.join(" · ")}</span>
+                        <span className="text-xs text-muted-foreground">{tutor.languageKeys.map(k => t(k)).join(" · ")}</span>
                       </div>
                     </div>
                   </Link>
