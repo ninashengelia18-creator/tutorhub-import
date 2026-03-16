@@ -30,6 +30,7 @@ export default function TutorSettings() {
     setDeleteEmail,
     setDeleteDialogOpen,
     setNotificationPreferences,
+    setDisplayName,
     handleAvatarUpload,
     handleSaveAccount,
     handleSavePassword,
@@ -63,8 +64,8 @@ export default function TutorSettings() {
             deleteDialogOpen={deleteDialogOpen}
             notificationPreferences={notificationPreferences}
             onAvatarUpload={handleAvatarUpload}
-            onFirstNameChange={(value) => setCurrentDisplayName(value, lastName, setActiveSection)}
-            onLastNameChange={(value) => setLastNameValue(firstName, value, setActiveSection)}
+            onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
+            onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}
             onCurrentPasswordChange={setCurrentPassword}
             onNewPasswordChange={setNewPassword}
             onConfirmPasswordChange={setConfirmPassword}
@@ -80,16 +81,4 @@ export default function TutorSettings() {
       </div>
     </Layout>
   );
-}
-
-function setCurrentDisplayName(value: string, lastName: string, setActiveSection: (value: never) => void) {
-  void setActiveSection;
-  throw new Error("placeholder");
-}
-
-function setLastNameValue(firstName: string, value: string, setActiveSection: (value: never) => void) {
-  void firstName;
-  void value;
-  void setActiveSection;
-  throw new Error("placeholder");
 }

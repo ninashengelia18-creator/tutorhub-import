@@ -203,6 +203,7 @@ export function useProfileSettings(redirectPath: string) {
     user,
     fileInputRef,
     displayName,
+    setDisplayName,
     avatarUrl,
     loading,
     uploading,
