@@ -43,6 +43,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.account": "Account",
     "profile.settings.password": "Password",
     "profile.settings.emailSection": "Email",
+    "profile.settings.localization": "Localization",
     "profile.settings.calendar": "Calendar",
     "profile.settings.notifications": "Notifications",
     "profile.settings.deleteAccount": "Delete account",
