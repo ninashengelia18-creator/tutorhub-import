@@ -346,8 +346,8 @@ export default function Messages() {
       return;
     }
 
-    if (selectedTutorName === pendingDelete.name) {
-      setSelectedTutorName(null);
+    if (selectedTutorId === pendingDelete.id) {
+      setSelectedTutorId(null);
     }
 
     setPendingDelete(null);
