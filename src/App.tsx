@@ -29,6 +29,7 @@ import ProfileSettings from "./pages/ProfileSettings.tsx";
 import TutorSettings from "./pages/TutorSettings.tsx";
 import BookingConfirmation from "./pages/BookingConfirmation.tsx";
 import MyLessons from "./pages/MyLessons.tsx";
+import SavedTutors from "./pages/SavedTutors.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import CookiePolicy from "./pages/CookiePolicy.tsx";
 import TermsOfService from "./pages/TermsOfService.tsx";
@@ -62,6 +63,7 @@ const App = () => (
                 <Route path="/ai-practice" element={<AIPractice />} />
                 <Route path="/messages" element={<ProtectedRoute requiredRole="student"><Messages /></ProtectedRoute>} />
                 <Route path="/my-lessons" element={<ProtectedRoute requiredRole="student"><MyLessons /></ProtectedRoute>} />
+                <Route path="/saved-tutors" element={<ProtectedRoute requiredRole="student"><SavedTutors /></ProtectedRoute>} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/for-business" element={<ForBusiness />} />
                 <Route path="/become-tutor" element={<BecomeTutor />} />
