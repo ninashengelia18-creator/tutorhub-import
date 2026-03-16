@@ -320,7 +320,7 @@ export default function LessonPlanner() {
 
   if (authLoading) {
     return (
-      <Layout>
+      <Layout hideFooter>
         <div className="flex min-h-[60vh] items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
@@ -333,7 +333,7 @@ export default function LessonPlanner() {
   const activePlan = viewingPlan || plan;
 
   return (
-    <Layout>
+    <Layout hideFooter>
       <div className="min-h-screen bg-background py-12">
         <div className="container mx-auto max-w-6xl px-4">
           {/* Header */}
