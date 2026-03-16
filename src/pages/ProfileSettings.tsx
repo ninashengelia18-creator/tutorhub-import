@@ -3,19 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 import { StudentSettingsPanels } from "@/components/profile/StudentSettingsPanels";
-import {
-  StudentSettingsSection,
-  StudentSettingsSidebar,
-} from "@/components/profile/StudentSettingsSidebar";
+import { StudentSettingsSection, StudentSettingsSidebar } from "@/components/profile/StudentSettingsSidebar";
 import { Layout } from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { sanitizeFileName } from "@/components/messages/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ProfileSettings() {
-  const { user } = useAuth();
+  const { user, refreshProfile, updateProfileState } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [displayName, setDisplayName] = useState("");
@@ -24,123 +24,117 @@ export default function ProfileSettings() {
   const [uploading, setUploading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<StudentSettingsSection>("account");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [deleteEmail, setDeleteEmail] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [notificationPreferences, setNotificationPreferences] = useState({ email_transactional: true, email_tips_discount: false, email_surveys: false });
 
   useEffect(() => {
     if (!user) {
-      navigate("/login");
+      navigate("/login?redirect=/profile");
       return;
     }
-
     void fetchProfile();
   }, [user, navigate]);
 
   const fetchProfile = async () => {
     if (!user) return;
+    const [{ data: profileData }, { data: preferenceData }] = await Promise.all([
+      supabase.from("profiles").select("display_name, avatar_url").eq("id", user.id).single(),
+      supabase.from("notification_preferences").select("email_transactional, email_tips_discount, email_surveys").eq("user_id", user.id).maybeSingle(),
+    ]);
 
-    const { data } = await supabase
-      .from("profiles")
-      .select("display_name, avatar_url")
-      .eq("id", user.id)
-      .single();
-
-    if (data) {
-      setDisplayName(data.display_name || "");
-      setAvatarUrl(data.avatar_url);
+    if (profileData) {
+      setDisplayName(profileData.display_name || "");
+      setAvatarUrl(profileData.avatar_url);
     }
-
+    if (preferenceData) setNotificationPreferences(preferenceData);
     setInitialLoading(false);
   };
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
-
-    if (!file.type.startsWith("image/")) {
-      toast({ title: "Error", description: "Please upload an image file.", variant: "destructive" });
-      return;
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      toast({ title: "Error", description: "File must be smaller than 2MB.", variant: "destructive" });
-      return;
-    }
+    if (!file.type.startsWith("image/")) return toast({ title: t("profile.settings.error"), description: t("profile.settings.imageOnly"), variant: "destructive" });
+    if (file.size > 2 * 1024 * 1024) return toast({ title: t("profile.settings.error"), description: t("profile.settings.fileTooLarge"), variant: "destructive" });
 
     setUploading(true);
-    const ext = file.name.split(".").pop();
-    const filePath = `${user.id}/avatar.${ext}`;
-
-    await supabase.storage.from("avatars").remove([filePath]);
-
+    const filePath = `${user.id}/${Date.now()}-${sanitizeFileName(file.name)}`;
     const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file, { upsert: true });
-
     if (uploadError) {
-      toast({ title: "Error", description: uploadError.message, variant: "destructive" });
       setUploading(false);
-      return;
+      return toast({ title: t("profile.settings.error"), description: uploadError.message, variant: "destructive" });
     }
-
-    const { data: publicUrl } = supabase.storage.from("avatars").getPublicUrl(filePath);
-    const url = `${publicUrl.publicUrl}?t=${Date.now()}`;
-
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({ avatar_url: url, updated_at: new Date().toISOString() })
-      .eq("id", user.id);
-
-    if (updateError) {
-      toast({ title: "Error", description: updateError.message, variant: "destructive" });
-    } else {
-      setAvatarUrl(url);
-      toast({ title: "Profile image updated" });
-    }
-
+    const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+    const url = `${data.publicUrl}?t=${Date.now()}`;
+    const { error } = await supabase.from("profiles").update({ avatar_url: url, updated_at: new Date().toISOString() }).eq("id", user.id);
     setUploading(false);
+    if (error) return toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
+    setAvatarUrl(url);
+    updateProfileState({ avatar_url: url });
+    await refreshProfile();
+    toast({ title: t("profile.settings.avatarUpdated") });
   };
 
-  const handleSave = async (event: React.FormEvent) => {
+  const handleSaveAccount = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!user) return;
-
     setLoading(true);
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({ display_name: displayName.trim(), updated_at: new Date().toISOString() })
-      .eq("id", user.id);
-
-    if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Changes saved" });
-    }
-
+    const cleanName = displayName.trim();
+    const { error } = await supabase.from("profiles").update({ display_name: cleanName, updated_at: new Date().toISOString() }).eq("id", user.id);
     setLoading(false);
+    if (error) return toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
+    updateProfileState({ display_name: cleanName });
+    await refreshProfile();
+    toast({ title: t("profile.settings.saved") });
+  };
+
+  const handleSavePassword = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!user) return;
+    if (newPassword.length < 6) return toast({ title: t("auth.error"), description: t("auth.passwordMin"), variant: "destructive" });
+    if (newPassword !== confirmPassword) return toast({ title: t("auth.error"), description: t("profile.settings.passwordMismatch"), variant: "destructive" });
+    setLoading(true);
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email: user.email || "", password: currentPassword });
+    if (signInError) {
+      setLoading(false);
+      return toast({ title: t("auth.error"), description: t("profile.settings.invalidCurrentPassword"), variant: "destructive" });
+    }
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setLoading(false);
+    if (error) return toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
+    setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
+    toast({ title: t("profile.settings.passwordSaved") });
+  };
+
+  const handleSaveNotifications = async () => {
+    if (!user) return;
+    setLoading(true);
+    const { error } = await supabase.from("notification_preferences").upsert({ user_id: user.id, ...notificationPreferences, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+    setLoading(false);
+    if (error) return toast({ title: t("profile.settings.error"), description: error.message, variant: "destructive" });
+    toast({ title: t("profile.settings.notificationsSaved") });
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    const { error } = await supabase.functions.invoke("delete-account", { body: { email: deleteEmail } });
+    if (error) return toast({ title: t("profile.settings.error"), description: t("profile.settings.deleteFailed"), variant: "destructive" });
+    await supabase.auth.signOut({ scope: "local" });
+    toast({ title: t("profile.settings.accountDeleted") });
+    navigate("/");
   };
 
   const initials = useMemo(() => {
     if (!displayName.trim()) return user?.email?.[0]?.toUpperCase() || "?";
-
-    return displayName
-      .split(" ")
-      .filter(Boolean)
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+    return displayName.split(" ").filter(Boolean).map((part) => part[0]).join("").toUpperCase().slice(0, 2);
   }, [displayName, user?.email]);
-
   const firstName = displayName.split(" ")[0] || "";
   const lastName = displayName.split(" ").slice(1).join(" ");
 
-  if (initialLoading) {
-    return (
-      <Layout hideFooter>
-        <div className="flex min-h-[60vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
-      </Layout>
-    );
-  }
+  if (initialLoading) return <Layout hideFooter><div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div></Layout>;
 
   return (
     <Layout hideFooter>
@@ -157,10 +151,25 @@ export default function ProfileSettings() {
             loading={loading}
             uploading={uploading}
             fileInputRef={fileInputRef}
+            currentPassword={currentPassword}
+            newPassword={newPassword}
+            confirmPassword={confirmPassword}
+            deleteEmail={deleteEmail}
+            deleteDialogOpen={deleteDialogOpen}
+            notificationPreferences={notificationPreferences}
             onAvatarUpload={handleAvatarUpload}
             onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
             onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}
-            onSaveAccount={handleSave}
+            onCurrentPasswordChange={setCurrentPassword}
+            onNewPasswordChange={setNewPassword}
+            onConfirmPasswordChange={setConfirmPassword}
+            onDeleteEmailChange={setDeleteEmail}
+            onSaveAccount={handleSaveAccount}
+            onSavePassword={handleSavePassword}
+            onSaveNotifications={handleSaveNotifications}
+            onToggleNotification={(key, value) => setNotificationPreferences((current) => ({ ...current, [key]: value }))}
+            onDeleteAccount={handleDeleteAccount}
+            onDeleteDialogOpenChange={setDeleteDialogOpen}
           />
         </div>
       </div>
