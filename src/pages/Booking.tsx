@@ -16,10 +16,10 @@ import { cn } from "@/lib/utils";
 const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
 
 const DURATIONS = [
-  { label: "30 min", value: 30 },
-  { label: "45 min", value: 45 },
-  { label: "60 min", value: 60 },
-  { label: "90 min", value: 90 },
+  { labelKey: "booking.duration30", value: 30 },
+  { labelKey: "booking.duration45", value: 45 },
+  { labelKey: "booking.duration60", value: 60 },
+  { labelKey: "booking.duration90", value: 90 },
 ];
 
 const tutorData: Record<string, { name: string; subject: string; price: number }> = {
@@ -58,7 +58,7 @@ export default function Booking() {
     }
 
     if (!date || !time || !studentName.trim() || !studentEmail.trim()) {
-      toast({ title: t("booking.failed"), description: "Please fill in all required fields.", variant: "destructive" });
+      toast({ title: t("booking.failed"), description: t("booking.fillRequired"), variant: "destructive" });
       return;
     }
 
@@ -244,7 +244,7 @@ export default function Booking() {
                       duration === d.value ? "border-primary bg-primary/5 text-primary" : "border-border hover:bg-muted/50"
                     }`}
                   >
-                    {d.label}
+                    {t(d.labelKey)}
                   </button>
                 ))}
               </div>

@@ -46,26 +46,27 @@ interface Booking {
   google_meet_link: string | null;
 }
 
-const statusBadge: Record<string, { class: string; label: string; icon: typeof Clock }> = {
-  pending: { class: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30", label: "Pending", icon: Clock },
-  confirmed: { class: "bg-green-500/10 text-green-600 border-green-500/30", label: "Confirmed", icon: CheckCircle },
-  completed: { class: "bg-blue-500/10 text-blue-600 border-blue-500/30", label: "Completed", icon: Check },
-  cancelled: { class: "bg-red-500/10 text-red-600 border-red-500/30", label: "Cancelled", icon: XCircle },
-};
+const getStatusBadge = (t: (key: string) => string) => ({
+  pending: { class: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30", labelKey: "myLessons.statusPending", icon: Clock },
+  confirmed: { class: "bg-green-500/10 text-green-600 border-green-500/30", labelKey: "myLessons.statusConfirmed", icon: CheckCircle },
+  completed: { class: "bg-blue-500/10 text-blue-600 border-blue-500/30", labelKey: "myLessons.statusCompleted", icon: Check },
+  cancelled: { class: "bg-red-500/10 text-red-600 border-red-500/30", labelKey: "myLessons.statusCancelled", icon: XCircle },
+});
 
-const CANCEL_REASONS = [
-  "This time doesn't work for me anymore",
-  "I have a technical issue",
-  "The tutor rescheduled to a time when I'm not available",
-  "The tutor asked me to cancel",
-  "I want to learn with a different tutor",
-  "I'm not ready to start learning yet",
-  "Other",
+const CANCEL_REASON_KEYS = [
+  "myLessons.cancelReason1",
+  "myLessons.cancelReason2",
+  "myLessons.cancelReason3",
+  "myLessons.cancelReason4",
+  "myLessons.cancelReason5",
+  "myLessons.cancelReason6",
+  "myLessons.cancelReason7",
 ];
 
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
 
 function CalendarView({ bookings }: { bookings: Booking[] }) {
+  const { lang, t } = useLanguage();
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const navigateWeek = (dir: number) => {
@@ -100,11 +101,12 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
     const first = weekDates[0];
     const last = weekDates[6];
     const sameMonth = first.getMonth() === last.getMonth();
+    const locale = lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US";
     if (sameMonth) {
-      return `${first.toLocaleDateString("en-US", { month: "short" })} ${first.getDate()} – ${last.getDate()}, ${last.getFullYear()}`;
+      return `${first.toLocaleDateString(locale, { month: "short" })} ${first.getDate()} – ${last.getDate()}, ${last.getFullYear()}`;
     }
-    return `${first.toLocaleDateString("en-US", { month: "short" })} ${first.getDate()} – ${last.toLocaleDateString("en-US", { month: "short" })} ${last.getDate()}, ${last.getFullYear()}`;
-  }, [weekDates]);
+    return `${first.toLocaleDateString(locale, { month: "short" })} ${first.getDate()} – ${last.toLocaleDateString(locale, { month: "short" })} ${last.getDate()}, ${last.getFullYear()}`;
+  }, [weekDates, lang]);
 
   const tzOffset = new Date().getTimezoneOffset();
   const tzHours = -tzOffset / 60;
@@ -114,7 +116,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={goToToday}>Today</Button>
+          <Button variant="outline" size="sm" onClick={goToToday}>{t("myLessons.today")}</Button>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigateWeek(-1)}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -131,7 +133,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
             const isToday = date.toISOString().split("T")[0] === todayStr;
             return (
               <div key={i} className={`p-2 text-center border-l ${isToday ? "bg-primary/5" : ""}`}>
-                <p className="text-xs text-muted-foreground">{date.toLocaleDateString("en-US", { weekday: "short" })}</p>
+                <p className="text-xs text-muted-foreground">{date.toLocaleDateString(lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US", { weekday: "short" })}</p>
                 <p className={`text-sm font-semibold ${isToday ? "text-primary" : ""}`}>{date.getDate()}</p>
                 {isToday && <div className="h-0.5 bg-primary mt-1 rounded-full" />}
               </div>
@@ -182,12 +184,12 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
 export default function MyLessons() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"lessons" | "calendar" | "tutors">("lessons");
   const [cancelBooking, setCancelBooking] = useState<Booking | null>(null);
-  const [cancelReason, setCancelReason] = useState(CANCEL_REASONS[0]);
+  const [cancelReason, setCancelReason] = useState(CANCEL_REASON_KEYS[0]);
   const [cancelMessage, setCancelMessage] = useState("");
   const [cancelling, setCancelling] = useState(false);
 
@@ -212,8 +214,9 @@ export default function MyLessons() {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr + "T00:00:00");
     const todayStr2 = new Date().toISOString().split("T")[0];
-    const prefix = dateStr === todayStr2 ? "Today, " : "";
-    return prefix + date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const locale = lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US";
+    const prefix = dateStr === todayStr2 ? t("myLessons.today") + ", " : "";
+    return prefix + date.toLocaleDateString(locale, { month: "short", day: "numeric" });
   };
 
   const formatTime = (t: string) => t.slice(0, 5);
@@ -223,13 +226,13 @@ export default function MyLessons() {
     setCancelling(true);
     const { error } = await supabase
       .from("bookings")
-      .update({ status: "cancelled", notes: `Cancel reason: ${cancelReason}. ${cancelMessage}` })
+      .update({ status: "cancelled", notes: `Cancel reason: ${t(cancelReason)}. ${cancelMessage}` })
       .eq("id", cancelBooking.id);
     setCancelling(false);
     if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Lesson cancelled" });
+      toast({ title: t("myLessons.lessonCancelled") });
       setCancelBooking(null);
       setCancelMessage("");
       fetchBookings();
@@ -245,7 +248,8 @@ export default function MyLessons() {
   ];
 
   const renderBookingCard = (booking: Booking, showActions = true) => {
-    const sb = statusBadge[booking.status] || statusBadge.pending;
+    const badges = getStatusBadge(t);
+    const sb = badges[booking.status as keyof typeof badges] || badges.pending;
     const StatusIcon = sb.icon;
     return (
       <div key={booking.id} className={`rounded-xl border bg-card p-4 flex items-center gap-4 ${booking.status === "cancelled" ? "opacity-50" : ""}`}>
@@ -262,7 +266,7 @@ export default function MyLessons() {
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="outline" className={`gap-1 text-xs ${sb.class}`}>
               <StatusIcon className="h-3 w-3" />
-              {sb.label}
+              {t(sb.labelKey)}
             </Badge>
           </div>
           <p className="text-sm font-medium">
@@ -295,14 +299,14 @@ export default function MyLessons() {
               )}
               <DropdownMenuItem className="gap-2" asChild>
                 <Link to="/messages">
-                  <MessageSquare className="h-4 w-4" /> Message tutor
+                  <MessageSquare className="h-4 w-4" /> {t("myLessons.messageTutor")}
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="gap-2 text-destructive focus:text-destructive"
                 onClick={() => setCancelBooking(booking)}
               >
-                <Ban className="h-4 w-4" /> Cancel
+                <Ban className="h-4 w-4" /> {t("myLessons.cancel")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -315,9 +319,9 @@ export default function MyLessons() {
     <Layout>
       <div className="border-b bg-card">
         <div className="container flex items-center gap-8 overflow-x-auto">
-          <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">Home</Link>
-          <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">Messages</Link>
-          <Link to="/my-lessons" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">My lessons</Link>
+          <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">{t("msg.home")}</Link>
+          <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">{t("msg.messages")}</Link>
+          <Link to="/my-lessons" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">{t("myLessons.title")}</Link>
         </div>
       </div>
 
@@ -331,10 +335,10 @@ export default function MyLessons() {
                   {lastTutor.tutor_name.split(" ").map(n => n[0]).join("")}
                 </span>
               </div>
-              <p className="font-semibold text-sm">Schedule your next lesson with {lastTutor.tutor_name.split(" ")[0]}.</p>
+              <p className="font-semibold text-sm">{t("myLessons.scheduleNext").replace("{name}", lastTutor.tutor_name.split(" ")[0])}</p>
             </div>
             <Button variant="outline" asChild>
-              <Link to="/search">Schedule lesson</Link>
+              <Link to="/search">{t("myLessons.scheduleLesson")}</Link>
             </Button>
           </motion.div>
         )}
@@ -405,7 +409,7 @@ export default function MyLessons() {
           {activeTab === "tutors" && (
             <div>
               {tutors.length === 0 && (
-                <p className="text-sm text-muted-foreground">No tutors yet. Book a lesson to get started!</p>
+                <p className="text-sm text-muted-foreground">{t("myLessons.noTutors")}</p>
               )}
               <div className="space-y-4">
                 {tutors.map(tutor => (
@@ -420,7 +424,7 @@ export default function MyLessons() {
                       <p className="text-sm text-muted-foreground">{tutor.subject}</p>
                     </div>
                     <Button variant="outline" asChild>
-                      <Link to="/search">Book Again</Link>
+                      <Link to="/search">{t("myLessons.bookAgain")}</Link>
                     </Button>
                   </div>
                 ))}
@@ -433,35 +437,35 @@ export default function MyLessons() {
       <Dialog open={!!cancelBooking} onOpenChange={(open) => !open && setCancelBooking(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-lg">Cancel this lesson?</DialogTitle>
+            <DialogTitle className="text-lg">{t("myLessons.cancelTitle")}</DialogTitle>
           </DialogHeader>
           {cancelBooking && (
             <div>
               <p className="text-sm text-muted-foreground mb-4">
-                {new Date(cancelBooking.lesson_date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })} · {formatTime(cancelBooking.start_time)} – {formatTime(cancelBooking.end_time)}
+                {new Date(cancelBooking.lesson_date + "T00:00:00").toLocaleDateString(lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US", { weekday: "long", month: "long", day: "numeric" })} · {formatTime(cancelBooking.start_time)} – {formatTime(cancelBooking.end_time)}
               </p>
               <div className="bg-destructive/10 rounded-lg p-3 flex items-start gap-3 mb-6">
                 <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                <p className="text-sm">Cancellations with less than 12 hours notice may be charged.</p>
+                <p className="text-sm">{t("myLessons.cancelWarning")}</p>
               </div>
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium mb-2">Reason for canceling</p>
+                  <p className="text-sm font-medium mb-2">{t("myLessons.cancelReason")}</p>
                   <Select value={cancelReason} onValueChange={setCancelReason}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {CANCEL_REASONS.map(reason => (
-                        <SelectItem key={reason} value={reason}>{reason}</SelectItem>
+                      {CANCEL_REASON_KEYS.map(reasonKey => (
+                        <SelectItem key={reasonKey} value={reasonKey}>{t(reasonKey)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <p className="text-sm font-medium mb-2">Message (optional)</p>
-                  <Textarea value={cancelMessage} onChange={(e) => setCancelMessage(e.target.value)} placeholder="I need to cancel because..." className="resize-none" rows={3} />
+                  <p className="text-sm font-medium mb-2">{t("myLessons.cancelMessage")}</p>
+                  <Textarea value={cancelMessage} onChange={(e) => setCancelMessage(e.target.value)} placeholder={t("myLessons.cancelMessagePlaceholder")} className="resize-none" rows={3} />
                 </div>
                 <Button onClick={handleCancel} disabled={cancelling} variant="destructive" className="w-full">
-                  {cancelling ? "Cancelling..." : "Confirm cancellation"}
+                  {cancelling ? t("myLessons.cancelling") : t("myLessons.confirmCancel")}
                 </Button>
               </div>
             </div>
