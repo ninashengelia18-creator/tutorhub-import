@@ -302,10 +302,10 @@ export function PortalHeader() {
         <div className="border-b border-border/60 bg-background sm:hidden">
           <div className="container flex flex-col gap-2 py-4">
             <div className="mb-2 border-b border-border/60 pb-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <p className="uppercase tracking-[0.25em] text-foreground" style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}>
                 LearnEazy
               </p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t("brand.tagline")}</p>
+              <p className="mt-1 text-sm font-semibold leading-tight tracking-wide text-muted-foreground">{t("brand.tagline")}</p>
             </div>
             <Link to={profilePath} className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
               {t("nav.profile")}
