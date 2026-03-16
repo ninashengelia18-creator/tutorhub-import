@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Clock, Calendar as CalendarIcon, GraduationCap, Plus, ChevronDown, ChevronLeft, ChevronRight, MoreHorizontal, RefreshCw, MessageSquare, User, Ban, AlertCircle, Check, Repeat, CalendarDays } from "lucide-react";
+import { Clock, Calendar as CalendarIcon, GraduationCap, Plus, ChevronDown, ChevronLeft, ChevronRight, MoreHorizontal, RefreshCw, MessageSquare, User, Ban, AlertCircle, Check, Repeat, CalendarDays, Video, ExternalLink, CheckCircle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Booking {
   id: string;
@@ -41,7 +43,15 @@ interface Booking {
   currency: string;
   status: string;
   is_trial: boolean;
+  google_meet_link: string | null;
 }
+
+const statusBadge: Record<string, { class: string; label: string; icon: typeof Clock }> = {
+  pending: { class: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30", label: "Pending", icon: Clock },
+  confirmed: { class: "bg-green-500/10 text-green-600 border-green-500/30", label: "Confirmed", icon: CheckCircle },
+  completed: { class: "bg-blue-500/10 text-blue-600 border-blue-500/30", label: "Completed", icon: Check },
+  cancelled: { class: "bg-red-500/10 text-red-600 border-red-500/30", label: "Cancelled", icon: XCircle },
+};
 
 const CANCEL_REASONS = [
   "This time doesn't work for me anymore",
@@ -66,7 +76,6 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
 
   const goToToday = () => setCurrentDate(new Date());
 
-  // Mon-Sun week dates
   const weekDates = useMemo(() => {
     const start = new Date(currentDate);
     const day = start.getDay();
@@ -81,7 +90,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
 
   const getBookingsForDate = (date: Date) => {
     const dateStr = date.toISOString().split("T")[0];
-    return bookings.filter(b => b.lesson_date === dateStr && b.status === "confirmed");
+    return bookings.filter(b => b.lesson_date === dateStr && (b.status === "confirmed" || b.status === "pending"));
   };
 
   const todayStr = new Date().toISOString().split("T")[0];
@@ -103,12 +112,9 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
 
   return (
     <div>
-      {/* Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={goToToday}>
-            Today
-          </Button>
+          <Button variant="outline" size="sm" onClick={goToToday}>Today</Button>
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigateWeek(-1)}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -117,40 +123,21 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
           </Button>
           <span className="text-base font-semibold">{weekRangeLabel}</span>
         </div>
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1.5">
-            <Check className="h-3.5 w-3.5" /> Confirmed
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Repeat className="h-3.5 w-3.5" /> Weekly
-          </span>
-          <span className="flex items-center gap-1.5">
-            <CalendarDays className="h-3.5 w-3.5" /> Single
-          </span>
-        </div>
       </div>
-
-      {/* Week View */}
       <div className="border rounded-xl overflow-hidden">
-        {/* Header */}
         <div className="grid grid-cols-[70px_repeat(7,1fr)] border-b bg-muted/30">
           <div className="p-2 text-xs text-muted-foreground text-center">{tzLabel}</div>
           {weekDates.map((date, i) => {
             const isToday = date.toISOString().split("T")[0] === todayStr;
             return (
               <div key={i} className={`p-2 text-center border-l ${isToday ? "bg-primary/5" : ""}`}>
-                <p className="text-xs text-muted-foreground">
-                  {date.toLocaleDateString("en-US", { weekday: "short" })}
-                </p>
-                <p className={`text-sm font-semibold ${isToday ? "text-primary" : ""}`}>
-                  {date.getDate()}
-                </p>
+                <p className="text-xs text-muted-foreground">{date.toLocaleDateString("en-US", { weekday: "short" })}</p>
+                <p className={`text-sm font-semibold ${isToday ? "text-primary" : ""}`}>{date.getDate()}</p>
                 {isToday && <div className="h-0.5 bg-primary mt-1 rounded-full" />}
               </div>
             );
           })}
         </div>
-        {/* Time grid */}
         <div className="max-h-[500px] overflow-y-auto">
           {HOURS.map(hour => (
             <div key={hour} className="grid grid-cols-[70px_repeat(7,1fr)] min-h-[48px]">
@@ -168,11 +155,15 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
                     {dayBookings.map(b => (
                       <div
                         key={b.id}
-                        className="absolute inset-x-0.5 top-0.5 rounded bg-primary/15 border border-primary/30 px-1 py-0.5 overflow-hidden cursor-pointer hover:bg-primary/25 transition-colors"
+                        className={`absolute inset-x-0.5 top-0.5 rounded px-1 py-0.5 overflow-hidden cursor-pointer transition-colors ${
+                          b.status === "pending"
+                            ? "bg-yellow-500/15 border border-yellow-500/30 hover:bg-yellow-500/25"
+                            : "bg-primary/15 border border-primary/30 hover:bg-primary/25"
+                        }`}
                         style={{ minHeight: `${(b.duration_minutes / 60) * 48 - 4}px` }}
                       >
-                        <p className="text-[10px] font-medium text-primary truncate">{b.subject}</p>
-                        <p className="text-[10px] text-primary/70 truncate tabular-nums">
+                        <p className="text-[10px] font-medium truncate">{b.subject}</p>
+                        <p className="text-[10px] opacity-70 truncate tabular-nums">
                           {formatTime(b.start_time)} – {formatTime(b.end_time)}
                         </p>
                       </div>
@@ -191,6 +182,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
 export default function MyLessons() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"lessons" | "calendar" | "tutors">("lessons");
@@ -199,31 +191,27 @@ export default function MyLessons() {
   const [cancelMessage, setCancelMessage] = useState("");
   const [cancelling, setCancelling] = useState(false);
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+  useEffect(() => { fetchBookings(); }, []);
 
   async function fetchBookings() {
     const { data } = await supabase
       .from("bookings")
       .select("*")
       .order("lesson_date", { ascending: true });
-    setBookings(data || []);
+    setBookings((data as Booking[]) || []);
     setLoading(false);
   }
 
   const today = new Date().toISOString().split("T")[0];
-  const upcoming = bookings.filter(b => b.lesson_date >= today && b.status === "confirmed");
+  const upcoming = bookings.filter(b => b.lesson_date >= today && (b.status === "confirmed" || b.status === "pending"));
   const past = bookings.filter(b => b.lesson_date < today || b.status === "completed");
   const cancelled = bookings.filter(b => b.status === "cancelled");
 
-  // Get last booked tutor for the "schedule next" banner
   const lastTutor = bookings.length > 0 ? bookings[bookings.length - 1] : null;
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr + "T00:00:00");
-    const todayDate = new Date();
-    const todayStr2 = todayDate.toISOString().split("T")[0];
+    const todayStr2 = new Date().toISOString().split("T")[0];
     const prefix = dateStr === todayStr2 ? "Today, " : "";
     return prefix + date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
@@ -241,63 +229,109 @@ export default function MyLessons() {
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Lesson cancelled and paid for" });
+      toast({ title: "Lesson cancelled" });
       setCancelBooking(null);
       setCancelMessage("");
       fetchBookings();
     }
   };
 
-  // Get unique tutors from bookings
   const tutors = Array.from(new Map(bookings.map(b => [b.tutor_name, b])).values());
 
   const tabs = [
-    { key: "lessons" as const, label: "Lessons", icon: Clock },
-    { key: "calendar" as const, label: "Calendar", icon: CalendarIcon },
-    { key: "tutors" as const, label: "Tutors", icon: GraduationCap },
+    { key: "lessons" as const, label: t("myLessons.lessons"), icon: Clock },
+    { key: "calendar" as const, label: t("myLessons.calendar"), icon: CalendarIcon },
+    { key: "tutors" as const, label: t("myLessons.tutors"), icon: GraduationCap },
   ];
+
+  const renderBookingCard = (booking: Booking, showActions = true) => {
+    const sb = statusBadge[booking.status] || statusBadge.pending;
+    const StatusIcon = sb.icon;
+    return (
+      <div key={booking.id} className={`rounded-xl border bg-card p-4 flex items-center gap-4 ${booking.status === "cancelled" ? "opacity-50" : ""}`}>
+        <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex items-center justify-center shrink-0">
+          {booking.tutor_avatar_url ? (
+            <img src={booking.tutor_avatar_url} alt={booking.tutor_name} className="h-full w-full object-cover" />
+          ) : (
+            <span className="text-sm font-bold text-primary">
+              {booking.tutor_name.split(" ").map(n => n[0]).join("")}
+            </span>
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <Badge variant="outline" className={`gap-1 text-xs ${sb.class}`}>
+              <StatusIcon className="h-3 w-3" />
+              {sb.label}
+            </Badge>
+          </div>
+          <p className="text-sm font-medium">
+            {formatDate(booking.lesson_date)} · {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {booking.tutor_name}, {booking.subject}
+          </p>
+          {booking.google_meet_link && booking.status === "confirmed" && (
+            <a href={booking.google_meet_link} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-1">
+              <Video className="h-3 w-3" /> {t("myLessons.joinMeet")} <ExternalLink className="h-3 w-3" />
+            </a>
+          )}
+        </div>
+        {showActions && (booking.status === "pending" || booking.status === "confirmed") && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-2 rounded-lg hover:bg-muted transition-colors">
+                <MoreHorizontal className="h-5 w-5 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              {booking.google_meet_link && booking.status === "confirmed" && (
+                <DropdownMenuItem className="gap-2" asChild>
+                  <a href={booking.google_meet_link} target="_blank" rel="noopener noreferrer">
+                    <Video className="h-4 w-4" /> {t("myLessons.joinMeet")}
+                  </a>
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem className="gap-2" asChild>
+                <Link to="/messages">
+                  <MessageSquare className="h-4 w-4" /> Message tutor
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="gap-2 text-destructive focus:text-destructive"
+                onClick={() => setCancelBooking(booking)}
+              >
+                <Ban className="h-4 w-4" /> Cancel
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+    );
+  };
 
   return (
     <Layout>
-      {/* Sub-navigation */}
       <div className="border-b bg-card">
         <div className="container flex items-center gap-8 overflow-x-auto">
-          <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            Home
-          </Link>
-          <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            Messages
-          </Link>
-          <Link to="/my-lessons" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">
-            My lessons
-          </Link>
-          <Link to="/for-business" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">
-            For business
-          </Link>
+          <Link to="/dashboard" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">Home</Link>
+          <Link to="/messages" className="py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">Messages</Link>
+          <Link to="/my-lessons" className="py-3 text-sm font-medium border-b-2 border-primary text-primary">My lessons</Link>
         </div>
       </div>
 
       <div className="container py-8">
-        {/* Schedule next lesson banner */}
         {lastTutor && upcoming.length === 0 && !loading && (
-          <motion.div
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-between rounded-xl border bg-card p-4 mb-8"
-          >
+          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-between rounded-xl border bg-card p-4 mb-8">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full bg-muted overflow-hidden flex items-center justify-center shrink-0">
-                {lastTutor.tutor_avatar_url ? (
-                  <img src={lastTutor.tutor_avatar_url} alt={lastTutor.tutor_name} className="h-full w-full object-cover" />
-                ) : (
-                  <span className="text-xs font-bold text-primary">
-                    {lastTutor.tutor_name.split(" ").map(n => n[0]).join("")}
-                  </span>
-                )}
+                <span className="text-xs font-bold text-primary">
+                  {lastTutor.tutor_name.split(" ").map(n => n[0]).join("")}
+                </span>
               </div>
-              <p className="font-semibold text-sm">
-                Schedule your next lesson with {lastTutor.tutor_name.split(" ")[0]}.
-              </p>
+              <p className="font-semibold text-sm">Schedule your next lesson with {lastTutor.tutor_name.split(" ")[0]}.</p>
             </div>
             <Button variant="outline" asChild>
               <Link to="/search">Schedule lesson</Link>
@@ -306,31 +340,23 @@ export default function MyLessons() {
         )}
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h1 className="text-2xl font-bold">My lessons</h1>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                Transfer balance or subscription
-              </Button>
-              <Button size="sm" className="hero-gradient text-primary-foreground border-0">
+            <h1 className="text-2xl font-bold">{t("myLessons.title")}</h1>
+            <Button size="sm" className="hero-gradient text-primary-foreground border-0" asChild>
+              <Link to="/search">
                 <Plus className="h-4 w-4 mr-1" />
-                Schedule lesson
-                <ChevronDown className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
+                {t("myLessons.scheduleLesson")}
+              </Link>
+            </Button>
           </div>
 
-          {/* Tabs */}
           <div className="flex items-center gap-6 border-b mb-6">
             {tabs.map(tab => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={`flex items-center gap-2 py-3 text-sm font-medium border-b-2 transition-colors ${
-                  activeTab === tab.key
-                    ? "border-primary text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
+                  activeTab === tab.key ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <tab.icon className="h-4 w-4" />
@@ -339,210 +365,90 @@ export default function MyLessons() {
             ))}
           </div>
 
-          {/* Lessons tab */}
           {activeTab === "lessons" && (
             <div className="space-y-8">
-              {/* Upcoming */}
               <div>
-                <h2 className="text-lg font-bold mb-4">Upcoming lessons</h2>
+                <h2 className="text-lg font-bold mb-4">{t("myLessons.upcoming")}</h2>
                 {upcoming.length === 0 && !loading && (
                   <div className="text-center py-12">
-                    <p className="text-lg font-bold mb-2">No upcoming lessons</p>
-                    <p className="text-sm text-muted-foreground mb-1">Don't put your goals on hold!</p>
-                    <p className="text-sm text-muted-foreground">Schedule your next lesson now to see progress.</p>
+                    <p className="text-lg font-bold mb-2">{t("myLessons.noUpcoming")}</p>
+                    <p className="text-sm text-muted-foreground">{t("myLessons.scheduleNow")}</p>
                   </div>
                 )}
                 <div className="space-y-3">
-                  {upcoming.map(booking => (
-                    <div key={booking.id} className="rounded-xl border bg-card p-4 flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex items-center justify-center shrink-0">
-                        {booking.tutor_avatar_url ? (
-                          <img src={booking.tutor_avatar_url} alt={booking.tutor_name} className="h-full w-full object-cover" />
-                        ) : (
-                          <span className="text-sm font-bold text-primary">
-                            {booking.tutor_name.split(" ").map(n => n[0]).join("")}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">
-                          {formatDate(booking.lesson_date)} · {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {booking.tutor_name}, {booking.subject}
-                        </p>
-                      </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button className="p-2 rounded-lg hover:bg-muted transition-colors">
-                            <MoreHorizontal className="h-5 w-5 text-muted-foreground" />
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuItem className="gap-2">
-                            <RefreshCw className="h-4 w-4" /> Reschedule
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="gap-2" asChild>
-                            <Link to="/messages">
-                              <MessageSquare className="h-4 w-4" /> Message tutor
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="gap-2">
-                            <User className="h-4 w-4" /> See tutor profile
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="gap-2 text-destructive focus:text-destructive"
-                            onClick={() => setCancelBooking(booking)}
-                          >
-                            <Ban className="h-4 w-4" /> Cancel
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  ))}
+                  {upcoming.map(b => renderBookingCard(b))}
                 </div>
               </div>
 
-              {/* Past */}
               {past.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-bold mb-4">Past lessons</h2>
+                  <h2 className="text-lg font-bold mb-4">{t("myLessons.past")}</h2>
                   <div className="space-y-3">
-                    {past.map(booking => (
-                      <div key={booking.id} className="rounded-xl border bg-card p-4 flex items-center gap-4 opacity-70">
-                        <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex items-center justify-center shrink-0">
-                          <span className="text-sm font-bold text-primary">
-                            {booking.tutor_name.split(" ").map(n => n[0]).join("")}
-                          </span>
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">
-                            {formatDate(booking.lesson_date)} · {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {booking.tutor_name}, {booking.subject}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                    {past.map(b => renderBookingCard(b, false))}
                   </div>
                 </div>
               )}
 
-              {/* Cancelled */}
               {cancelled.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-bold mb-4">Cancelled</h2>
+                  <h2 className="text-lg font-bold mb-4">{t("myLessons.cancelled")}</h2>
                   <div className="space-y-3">
-                    {cancelled.map(booking => (
-                      <div key={booking.id} className="rounded-xl border bg-card p-4 flex items-center gap-4 opacity-50">
-                        <div className="h-12 w-12 rounded-lg bg-muted overflow-hidden flex items-center justify-center shrink-0">
-                          <span className="text-sm font-bold text-primary">
-                            {booking.tutor_name.split(" ").map(n => n[0]).join("")}
-                          </span>
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium line-through">
-                            {formatDate(booking.lesson_date)} · {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Cancelled and paid {booking.currency}{booking.price_amount.toFixed(2)} · {booking.tutor_name}, {booking.subject}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                    {cancelled.map(b => renderBookingCard(b, false))}
                   </div>
                 </div>
               )}
             </div>
           )}
 
-          {/* Calendar tab */}
-          {activeTab === "calendar" && (
-            <CalendarView bookings={bookings} />
-          )}
+          {activeTab === "calendar" && <CalendarView bookings={bookings} />}
 
-          {/* Tutors tab */}
           {activeTab === "tutors" && (
             <div>
               {tutors.length === 0 && (
                 <p className="text-sm text-muted-foreground">No tutors yet. Book a lesson to get started!</p>
               )}
               <div className="space-y-4">
-                {tutors.map(tutor => {
-                  const tutorBookings = bookings.filter(b => b.tutor_name === tutor.tutor_name && b.status === "confirmed" && b.lesson_date >= today);
-                  return (
-                    <div key={tutor.tutor_name} className="flex items-center gap-6 py-4 border-b last:border-0">
-                      <div className="h-14 w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center shrink-0">
-                        {tutor.tutor_avatar_url ? (
-                          <img src={tutor.tutor_avatar_url} alt={tutor.tutor_name} className="h-full w-full object-cover" />
-                        ) : (
-                          <span className="text-lg font-bold text-primary">
-                            {tutor.tutor_name.split(" ").map(n => n[0]).join("")}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-primary hover:underline cursor-pointer">{tutor.tutor_name}</p>
-                        <p className="text-sm text-muted-foreground">{tutor.subject}</p>
-                      </div>
-                      <div className="text-center min-w-[80px]">
-                        <p className="font-medium">{tutorBookings.length} lessons</p>
-                        <p className="text-xs text-muted-foreground">to schedule</p>
-                      </div>
-                      <div className="text-center min-w-[80px]">
-                        <p className="font-medium">{tutor.currency}{tutor.price_amount.toFixed(2)}</p>
-                        <p className="text-xs text-muted-foreground">per lesson</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon" asChild>
-                          <Link to="/messages">
-                            <MessageSquare className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                        <Button variant="outline">Subscribe</Button>
-                      </div>
+                {tutors.map(tutor => (
+                  <div key={tutor.tutor_name} className="flex items-center gap-6 py-4 border-b last:border-0">
+                    <div className="h-14 w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center shrink-0">
+                      <span className="text-lg font-bold text-primary">
+                        {tutor.tutor_name.split(" ").map(n => n[0]).join("")}
+                      </span>
                     </div>
-                  );
-                })}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-primary">{tutor.tutor_name}</p>
+                      <p className="text-sm text-muted-foreground">{tutor.subject}</p>
+                    </div>
+                    <Button variant="outline" asChild>
+                      <Link to="/search">Book Again</Link>
+                    </Button>
+                  </div>
+                ))}
               </div>
             </div>
           )}
         </motion.div>
       </div>
 
-      {/* Cancel Dialog */}
       <Dialog open={!!cancelBooking} onOpenChange={(open) => !open && setCancelBooking(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-lg">
-              This lesson can't be rescheduled on short notice
-            </DialogTitle>
+            <DialogTitle className="text-lg">Cancel this lesson?</DialogTitle>
           </DialogHeader>
-
           {cancelBooking && (
             <div>
               <p className="text-sm text-muted-foreground mb-4">
                 {new Date(cancelBooking.lesson_date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })} · {formatTime(cancelBooking.start_time)} – {formatTime(cancelBooking.end_time)}
               </p>
-
               <div className="bg-destructive/10 rounded-lg p-3 flex items-start gap-3 mb-6">
                 <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium">Would you like to cancel this lesson?</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    When you cancel with less than 12 hours notice, the lesson will be deducted from your balance
-                  </p>
-                </div>
+                <p className="text-sm">Cancellations with less than 12 hours notice may be charged.</p>
               </div>
-
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium mb-2">Please choose a reason for canceling</p>
+                  <p className="text-sm font-medium mb-2">Reason for canceling</p>
                   <Select value={cancelReason} onValueChange={setCancelReason}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {CANCEL_REASONS.map(reason => (
                         <SelectItem key={reason} value={reason}>{reason}</SelectItem>
@@ -550,26 +456,11 @@ export default function MyLessons() {
                     </SelectContent>
                   </Select>
                 </div>
-
                 <div>
-                  <p className="text-sm font-medium mb-2">
-                    Message for {cancelBooking.tutor_name.split(" ")[0]} · Optional
-                  </p>
-                  <Textarea
-                    value={cancelMessage}
-                    onChange={(e) => setCancelMessage(e.target.value)}
-                    placeholder="I need to cancel because..."
-                    className="resize-none"
-                    rows={3}
-                  />
+                  <p className="text-sm font-medium mb-2">Message (optional)</p>
+                  <Textarea value={cancelMessage} onChange={(e) => setCancelMessage(e.target.value)} placeholder="I need to cancel because..." className="resize-none" rows={3} />
                 </div>
-
-                <Button
-                  onClick={handleCancel}
-                  disabled={cancelling}
-                  variant="destructive"
-                  className="w-full"
-                >
+                <Button onClick={handleCancel} disabled={cancelling} variant="destructive" className="w-full">
                   {cancelling ? "Cancelling..." : "Confirm cancellation"}
                 </Button>
               </div>
