@@ -1249,6 +1249,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "admin.accessDenied": "წვდომა აკრძალულია",
     "admin.adminOnly": "ეს გვერდი მხოლოდ ადმინისტრატორებისთვისაა.",
     "nav.admin": "ადმინი",
+    "admin.bookingsTab": "ჯავშნები",
+    "admin.tutorAppsTab": "რეპეტიტორების განაცხადები",
+    "admin.totalApps": "სულ განაცხადები",
+    "admin.pendingApps": "განხილვის მოლოდინში",
+    "admin.approvedApps": "დამტკიცებული",
+    "admin.searchTutors": "მოძებნეთ სახელით, ელ-ფოსტით ან საგნით...",
+    "admin.approveTutor": "დამტკიცება",
+    "admin.rejectTutor": "უარყოფა",
+    "admin.tutorApproved": "რეპეტიტორი დამტკიცებულია!",
+    "admin.tutorRejected": "რეპეტიტორი უარყოფილია.",
+    "admin.noApps": "რეპეტიტორების განაცხადები ჯერ არ არის",
     "nav.tutorSchedule": "ჩემი განრიგი",
 
     // Tutor Schedule
