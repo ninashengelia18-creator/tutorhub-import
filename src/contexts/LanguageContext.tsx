@@ -84,7 +84,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.tipsDesc": "Get learning resources and exclusive offers to support your progress.",
     "profile.settings.surveysTitle": "Surveys and interviews",
     "profile.settings.surveysDesc": "Take part in research studies to help us improve the student experience.",
-    "profile.settings.notificationsSaved": "Notification preferences saved!"
+    "profile.settings.notificationsSaved": "Notification preferences saved!",
     "profile.settings.deleteTitle": "Delete account",
     "profile.settings.deleteDesc": "Deleting your account is permanent and all your account information will be deleted along with it.",
     "profile.settings.deleteWarning": "Please type your email address to confirm account deletion.",
