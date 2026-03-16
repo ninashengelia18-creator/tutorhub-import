@@ -71,7 +71,7 @@ const tutorData: Record<string, {
     rating: 4.8,
     reviewCount: 98,
     price: 30,
-    lessonLength: "50-min",
+    lessonLengthKey: "booking.duration50",
     photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face",
     languages: [
       { nameKey: "td.lang.georgian", levelKey: "td.level.native" },
