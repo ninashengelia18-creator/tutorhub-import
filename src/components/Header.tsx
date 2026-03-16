@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, LayoutDashboard, UserCircle, ChevronDown, Globe } from "lucide-react";
+import { Menu, X, LogOut, LayoutDashboard, UserCircle, ChevronDown, Globe, BookOpen } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
@@ -115,6 +115,12 @@ export function Header() {
           {user ? (
             <>
               <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
+                <Link to="/lesson-planner">
+                  <BookOpen className="h-4 w-4 mr-1" />
+                  {t("nav.lessonPlanner")}
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
                 <Link to="/dashboard">
                   <LayoutDashboard className="h-4 w-4 mr-1" />
                   {t("auth.dashboard")}
@@ -192,6 +198,9 @@ export function Header() {
               <div className="flex gap-3 pt-2 border-t border-border/50">
                 {user ? (
                   <>
+                    <Button variant="ghost" size="sm" className="flex-1" asChild>
+                      <Link to="/lesson-planner" onClick={() => setMobileOpen(false)}>{t("nav.lessonPlanner")}</Link>
+                    </Button>
                     <Button variant="ghost" size="sm" className="flex-1" asChild>
                       <Link to="/dashboard" onClick={() => setMobileOpen(false)}>{t("auth.dashboard")}</Link>
                     </Button>

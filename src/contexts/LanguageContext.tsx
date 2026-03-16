@@ -22,6 +22,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "Log in",
     "nav.signup": "Sign up",
     "nav.profile": "Profile",
+    "nav.lessonPlanner": "Lesson Planner",
 
     // Profile Settings
     "profile.settings.title": "Profile Settings",
@@ -563,6 +564,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "შესვლა",
     "nav.signup": "რეგისტრაცია",
     "nav.profile": "პროფილი",
+    "nav.lessonPlanner": "გაკვეთილის გეგმა",
 
     // Profile Settings
     "profile.settings.title": "პროფილის პარამეტრები",
@@ -1109,6 +1111,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "Войти",
     "nav.signup": "Регистрация",
     "nav.profile": "Профиль",
+    "nav.lessonPlanner": "Планировщик уроков",
 
     // Profile Settings
     "profile.settings.title": "Настройки профиля",
