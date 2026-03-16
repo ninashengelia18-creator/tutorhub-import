@@ -552,6 +552,47 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.passwordUpdated": "Password updated successfully!",
     "auth.logout": "Log out",
     "auth.dashboard": "Dashboard",
+
+    // Booking flow (new)
+    "booking.subject": "Subject",
+    "booking.duration": "Lesson Duration",
+    "booking.selectDate": "Select a date",
+    "booking.bookingWith": "Booking a lesson with",
+    "booking.messageToTutor": "Message to Tutor (optional)",
+    "booking.lessonWith": "lesson with",
+    "booking.thankYouMsg": "Thank you for booking! Our team will contact you via chat within 24 hours to provide payment details and confirm your session.",
+
+    // My Lessons
+    "myLessons.title": "My Lessons",
+    "myLessons.lessons": "Lessons",
+    "myLessons.calendar": "Calendar",
+    "myLessons.tutors": "Tutors",
+    "myLessons.upcoming": "Upcoming Lessons",
+    "myLessons.past": "Past Lessons",
+    "myLessons.cancelled": "Cancelled",
+    "myLessons.noUpcoming": "No upcoming lessons",
+    "myLessons.scheduleNow": "Schedule your next lesson now!",
+    "myLessons.scheduleLesson": "Schedule Lesson",
+    "myLessons.joinMeet": "Join Google Meet",
+
+    // Admin
+    "admin.title": "Admin Dashboard",
+    "admin.subtitle": "Manage all bookings, payments, and lessons",
+    "admin.totalBookings": "Total Bookings",
+    "admin.pendingPayment": "Pending Payment",
+    "admin.confirmed": "Confirmed",
+    "admin.completedStat": "Completed",
+    "admin.searchPlaceholder": "Search by student, tutor, or subject...",
+    "admin.markPaid": "Mark as Paid",
+    "admin.markCompleted": "Mark Completed",
+    "admin.addMeetLink": "Add Google Meet Link",
+    "admin.saveMeetLink": "Save Link",
+    "admin.meetLinkSaved": "Google Meet link saved!",
+    "admin.markedPaid": "Booking confirmed! Payment received.",
+    "admin.noBookings": "No bookings yet",
+    "admin.accessDenied": "Access Denied",
+    "admin.adminOnly": "This page is only accessible to administrators.",
+    "nav.admin": "Admin",
   },
   ka: {
     // Nav
