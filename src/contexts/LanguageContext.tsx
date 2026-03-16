@@ -730,9 +730,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "search.evening": "Evening",
     "search.perHour": "/hr",
 
-    // Tutor FAQ 8
-    "tutor.faq8.q": "How much can I earn on LearnEazy?",
-    "tutor.faq8.a": "Most popular tutors on LearnEazy earn up to $550 a week. Your earnings depend on the hourly rate you set, the number of lessons you teach and how many students continue learning with you after the trial lesson. A tip for newly registered tutors: start with a lower hourly rate to get first students faster. You can change your rate anytime.",
+  },
   },
   ka: {
     // Nav
