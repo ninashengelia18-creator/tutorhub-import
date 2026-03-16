@@ -1111,6 +1111,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "Войти",
     "nav.signup": "Регистрация",
     "nav.profile": "Профиль",
+    "nav.lessonPlanner": "Планировщик уроков",
 
     // Profile Settings
     "profile.settings.title": "Настройки профиля",
