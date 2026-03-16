@@ -7,6 +7,7 @@ import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/owl-logo.png";
+import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
 
 const langLabels: Record<Language, string> = { ka: "ქარ", en: "EN", ru: "РУ" };
 
@@ -121,6 +122,12 @@ export function Header() {
             </AnimatePresence>
           </div>
 
+          <SubscribePlansDialog
+            buttonVariant="outline"
+            buttonSize="sm"
+            buttonClassName="rounded-full border-primary/35 bg-primary/10 px-4 text-primary hover:bg-primary hover:text-primary-foreground"
+          />
+
           {user ? (
             <>
               <Button variant="ghost" size="sm" className="text-foreground/80 hover:text-foreground" asChild>
@@ -192,20 +199,27 @@ export function Header() {
           >
             <div className="container py-4 flex flex-col gap-3">
               {/* Mobile language switcher */}
-              <div className="flex items-center gap-1 bg-secondary rounded-lg p-1 self-start">
-                {(Object.keys(langLabels) as Language[]).map((l) => (
-                  <button
-                    key={l}
-                    onClick={() => setLang(l)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                      lang === l
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {langLabels[l]}
-                  </button>
-                ))}
+              <div className="flex flex-wrap items-center gap-2 self-start">
+                <div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
+                  {(Object.keys(langLabels) as Language[]).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => setLang(l)}
+                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                        lang === l
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {langLabels[l]}
+                    </button>
+                  ))}
+                </div>
+                <SubscribePlansDialog
+                  buttonVariant="outline"
+                  buttonSize="sm"
+                  buttonClassName="rounded-full border-primary/35 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground"
+                />
               </div>
 
               {navLinks.map((link) => (
