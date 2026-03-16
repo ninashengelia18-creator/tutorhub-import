@@ -564,6 +564,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.login": "შესვლა",
     "nav.signup": "რეგისტრაცია",
     "nav.profile": "პროფილი",
+    "nav.lessonPlanner": "გაკვეთილის გეგმა",
 
     // Profile Settings
     "profile.settings.title": "პროფილის პარამეტრები",
