@@ -132,12 +132,13 @@ function detectLanguageFromBrowser(browserLanguage: string) {
 
 function fallbackPreferences(browserLanguage: string, browserTimeZone: string) {
   const language = detectLanguageFromBrowser(browserLanguage);
+  const detectedTimeZone = isValidTimeZone(browserTimeZone) ? browserTimeZone : DEFAULT_TIMEZONE;
 
-  if (browserTimeZone === "Asia/Tbilisi" || language === "ka") {
+  if (detectedTimeZone === "Asia/Tbilisi") {
     return normalizePreferences({
       preferred_language: "ka",
       preferred_currency: "GEL",
-      preferred_timezone: "Asia/Tbilisi",
+      preferred_timezone: detectedTimeZone,
     });
   }
 
@@ -145,14 +146,14 @@ function fallbackPreferences(browserLanguage: string, browserTimeZone: string) {
     return normalizePreferences({
       preferred_language: "ru",
       preferred_currency: "USD",
-      preferred_timezone: browserTimeZone,
+      preferred_timezone: detectedTimeZone,
     });
   }
 
   return normalizePreferences({
     preferred_language: "en",
     preferred_currency: "USD",
-    preferred_timezone: browserTimeZone,
+    preferred_timezone: detectedTimeZone,
   });
 }
 
