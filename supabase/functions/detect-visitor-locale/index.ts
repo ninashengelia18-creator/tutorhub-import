@@ -21,6 +21,17 @@ function detectLanguage(browserLanguage: string): Language {
   return "en";
 }
 
+function isValidTimeZone(value: string | null | undefined) {
+  if (!value) return false;
+
+  try {
+    Intl.DateTimeFormat("en-US", { timeZone: value }).format(new Date());
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function getClientIp(req: Request) {
   const forwardedFor = req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "";
   return forwardedFor.split(",")[0]?.trim() || null;

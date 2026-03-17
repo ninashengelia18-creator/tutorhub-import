@@ -63,9 +63,21 @@ export const TIMEZONE_OPTIONS: Array<{ value: string; label: string }> = [
   { value: "UTC", label: "UTC" },
 ];
 
+function isValidTimeZone(value: string | null | undefined) {
+  if (!value) return false;
+
+  try {
+    Intl.DateTimeFormat("en-US", { timeZone: value }).format(new Date());
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function getBrowserTimeZone() {
   try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone || DEFAULT_TIMEZONE;
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return isValidTimeZone(timeZone) ? timeZone : DEFAULT_TIMEZONE;
   } catch {
     return DEFAULT_TIMEZONE;
   }
