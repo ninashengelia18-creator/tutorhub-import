@@ -112,10 +112,11 @@ export default function AdminDashboard() {
   }, []);
 
   const refreshAdminData = useCallback(async () => {
-    const [bookingResult, applicationResult, tutorResult] = await Promise.all([
+    const [bookingResult, applicationResult, tutorResult, enquiryResult] = await Promise.all([
       supabase.from("bookings").select("*").order("created_at", { ascending: false }),
       supabase.from("tutor_applications").select("*").order("created_at", { ascending: false }),
       supabase.from("public_tutor_profiles" as never).select("*").order("created_at", { ascending: false }),
+      supabase.from("business_inquiries").select("*").order("created_at", { ascending: false }),
     ]);
 
     if (bookingResult.error) {
@@ -134,6 +135,12 @@ export default function AdminDashboard() {
       toast({ title: "Error", description: tutorResult.error.message, variant: "destructive" });
     } else {
       setTutors((tutorResult.data as PublicTutorProfile[] | null) ?? []);
+    }
+
+    if (enquiryResult.error) {
+      toast({ title: "Error", description: enquiryResult.error.message, variant: "destructive" });
+    } else {
+      setEnquiries((enquiryResult.data as BusinessInquiry[] | null) ?? []);
     }
   }, [toast]);
 
