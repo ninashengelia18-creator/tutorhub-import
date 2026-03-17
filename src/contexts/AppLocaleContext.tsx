@@ -91,8 +91,7 @@ function normalizeCurrencyCode(value: string | null | undefined): CurrencyCode {
   return DEFAULT_CURRENCY;
 }
 
-function normalizeLanguage(value: string | null | undefined): Language {
-  if (value === "ka" || value === "ru" || value === "en") return value;
+function normalizeLanguage(_value: string | null | undefined): Language {
   return DEFAULT_LANGUAGE;
 }
 
@@ -123,36 +122,17 @@ function writeStoredPreferences(key: string, preferences: LocalePreferences) {
   localStorage.setItem(key, JSON.stringify(preferences));
 }
 
-function detectLanguageFromBrowser(browserLanguage: string) {
-  const normalized = browserLanguage.toLowerCase();
-  if (normalized.startsWith("ka")) return "ka" satisfies Language;
-  if (normalized.startsWith("ru")) return "ru" satisfies Language;
-  return "en" satisfies Language;
+function detectLanguageFromBrowser(_browserLanguage: string): Language {
+  return "en";
 }
 
 function fallbackPreferences(browserLanguage: string, browserTimeZone: string) {
   const language = detectLanguageFromBrowser(browserLanguage);
   const detectedTimeZone = isValidTimeZone(browserTimeZone) ? browserTimeZone : DEFAULT_TIMEZONE;
 
-  if (detectedTimeZone === "Asia/Tbilisi") {
-    return normalizePreferences({
-      preferred_language: "ka",
-      preferred_currency: "GEL",
-      preferred_timezone: detectedTimeZone,
-    });
-  }
-
-  if (language === "ru") {
-    return normalizePreferences({
-      preferred_language: "ru",
-      preferred_currency: "USD",
-      preferred_timezone: detectedTimeZone,
-    });
-  }
-
   return normalizePreferences({
-    preferred_language: "en",
-    preferred_currency: "USD",
+    preferred_language: language,
+    preferred_currency: detectedTimeZone === "Asia/Tbilisi" ? "GEL" : "USD",
     preferred_timezone: detectedTimeZone,
   });
 }
