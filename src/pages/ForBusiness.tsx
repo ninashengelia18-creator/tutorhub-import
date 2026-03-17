@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { submitFormspree } from "@/lib/formspree";
 import { toast } from "@/hooks/use-toast";
 import { z } from "zod";
 
