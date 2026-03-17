@@ -18,6 +18,19 @@ import {
 const TOTAL_STEPS = 4;
 const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
 
+type FieldName =
+  | "firstName"
+  | "lastName"
+  | "email"
+  | "experience"
+  | "bio"
+  | "selectedSubjects"
+  | "hourlyRate"
+  | "availability"
+  | "agreeTerms";
+
+type FormErrors = Partial<Record<FieldName, string>>;
+
 const subjectKeys = [
   { value: "English", key: "tutor.apply.subj.english" },
   { value: "Mathematics", key: "tutor.apply.subj.mathematics" },
@@ -47,6 +60,7 @@ export default function TutorApply() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   // Step 1 — Personal Info
   const [firstName, setFirstName] = useState("");
@@ -75,28 +89,103 @@ export default function TutorApply() {
 
   const fullName = useMemo(() => [firstName.trim(), lastName.trim()].filter(Boolean).join(" "), [firstName, lastName]);
 
+  const getFieldError = (fieldName: FieldName, value: unknown) => {
+    const result = tutorApplicationSchema.shape[fieldName].safeParse(value);
+    return result.success ? undefined : result.error.issues[0]?.message;
+  };
+
+  const setFieldError = (fieldName: FieldName, value: unknown) => {
+    setErrors((prev) => {
+      const next = { ...prev };
+      const message = getFieldError(fieldName, value);
+
+      if (message) {
+        next[fieldName] = message;
+      } else {
+        delete next[fieldName];
+      }
+
+      return next;
+    });
+  };
+
+  const validateCurrentStep = () => {
+    const nextErrors: FormErrors = {};
+
+    if (step === 1) {
+      nextErrors.firstName = getFieldError("firstName", firstName);
+      nextErrors.lastName = getFieldError("lastName", lastName);
+      nextErrors.email = getFieldError("email", email);
+    }
+
+    if (step === 2) {
+      nextErrors.experience = getFieldError("experience", experience);
+      nextErrors.bio = getFieldError("bio", bio);
+    }
+
+    if (step === 3) {
+      nextErrors.selectedSubjects = getFieldError("selectedSubjects", selectedSubjects);
+      nextErrors.hourlyRate = getFieldError("hourlyRate", hourlyRate);
+    }
+
+    if (step === 4) {
+      nextErrors.availability = getFieldError("availability", availability);
+      nextErrors.agreeTerms = getFieldError("agreeTerms", agreeTerms);
+    }
+
+    const filteredErrors = Object.fromEntries(
+      Object.entries(nextErrors).filter(([, value]) => Boolean(value))
+    ) as FormErrors;
+
+    setErrors((prev) => ({ ...prev, ...filteredErrors }));
+
+    return Object.keys(filteredErrors).length === 0;
+  };
+
+  const clearStepErrors = (fields: FieldName[]) => {
+    setErrors((prev) => {
+      const next = { ...prev };
+      fields.forEach((field) => delete next[field]);
+      return next;
+    });
+  };
+
   const toggleSubject = (sub: string) => {
-    setSelectedSubjects((prev) =>
-      prev.includes(sub) ? prev.filter((s) => s !== sub) : [...prev, sub]
-    );
+    setSelectedSubjects((prev) => {
+      const next = prev.includes(sub) ? prev.filter((s) => s !== sub) : [...prev, sub];
+      setFieldError("selectedSubjects", next);
+      return next;
+    });
   };
 
   const canProceed = () => {
     switch (step) {
       case 1:
-        return firstName.trim().length > 0 && lastName.trim().length > 0 && email.trim().length > 0;
+        return !getFieldError("firstName", firstName) && !getFieldError("lastName", lastName) && !getFieldError("email", email);
       case 2:
-        return experience.trim().length > 0 && bio.trim().length >= 30;
+        return !getFieldError("experience", experience) && !getFieldError("bio", bio);
       case 3:
-        return selectedSubjects.length > 0 && hourlyRate.trim().length > 0;
+        return !getFieldError("selectedSubjects", selectedSubjects) && !getFieldError("hourlyRate", hourlyRate);
       case 4:
-        return availability.trim().length > 0 && agreeTerms;
+        return !getFieldError("availability", availability) && !getFieldError("agreeTerms", agreeTerms);
       default:
         return false;
     }
   };
 
+  const handleNextStep = () => {
+    if (!validateCurrentStep()) return;
+
+    if (step === 1) clearStepErrors(["firstName", "lastName", "email"]);
+    if (step === 2) clearStepErrors(["experience", "bio"]);
+    if (step === 3) clearStepErrors(["selectedSubjects", "hourlyRate"]);
+
+    setStep((currentStep) => currentStep + 1);
+  };
+
   const handleSubmit = async () => {
+    if (!validateCurrentStep()) return;
+
     setSubmitting(true);
 
     try {
@@ -157,6 +246,7 @@ export default function TutorApply() {
         throw new Error(formspreeMessage || "We couldn't submit your application right now. Please try again in a moment.");
       }
 
+      clearStepErrors(["availability", "agreeTerms"]);
       setSubmitted(true);
     } catch (error: unknown) {
       toast({
@@ -236,16 +326,41 @@ export default function TutorApply() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.firstName")} *</Label>
-                    <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                    <Input
+                      value={firstName}
+                      onChange={(e) => {
+                        setFirstName(e.target.value);
+                        setFieldError("firstName", e.target.value);
+                      }}
+                      aria-invalid={Boolean(errors.firstName)}
+                    />
+                    {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
                   </div>
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.lastName")} *</Label>
-                    <Input value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    <Input
+                      value={lastName}
+                      onChange={(e) => {
+                        setLastName(e.target.value);
+                        setFieldError("lastName", e.target.value);
+                      }}
+                      aria-invalid={Boolean(errors.lastName)}
+                    />
+                    {errors.lastName && <p className="text-sm text-destructive">{errors.lastName}</p>}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.email")} *</Label>
-                  <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setFieldError("email", e.target.value);
+                    }}
+                    aria-invalid={Boolean(errors.email)}
+                  />
+                  {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -268,14 +383,23 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.experience")} *</Label>
-                  <Select value={experience} onValueChange={setExperience}>
-                    <SelectTrigger><SelectValue placeholder={t("tutor.apply.selectExp")} /></SelectTrigger>
+                  <Select
+                    value={experience}
+                    onValueChange={(value) => {
+                      setExperience(value);
+                      setFieldError("experience", value);
+                    }}
+                  >
+                    <SelectTrigger aria-invalid={Boolean(errors.experience)}>
+                      <SelectValue placeholder={t("tutor.apply.selectExp")} />
+                    </SelectTrigger>
                     <SelectContent>
                       {experienceOptions.map((opt) => (
                         <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  {errors.experience && <p className="text-sm text-destructive">{errors.experience}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.education")}</Label>
@@ -287,7 +411,17 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.bio")} *</Label>
-                  <Textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={5} placeholder={t("tutor.apply.bioPlaceholder")} />
+                  <Textarea
+                    value={bio}
+                    onChange={(e) => {
+                      setBio(e.target.value);
+                      setFieldError("bio", e.target.value);
+                    }}
+                    rows={5}
+                    placeholder={t("tutor.apply.bioPlaceholder")}
+                    aria-invalid={Boolean(errors.bio)}
+                  />
+                  {errors.bio && <p className="text-sm text-destructive">{errors.bio}</p>}
                 </div>
               </div>
             )}
@@ -316,11 +450,22 @@ export default function TutorApply() {
                       </button>
                     ))}
                   </div>
+                  {errors.selectedSubjects && <p className="text-sm text-destructive">{errors.selectedSubjects}</p>}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.rate")} * (GEL/hr)</Label>
-                    <Input type="number" min="1" value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value)} />
+                    <Input
+                      type="number"
+                      min="1"
+                      value={hourlyRate}
+                      onChange={(e) => {
+                        setHourlyRate(e.target.value);
+                        setFieldError("hourlyRate", e.target.value);
+                      }}
+                      aria-invalid={Boolean(errors.hourlyRate)}
+                    />
+                    {errors.hourlyRate && <p className="text-sm text-destructive">{errors.hourlyRate}</p>}
                   </div>
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.nativeLang")}</Label>
@@ -342,14 +487,23 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.availability")} *</Label>
-                  <Select value={availability} onValueChange={setAvailability}>
-                    <SelectTrigger><SelectValue placeholder={t("tutor.apply.selectAvail")} /></SelectTrigger>
+                  <Select
+                    value={availability}
+                    onValueChange={(value) => {
+                      setAvailability(value);
+                      setFieldError("availability", value);
+                    }}
+                  >
+                    <SelectTrigger aria-invalid={Boolean(errors.availability)}>
+                      <SelectValue placeholder={t("tutor.apply.selectAvail")} />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="part-time">{t("tutor.apply.availPartTime")}</SelectItem>
                       <SelectItem value="full-time">{t("tutor.apply.availFullTime")}</SelectItem>
                       <SelectItem value="flexible">{t("tutor.apply.availFlexible")}</SelectItem>
                     </SelectContent>
                   </Select>
+                  {errors.availability && <p className="text-sm text-destructive">{errors.availability}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.timezone")}</Label>
@@ -383,10 +537,22 @@ export default function TutorApply() {
                   <Textarea value={aboutTeaching} onChange={(e) => setAboutTeaching(e.target.value)} rows={4} placeholder={t("tutor.apply.aboutTeachingPlaceholder")} />
                 </div>
                 <div className="flex items-start gap-3">
-                  <Checkbox id="terms" checked={agreeTerms} onCheckedChange={(v) => setAgreeTerms(v === true)} />
-                  <Label htmlFor="terms" className="text-sm leading-relaxed cursor-pointer">
-                    {t("tutor.apply.terms")}
-                  </Label>
+                  <Checkbox
+                    id="terms"
+                    checked={agreeTerms}
+                    onCheckedChange={(value) => {
+                      const isChecked = value === true;
+                      setAgreeTerms(isChecked);
+                      setFieldError("agreeTerms", isChecked);
+                    }}
+                    aria-invalid={Boolean(errors.agreeTerms)}
+                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="terms" className="text-sm leading-relaxed cursor-pointer">
+                      {t("tutor.apply.terms")}
+                    </Label>
+                    {errors.agreeTerms && <p className="text-sm text-destructive">{errors.agreeTerms}</p>}
+                  </div>
                 </div>
               </div>
             )}
@@ -403,7 +569,7 @@ export default function TutorApply() {
             <ArrowLeft className="mr-2 h-4 w-4" /> {t("tutor.apply.back")}
           </Button>
           {step < TOTAL_STEPS ? (
-            <Button onClick={() => setStep((s) => s + 1)} disabled={!canProceed()}>
+            <Button onClick={handleNextStep} disabled={!canProceed()}>
               {t("tutor.apply.next")} <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (
