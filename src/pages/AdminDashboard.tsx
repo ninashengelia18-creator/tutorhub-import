@@ -417,13 +417,17 @@ export default function AdminDashboard() {
     };
 
     try {
-      const updates = [
-        supabase.from("public_tutor_profiles" as never).update(payload as never).eq("id", editingTutor.id),
-      ];
+      const { error: profileError } = await supabase
+        .from("public_tutor_profiles" as never)
+        .update(payload as never)
+        .eq("id", editingTutor.id);
+
+      if (profileError) throw profileError;
 
       if (editingTutor.application_id) {
-        updates.push(
-          supabase.from("tutor_applications").update({
+        const { error: applicationError } = await supabase
+          .from("tutor_applications")
+          .update({
             subjects: values.subjects,
             experience: values.experience.trim(),
             hourly_rate: Number(values.hourlyRate),
@@ -433,13 +437,11 @@ export default function AdminDashboard() {
             bio: values.bio.trim(),
             education: values.education.trim() || null,
             certifications: values.certifications.trim() || null,
-          }).eq("id", editingTutor.application_id),
-        );
-      }
+          })
+          .eq("id", editingTutor.application_id);
 
-      const results = await Promise.all(updates);
-      const failed = results.find((result) => result.error);
-      if (failed?.error) throw failed.error;
+        if (applicationError) throw applicationError;
+      }
 
       toast({ title: "Tutor profile updated" });
       setEditingTutor(null);
