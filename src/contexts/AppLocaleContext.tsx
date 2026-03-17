@@ -91,8 +91,7 @@ function normalizeCurrencyCode(value: string | null | undefined): CurrencyCode {
   return DEFAULT_CURRENCY;
 }
 
-function normalizeLanguage(value: string | null | undefined): Language {
-  if (value === "ka" || value === "ru" || value === "en") return value;
+function normalizeLanguage(_value: string | null | undefined): Language {
   return DEFAULT_LANGUAGE;
 }
 
