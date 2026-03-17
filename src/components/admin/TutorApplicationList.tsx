@@ -60,7 +60,7 @@ export function TutorApplicationList({
             <div className="flex flex-col gap-4 md:flex-row md:items-start">
               <div className="min-w-0 flex-1">
                 <div className="mb-1 flex items-center gap-2">
-                  <Badge variant="outline" className={cn(sc.color, "gap-1")}>
+                  <Badge variant={sc.tone === "warning" ? "secondary" : "outline"} className="gap-1">
                     <StatusIcon className="h-3 w-3" />
                     {sc.label}
                   </Badge>
