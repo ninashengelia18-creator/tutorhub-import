@@ -21,6 +21,17 @@ function detectLanguage(browserLanguage: string): Language {
   return "en";
 }
 
+function isValidTimeZone(value: string | null | undefined) {
+  if (!value) return false;
+
+  try {
+    Intl.DateTimeFormat("en-US", { timeZone: value }).format(new Date());
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function getClientIp(req: Request) {
   const forwardedFor = req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "";
   return forwardedFor.split(",")[0]?.trim() || null;
@@ -34,7 +45,8 @@ serve(async (req) => {
   try {
     const body = await req.json().catch(() => ({}));
     const browserLanguage = typeof body?.browserLanguage === "string" ? body.browserLanguage : req.headers.get("accept-language") ?? "en-US";
-    const browserTimeZone = typeof body?.browserTimeZone === "string" ? body.browserTimeZone : "UTC";
+    const requestedTimeZone = typeof body?.browserTimeZone === "string" ? body.browserTimeZone : null;
+    const browserTimeZone = isValidTimeZone(requestedTimeZone) ? requestedTimeZone : "UTC";
 
     const ip = getClientIp(req);
     let countryCode: string | null = null;
@@ -46,7 +58,10 @@ serve(async (req) => {
         const geoData = await geoResponse.json();
         if (geoData?.success) {
           countryCode = typeof geoData.country_code === "string" ? geoData.country_code.toUpperCase() : null;
-          timeZone = typeof geoData?.timezone?.id === "string" ? geoData.timezone.id : browserTimeZone;
+
+          if (!isValidTimeZone(timeZone) && typeof geoData?.timezone?.id === "string" && isValidTimeZone(geoData.timezone.id)) {
+            timeZone = geoData.timezone.id;
+          }
         }
       }
     }
@@ -58,7 +73,10 @@ serve(async (req) => {
     if (countryCode === "GE") {
       preferred_language = "ka";
       preferred_currency = "GEL";
-      timeZone = "Asia/Tbilisi";
+
+      if (!isValidTimeZone(timeZone)) {
+        timeZone = "Asia/Tbilisi";
+      }
     } else if (countryCode === "US") {
       preferred_language = "en";
       preferred_currency = "USD";
@@ -74,7 +92,7 @@ serve(async (req) => {
       countryCode,
       preferred_language,
       preferred_currency,
-      preferred_timezone: timeZone || browserTimeZone || "UTC",
+      preferred_timezone: isValidTimeZone(timeZone) ? timeZone : browserTimeZone,
     }), {
       status: 200,
       headers: {

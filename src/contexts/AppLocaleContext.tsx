@@ -63,9 +63,21 @@ export const TIMEZONE_OPTIONS: Array<{ value: string; label: string }> = [
   { value: "UTC", label: "UTC" },
 ];
 
+function isValidTimeZone(value: string | null | undefined) {
+  if (!value) return false;
+
+  try {
+    Intl.DateTimeFormat("en-US", { timeZone: value }).format(new Date());
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function getBrowserTimeZone() {
   try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone || DEFAULT_TIMEZONE;
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return isValidTimeZone(timeZone) ? timeZone : DEFAULT_TIMEZONE;
   } catch {
     return DEFAULT_TIMEZONE;
   }
@@ -85,10 +97,12 @@ function normalizeLanguage(value: string | null | undefined): Language {
 }
 
 function normalizePreferences(input?: Partial<LocalePreferences> | null): LocalePreferences {
+  const requestedTimeZone = input?.preferred_timezone?.trim();
+
   return {
     preferred_language: normalizeLanguage(input?.preferred_language),
     preferred_currency: normalizeCurrencyCode(input?.preferred_currency),
-    preferred_timezone: input?.preferred_timezone?.trim() || getBrowserTimeZone(),
+    preferred_timezone: isValidTimeZone(requestedTimeZone) ? requestedTimeZone : getBrowserTimeZone(),
   };
 }
 
@@ -118,12 +132,13 @@ function detectLanguageFromBrowser(browserLanguage: string) {
 
 function fallbackPreferences(browserLanguage: string, browserTimeZone: string) {
   const language = detectLanguageFromBrowser(browserLanguage);
+  const detectedTimeZone = isValidTimeZone(browserTimeZone) ? browserTimeZone : DEFAULT_TIMEZONE;
 
-  if (browserTimeZone === "Asia/Tbilisi" || language === "ka") {
+  if (detectedTimeZone === "Asia/Tbilisi") {
     return normalizePreferences({
       preferred_language: "ka",
       preferred_currency: "GEL",
-      preferred_timezone: "Asia/Tbilisi",
+      preferred_timezone: detectedTimeZone,
     });
   }
 
@@ -131,14 +146,14 @@ function fallbackPreferences(browserLanguage: string, browserTimeZone: string) {
     return normalizePreferences({
       preferred_language: "ru",
       preferred_currency: "USD",
-      preferred_timezone: browserTimeZone,
+      preferred_timezone: detectedTimeZone,
     });
   }
 
   return normalizePreferences({
     preferred_language: "en",
     preferred_currency: "USD",
-    preferred_timezone: browserTimeZone,
+    preferred_timezone: detectedTimeZone,
   });
 }
 
@@ -225,8 +240,15 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
       const browserLanguage = typeof navigator !== "undefined" ? navigator.language : "en-US";
       const browserTimeZone = getBrowserTimeZone();
       const localManualPreferences = readStoredPreferences(MANUAL_PREFERENCES_KEY);
+      let storedPreferences: Partial<LocalePreferences> | null = null;
 
       setIsDetecting(true);
+
+      if (localManualPreferences) {
+        applyManualPreferences(localManualPreferences);
+        setIsDetecting(false);
+        return;
+      }
 
       if (user?.id) {
         const { data } = await supabase
@@ -237,17 +259,7 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
 
         if (cancelled) return;
 
-        if (data) {
-          applyManualPreferences(data as unknown as LocalePreferences);
-          setIsDetecting(false);
-          return;
-        }
-
-        if (localManualPreferences) {
-          applyManualPreferences(localManualPreferences);
-          setIsDetecting(false);
-          return;
-        }
+        storedPreferences = (data as Partial<LocalePreferences> | null) ?? null;
       }
 
       try {
@@ -261,12 +273,20 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
         if (error) throw error;
         if (cancelled) return;
 
-        const detectedPreferences = normalizePreferences(data as Partial<LocalePreferences>);
+        const detectedPreferences = normalizePreferences({
+          ...storedPreferences,
+          ...(data as Partial<LocalePreferences> | null),
+          preferred_timezone: (data as Partial<LocalePreferences> | null)?.preferred_timezone ?? browserTimeZone,
+        });
         applyDetectedPreferences(detectedPreferences);
         await persistPreferences(detectedPreferences);
       } catch {
         if (cancelled) return;
-        const detectedPreferences = fallbackPreferences(browserLanguage, browserTimeZone);
+        const detectedPreferences = normalizePreferences({
+          ...storedPreferences,
+          ...fallbackPreferences(browserLanguage, browserTimeZone),
+          preferred_timezone: browserTimeZone,
+        });
         applyDetectedPreferences(detectedPreferences);
         await persistPreferences(detectedPreferences);
       } finally {

@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import { useMemo, type RefObject } from "react";
 import { Bell, CalendarDays, Camera, Loader2, Mail, Trash2 } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -113,6 +113,14 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
     onDeleteAccount,
     onDeleteDialogOpenChange,
   } = props;
+
+  const timezoneOptions = useMemo(() => {
+    if (TIMEZONE_OPTIONS.some((option) => option.value === timezone)) {
+      return TIMEZONE_OPTIONS;
+    }
+
+    return [{ value: timezone, label: getTimeZoneSettingLabel(timezone) }, ...TIMEZONE_OPTIONS];
+  }, [timezone]);
 
   if (activeSection === "password") {
     return (
@@ -260,7 +268,7 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
                 <SelectValue placeholder={t("profile.settings.timezone")} />
               </SelectTrigger>
               <SelectContent>
-                {TIMEZONE_OPTIONS.map((option) => (
+                {timezoneOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {getTimeZoneSettingLabel(option.value)}
                   </SelectItem>
