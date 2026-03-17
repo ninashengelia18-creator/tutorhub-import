@@ -1,38 +1,38 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Languages, Code, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Palette, Lightbulb, MapPin } from "lucide-react";
+import { BookOpen, Languages, Code, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Briefcase, Scale, Heart, BarChart3, Megaphone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const subjectCategories = [
   {
-    categoryKey: "home.cat.school",
+    categoryKey: "home.cat.k12",
     subjects: [
-      { icon: BookOpen, nameKey: "home.subj.georgianLit", href: "/search?subject=GeorgianLit", teacherCount: "18" },
       { icon: Calculator, nameKey: "home.subj.math", href: "/search?subject=Mathematics", teacherCount: "24" },
-      { icon: Languages, nameKey: "home.subj.english", href: "/search?subject=English", teacherCount: "32" },
-      { icon: Globe, nameKey: "home.subj.foreignLangs", href: "/search?subject=ForeignLanguages", teacherCount: "26" },
-      { icon: MapPin, nameKey: "home.subj.history", href: "/search?subject=History", teacherCount: "11" },
-      { icon: MapPin, nameKey: "home.subj.geography", href: "/search?subject=Geography", teacherCount: "7" },
-      { icon: FlaskConical, nameKey: "home.subj.biology", href: "/search?subject=Biology", teacherCount: "14" },
-      { icon: FlaskConical, nameKey: "home.subj.physics", href: "/search?subject=Physics", teacherCount: "15" },
-      { icon: FlaskConical, nameKey: "home.subj.chemistry", href: "/search?subject=Chemistry", teacherCount: "12" },
+      { icon: BookOpen, nameKey: "home.subj.english", href: "/search?subject=English", teacherCount: "32" },
+      { icon: FlaskConical, nameKey: "home.subj.science", href: "/search?subject=Science", teacherCount: "41" },
+      { icon: MapPin, nameKey: "home.subj.history", href: "/search?subject=History", teacherCount: "18" },
+      { icon: Languages, nameKey: "home.subj.foreignLangs", href: "/search?subject=ForeignLanguages", teacherCount: "26" },
+      { icon: Cpu, nameKey: "home.subj.computerScience", href: "/search?subject=ComputerScience", teacherCount: "15" },
     ],
   },
   {
-    categoryKey: "home.cat.exams",
+    categoryKey: "home.cat.gcse",
     subjects: [
-      { icon: GraduationCap, nameKey: "home.subj.examGeorgianLit", href: "/search?subject=ExamGeorgianLit", teacherCount: "6" },
-      { icon: GraduationCap, nameKey: "home.subj.examForeignLang", href: "/search?subject=ExamForeignLang", teacherCount: "9" },
-      { icon: GraduationCap, nameKey: "home.subj.examHistoryMath", href: "/search?subject=ExamHistoryMath", teacherCount: "8" },
-      { icon: Lightbulb, nameKey: "home.subj.generalAptitude", href: "/search?subject=GeneralAptitude", teacherCount: "5" },
+      { icon: GraduationCap, nameKey: "home.subj.gcseCore", href: "/search?subject=GCSE", teacherCount: "20" },
+      { icon: GraduationCap, nameKey: "home.subj.aLevel", href: "/search?subject=ALevel", teacherCount: "17" },
+      { icon: GraduationCap, nameKey: "home.subj.examPrep", href: "/search?subject=ExamPrep", teacherCount: "14" },
     ],
   },
   {
-    categoryKey: "home.cat.special",
+    categoryKey: "home.cat.professional",
     subjects: [
-      { icon: Cpu, nameKey: "home.subj.robotics", href: "/search?subject=Robotics", teacherCount: "3" },
+      { icon: Briefcase, nameKey: "home.subj.businessFinance", href: "/search?subject=BusinessFinance", teacherCount: "10" },
       { icon: Code, nameKey: "home.subj.programming", href: "/search?subject=Programming", teacherCount: "12" },
-      { icon: Palette, nameKey: "home.subj.art", href: "/search?subject=Art", teacherCount: "5" },
+      { icon: BarChart3, nameKey: "home.subj.dataScience", href: "/search?subject=DataScience", teacherCount: "8" },
+      { icon: Megaphone, nameKey: "home.subj.marketing", href: "/search?subject=Marketing", teacherCount: "6" },
+      { icon: Scale, nameKey: "home.subj.law", href: "/search?subject=Law", teacherCount: "5" },
+      { icon: Heart, nameKey: "home.subj.medicine", href: "/search?subject=Medicine", teacherCount: "7" },
+      { icon: Globe, nameKey: "home.subj.businessEnglish", href: "/search?subject=BusinessEnglish", teacherCount: "9" },
     ],
   },
 ];
