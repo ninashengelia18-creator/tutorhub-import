@@ -325,6 +325,92 @@ export type Database = {
         }
         Relationships: []
       }
+      public_tutor_profiles: {
+        Row: {
+          application_id: string | null
+          avatar_url: string | null
+          bio: string
+          certifications: string | null
+          country: string | null
+          created_at: string
+          education: string | null
+          email: string | null
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id: string
+          is_published: boolean
+          languages_spoken: string[]
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          primary_subject: string
+          rating: number
+          review_count: number
+          source: string
+          subjects: string[]
+          updated_at: string
+        }
+        Insert: {
+          application_id?: string | null
+          avatar_url?: string | null
+          bio: string
+          certifications?: string | null
+          country?: string | null
+          created_at?: string
+          education?: string | null
+          email?: string | null
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id?: string
+          is_published?: boolean
+          languages_spoken?: string[]
+          last_name: string
+          native_language?: string | null
+          other_languages?: string | null
+          primary_subject: string
+          rating?: number
+          review_count?: number
+          source?: string
+          subjects?: string[]
+          updated_at?: string
+        }
+        Update: {
+          application_id?: string | null
+          avatar_url?: string | null
+          bio?: string
+          certifications?: string | null
+          country?: string | null
+          created_at?: string
+          education?: string | null
+          email?: string | null
+          experience?: string
+          first_name?: string
+          hourly_rate?: number
+          id?: string
+          is_published?: boolean
+          languages_spoken?: string[]
+          last_name?: string
+          native_language?: string | null
+          other_languages?: string | null
+          primary_subject?: string
+          rating?: number
+          review_count?: number
+          source?: string
+          subjects?: string[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_tutor_profiles_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: true
+            referencedRelation: "tutor_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tutor_applications: {
         Row: {
           about_teaching: string | null
@@ -477,6 +563,57 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_create_tutor_profile: {
+        Args: {
+          _avatar_url?: string
+          _bio?: string
+          _certifications?: string
+          _country?: string
+          _education?: string
+          _email: string
+          _experience: string
+          _first_name: string
+          _hourly_rate: number
+          _last_name: string
+          _native_language?: string
+          _other_languages?: string
+          _primary_subject: string
+          _rating?: number
+          _review_count?: number
+          _subjects: string[]
+        }
+        Returns: {
+          application_id: string | null
+          avatar_url: string | null
+          bio: string
+          certifications: string | null
+          country: string | null
+          created_at: string
+          education: string | null
+          email: string | null
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id: string
+          is_published: boolean
+          languages_spoken: string[]
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          primary_subject: string
+          rating: number
+          review_count: number
+          source: string
+          subjects: string[]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "public_tutor_profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       approve_tutor_application: {
         Args: { _application_id: string }
         Returns: {
@@ -585,6 +722,40 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "tutor_applications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      sync_public_tutor_profile_from_application: {
+        Args: { _application_id: string }
+        Returns: {
+          application_id: string | null
+          avatar_url: string | null
+          bio: string
+          certifications: string | null
+          country: string | null
+          created_at: string
+          education: string | null
+          email: string | null
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id: string
+          is_published: boolean
+          languages_spoken: string[]
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          primary_subject: string
+          rating: number
+          review_count: number
+          source: string
+          subjects: string[]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "public_tutor_profiles"
           isOneToOne: true
           isSetofReturn: false
         }
