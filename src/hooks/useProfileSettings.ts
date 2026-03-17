@@ -70,6 +70,10 @@ export function useProfileSettings(redirectPath: string) {
     setEmail(user?.email || "");
   }, [user?.email]);
 
+  useEffect(() => {
+    setSelectedTimezone(timezone);
+  }, [timezone]);
+
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
