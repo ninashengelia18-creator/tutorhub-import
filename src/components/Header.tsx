@@ -36,11 +36,32 @@ const navLinks = [
   { labelKey: "nav.faq", href: "/faq" },
 ] as const;
 
+const k12Subjects = [
+  { label: "Mathematics", href: "/search?subject=Mathematics" },
+  { label: "English Language & Literature", href: "/search?subject=English" },
+  { label: "Physics", href: "/search?subject=Physics" },
+  { label: "Chemistry", href: "/search?subject=Chemistry" },
+  { label: "Biology", href: "/search?subject=Biology" },
+  { label: "History & Geography", href: "/search?subject=History" },
+  { label: "Computer Science", href: "/search?subject=ComputerScience" },
+];
+
+const gcseALevelSubjects = [
+  { label: "GCSE Mathematics", href: "/search?subject=Mathematics" },
+  { label: "GCSE English", href: "/search?subject=English" },
+  { label: "GCSE Sciences", href: "/search?subject=Science" },
+  { label: "A-Level Mathematics", href: "/search?subject=Mathematics" },
+  { label: "A-Level Physics", href: "/search?subject=Physics" },
+  { label: "A-Level Chemistry", href: "/search?subject=Chemistry" },
+  { label: "A-Level Biology", href: "/search?subject=Biology" },
+  { label: "A-Level Economics", href: "/search?subject=Economics" },
+];
+
 const forStudentsMenu = {
   findATutor: [
     { label: "Find a Tutor", href: "/search" },
-    { label: "K-12 Subjects", href: "/search?subject=K12" },
-    { label: "GCSE & A-Level", href: "/search?subject=GCSE" },
+    { label: "K-12 Subjects", href: "/search?subject=K12", children: k12Subjects },
+    { label: "GCSE & A-Level", href: "/search?subject=GCSE", children: gcseALevelSubjects },
     { label: "Professional Courses", href: "/search?subject=Professional" },
     { label: "Exam Preparation", href: "/search?subject=ExamPrep" },
   ],
