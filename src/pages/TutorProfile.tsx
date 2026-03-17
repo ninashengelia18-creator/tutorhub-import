@@ -223,6 +223,7 @@ export default function TutorProfile() {
   const tutor = tutorData[id || "1"] || tutorData["1"];
   const { t, lang } = useLanguage();
   const { user } = useAuth();
+  const { timezone } = useAppLocale();
   const { toast } = useToast();
   const text = useMemo(() => actionCopy[lang], [lang]);
   const [saved, setSaved] = useState(() => isTutorSaved(id || "1"));
