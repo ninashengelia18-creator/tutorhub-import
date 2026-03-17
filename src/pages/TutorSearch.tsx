@@ -24,6 +24,8 @@ export default function TutorSearch() {
   const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
+    let active = true;
+
     const loadTutors = async () => {
       setLoading(true);
       const { data } = await supabase
@@ -32,11 +34,28 @@ export default function TutorSearch() {
         .eq("is_published", true)
         .order("created_at", { ascending: false });
 
+      if (!active) return;
       setTutors(((data as PublicTutorProfile[] | null) ?? []).filter((tutor) => tutor.is_published));
       setLoading(false);
     };
 
     void loadTutors();
+
+    const channel = supabase
+      .channel("public-tutor-profiles")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "public_tutor_profiles" },
+        () => {
+          void loadTutors();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      active = false;
+      void supabase.removeChannel(channel);
+    };
   }, []);
 
   useEffect(() => {
