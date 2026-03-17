@@ -73,7 +73,10 @@ serve(async (req) => {
     if (countryCode === "GE") {
       preferred_language = "ka";
       preferred_currency = "GEL";
-      timeZone = "Asia/Tbilisi";
+
+      if (!isValidTimeZone(timeZone)) {
+        timeZone = "Asia/Tbilisi";
+      }
     } else if (countryCode === "US") {
       preferred_language = "en";
       preferred_currency = "USD";
@@ -89,7 +92,7 @@ serve(async (req) => {
       countryCode,
       preferred_language,
       preferred_currency,
-      preferred_timezone: timeZone || browserTimeZone || "UTC",
+      preferred_timezone: isValidTimeZone(timeZone) ? timeZone : browserTimeZone,
     }), {
       status: 200,
       headers: {

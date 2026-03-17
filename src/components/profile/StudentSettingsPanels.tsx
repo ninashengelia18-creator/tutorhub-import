@@ -268,7 +268,7 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
                 <SelectValue placeholder={t("profile.settings.timezone")} />
               </SelectTrigger>
               <SelectContent>
-                {TIMEZONE_OPTIONS.map((option) => (
+                {timezoneOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {getTimeZoneSettingLabel(option.value)}
                   </SelectItem>

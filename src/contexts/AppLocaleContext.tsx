@@ -240,8 +240,15 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
       const browserLanguage = typeof navigator !== "undefined" ? navigator.language : "en-US";
       const browserTimeZone = getBrowserTimeZone();
       const localManualPreferences = readStoredPreferences(MANUAL_PREFERENCES_KEY);
+      let storedPreferences: Partial<LocalePreferences> | null = null;
 
       setIsDetecting(true);
+
+      if (localManualPreferences) {
+        applyManualPreferences(localManualPreferences);
+        setIsDetecting(false);
+        return;
+      }
 
       if (user?.id) {
         const { data } = await supabase
@@ -252,17 +259,7 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
 
         if (cancelled) return;
 
-        if (data) {
-          applyManualPreferences(data as unknown as LocalePreferences);
-          setIsDetecting(false);
-          return;
-        }
-
-        if (localManualPreferences) {
-          applyManualPreferences(localManualPreferences);
-          setIsDetecting(false);
-          return;
-        }
+        storedPreferences = (data as Partial<LocalePreferences> | null) ?? null;
       }
 
       try {
@@ -276,12 +273,20 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
         if (error) throw error;
         if (cancelled) return;
 
-        const detectedPreferences = normalizePreferences(data as Partial<LocalePreferences>);
+        const detectedPreferences = normalizePreferences({
+          ...storedPreferences,
+          ...(data as Partial<LocalePreferences> | null),
+          preferred_timezone: (data as Partial<LocalePreferences> | null)?.preferred_timezone ?? browserTimeZone,
+        });
         applyDetectedPreferences(detectedPreferences);
         await persistPreferences(detectedPreferences);
       } catch {
         if (cancelled) return;
-        const detectedPreferences = fallbackPreferences(browserLanguage, browserTimeZone);
+        const detectedPreferences = normalizePreferences({
+          ...storedPreferences,
+          ...fallbackPreferences(browserLanguage, browserTimeZone),
+          preferred_timezone: browserTimeZone,
+        });
         applyDetectedPreferences(detectedPreferences);
         await persistPreferences(detectedPreferences);
       } finally {
