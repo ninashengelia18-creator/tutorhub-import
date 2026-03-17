@@ -151,7 +151,8 @@ export default function TutorApply() {
 
     setErrors((prev) => ({ ...prev, ...filteredErrors }));
 
-    return Object.keys(filteredErrors).length === 0;
+    const hasIdError = step === 4 && (!idFile || !confirmIdOwnership);
+    return Object.keys(filteredErrors).length === 0 && !hasIdError;
   };
 
   const clearStepErrors = (fields: FieldName[]) => {
