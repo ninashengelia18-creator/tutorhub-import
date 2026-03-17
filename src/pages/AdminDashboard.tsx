@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Building2, ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle, Clock, XCircle } from "lucide-react";
 
 import { Layout } from "@/components/Layout";
 import { TutorApplicationList, type TutorApplicationListItem } from "@/components/admin/TutorApplicationList";
@@ -39,6 +39,17 @@ interface AdminBooking {
   created_at: string;
 }
 
+interface BusinessInquiry {
+  id: string;
+  company_name: string;
+  contact_name: string;
+  email: string;
+  phone: string | null;
+  team_size: string | null;
+  message: string | null;
+  created_at: string;
+}
+
 const bookingStatusConfig: Record<string, { color: string; icon: typeof Clock; label: string }> = {
   pending: { color: "border-warning/30 bg-warning/10 text-warning", icon: Clock, label: "Pending" },
   confirmed: { color: "border-success/30 bg-success/10 text-success", icon: CheckCircle, label: "Confirmed" },
@@ -58,9 +69,10 @@ export default function AdminDashboard() {
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const [activeTab, setActiveTab] = useState<"bookings" | "tutors">("bookings");
+  const [activeTab, setActiveTab] = useState<"bookings" | "tutors" | "enquiries">("bookings");
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [applications, setApplications] = useState<TutorApplicationListItem[]>([]);
+  const [enquiries, setEnquiries] = useState<BusinessInquiry[]>([]);
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -100,10 +112,11 @@ export default function AdminDashboard() {
   }, []);
 
   const refreshAdminData = useCallback(async () => {
-    const [bookingResult, applicationResult, tutorResult] = await Promise.all([
+    const [bookingResult, applicationResult, tutorResult, enquiryResult] = await Promise.all([
       supabase.from("bookings").select("*").order("created_at", { ascending: false }),
       supabase.from("tutor_applications").select("*").order("created_at", { ascending: false }),
       supabase.from("public_tutor_profiles" as never).select("*").order("created_at", { ascending: false }),
+      supabase.from("business_inquiries").select("*").order("created_at", { ascending: false }),
     ]);
 
     if (bookingResult.error) {
@@ -122,6 +135,12 @@ export default function AdminDashboard() {
       toast({ title: "Error", description: tutorResult.error.message, variant: "destructive" });
     } else {
       setTutors((tutorResult.data as PublicTutorProfile[] | null) ?? []);
+    }
+
+    if (enquiryResult.error) {
+      toast({ title: "Error", description: enquiryResult.error.message, variant: "destructive" });
+    } else {
+      setEnquiries((enquiryResult.data as BusinessInquiry[] | null) ?? []);
     }
   }, [toast]);
 
@@ -672,6 +691,13 @@ export default function AdminDashboard() {
               <GraduationCap className="h-4 w-4" />
               Tutor management ({tutorStats.total})
             </button>
+            <button
+              onClick={() => setActiveTab("enquiries")}
+              className={`flex items-center gap-2 border-b-2 py-3 text-sm font-medium transition-colors ${activeTab === "enquiries" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            >
+              <Building2 className="h-4 w-4" />
+              Enquiries ({enquiries.length})
+            </button>
           </div>
 
           {activeTab === "bookings" && (
@@ -827,6 +853,50 @@ export default function AdminDashboard() {
                   pendingActionId={pendingTutorActionId}
                 />
               </section>
+            </>
+          )}
+
+          {activeTab === "enquiries" && (
+            <>
+              <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-2">
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-foreground">{enquiries.length}</p>
+                  <p className="text-xs text-muted-foreground">Total enquiries</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-info">
+                    {enquiries.filter((e) => {
+                      const d = new Date(e.created_at);
+                      const now = new Date();
+                      return now.getTime() - d.getTime() < 7 * 24 * 60 * 60 * 1000;
+                    }).length}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Last 7 days</p>
+                </div>
+              </div>
+
+              {loading ? (
+                <div className="py-12 text-center text-muted-foreground">Loading...</div>
+              ) : enquiries.length === 0 ? (
+                <div className="py-12 text-center text-muted-foreground">No business enquiries yet</div>
+              ) : (
+                <div className="space-y-3">
+                  {enquiries.map((enquiry) => (
+                    <div key={enquiry.id} className="rounded-xl border bg-card p-4">
+                      <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                        <div className="min-w-0 flex-1 space-y-1">
+                          <p className="text-sm font-semibold">{enquiry.company_name}</p>
+                          <p className="text-sm text-muted-foreground">{enquiry.contact_name} · {enquiry.email}</p>
+                          {enquiry.phone && <p className="text-sm text-muted-foreground">📞 {enquiry.phone}</p>}
+                          {enquiry.team_size && <p className="text-sm text-muted-foreground">👥 Team size: {enquiry.team_size}</p>}
+                          {enquiry.message && <p className="mt-2 text-sm italic text-muted-foreground">"{enquiry.message}"</p>}
+                        </div>
+                        <span className="shrink-0 text-xs text-muted-foreground">{new Date(enquiry.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </>
           )}
         </motion.div>

@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { submitFormspree } from "@/lib/formspree";
 import { toast } from "@/hooks/use-toast";
 import { z } from "zod";
 
@@ -51,20 +52,35 @@ export default function ForBusiness() {
       return;
     }
     setSubmitting(true);
-    const { error } = await supabase.from("business_inquiries").insert([{
-      company_name: parsed.data.company_name,
-      contact_name: parsed.data.contact_name,
-      email: parsed.data.email,
-      phone: parsed.data.phone || null,
-      team_size: parsed.data.team_size || null,
-      message: parsed.data.message || null,
-    }]);
-    setSubmitting(false);
-    if (error) {
-      toast({ title: t("biz.form.error"), variant: "destructive" });
-    } else {
+    try {
+      const row = {
+        company_name: parsed.data.company_name,
+        contact_name: parsed.data.contact_name,
+        email: parsed.data.email,
+        phone: parsed.data.phone || null,
+        team_size: parsed.data.team_size || null,
+        message: parsed.data.message || null,
+      };
+      const { error } = await supabase.from("business_inquiries").insert([row]);
+      if (error) throw error;
+
+      // Also send via Formspree so it arrives in the inbox
+      await submitFormspree({
+        email: parsed.data.email,
+        company_name: parsed.data.company_name,
+        contact_name: parsed.data.contact_name,
+        phone: parsed.data.phone || "Not provided",
+        team_size: parsed.data.team_size || "Not provided",
+        message: parsed.data.message || "No message",
+        _subject: `Business enquiry from ${parsed.data.company_name}`,
+      }).catch(() => {/* DB insert succeeded, email is best-effort */});
+
       toast({ title: t("biz.form.success") });
       setFormData({ company_name: "", contact_name: "", email: "", phone: "", team_size: "", message: "" });
+    } catch {
+      toast({ title: t("biz.form.error"), variant: "destructive" });
+    } finally {
+      setSubmitting(false);
     }
   };
 
