@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle, User, GraduationCap, BookOpen, Clock } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, User, GraduationCap, BookOpen, Clock, Upload, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   getTutorApplicationErrorMessage,
@@ -86,6 +86,10 @@ export default function TutorApply() {
   const [timezone, setTimezone] = useState("");
   const [aboutTeaching, setAboutTeaching] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [idFile, setIdFile] = useState<File | null>(null);
+  const [confirmIdOwnership, setConfirmIdOwnership] = useState(false);
+  const [idError, setIdError] = useState<string | null>(null);
+  const idInputRef = useRef<HTMLInputElement>(null);
 
   const fullName = useMemo(() => [firstName.trim(), lastName.trim()].filter(Boolean).join(" "), [firstName, lastName]);
 
@@ -131,6 +135,14 @@ export default function TutorApply() {
     if (step === 4) {
       nextErrors.availability = getFieldError("availability", availability);
       nextErrors.agreeTerms = getFieldError("agreeTerms", agreeTerms);
+
+      if (!idFile) {
+        setIdError("Please upload a photo of your government-issued ID.");
+      } else if (!confirmIdOwnership) {
+        setIdError("Please confirm the uploaded ID belongs to you.");
+      } else {
+        setIdError(null);
+      }
     }
 
     const filteredErrors = Object.fromEntries(
@@ -139,7 +151,8 @@ export default function TutorApply() {
 
     setErrors((prev) => ({ ...prev, ...filteredErrors }));
 
-    return Object.keys(filteredErrors).length === 0;
+    const hasIdError = step === 4 && (!idFile || !confirmIdOwnership);
+    return Object.keys(filteredErrors).length === 0 && !hasIdError;
   };
 
   const clearStepErrors = (fields: FieldName[]) => {
@@ -167,7 +180,7 @@ export default function TutorApply() {
       case 3:
         return !getFieldError("selectedSubjects", selectedSubjects) && !getFieldError("hourlyRate", hourlyRate);
       case 4:
-        return !getFieldError("availability", availability) && !getFieldError("agreeTerms", agreeTerms);
+        return !getFieldError("availability", availability) && !getFieldError("agreeTerms", agreeTerms) && !!idFile && confirmIdOwnership;
       default:
         return false;
     }
@@ -513,6 +526,62 @@ export default function TutorApply() {
                   <p className="text-xs text-muted-foreground">{t("tutor.apply.videoDesc")}</p>
                   <Input type="url" placeholder={t("tutor.apply.videoPlaceholder")} className="mt-1" />
 
+                </div>
+
+                {/* ID Verification */}
+                <div className="space-y-3 rounded-lg border border-border bg-card/50 p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ShieldCheck className="h-5 w-5 text-primary" />
+                    <Label className="text-base font-semibold">ID Verification *</Label>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Upload a photo of your government-issued ID (passport or national ID card).
+                  </p>
+                  <input
+                    ref={idInputRef}
+                    type="file"
+                    accept="image/*,.pdf"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      if (file && file.size > 10 * 1024 * 1024) {
+                        setIdError("File is too large. Maximum size is 10 MB.");
+                        setIdFile(null);
+                        return;
+                      }
+                      setIdFile(file);
+                      setIdError(null);
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full justify-center gap-2"
+                    onClick={() => idInputRef.current?.click()}
+                  >
+                    <Upload className="h-4 w-4" />
+                    {idFile ? idFile.name : "Choose file…"}
+                  </Button>
+
+                  <div className="flex items-start gap-3 pt-1">
+                    <Checkbox
+                      id="confirmId"
+                      checked={confirmIdOwnership}
+                      onCheckedChange={(v) => {
+                        setConfirmIdOwnership(v === true);
+                        if (v === true && idFile) setIdError(null);
+                      }}
+                    />
+                    <Label htmlFor="confirmId" className="text-sm leading-relaxed cursor-pointer">
+                      I confirm the uploaded ID belongs to me.
+                    </Label>
+                  </div>
+
+                  {idError && <p className="text-sm text-destructive">{idError}</p>}
+
+                  <p className="text-xs text-muted-foreground italic">
+                    Your ID is used for verification purposes only and will not be shared publicly.
+                  </p>
                 </div>
 
                 <div className="space-y-2">
