@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Building2, ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle, Clock, XCircle } from "lucide-react";
 
 import { Layout } from "@/components/Layout";
 import { TutorApplicationList, type TutorApplicationListItem } from "@/components/admin/TutorApplicationList";
