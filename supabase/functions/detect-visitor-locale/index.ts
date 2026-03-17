@@ -45,7 +45,8 @@ serve(async (req) => {
   try {
     const body = await req.json().catch(() => ({}));
     const browserLanguage = typeof body?.browserLanguage === "string" ? body.browserLanguage : req.headers.get("accept-language") ?? "en-US";
-    const browserTimeZone = typeof body?.browserTimeZone === "string" ? body.browserTimeZone : "UTC";
+    const requestedTimeZone = typeof body?.browserTimeZone === "string" ? body.browserTimeZone : null;
+    const browserTimeZone = isValidTimeZone(requestedTimeZone) ? requestedTimeZone : "UTC";
 
     const ip = getClientIp(req);
     let countryCode: string | null = null;
@@ -57,7 +58,10 @@ serve(async (req) => {
         const geoData = await geoResponse.json();
         if (geoData?.success) {
           countryCode = typeof geoData.country_code === "string" ? geoData.country_code.toUpperCase() : null;
-          timeZone = typeof geoData?.timezone?.id === "string" ? geoData.timezone.id : browserTimeZone;
+
+          if (!isValidTimeZone(timeZone) && typeof geoData?.timezone?.id === "string" && isValidTimeZone(geoData.timezone.id)) {
+            timeZone = geoData.timezone.id;
+          }
         }
       }
     }
