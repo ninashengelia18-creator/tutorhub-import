@@ -97,10 +97,12 @@ function normalizeLanguage(value: string | null | undefined): Language {
 }
 
 function normalizePreferences(input?: Partial<LocalePreferences> | null): LocalePreferences {
+  const requestedTimeZone = input?.preferred_timezone?.trim();
+
   return {
     preferred_language: normalizeLanguage(input?.preferred_language),
     preferred_currency: normalizeCurrencyCode(input?.preferred_currency),
-    preferred_timezone: input?.preferred_timezone?.trim() || getBrowserTimeZone(),
+    preferred_timezone: isValidTimeZone(requestedTimeZone) ? requestedTimeZone : getBrowserTimeZone(),
   };
 }
 
