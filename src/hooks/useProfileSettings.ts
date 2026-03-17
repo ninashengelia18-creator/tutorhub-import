@@ -13,7 +13,8 @@ export function useProfileSettings(redirectPath: string) {
   const { user, refreshProfile, updateProfileState, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { currency, timezone, setLocalePreferences } = useAppLocale();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [displayName, setDisplayName] = useState("");
