@@ -92,33 +92,48 @@ serve(async (req) => {
       authUserId = listedUsers.users.find((entry) => entry.email?.trim().toLowerCase() === normalizedEmail)?.id ?? null;
     }
 
-    const deletions = [
+    const deleteByTutorNameOperations = [
       adminClient.from("messages").delete().eq("tutor_name", fullName),
       adminClient.from("message_conversations").delete().eq("tutor_name", fullName),
       adminClient.from("bookings").delete().eq("tutor_name", fullName),
       adminClient.from("tutor_availability_slots").delete().eq("tutor_name", fullName),
-      adminClient.from("public_tutor_profiles").delete().eq("id", normalizedTutorProfileId),
     ];
 
-    if (tutor.application_id) {
-      deletions.push(adminClient.from("tutor_applications").delete().eq("id", tutor.application_id));
+    const deleteByTutorNameResults = await Promise.all(deleteByTutorNameOperations);
+    const failedTutorNameDeletion = deleteByTutorNameResults.find((result) => result.error);
+    if (failedTutorNameDeletion?.error) {
+      throw failedTutorNameDeletion.error;
     }
 
     if (authUserId) {
-      deletions.push(
+      const accountDeletionOperations = [
         adminClient.from("lesson_plans").delete().eq("tutor_id", authUserId),
         adminClient.from("messages").delete().eq("sender_id", authUserId),
         adminClient.from("notification_preferences").delete().eq("user_id", authUserId),
         adminClient.from("user_preferences").delete().eq("user_id", authUserId),
         adminClient.from("profiles").delete().eq("id", authUserId),
         adminClient.from("user_roles").delete().eq("user_id", authUserId),
-      );
+      ];
+
+      const accountDeletionResults = await Promise.all(accountDeletionOperations);
+      const failedAccountDeletion = accountDeletionResults.find((result) => result.error);
+      if (failedAccountDeletion?.error) {
+        throw failedAccountDeletion.error;
+      }
     }
 
-    const results = await Promise.all(deletions);
-    const failedResult = results.find((result) => result.error);
-    if (failedResult?.error) {
-      throw failedResult.error;
+    const { error: deleteProfileError } = await adminClient
+      .from("public_tutor_profiles")
+      .delete()
+      .eq("id", normalizedTutorProfileId);
+    if (deleteProfileError) throw deleteProfileError;
+
+    if (tutor.application_id) {
+      const { error: deleteApplicationError } = await adminClient
+        .from("tutor_applications")
+        .delete()
+        .eq("id", tutor.application_id);
+      if (deleteApplicationError) throw deleteApplicationError;
     }
 
     if (authUserId) {
