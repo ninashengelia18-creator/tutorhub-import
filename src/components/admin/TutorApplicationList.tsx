@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CheckCircle, Clock, XCircle } from "lucide-react";
+import { CheckCircle, Clock, XCircle, FileText } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface TutorApplicationListItem {
   id: string;
