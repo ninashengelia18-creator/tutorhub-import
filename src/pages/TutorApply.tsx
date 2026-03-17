@@ -453,22 +453,13 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.subjects")} *</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {subjectKeys.map((sub) => (
-                      <button
-                        key={sub.value}
-                        type="button"
-                        onClick={() => toggleSubject(sub.value)}
-                        className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                          selectedSubjects.includes(sub.value)
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-background text-foreground border-border hover:border-primary"
-                        }`}
-                      >
-                        {t(sub.key)}
-                      </button>
-                    ))}
-                  </div>
+                  <Input
+                    value={subjectText}
+                    onChange={(e) => handleSubjectChange(e.target.value)}
+                    placeholder="e.g. Mathematics, Physics, SAT Prep"
+                    aria-invalid={Boolean(errors.selectedSubjects)}
+                  />
+                  <p className="text-xs text-muted-foreground">Separate multiple subjects with commas</p>
                   {errors.selectedSubjects && <p className="text-sm text-destructive">{errors.selectedSubjects}</p>}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
