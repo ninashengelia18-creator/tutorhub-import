@@ -165,12 +165,10 @@ export default function TutorApply() {
     });
   };
 
-  const toggleSubject = (sub: string) => {
-    setSelectedSubjects((prev) => {
-      const next = prev.includes(sub) ? prev.filter((s) => s !== sub) : [...prev, sub];
-      setFieldError("selectedSubjects", next);
-      return next;
-    });
+  const handleSubjectChange = (value: string) => {
+    setSubjectText(value);
+    const parsed = value.split(",").map(s => s.trim()).filter(Boolean);
+    setFieldError("selectedSubjects", parsed);
   };
 
   const canProceed = () => {
