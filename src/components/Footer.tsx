@@ -37,74 +37,68 @@ export function Footer() {
   const { t } = useLanguage();
 
   const aboutLinks = [
-    { labelKey: "footer.howItWorks", href: "/" },
-    { labelKey: "footer.faq", href: "/faq" },
-    { labelKey: "footer.forBusiness", href: "/for-business" },
+    { label: "How it works", href: "/" },
+    { label: "FAQ", href: "/faq" },
+    { label: "For Business", href: "/for-business" },
   ];
 
   const studentLinks = [
-    { labelKey: "footer.findTutor", href: "/search" },
-    { labelKey: "footer.schoolSubjects", href: "/search?subject=Mathematics" },
-    { labelKey: "footer.examPrep", href: "/search?subject=ExamGeorgianLit" },
-    { labelKey: "footer.programming", href: "/search?subject=Programming" },
-    { labelKey: "footer.art", href: "/search?subject=Art" },
+    { label: "Find a Tutor", href: "/search" },
+    { label: "K-12 Subjects", href: "/search?subject=K12" },
+    { label: "GCSE & A-Level", href: "/search?subject=GCSE" },
+    { label: "Professional Courses", href: "/search?subject=Professional" },
+    { label: "Exam Preparation", href: "/search?subject=ExamPrep" },
   ];
 
   const tutorLinks = [
-    { labelKey: "footer.becomeTutor", href: "/become-tutor" },
-    { labelKey: "footer.applyNow", href: "/tutor-apply" },
+    { label: t("footer.becomeTutor"), href: "/become-tutor" },
+    { label: t("footer.applyNow"), href: "/tutor-apply" },
   ];
 
   const subjectLinks = [
-    { labelKey: "home.subj.georgianLit", href: "/search?subject=GeorgianLit" },
-    { labelKey: "home.subj.math", href: "/search?subject=Mathematics" },
-    { labelKey: "home.subj.english", href: "/search?subject=English" },
-    { labelKey: "home.subj.physics", href: "/search?subject=Physics" },
-    { labelKey: "home.subj.chemistry", href: "/search?subject=Chemistry" },
-    { labelKey: "home.subj.history", href: "/search?subject=History" },
-    { labelKey: "home.subj.biology", href: "/search?subject=Biology" },
-    { labelKey: "home.subj.programming", href: "/search?subject=Programming" },
-    { labelKey: "home.subj.robotics", href: "/search?subject=Robotics" },
-    { labelKey: "home.subj.art", href: "/search?subject=Art" },
+    { label: "Mathematics", href: "/search?subject=Mathematics" },
+    { label: "English Language & Literature", href: "/search?subject=English" },
+    { label: "Physics", href: "/search?subject=Physics" },
+    { label: "Chemistry", href: "/search?subject=Chemistry" },
+    { label: "Biology", href: "/search?subject=Biology" },
+    { label: "History & Geography", href: "/search?subject=History" },
+    { label: "Computer Science & Programming", href: "/search?subject=ComputerScience" },
+    { label: "Business & Finance", href: "/search?subject=BusinessFinance" },
+    { label: "Data Science", href: "/search?subject=DataScience" },
+    { label: "Law", href: "/search?subject=Law" },
+    { label: "Medicine & Healthcare", href: "/search?subject=Medicine" },
+    { label: "English for Professionals", href: "/search?subject=BusinessEnglish" },
   ];
 
   const learnLinks = [
-    { labelKey: "footer.learnEnglish", href: "/search?subject=English" },
-    { labelKey: "footer.learnSpanish", href: "/search?subject=Spanish" },
-    { labelKey: "footer.learnFrench", href: "/search?subject=French" },
-    { labelKey: "footer.learnGerman", href: "/search?subject=German" },
-    { labelKey: "footer.learnGeorgian", href: "/search?subject=Georgian" },
-    { labelKey: "footer.learnItalian", href: "/search?subject=Italian" },
-    { labelKey: "footer.learnAnother", href: "/search" },
-  ];
-
-  const onlineClassLinks = [
-    { labelKey: "footer.onlineEnglishClasses", href: "/search?subject=English" },
-    { labelKey: "footer.businessEnglish", href: "/search?subject=BusinessEnglish" },
-    { labelKey: "footer.onlineSpanishClasses", href: "/search?subject=Spanish" },
-    { labelKey: "footer.onlineFrenchClasses", href: "/search?subject=French" },
-    { labelKey: "footer.onlineGermanClasses", href: "/search?subject=German" },
+    { label: t("footer.learnEnglish"), href: "/search?subject=English" },
+    { label: t("footer.learnSpanish"), href: "/search?subject=Spanish" },
+    { label: t("footer.learnFrench"), href: "/search?subject=French" },
+    { label: t("footer.learnGerman"), href: "/search?subject=German" },
+    { label: t("footer.learnItalian"), href: "/search?subject=Italian" },
+    { label: t("footer.learnAnother"), href: "/search" },
   ];
 
   const tutorTypeLinks = [
-    { labelKey: "footer.englishTutors", href: "/search?subject=English" },
-    { labelKey: "footer.spanishTutors", href: "/search?subject=Spanish" },
-    { labelKey: "footer.frenchTutors", href: "/search?subject=French" },
-    { labelKey: "footer.germanTutors", href: "/search?subject=German" },
-    { labelKey: "footer.mathTutors", href: "/search?subject=Mathematics" },
+    { label: "English Tutors", href: "/search?subject=English" },
+    { label: "Maths Tutors", href: "/search?subject=Mathematics" },
+    { label: "Science Tutors", href: "/search?subject=Science" },
+    { label: "GCSE Tutors", href: "/search?subject=GCSE" },
+    { label: "A-Level Tutors", href: "/search?subject=ALevel" },
+    { label: "Professional Skills Tutors", href: "/search?subject=Professional" },
   ];
 
-  const renderLinkColumn = (titleKey: string, links: { labelKey: string; href: string }[]) => (
+  const renderLinkColumn = (title: string, links: { label?: string; labelKey?: string; href: string }[]) => (
     <div>
-      <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{t(titleKey)}</h4>
+      <h4 className="font-semibold text-sm text-foreground mb-3 uppercase tracking-wide">{title}</h4>
       <ul className="space-y-2">
-        {links.map((link) => (
-          <li key={link.labelKey}>
+        {links.map((link, i) => (
+          <li key={i}>
             <Link
               to={link.href}
               className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              {t(link.labelKey)}
+              {link.label || (link.labelKey ? t(link.labelKey) : "")}
             </Link>
           </li>
         ))}
@@ -116,20 +110,19 @@ export function Footer() {
     <footer className="border-t border-border/50 bg-secondary/30">
       <div className="container py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {renderLinkColumn("footer.aboutUs", aboutLinks)}
-          {renderLinkColumn("footer.forStudents", studentLinks)}
-          {renderLinkColumn("footer.forTutors", tutorLinks)}
-          {renderLinkColumn("footer.subjects", subjectLinks)}
+          {renderLinkColumn(t("footer.aboutUs"), aboutLinks)}
+          {renderLinkColumn(t("footer.forStudents"), studentLinks)}
+          {renderLinkColumn(t("footer.forTutors"), tutorLinks)}
+          {renderLinkColumn(t("footer.subjects"), subjectLinks)}
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mt-10 pt-8 border-t border-border/50">
-          {renderLinkColumn("footer.learn", learnLinks)}
-          {renderLinkColumn("footer.onlineClasses", onlineClassLinks)}
-          {renderLinkColumn("footer.oneOnOneTutors", tutorTypeLinks)}
+          {renderLinkColumn(t("footer.learn"), learnLinks)}
+          {renderLinkColumn(t("footer.oneOnOneTutors"), tutorTypeLinks)}
         </div>
       </div>
 
-      {/* Support, Contacts, Social, Apps */}
+      {/* Support, Contacts, Social */}
       <div className="border-t border-border/50">
         <div className="container py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
