@@ -30,6 +30,7 @@ export function useProfileSettings(redirectPath: string) {
   const [deleteEmail, setDeleteEmail] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [notificationPreferences, setNotificationPreferences] = useState({ email_transactional: true, email_tips_discount: false, email_surveys: false });
+  const [selectedTimezone, setSelectedTimezone] = useState(timezone);
 
   const fetchProfile = useCallback(async () => {
     if (!user) {
