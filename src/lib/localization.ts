@@ -10,13 +10,15 @@ const SUBJECT_TRANSLATION_KEYS: Record<string, string> = {
   chemistry: "home.subj.chemistry",
   biology: "home.subj.biology",
   history: "home.subj.history",
-  geography: "home.subj.geography",
-  georgian: "td.georgian",
-  russian: "td.russian",
-  music: "td.music",
-  art: "home.subj.art",
-  "drawing / art": "home.subj.art",
-  "georgian language & literature": "home.subj.georgianLit",
+  science: "home.subj.science",
+  "computer science": "home.subj.computerScience",
+  "foreign languages": "home.subj.foreignLangs",
+  "business & finance": "home.subj.businessFinance",
+  "data science": "home.subj.dataScience",
+  marketing: "home.subj.marketing",
+  law: "home.subj.law",
+  medicine: "home.subj.medicine",
+  "business english": "home.subj.businessEnglish",
 };
 
 const SUBJECT_CANONICAL_VALUES: Record<string, string> = {
