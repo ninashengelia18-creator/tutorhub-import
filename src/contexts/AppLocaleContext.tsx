@@ -122,10 +122,7 @@ function writeStoredPreferences(key: string, preferences: LocalePreferences) {
   localStorage.setItem(key, JSON.stringify(preferences));
 }
 
-function detectLanguageFromBrowser(browserLanguage: string) {
-  const normalized = browserLanguage.toLowerCase();
-  if (normalized.startsWith("ka")) return "ka" satisfies Language;
-  if (normalized.startsWith("ru")) return "ru" satisfies Language;
+function detectLanguageFromBrowser(_browserLanguage: string) {
   return "en" satisfies Language;
 }
 
