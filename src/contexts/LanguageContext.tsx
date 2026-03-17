@@ -2001,6 +2001,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Nav
     "nav.home": "Главная",
     "nav.findTutors": "Репетиторы",
+    "nav.conversationPartners": "Партнёры для разговора",
     "nav.forBusiness": "Для бизнеса",
     "nav.becomeTutor": "Стать репетитором",
     "nav.provenProgress": "Прогресс",
