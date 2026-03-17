@@ -33,6 +33,7 @@ interface StudentSettingsPanelsProps {
   initials: string;
   firstName: string;
   lastName: string;
+  timezone: string;
   loading: boolean;
   uploading: boolean;
   fileInputRef: RefObject<HTMLInputElement>;
@@ -50,6 +51,7 @@ interface StudentSettingsPanelsProps {
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
   onEmailChange: (value: string) => void;
+  onTimezoneChange: (value: string) => void;
   onCurrentPasswordChange: (value: string) => void;
   onNewPasswordChange: (value: string) => void;
   onConfirmPasswordChange: (value: string) => void;
