@@ -58,7 +58,7 @@ export default function AdminDashboard() {
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const [activeTab, setActiveTab] = useState<"bookings" | "tutors">("bookings");
+  const [activeTab, setActiveTab] = useState<"bookings" | "tutors" | "enquiries">("bookings");
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [applications, setApplications] = useState<TutorApplicationListItem[]>([]);
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
