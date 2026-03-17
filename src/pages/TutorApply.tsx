@@ -18,6 +18,19 @@ import {
 const TOTAL_STEPS = 4;
 const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
 
+type FieldName =
+  | "firstName"
+  | "lastName"
+  | "email"
+  | "experience"
+  | "bio"
+  | "selectedSubjects"
+  | "hourlyRate"
+  | "availability"
+  | "agreeTerms";
+
+type FormErrors = Partial<Record<FieldName, string>>;
+
 const subjectKeys = [
   { value: "English", key: "tutor.apply.subj.english" },
   { value: "Mathematics", key: "tutor.apply.subj.mathematics" },
@@ -47,6 +60,7 @@ export default function TutorApply() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   // Step 1 — Personal Info
   const [firstName, setFirstName] = useState("");
@@ -75,28 +89,103 @@ export default function TutorApply() {
 
   const fullName = useMemo(() => [firstName.trim(), lastName.trim()].filter(Boolean).join(" "), [firstName, lastName]);
 
+  const getFieldError = (fieldName: FieldName, value: unknown) => {
+    const result = tutorApplicationSchema.shape[fieldName].safeParse(value);
+    return result.success ? undefined : result.error.issues[0]?.message;
+  };
+
+  const setFieldError = (fieldName: FieldName, value: unknown) => {
+    setErrors((prev) => {
+      const next = { ...prev };
+      const message = getFieldError(fieldName, value);
+
+      if (message) {
+        next[fieldName] = message;
+      } else {
+        delete next[fieldName];
+      }
+
+      return next;
+    });
+  };
+
+  const validateCurrentStep = () => {
+    const nextErrors: FormErrors = {};
+
+    if (step === 1) {
+      nextErrors.firstName = getFieldError("firstName", firstName);
+      nextErrors.lastName = getFieldError("lastName", lastName);
+      nextErrors.email = getFieldError("email", email);
+    }
+
+    if (step === 2) {
+      nextErrors.experience = getFieldError("experience", experience);
+      nextErrors.bio = getFieldError("bio", bio);
+    }
+
+    if (step === 3) {
+      nextErrors.selectedSubjects = getFieldError("selectedSubjects", selectedSubjects);
+      nextErrors.hourlyRate = getFieldError("hourlyRate", hourlyRate);
+    }
+
+    if (step === 4) {
+      nextErrors.availability = getFieldError("availability", availability);
+      nextErrors.agreeTerms = getFieldError("agreeTerms", agreeTerms);
+    }
+
+    const filteredErrors = Object.fromEntries(
+      Object.entries(nextErrors).filter(([, value]) => Boolean(value))
+    ) as FormErrors;
+
+    setErrors((prev) => ({ ...prev, ...filteredErrors }));
+
+    return Object.keys(filteredErrors).length === 0;
+  };
+
+  const clearStepErrors = (fields: FieldName[]) => {
+    setErrors((prev) => {
+      const next = { ...prev };
+      fields.forEach((field) => delete next[field]);
+      return next;
+    });
+  };
+
   const toggleSubject = (sub: string) => {
-    setSelectedSubjects((prev) =>
-      prev.includes(sub) ? prev.filter((s) => s !== sub) : [...prev, sub]
-    );
+    setSelectedSubjects((prev) => {
+      const next = prev.includes(sub) ? prev.filter((s) => s !== sub) : [...prev, sub];
+      setFieldError("selectedSubjects", next);
+      return next;
+    });
   };
 
   const canProceed = () => {
     switch (step) {
       case 1:
-        return firstName.trim().length > 0 && lastName.trim().length > 0 && email.trim().length > 0;
+        return !getFieldError("firstName", firstName) && !getFieldError("lastName", lastName) && !getFieldError("email", email);
       case 2:
-        return experience.trim().length > 0 && bio.trim().length >= 30;
+        return !getFieldError("experience", experience) && !getFieldError("bio", bio);
       case 3:
-        return selectedSubjects.length > 0 && hourlyRate.trim().length > 0;
+        return !getFieldError("selectedSubjects", selectedSubjects) && !getFieldError("hourlyRate", hourlyRate);
       case 4:
-        return availability.trim().length > 0 && agreeTerms;
+        return !getFieldError("availability", availability) && !getFieldError("agreeTerms", agreeTerms);
       default:
         return false;
     }
   };
 
+  const handleNextStep = () => {
+    if (!validateCurrentStep()) return;
+
+    if (step === 1) clearStepErrors(["firstName", "lastName", "email"]);
+    if (step === 2) clearStepErrors(["experience", "bio"]);
+    if (step === 3) clearStepErrors(["selectedSubjects", "hourlyRate"]);
+
+    setStep((currentStep) => currentStep + 1);
+  };
+
   const handleSubmit = async () => {
+    if (!validateCurrentStep()) return;
+
     setSubmitting(true);
 
     try {
@@ -157,6 +246,7 @@ export default function TutorApply() {
         throw new Error(formspreeMessage || "We couldn't submit your application right now. Please try again in a moment.");
       }
 
+      clearStepErrors(["availability", "agreeTerms"]);
       setSubmitted(true);
     } catch (error: unknown) {
       toast({
