@@ -122,8 +122,8 @@ function writeStoredPreferences(key: string, preferences: LocalePreferences) {
   localStorage.setItem(key, JSON.stringify(preferences));
 }
 
-function detectLanguageFromBrowser(_browserLanguage: string) {
-  return "en" satisfies Language;
+function detectLanguageFromBrowser(_browserLanguage: string): Language {
+  return "en";
 }
 
 function fallbackPreferences(browserLanguage: string, browserTimeZone: string) {
