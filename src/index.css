@@ -6,61 +6,61 @@
 
 @layer base {
   :root {
-    /* Dark purple theme — #1A0533 base */
-    --background: 270 60% 10%;
+    /* Lightened premium purple theme */
+    --background: 268 58% 18%;
     --foreground: 0 0% 100%;
 
-    --card: 270 55% 15%;
+    --card: 268 52% 22%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 270 55% 15%;
+    --popover: 268 52% 22%;
     --popover-foreground: 0 0% 100%;
 
     /* Bright purple #9333EA */
     --primary: 271 81% 56%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary #2D0A5E */
-    --secondary: 270 80% 20%;
+    /* Lighter secondary purple */
+    --secondary: 269 63% 28%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Light purple subtext #C4B5FD */
-    --muted: 270 50% 18%;
-    --muted-foreground: 263 83% 85%;
+    /* Softer purple surfaces */
+    --muted: 268 42% 24%;
+    --muted-foreground: 263 83% 88%;
 
-    --accent: 270 60% 25%;
+    --accent: 269 55% 32%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 270 40% 22%;
-    --input: 270 40% 22%;
+    --border: 269 34% 30%;
+    --input: 269 34% 30%;
     --ring: 271 81% 56%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 270 60% 8%;
+    --sidebar-background: 268 58% 16%;
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 271 81% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 270 50% 18%;
+    --sidebar-accent: 268 42% 24%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 270 40% 22%;
+    --sidebar-border: 269 34% 30%;
     --sidebar-ring: 271 81% 56%;
 
     /* Custom tokens */
     --primary-hover: 271 81% 48%;
-    --primary-light: 270 55% 15%;
+    --primary-light: 268 52% 22%;
     --success: 142 71% 45%;
     --warning: 38 92% 50%;
     --info: 210 79% 46%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(271, 81%, 56%), hsl(290, 70%, 50%));
-    --gradient-cta: linear-gradient(135deg, hsl(271, 81%, 56%), hsl(250, 80%, 55%));
-    --shadow-card: 0 0 20px -5px hsla(271, 81%, 56%, 0.15);
-    --shadow-card-hover: 0 0 30px -5px hsla(271, 81%, 56%, 0.3);
-    --shadow-elevated: 0 20px 40px -10px hsla(271, 81%, 56%, 0.2);
+    --gradient-hero: linear-gradient(135deg, hsl(271, 81%, 60%), hsl(286, 72%, 56%));
+    --gradient-cta: linear-gradient(135deg, hsl(271, 81%, 58%), hsl(254, 78%, 60%));
+    --shadow-card: 0 0 20px -5px hsla(271, 81%, 56%, 0.16);
+    --shadow-card-hover: 0 0 30px -5px hsla(271, 81%, 56%, 0.28);
+    --shadow-elevated: 0 20px 40px -10px hsla(271, 81%, 56%, 0.22);
   }
 }
 
