@@ -39,6 +39,17 @@ interface AdminBooking {
   created_at: string;
 }
 
+interface BusinessInquiry {
+  id: string;
+  company_name: string;
+  contact_name: string;
+  email: string;
+  phone: string | null;
+  team_size: string | null;
+  message: string | null;
+  created_at: string;
+}
+
 const bookingStatusConfig: Record<string, { color: string; icon: typeof Clock; label: string }> = {
   pending: { color: "border-warning/30 bg-warning/10 text-warning", icon: Clock, label: "Pending" },
   confirmed: { color: "border-success/30 bg-success/10 text-success", icon: CheckCircle, label: "Confirmed" },
