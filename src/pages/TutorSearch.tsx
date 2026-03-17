@@ -157,7 +157,7 @@ export default function TutorSearch() {
                           <p className="text-sm font-medium text-primary">{tutor.primary_subject}</p>
                         </div>
                         <div className="text-left sm:text-right">
-                          <p className="text-2xl font-bold text-foreground">${Number(tutor.hourly_rate).toFixed(0)}</p>
+                          <p className="text-2xl font-bold text-foreground">${Number(tutor.hourly_rate).toFixed(0)} USD</p>
                           <p className="text-xs text-muted-foreground">per hour</p>
                         </div>
                       </div>

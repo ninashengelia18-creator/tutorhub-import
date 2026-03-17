@@ -36,11 +36,32 @@ const navLinks = [
   { labelKey: "nav.faq", href: "/faq" },
 ] as const;
 
+const k12Subjects = [
+  { label: "Mathematics", href: "/search?subject=Mathematics" },
+  { label: "English Language & Literature", href: "/search?subject=English" },
+  { label: "Physics", href: "/search?subject=Physics" },
+  { label: "Chemistry", href: "/search?subject=Chemistry" },
+  { label: "Biology", href: "/search?subject=Biology" },
+  { label: "History & Geography", href: "/search?subject=History" },
+  { label: "Computer Science", href: "/search?subject=ComputerScience" },
+];
+
+const gcseALevelSubjects = [
+  { label: "GCSE Mathematics", href: "/search?subject=Mathematics" },
+  { label: "GCSE English", href: "/search?subject=English" },
+  { label: "GCSE Sciences", href: "/search?subject=Science" },
+  { label: "A-Level Mathematics", href: "/search?subject=Mathematics" },
+  { label: "A-Level Physics", href: "/search?subject=Physics" },
+  { label: "A-Level Chemistry", href: "/search?subject=Chemistry" },
+  { label: "A-Level Biology", href: "/search?subject=Biology" },
+  { label: "A-Level Economics", href: "/search?subject=Economics" },
+];
+
 const forStudentsMenu = {
   findATutor: [
     { label: "Find a Tutor", href: "/search" },
-    { label: "K-12 Subjects", href: "/search?subject=K12" },
-    { label: "GCSE & A-Level", href: "/search?subject=GCSE" },
+    { label: "K-12 Subjects", href: "/search?subject=K12", children: k12Subjects },
+    { label: "GCSE & A-Level", href: "/search?subject=GCSE", children: gcseALevelSubjects },
     { label: "Professional Courses", href: "/search?subject=Professional" },
     { label: "Exam Preparation", href: "/search?subject=ExamPrep" },
   ],
@@ -88,19 +109,43 @@ function initialsFromValue(value: string) {
   );
 }
 
-function MegaMenuColumn({ title, items }: { title: string; items: { label: string; href: string }[] }) {
+function MegaMenuColumn({ title, items }: { title: string; items: { label: string; href: string; children?: { label: string; href: string }[] }[] }) {
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
   return (
     <div>
       <h4 className="text-xs font-bold uppercase tracking-wider text-primary mb-3">{title}</h4>
       <ul className="space-y-1.5">
         {items.map((item) => (
-          <li key={item.href + item.label}>
+          <li
+            key={item.href + item.label}
+            className="relative"
+            onMouseEnter={() => item.children && setHoveredItem(item.label)}
+            onMouseLeave={() => setHoveredItem(null)}
+          >
             <Link
               to={item.href}
-              className="block text-sm text-foreground/80 hover:text-primary transition-colors py-0.5"
+              className="flex items-center justify-between text-sm text-foreground/80 hover:text-primary transition-colors py-0.5"
             >
               {item.label}
+              {item.children && <ChevronDown className="h-3 w-3 -rotate-90" />}
             </Link>
+            {item.children && hoveredItem === item.label && (
+              <div className="absolute left-full top-0 z-50 ml-2 w-56 rounded-xl border border-border/70 bg-popover p-3 shadow-lg">
+                <ul className="space-y-1">
+                  {item.children.map((child) => (
+                    <li key={child.href + child.label}>
+                      <Link
+                        to={child.href}
+                        className="block text-sm text-foreground/80 hover:text-primary transition-colors py-0.5"
+                      >
+                        {child.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </li>
         ))}
       </ul>

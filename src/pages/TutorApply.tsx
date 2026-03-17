@@ -76,8 +76,9 @@ export default function TutorApply() {
   const [certifications, setCertifications] = useState("");
   const [bio, setBio] = useState("");
 
-  // Step 3 — Subjects & Rate
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+  // Step 3 — Subject & Rate
+  const [subjectText, setSubjectText] = useState("");
+  const selectedSubjects = useMemo(() => subjectText.split(",").map(s => s.trim()).filter(Boolean), [subjectText]);
   const [hourlyRate, setHourlyRate] = useState("");
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [otherLanguages, setOtherLanguages] = useState("");
@@ -164,12 +165,10 @@ export default function TutorApply() {
     });
   };
 
-  const toggleSubject = (sub: string) => {
-    setSelectedSubjects((prev) => {
-      const next = prev.includes(sub) ? prev.filter((s) => s !== sub) : [...prev, sub];
-      setFieldError("selectedSubjects", next);
-      return next;
-    });
+  const handleSubjectChange = (value: string) => {
+    setSubjectText(value);
+    const parsed = value.split(",").map(s => s.trim()).filter(Boolean);
+    setFieldError("selectedSubjects", parsed);
   };
 
   const canProceed = () => {
@@ -454,27 +453,18 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.subjects")} *</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {subjectKeys.map((sub) => (
-                      <button
-                        key={sub.value}
-                        type="button"
-                        onClick={() => toggleSubject(sub.value)}
-                        className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                          selectedSubjects.includes(sub.value)
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-background text-foreground border-border hover:border-primary"
-                        }`}
-                      >
-                        {t(sub.key)}
-                      </button>
-                    ))}
-                  </div>
+                  <Input
+                    value={subjectText}
+                    onChange={(e) => handleSubjectChange(e.target.value)}
+                    placeholder="e.g. Mathematics, Physics, SAT Prep"
+                    aria-invalid={Boolean(errors.selectedSubjects)}
+                  />
+                  <p className="text-xs text-muted-foreground">Separate multiple subjects with commas</p>
                   {errors.selectedSubjects && <p className="text-sm text-destructive">{errors.selectedSubjects}</p>}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>{t("tutor.apply.rate")} * (GEL/hr)</Label>
+                    <Label>{t("tutor.apply.rate")} * (USD/hr)</Label>
                     <Input
                       type="number"
                       min="1"
