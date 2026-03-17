@@ -72,6 +72,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<"bookings" | "tutors" | "enquiries">("bookings");
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [applications, setApplications] = useState<TutorApplicationListItem[]>([]);
+  const [enquiries, setEnquiries] = useState<BusinessInquiry[]>([]);
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
