@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,9 +10,13 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle, User, GraduationCap, BookOpen, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
+import {
+  getTutorApplicationErrorMessage,
+  tutorApplicationSchema,
+} from "@/lib/tutorApplicationValidation";
 
 const TOTAL_STEPS = 4;
+const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
 
 const subjectKeys = [
   { value: "English", key: "tutor.apply.subj.english" },
@@ -69,6 +73,8 @@ export default function TutorApply() {
   const [aboutTeaching, setAboutTeaching] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
 
+  const fullName = useMemo(() => [firstName.trim(), lastName.trim()].filter(Boolean).join(" "), [firstName, lastName]);
+
   const toggleSubject = (sub: string) => {
     setSelectedSubjects((prev) =>
       prev.includes(sub) ? prev.filter((s) => s !== sub) : [...prev, sub]
@@ -77,47 +83,87 @@ export default function TutorApply() {
 
   const canProceed = () => {
     switch (step) {
-      case 1: return firstName.trim() && lastName.trim() && email.trim();
-      case 2: return experience && bio.trim();
-      case 3: return selectedSubjects.length > 0 && hourlyRate;
-      case 4: return availability && agreeTerms;
-      default: return false;
+      case 1:
+        return firstName.trim().length > 0 && lastName.trim().length > 0 && email.trim().length > 0;
+      case 2:
+        return experience.trim().length > 0 && bio.trim().length >= 30;
+      case 3:
+        return selectedSubjects.length > 0 && hourlyRate.trim().length > 0;
+      case 4:
+        return availability.trim().length > 0 && agreeTerms;
+      default:
+        return false;
     }
   };
 
   const handleSubmit = async () => {
     setSubmitting(true);
+
     try {
-      const applicationData = {
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        email: email.trim(),
-        phone: phone.trim() || null,
-        country: country.trim() || null,
+      const validatedData = tutorApplicationSchema.parse({
+        firstName,
+        lastName,
+        email,
+        phone,
+        country,
         experience,
-        education: education.trim() || null,
-        certifications: certifications.trim() || null,
-        bio: bio.trim(),
-        subjects: selectedSubjects,
-        hourly_rate: parseFloat(hourlyRate),
-        native_language: nativeLanguage.trim() || null,
-        other_languages: otherLanguages.trim() || null,
+        education,
+        certifications,
+        bio,
+        selectedSubjects,
+        hourlyRate,
+        nativeLanguage,
+        otherLanguages,
         availability,
-        timezone: timezone.trim() || null,
-        about_teaching: aboutTeaching.trim() || null,
+        timezone,
+        aboutTeaching,
+        agreeTerms,
+      });
+
+      const payload = {
+        name: fullName,
+        email: validatedData.email.trim(),
+        full_name: fullName,
+        subject_taught: validatedData.selectedSubjects.join(", "),
+        experience: validatedData.experience,
+        qualifications: [validatedData.education.trim(), validatedData.certifications.trim()].filter(Boolean).join(" | ") || "Not provided",
+        languages_spoken: [validatedData.nativeLanguage.trim(), validatedData.otherLanguages.trim()].filter(Boolean).join(", ") || "Not provided",
+        hourly_rate: Number(validatedData.hourlyRate),
+        country: validatedData.country.trim() || "Not provided",
+        phone: validatedData.phone?.trim() || "Not provided",
+        availability: validatedData.availability,
+        timezone: validatedData.timezone.trim() || "Not provided",
+        about_teaching: validatedData.aboutTeaching.trim() || "Not provided",
+        bio: validatedData.bio.trim(),
+        _subject: `New Tutor Application: ${fullName}`,
       };
 
-      // Submit to Formspree → forwards to info@learneazy.org
-      const res = await fetch("https://formspree.io/f/mojknpqp", {
+      const res = await fetch(FORMSPREE_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(applicationData),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Submission failed");
+
+      const result = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        const formspreeMessage = Array.isArray(result?.errors)
+          ? result.errors.map((issue: { message?: string }) => issue.message).filter(Boolean).join(" ")
+          : result?.error;
+
+        throw new Error(formspreeMessage || "We couldn't submit your application right now. Please try again in a moment.");
+      }
 
       setSubmitted(true);
-    } catch (err: any) {
-      toast({ title: t("tutor.apply.error"), variant: "destructive" });
+    } catch (error: unknown) {
+      toast({
+        title: t("tutor.apply.error"),
+        description: getTutorApplicationErrorMessage(error),
+        variant: "destructive",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -329,7 +375,7 @@ export default function TutorApply() {
                   <Label>{t("tutor.apply.videoLabel")}</Label>
                   <p className="text-xs text-muted-foreground">{t("tutor.apply.videoDesc")}</p>
                   <Input type="url" placeholder={t("tutor.apply.videoPlaceholder")} className="mt-1" />
-                  
+
                 </div>
 
                 <div className="space-y-2">
