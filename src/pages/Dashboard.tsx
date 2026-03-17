@@ -1,15 +1,17 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Clock, Video, MoreHorizontal, TrendingUp, Monitor, ChevronRight, BookOpen, Search, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { SubscribePlansDialog } from "@/components/SubscribePlansDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { localizeSubjectLabel } from "@/lib/localization";
+import { formatDateInTimeZone, formatLessonTimeRange } from "@/lib/datetime";
 
 interface Booking {
   id: string;
@@ -20,6 +22,8 @@ interface Booking {
   lesson_date: string;
   start_time: string;
   end_time: string;
+  lesson_start_at?: string | null;
+  lesson_end_at?: string | null;
   price_amount: number;
   currency: string;
   status: string;
@@ -28,7 +32,8 @@ interface Booking {
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { timezone } = useAppLocale();
+  const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const displayName = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "";
@@ -38,24 +43,37 @@ export default function Dashboard() {
       const { data } = await supabase
         .from("bookings")
         .select("*")
-        .order("lesson_date", { ascending: true });
-      setBookings(data || []);
+        .order("lesson_start_at", { ascending: true });
+      setBookings((data as Booking[]) || []);
       setLoading(false);
     }
-    fetchBookings();
+    void fetchBookings();
   }, []);
 
-  const today = new Date().toISOString().split("T")[0];
-  const upcomingBookings = bookings.filter(b => b.lesson_date >= today && b.status === "confirmed");
+  const now = new Date();
+
+  const upcomingBookings = useMemo(
+    () => bookings.filter((booking) => booking.status === "confirmed" && booking.lesson_start_at && new Date(booking.lesson_start_at) >= now),
+    [bookings, now],
+  );
   const lastTutor = bookings.length > 0 ? bookings[bookings.length - 1] : null;
 
-  const formatTime = (time: string) => time.slice(0, 5);
+  const formatLessonDate = (value?: string | null) =>
+    value
+      ? formatDateInTimeZone(value, lang, timezone, {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        })
+      : "";
+
+  const renderLessonRange = (booking: Booking) =>
+    formatLessonTimeRange(booking.lesson_start_at, booking.lesson_end_at, lang, timezone);
 
   return (
     <Layout hideFooter>
       <div className="container py-8">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          {/* Returning user with tutor */}
           {lastTutor && upcomingBookings.length === 0 && !loading && (
             <div className="text-center py-8">
               <p className="text-muted-foreground mb-1">
@@ -65,14 +83,13 @@ export default function Dashboard() {
                 {t("dash.readyContinue").replace("{name}", lastTutor.tutor_name.split(" ")[0])}
               </h1>
 
-              {/* Tutor card */}
               <div className="max-w-sm mx-auto">
                 <div className="h-40 w-40 rounded-lg bg-muted overflow-hidden flex items-center justify-center mx-auto mb-4">
                   {lastTutor.tutor_avatar_url ? (
                     <img src={lastTutor.tutor_avatar_url} alt={lastTutor.tutor_name} className="h-full w-full object-cover" />
                   ) : (
                     <span className="text-4xl font-bold text-primary">
-                      {lastTutor.tutor_name.split(" ").map(n => n[0]).join("")}
+                      {lastTutor.tutor_name.split(" ").map((n) => n[0]).join("")}
                     </span>
                   )}
                 </div>
@@ -91,7 +108,6 @@ export default function Dashboard() {
                 />
               </div>
 
-              {/* Continue learning */}
               <div className="mt-12 text-left max-w-2xl mx-auto">
                 <h3 className="font-semibold text-lg mb-4">{t("dash.continueLearning")}</h3>
                 <div className="rounded-xl border bg-card p-4 flex items-center justify-between">
@@ -101,7 +117,7 @@ export default function Dashboard() {
                         <img src={lastTutor.tutor_avatar_url} alt="" className="h-full w-full object-cover" />
                       ) : (
                         <span className="text-sm font-bold text-primary">
-                          {lastTutor.tutor_name.split(" ").map(n => n[0]).join("")}
+                          {lastTutor.tutor_name.split(" ").map((n) => n[0]).join("")}
                         </span>
                       )}
                     </div>
@@ -116,7 +132,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* New user with no bookings */}
           {bookings.length === 0 && !loading && (
             <div className="text-center py-12">
               <p className="text-muted-foreground mb-1">
@@ -139,13 +154,11 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Has upcoming lessons */}
           {upcomingBookings.length > 0 && (
             <div>
               <p className="text-muted-foreground mb-1">{t("dash.goodToSee").replace("{name}", displayName)}</p>
               <h1 className="text-2xl md:text-3xl font-bold mb-6">{t("dash.nextLesson")}</h1>
 
-              {/* Next lesson card */}
               <Card className="max-w-2xl">
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between mb-4">
@@ -155,7 +168,7 @@ export default function Dashboard() {
                           <img src={upcomingBookings[0].tutor_avatar_url} alt={upcomingBookings[0].tutor_name} className="h-full w-full object-cover" />
                         ) : (
                           <span className="text-sm font-bold text-primary">
-                            {upcomingBookings[0].tutor_name.split(" ").map(n => n[0]).join("")}
+                            {upcomingBookings[0].tutor_name.split(" ").map((n) => n[0]).join("")}
                           </span>
                         )}
                       </div>
@@ -166,7 +179,10 @@ export default function Dashboard() {
                   </div>
 
                   <p className="text-lg font-bold mb-1">
-                    {formatTime(upcomingBookings[0].start_time)} – {formatTime(upcomingBookings[0].end_time)}
+                    {renderLessonRange(upcomingBookings[0])}
+                  </p>
+                  <p className="text-sm text-muted-foreground mb-1">
+                    {formatLessonDate(upcomingBookings[0].lesson_start_at)}
                   </p>
                   <p className="text-sm text-muted-foreground mb-4">
                     {localizeSubjectLabel(upcomingBookings[0].subject, t)} {t("dash.withTutor")} {upcomingBookings[0].tutor_name}
@@ -179,7 +195,6 @@ export default function Dashboard() {
                     </Link>
                   </Button>
 
-                  {/* Before your lesson section */}
                   <div className="mt-6 pt-4 border-t">
                     <p className="font-semibold text-sm mb-3">{t("dash.beforeLesson")}</p>
                     <div className="space-y-2">
@@ -198,7 +213,6 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
 
-              {/* Up next timeline */}
               {upcomingBookings.length > 1 && (
                 <div className="mt-8">
                   <h2 className="text-xl font-bold mb-4">{t("dash.upNext")}</h2>
@@ -211,9 +225,8 @@ export default function Dashboard() {
                         </div>
                         <div className="flex-1 flex items-center justify-between pb-4">
                           <div>
-                            <p className="font-bold">
-                              {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
-                            </p>
+                            <p className="font-bold">{renderLessonRange(booking)}</p>
+                            <p className="text-sm text-muted-foreground">{formatLessonDate(booking.lesson_start_at)}</p>
                             <p className="text-sm text-muted-foreground">
                               {localizeSubjectLabel(booking.subject, t)} {t("dash.withTutor")} {booking.tutor_name}
                             </p>

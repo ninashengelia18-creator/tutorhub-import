@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet } from "lucide-react";
-import { getLocaleForLanguage, localizeSubjectLabel } from "@/lib/localization";
+import { formatDateInTimeZone, formatLessonTimeRange, getDateFromKey, getDateKeyInTimeZone } from "@/lib/datetime";
+import { localizeSubjectLabel } from "@/lib/localization";
 import { cn } from "@/lib/utils";
 
 interface TutorBooking {
@@ -17,6 +19,8 @@ interface TutorBooking {
   lesson_date: string;
   start_time: string;
   end_time: string;
+  lesson_start_at?: string | null;
+  lesson_end_at?: string | null;
   duration_minutes: number;
   status: string;
   google_meet_link: string | null;
@@ -24,8 +28,16 @@ interface TutorBooking {
   currency: string;
 }
 
+function getLocalDateKey(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export default function TutorSchedule() {
   const { user } = useAuth();
+  const { timezone } = useAppLocale();
   const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [allBookings, setAllBookings] = useState<TutorBooking[]>([]);
@@ -38,23 +50,19 @@ export default function TutorSchedule() {
     const fetchBookings = async () => {
       setLoading(true);
 
-      const today = new Date().toISOString().split("T")[0];
-      const selectFields = "id, student_name, subject, lesson_date, start_time, end_time, duration_minutes, status, google_meet_link, price_amount, currency";
+      const selectFields = "id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, duration_minutes, status, google_meet_link, price_amount, currency";
 
       const [upcomingRes, allRes] = await Promise.all([
         supabase
           .from("bookings")
           .select(selectFields)
           .in("status", ["confirmed", "completed"])
-          .gte("lesson_date", today)
-          .order("lesson_date", { ascending: true })
-          .order("start_time", { ascending: true }),
+          .order("lesson_start_at", { ascending: true }),
         supabase
           .from("bookings")
           .select(selectFields)
           .in("status", ["confirmed", "completed"])
-          .order("lesson_date", { ascending: false })
-          .order("start_time", { ascending: false }),
+          .order("lesson_start_at", { ascending: false }),
       ]);
 
       setBookings((upcomingRes.data as TutorBooking[]) ?? []);
@@ -65,33 +73,52 @@ export default function TutorSchedule() {
     void fetchBookings();
   }, [user]);
 
-  const selectedDateKey = useMemo(() => {
-    const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
-    const day = String(selectedDate.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }, [selectedDate]);
+  const now = new Date();
+  const todayKey = getDateKeyInTimeZone(now, timezone);
+  const selectedDateKey = useMemo(() => getLocalDateKey(selectedDate), [selectedDate]);
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(`${dateStr}T00:00:00`);
-    const todayStr = new Date().toISOString().split("T")[0];
-    const prefix = dateStr === todayStr ? `${t("tutorSchedule.todayPrefix")} ` : "";
-    return prefix + date.toLocaleDateString(getLocaleForLanguage(lang), { weekday: "short", month: "short", day: "numeric" });
-  };
+  const upcomingBookings = useMemo(
+    () => bookings.filter((booking) => booking.lesson_start_at && new Date(booking.lesson_start_at) >= now),
+    [bookings, now],
+  );
 
-  const formatTime = (timeValue: string) => timeValue.slice(0, 5);
-
-  const grouped = bookings.reduce<Record<string, TutorBooking[]>>((acc, booking) => {
-    (acc[booking.lesson_date] ||= []).push(booking);
+  const grouped = upcomingBookings.reduce<Record<string, TutorBooking[]>>((acc, booking) => {
+    const key = getDateKeyInTimeZone(booking.lesson_start_at, timezone);
+    if (!key) return acc;
+    (acc[key] ||= []).push(booking);
     return acc;
   }, {});
 
   const calendarDates = useMemo(
-    () => Object.keys(grouped).map((date) => new Date(`${date}T00:00:00`)),
+    () => Object.keys(grouped).map((date) => getDateFromKey(date)),
     [grouped],
   );
 
   const selectedDayLessons = grouped[selectedDateKey] ?? [];
+
+  const stats = useMemo(() => {
+    const todaysLessons = upcomingBookings.filter((booking) => getDateKeyInTimeZone(booking.lesson_start_at, timezone) === todayKey);
+    const completedRevenue = allBookings
+      .filter((booking) => booking.status === "completed")
+      .reduce((sum, booking) => sum + booking.price_amount, 0);
+
+    return {
+      todaysLessons,
+      completedRevenue,
+    };
+  }, [allBookings, upcomingBookings, timezone, todayKey]);
+
+  const formatDate = (dateKey: string) => {
+    const prefix = dateKey === todayKey ? `${t("tutorSchedule.todayPrefix")} ` : "";
+    return prefix + formatDateInTimeZone(getDateFromKey(dateKey), lang, timezone, {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const formatTimeRange = (booking: TutorBooking) =>
+    formatLessonTimeRange(booking.lesson_start_at, booking.lesson_end_at, lang, timezone);
 
   return (
     <Layout hideFooter>
@@ -142,7 +169,7 @@ export default function TutorSchedule() {
 
               <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
                 <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-foreground">{bookings.length}</p>
+                  <p className="text-2xl font-bold text-foreground">{stats.todaysLessons.length}</p>
                   <p className="text-xs text-muted-foreground">{t("tutorSchedule.upcomingCount")}</p>
                 </div>
                 <div className="rounded-xl border bg-card p-4">
@@ -153,20 +180,20 @@ export default function TutorSchedule() {
                   <div className="flex items-center gap-1.5">
                     <Wallet className="h-5 w-5 text-primary" />
                     <p className="text-2xl font-bold text-foreground">
-                      ₾{allBookings.filter((booking) => booking.status === "completed").reduce((sum, booking) => sum + booking.price_amount, 0).toFixed(0)}
+                      ₾{stats.completedRevenue.toFixed(0)}
                     </p>
                   </div>
                   <p className="text-xs text-muted-foreground">{t("tutorSchedule.earnedTotal")}</p>
                 </div>
                 <div className="rounded-xl border bg-card p-4">
                   <p className="text-2xl font-bold text-foreground">
-                    ₾{bookings.reduce((sum, booking) => sum + booking.price_amount, 0).toFixed(0)}
+                    ₾{upcomingBookings.reduce((sum, booking) => sum + booking.price_amount, 0).toFixed(0)}
                   </p>
                   <p className="text-xs text-muted-foreground">{t("tutorSchedule.upcomingRevenue")}</p>
                 </div>
               </div>
 
-              {bookings.length === 0 ? (
+              {upcomingBookings.length === 0 ? (
                 <div className="py-16 text-center">
                   <BookOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                   <p className="mb-1 text-lg font-bold">{t("tutorSchedule.noLessons")}</p>
@@ -209,9 +236,7 @@ export default function TutorSchedule() {
 
                             <div className="flex shrink-0 items-center gap-2 text-sm text-muted-foreground">
                               <Clock className="h-4 w-4" />
-                              <span className="tabular-nums">
-                                {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
-                              </span>
+                              <span className="tabular-nums">{formatTimeRange(booking)}</span>
                             </div>
 
                             {booking.google_meet_link ? (
@@ -267,9 +292,7 @@ export default function TutorSchedule() {
 
                                 <div className="flex shrink-0 items-center gap-2 text-sm text-muted-foreground">
                                   <Clock className="h-4 w-4" />
-                                  <span className="tabular-nums">
-                                    {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
-                                  </span>
+                                  <span className="tabular-nums">{formatTimeRange(booking)}</span>
                                 </div>
 
                                 {booking.google_meet_link ? (
