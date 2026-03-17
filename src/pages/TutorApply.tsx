@@ -76,8 +76,9 @@ export default function TutorApply() {
   const [certifications, setCertifications] = useState("");
   const [bio, setBio] = useState("");
 
-  // Step 3 — Subjects & Rate
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+  // Step 3 — Subject & Rate
+  const [subjectText, setSubjectText] = useState("");
+  const selectedSubjects = useMemo(() => subjectText.split(",").map(s => s.trim()).filter(Boolean), [subjectText]);
   const [hourlyRate, setHourlyRate] = useState("");
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [otherLanguages, setOtherLanguages] = useState("");
