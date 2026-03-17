@@ -286,6 +286,14 @@ export function Header() {
             {!user && (
               <>
                 <Link
+                  to="/conversation-partners"
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname === "/conversation-partners" ? "text-primary" : "text-foreground/90"
+                  }`}
+                >
+                  {t("nav.conversationPartners")}
+                </Link>
+                <Link
                   to="/for-business"
                   className={`text-sm font-medium transition-colors hover:text-primary ${
                     location.pathname === "/for-business" ? "text-primary" : "text-foreground/90"
