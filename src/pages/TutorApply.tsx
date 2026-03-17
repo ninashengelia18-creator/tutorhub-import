@@ -527,6 +527,62 @@ export default function TutorApply() {
 
                 </div>
 
+                {/* ID Verification */}
+                <div className="space-y-3 rounded-lg border border-border bg-card/50 p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ShieldCheck className="h-5 w-5 text-primary" />
+                    <Label className="text-base font-semibold">ID Verification *</Label>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Upload a photo of your government-issued ID (passport or national ID card).
+                  </p>
+                  <input
+                    ref={idInputRef}
+                    type="file"
+                    accept="image/*,.pdf"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      if (file && file.size > 10 * 1024 * 1024) {
+                        setIdError("File is too large. Maximum size is 10 MB.");
+                        setIdFile(null);
+                        return;
+                      }
+                      setIdFile(file);
+                      setIdError(null);
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full justify-center gap-2"
+                    onClick={() => idInputRef.current?.click()}
+                  >
+                    <Upload className="h-4 w-4" />
+                    {idFile ? idFile.name : "Choose file…"}
+                  </Button>
+
+                  <div className="flex items-start gap-3 pt-1">
+                    <Checkbox
+                      id="confirmId"
+                      checked={confirmIdOwnership}
+                      onCheckedChange={(v) => {
+                        setConfirmIdOwnership(v === true);
+                        if (v === true && idFile) setIdError(null);
+                      }}
+                    />
+                    <Label htmlFor="confirmId" className="text-sm leading-relaxed cursor-pointer">
+                      I confirm the uploaded ID belongs to me.
+                    </Label>
+                  </div>
+
+                  {idError && <p className="text-sm text-destructive">{idError}</p>}
+
+                  <p className="text-xs text-muted-foreground italic">
+                    Your ID is used for verification purposes only and will not be shared publicly.
+                  </p>
+                </div>
+
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.aboutTeaching")}</Label>
                   <Textarea value={aboutTeaching} onChange={(e) => setAboutTeaching(e.target.value)} rows={4} placeholder={t("tutor.apply.aboutTeachingPlaceholder")} />
