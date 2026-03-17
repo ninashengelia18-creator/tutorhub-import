@@ -569,7 +569,7 @@ export default function TutorApply() {
             <ArrowLeft className="mr-2 h-4 w-4" /> {t("tutor.apply.back")}
           </Button>
           {step < TOTAL_STEPS ? (
-            <Button onClick={() => setStep((s) => s + 1)} disabled={!canProceed()}>
+            <Button onClick={handleNextStep} disabled={!canProceed()}>
               {t("tutor.apply.next")} <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (

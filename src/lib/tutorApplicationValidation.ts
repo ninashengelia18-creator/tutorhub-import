@@ -7,9 +7,9 @@ export const tutorApplicationSchema = z.object({
   phone: z.string().trim().max(50, "Phone number is too long.").optional().or(z.literal("")),
   country: z.string().trim().max(100, "Country is too long.").optional().or(z.literal("")),
   experience: z.string().trim().min(1, "Please select your teaching experience."),
-  education: z.string().trim().max(255, "Qualifications are too long.").optional().or(z.literal("")),
+  education: z.string().trim().max(255, "Education is too long.").optional().or(z.literal("")),
   certifications: z.string().trim().max(255, "Certifications are too long.").optional().or(z.literal("")),
-  bio: z.string().trim().min(30, "Please add a short bio of at least 30 characters.").max(2000, "Bio is too long."),
+  bio: z.string().trim().min(1, "About you is required.").max(2000, "About you is too long."),
   selectedSubjects: z.array(z.string().trim()).min(1, "Please select at least one subject."),
   hourlyRate: z
     .string()
