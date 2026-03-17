@@ -92,17 +92,26 @@ serve(async (req) => {
       authUserId = listedUsers.users.find((entry) => entry.email?.trim().toLowerCase() === normalizedEmail)?.id ?? null;
     }
 
-    const deleteByTutorNameOperations = [
-      adminClient.from("messages").delete().eq("tutor_name", fullName),
-      adminClient.from("message_conversations").delete().eq("tutor_name", fullName),
-      adminClient.from("bookings").delete().eq("tutor_name", fullName),
-      adminClient.from("tutor_availability_slots").delete().eq("tutor_name", fullName),
-    ];
+    if (fullName) {
+      const deleteByTutorNameResults = await Promise.all([
+        adminClient.from("messages").delete().eq("tutor_name", fullName),
+        adminClient.from("message_conversations").delete().eq("tutor_name", fullName),
+        adminClient.from("bookings").delete().eq("tutor_name", fullName),
+      ]);
 
-    const deleteByTutorNameResults = await Promise.all(deleteByTutorNameOperations);
-    const failedTutorNameDeletion = deleteByTutorNameResults.find((result) => result.error);
-    if (failedTutorNameDeletion?.error) {
-      throw failedTutorNameDeletion.error;
+      const failedTutorNameDeletion = deleteByTutorNameResults.find((result) => result.error);
+      if (failedTutorNameDeletion?.error) {
+        throw failedTutorNameDeletion.error;
+      }
+
+      const { error: deleteAvailabilityError } = await adminClient
+        .from("tutor_availability_slots")
+        .delete()
+        .eq("tutor_name", fullName);
+
+      if (deleteAvailabilityError) {
+        throw deleteAvailabilityError;
+      }
     }
 
     if (authUserId) {
