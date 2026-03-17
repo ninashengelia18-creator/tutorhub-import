@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
@@ -29,6 +30,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  formatDateInTimeZone,
+  formatLessonTimeRange,
+  getDateFromKey,
+  getDateKeyInTimeZone,
+  getHourInTimeZone,
+  getTimeZoneOffsetLabel,
+} from "@/lib/datetime";
 import { localizeSubjectLabel } from "@/lib/localization";
 
 interface Booking {
@@ -40,6 +49,8 @@ interface Booking {
   lesson_date: string;
   start_time: string;
   end_time: string;
+  lesson_start_at?: string | null;
+  lesson_end_at?: string | null;
   price_amount: number;
   currency: string;
   status: string;
@@ -66,8 +77,16 @@ const CANCEL_REASON_KEYS = [
 
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
 
+function getLocalDateKey(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function CalendarView({ bookings }: { bookings: Booking[] }) {
   const { lang, t } = useLanguage();
+  const { timezone } = useAppLocale();
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const navigateWeek = (dir: number) => {
@@ -91,27 +110,34 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
   }, [currentDate]);
 
   const getBookingsForDate = (date: Date) => {
-    const dateStr = date.toISOString().split("T")[0];
-    return bookings.filter(b => b.lesson_date === dateStr && (b.status === "confirmed" || b.status === "pending"));
+    const dateStr = getLocalDateKey(date);
+    return bookings.filter((booking) => {
+      if (booking.status !== "confirmed" && booking.status !== "pending") return false;
+      return getDateKeyInTimeZone(booking.lesson_start_at, timezone) === dateStr;
+    });
   };
 
-  const todayStr = new Date().toISOString().split("T")[0];
-  const formatTime = (t: string) => t.slice(0, 5);
+  const todayStr = getLocalDateKey(new Date());
+  const formatTime = (booking: Booking) => formatLessonTimeRange(booking.lesson_start_at, booking.lesson_end_at, lang, timezone);
 
   const weekRangeLabel = useMemo(() => {
     const first = weekDates[0];
     const last = weekDates[6];
     const sameMonth = first.getMonth() === last.getMonth();
-    const locale = lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US";
-    if (sameMonth) {
-      return `${first.toLocaleDateString(locale, { month: "short" })} ${first.getDate()} – ${last.getDate()}, ${last.getFullYear()}`;
-    }
-    return `${first.toLocaleDateString(locale, { month: "short" })} ${first.getDate()} – ${last.toLocaleDateString(locale, { month: "short" })} ${last.getDate()}, ${last.getFullYear()}`;
-  }, [weekDates, lang]);
+    const firstMonth = formatDateInTimeZone(first, lang, timezone, { month: "short" });
+    const lastMonth = formatDateInTimeZone(last, lang, timezone, { month: "short" });
+    const firstDay = formatDateInTimeZone(first, lang, timezone, { day: "numeric" });
+    const lastDay = formatDateInTimeZone(last, lang, timezone, { day: "numeric" });
+    const lastYear = formatDateInTimeZone(last, lang, timezone, { year: "numeric" });
 
-  const tzOffset = new Date().getTimezoneOffset();
-  const tzHours = -tzOffset / 60;
-  const tzLabel = `GMT ${tzHours >= 0 ? "+" : ""}${tzHours}:00`;
+    if (sameMonth) {
+      return `${firstMonth} ${firstDay} – ${lastDay}, ${lastYear}`;
+    }
+
+    return `${firstMonth} ${firstDay} – ${lastMonth} ${lastDay}, ${lastYear}`;
+  }, [weekDates, lang, timezone]);
+
+  const tzLabel = getTimeZoneOffsetLabel(timezone);
 
   return (
     <div>
@@ -131,44 +157,39 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
         <div className="grid grid-cols-[70px_repeat(7,1fr)] border-b bg-muted/30">
           <div className="p-2 text-xs text-muted-foreground text-center">{tzLabel}</div>
           {weekDates.map((date, i) => {
-            const isToday = date.toISOString().split("T")[0] === todayStr;
+            const isToday = getLocalDateKey(date) === todayStr;
             return (
               <div key={i} className={`p-2 text-center border-l ${isToday ? "bg-primary/5" : ""}`}>
-                <p className="text-xs text-muted-foreground">{date.toLocaleDateString(lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US", { weekday: "short" })}</p>
-                <p className={`text-sm font-semibold ${isToday ? "text-primary" : ""}`}>{date.getDate()}</p>
+                <p className="text-xs text-muted-foreground">{formatDateInTimeZone(date, lang, timezone, { weekday: "short" })}</p>
+                <p className={`text-sm font-semibold ${isToday ? "text-primary" : ""}`}>{formatDateInTimeZone(date, lang, timezone, { day: "numeric" })}</p>
                 {isToday && <div className="h-0.5 bg-primary mt-1 rounded-full" />}
               </div>
             );
           })}
         </div>
         <div className="max-h-[500px] overflow-y-auto">
-          {HOURS.map(hour => (
+          {HOURS.map((hour) => (
             <div key={hour} className="grid grid-cols-[70px_repeat(7,1fr)] min-h-[48px]">
               <div className="p-1 text-right pr-3 text-xs text-muted-foreground tabular-nums border-t">
                 {String(hour).padStart(2, "0")}:00
               </div>
               {weekDates.map((date, i) => {
-                const dayBookings = getBookingsForDate(date).filter(b => {
-                  const startHour = parseInt(b.start_time.split(":")[0]);
-                  return startHour === hour;
-                });
-                const isToday = date.toISOString().split("T")[0] === todayStr;
+                const dayBookings = getBookingsForDate(date).filter((booking) => getHourInTimeZone(booking.lesson_start_at, timezone) === hour);
+                const isToday = getLocalDateKey(date) === todayStr;
                 return (
                   <div key={i} className={`border-l border-t relative ${isToday ? "bg-primary/[0.02]" : ""}`}>
-                    {dayBookings.map(b => (
+                    {dayBookings.map((booking) => (
                       <div
-                        key={b.id}
+                        key={booking.id}
                         className={`absolute inset-x-0.5 top-0.5 rounded px-1 py-0.5 overflow-hidden cursor-pointer transition-colors ${
-                          b.status === "pending"
+                          booking.status === "pending"
                             ? "bg-yellow-500/15 border border-yellow-500/30 hover:bg-yellow-500/25"
                             : "bg-primary/15 border border-primary/30 hover:bg-primary/25"
                         }`}
-                        style={{ minHeight: `${(b.duration_minutes / 60) * 48 - 4}px` }}
+                        style={{ minHeight: `${(booking.duration_minutes / 60) * 48 - 4}px` }}
                       >
-                        <p className="text-[10px] font-medium truncate">{localizeSubjectLabel(b.subject, t)}</p>
-                        <p className="text-[10px] opacity-70 truncate tabular-nums">
-                          {formatTime(b.start_time)} – {formatTime(b.end_time)}
-                        </p>
+                        <p className="text-[10px] font-medium truncate">{localizeSubjectLabel(booking.subject, t)}</p>
+                        <p className="text-[10px] opacity-70 truncate tabular-nums">{formatTime(booking)}</p>
                       </div>
                     ))}
                   </div>
@@ -184,6 +205,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
 
 export default function MyLessons() {
   const { user } = useAuth();
+  const { timezone } = useAppLocale();
   const { toast } = useToast();
   const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -194,33 +216,33 @@ export default function MyLessons() {
   const [cancelMessage, setCancelMessage] = useState("");
   const [cancelling, setCancelling] = useState(false);
 
-  useEffect(() => { fetchBookings(); }, []);
+  useEffect(() => { void fetchBookings(); }, []);
 
   async function fetchBookings() {
     const { data } = await supabase
       .from("bookings")
       .select("*")
-      .order("lesson_date", { ascending: true });
+      .order("lesson_start_at", { ascending: true });
     setBookings((data as Booking[]) || []);
     setLoading(false);
   }
 
-  const today = new Date().toISOString().split("T")[0];
-  const upcoming = bookings.filter(b => b.lesson_date >= today && (b.status === "confirmed" || b.status === "pending"));
-  const past = bookings.filter(b => b.lesson_date < today || b.status === "completed");
-  const cancelled = bookings.filter(b => b.status === "cancelled");
+  const now = new Date();
+  const today = getDateKeyInTimeZone(now, timezone);
+  const upcoming = bookings.filter((booking) => (booking.status === "confirmed" || booking.status === "pending") && booking.lesson_start_at && new Date(booking.lesson_start_at) >= now);
+  const past = bookings.filter((booking) => booking.status === "completed" || ((booking.status === "confirmed" || booking.status === "pending") && booking.lesson_start_at && new Date(booking.lesson_start_at) < now));
+  const cancelled = bookings.filter((booking) => booking.status === "cancelled");
 
   const lastTutor = bookings.length > 0 ? bookings[bookings.length - 1] : null;
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr + "T00:00:00");
-    const todayStr2 = new Date().toISOString().split("T")[0];
-    const locale = lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US";
-    const prefix = dateStr === todayStr2 ? t("myLessons.today") + ", " : "";
-    return prefix + date.toLocaleDateString(locale, { month: "short", day: "numeric" });
+  const formatDate = (value?: string | null) => {
+    if (!value) return "";
+    const dateKey = getDateKeyInTimeZone(value, timezone);
+    const prefix = dateKey === today ? `${t("myLessons.today")}, ` : "";
+    return prefix + formatDateInTimeZone(value, lang, timezone, { month: "short", day: "numeric" });
   };
 
-  const formatTime = (t: string) => t.slice(0, 5);
+  const formatTime = (booking: Booking) => formatLessonTimeRange(booking.lesson_start_at, booking.lesson_end_at, lang, timezone);
 
   const handleCancel = async () => {
     if (!cancelBooking) return;
@@ -240,7 +262,7 @@ export default function MyLessons() {
     }
   };
 
-  const tutors = Array.from(new Map(bookings.map(b => [b.tutor_name, b])).values());
+  const tutors = Array.from(new Map(bookings.map((booking) => [booking.tutor_name, booking])).values());
 
   const tabs = [
     { key: "lessons" as const, label: t("myLessons.lessons"), icon: Clock },
@@ -259,7 +281,7 @@ export default function MyLessons() {
             <img src={booking.tutor_avatar_url} alt={booking.tutor_name} className="h-full w-full object-cover" />
           ) : (
             <span className="text-sm font-bold text-primary">
-              {booking.tutor_name.split(" ").map(n => n[0]).join("")}
+              {booking.tutor_name.split(" ").map((n) => n[0]).join("")}
             </span>
           )}
         </div>
@@ -271,7 +293,7 @@ export default function MyLessons() {
             </Badge>
           </div>
           <p className="text-sm font-medium">
-            {formatDate(booking.lesson_date)} · {formatTime(booking.start_time)} – {formatTime(booking.end_time)}
+            {formatDate(booking.lesson_start_at)} · {formatTime(booking)}
           </p>
           <p className="text-sm text-muted-foreground">
             {booking.tutor_name}, {localizeSubjectLabel(booking.subject, t)}
@@ -325,7 +347,7 @@ export default function MyLessons() {
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full bg-muted overflow-hidden flex items-center justify-center shrink-0">
                 <span className="text-xs font-bold text-primary">
-                  {lastTutor.tutor_name.split(" ").map(n => n[0]).join("")}
+                  {lastTutor.tutor_name.split(" ").map((n) => n[0]).join("")}
                 </span>
               </div>
               <p className="font-semibold text-sm">{t("myLessons.scheduleNext").replace("{name}", lastTutor.tutor_name.split(" ")[0])}</p>
@@ -348,7 +370,7 @@ export default function MyLessons() {
           </div>
 
           <div className="flex items-center gap-6 border-b mb-6">
-            {tabs.map(tab => (
+            {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
@@ -373,7 +395,7 @@ export default function MyLessons() {
                   </div>
                 )}
                 <div className="space-y-3">
-                  {upcoming.map(b => renderBookingCard(b))}
+                  {upcoming.map((booking) => renderBookingCard(booking))}
                 </div>
               </div>
 
@@ -381,7 +403,7 @@ export default function MyLessons() {
                 <div>
                   <h2 className="text-lg font-bold mb-4">{t("myLessons.past")}</h2>
                   <div className="space-y-3">
-                    {past.map(b => renderBookingCard(b, false))}
+                    {past.map((booking) => renderBookingCard(booking, false))}
                   </div>
                 </div>
               )}
@@ -390,7 +412,7 @@ export default function MyLessons() {
                 <div>
                   <h2 className="text-lg font-bold mb-4">{t("myLessons.cancelled")}</h2>
                   <div className="space-y-3">
-                    {cancelled.map(b => renderBookingCard(b, false))}
+                    {cancelled.map((booking) => renderBookingCard(booking, false))}
                   </div>
                 </div>
               )}
@@ -405,11 +427,11 @@ export default function MyLessons() {
                 <p className="text-sm text-muted-foreground">{t("myLessons.noTutors")}</p>
               )}
               <div className="space-y-4">
-                {tutors.map(tutor => (
+                {tutors.map((tutor) => (
                   <div key={tutor.tutor_name} className="flex items-center gap-6 py-4 border-b last:border-0">
                     <div className="h-14 w-14 rounded-full bg-muted overflow-hidden flex items-center justify-center shrink-0">
                       <span className="text-lg font-bold text-primary">
-                        {tutor.tutor_name.split(" ").map(n => n[0]).join("")}
+                        {tutor.tutor_name.split(" ").map((n) => n[0]).join("")}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
@@ -435,7 +457,7 @@ export default function MyLessons() {
           {cancelBooking && (
             <div>
               <p className="text-sm text-muted-foreground mb-4">
-                {new Date(cancelBooking.lesson_date + "T00:00:00").toLocaleDateString(lang === "ka" ? "ka-GE" : lang === "ru" ? "ru-RU" : "en-US", { weekday: "long", month: "long", day: "numeric" })} · {formatTime(cancelBooking.start_time)} – {formatTime(cancelBooking.end_time)}
+                {formatDateInTimeZone(cancelBooking.lesson_start_at, lang, timezone, { weekday: "long", month: "long", day: "numeric" })} · {formatTime(cancelBooking)}
               </p>
               <div className="bg-destructive/10 rounded-lg p-3 flex items-start gap-3 mb-6">
                 <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
@@ -447,7 +469,7 @@ export default function MyLessons() {
                   <Select value={cancelReason} onValueChange={setCancelReason}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {CANCEL_REASON_KEYS.map(reasonKey => (
+                      {CANCEL_REASON_KEYS.map((reasonKey) => (
                         <SelectItem key={reasonKey} value={reasonKey}>{t(reasonKey)}</SelectItem>
                       ))}
                     </SelectContent>

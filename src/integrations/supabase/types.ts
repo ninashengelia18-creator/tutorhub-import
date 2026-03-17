@@ -24,8 +24,11 @@ export type Database = {
           id: string
           is_trial: boolean
           lesson_date: string
+          lesson_end_at: string | null
+          lesson_start_at: string | null
           notes: string | null
           price_amount: number
+          scheduled_timezone: string
           start_time: string
           status: string
           student_email: string | null
@@ -46,8 +49,11 @@ export type Database = {
           id?: string
           is_trial?: boolean
           lesson_date: string
+          lesson_end_at?: string | null
+          lesson_start_at?: string | null
           notes?: string | null
           price_amount: number
+          scheduled_timezone?: string
           start_time: string
           status?: string
           student_email?: string | null
@@ -68,8 +74,11 @@ export type Database = {
           id?: string
           is_trial?: boolean
           lesson_date?: string
+          lesson_end_at?: string | null
+          lesson_start_at?: string | null
           notes?: string | null
           price_amount?: number
+          scheduled_timezone?: string
           start_time?: string
           status?: string
           student_email?: string | null

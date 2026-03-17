@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -42,6 +43,7 @@ export default function Booking() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const { timezone } = useAppLocale();
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -61,7 +63,6 @@ export default function Booking() {
   const price = (tutor.price / 60) * duration;
 
   const handleSubmit = async () => {
-    // If not logged in, redirect to login with return URL
     if (!user) {
       navigate(`/login?redirect=/booking/${id}`);
       return;
@@ -94,7 +95,8 @@ export default function Booking() {
         student_email: studentEmail.trim(),
         student_message: message.trim() || null,
         notes: message.trim() || null,
-      });
+        scheduled_timezone: timezone,
+      } as never);
       if (error) throw error;
 
       // Send email via Formspree

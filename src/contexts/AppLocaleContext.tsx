@@ -182,6 +182,20 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
   const [timezone, setTimezone] = useState(storedPreferences?.preferred_timezone ?? getBrowserTimeZone());
   const [isDetecting, setIsDetecting] = useState(true);
 
+  const persistPreferences = useCallback(async (preferences: LocalePreferences) => {
+    if (!user?.id) return;
+
+    await supabase
+      .from("user_preferences" as never)
+      .upsert({
+        user_id: user.id,
+        ...preferences,
+        updated_at: new Date().toISOString(),
+      } as never, {
+        onConflict: "user_id",
+      });
+  }, [user?.id]);
+
   const applyDetectedPreferences = useCallback((preferences: LocalePreferences) => {
     const normalized = normalizePreferences(preferences);
 
@@ -201,7 +215,8 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
     setTimezone(normalized.preferred_timezone);
     setLang(normalized.preferred_language);
     writeStoredPreferences(MANUAL_PREFERENCES_KEY, normalized);
-  }, [setLang]);
+    void persistPreferences(normalized);
+  }, [persistPreferences, setLang]);
 
   useEffect(() => {
     let cancelled = false;
@@ -209,6 +224,7 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
     const loadPreferences = async () => {
       const browserLanguage = typeof navigator !== "undefined" ? navigator.language : "en-US";
       const browserTimeZone = getBrowserTimeZone();
+      const localManualPreferences = readStoredPreferences(MANUAL_PREFERENCES_KEY);
 
       setIsDetecting(true);
 
@@ -226,6 +242,12 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
           setIsDetecting(false);
           return;
         }
+
+        if (localManualPreferences) {
+          applyManualPreferences(localManualPreferences);
+          setIsDetecting(false);
+          return;
+        }
       }
 
       try {
@@ -239,10 +261,14 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
         if (error) throw error;
         if (cancelled) return;
 
-        applyDetectedPreferences(normalizePreferences(data as Partial<LocalePreferences>));
+        const detectedPreferences = normalizePreferences(data as Partial<LocalePreferences>);
+        applyDetectedPreferences(detectedPreferences);
+        await persistPreferences(detectedPreferences);
       } catch {
         if (cancelled) return;
-        applyDetectedPreferences(fallbackPreferences(browserLanguage, browserTimeZone));
+        const detectedPreferences = fallbackPreferences(browserLanguage, browserTimeZone);
+        applyDetectedPreferences(detectedPreferences);
+        await persistPreferences(detectedPreferences);
       } finally {
         if (!cancelled) {
           setIsDetecting(false);
@@ -255,7 +281,7 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [applyDetectedPreferences, applyManualPreferences, user?.id]);
+  }, [applyDetectedPreferences, applyManualPreferences, persistPreferences, user?.id]);
 
   const formatCurrency = useCallback((amount: number, sourceCurrency: CurrencyCode | string = "GEL") => {
     const normalizedSourceCurrency = normalizeCurrencyCode(sourceCurrency);

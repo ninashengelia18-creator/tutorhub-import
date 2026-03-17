@@ -7,9 +7,11 @@ import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
-import { getLocaleForLanguage, localizeSubjectLabel } from "@/lib/localization";
+import { formatDateInTimeZone, formatLessonTimeRange, getDateKeyInTimeZone } from "@/lib/datetime";
+import { localizeSubjectLabel } from "@/lib/localization";
 
 interface TutorBooking {
   id: string;
@@ -18,6 +20,8 @@ interface TutorBooking {
   lesson_date: string;
   start_time: string;
   end_time: string;
+  lesson_start_at?: string | null;
+  lesson_end_at?: string | null;
   status: string;
   price_amount: number;
   currency: string;
@@ -25,6 +29,7 @@ interface TutorBooking {
 
 export default function TutorDashboard() {
   const { user, profile } = useAuth();
+  const { timezone } = useAppLocale();
   const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,11 +41,10 @@ export default function TutorDashboard() {
     const loadBookings = async () => {
       const { data } = await supabase
         .from("bookings")
-        .select("id, student_name, subject, lesson_date, start_time, end_time, status, price_amount, currency")
+        .select("id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, status, price_amount, currency")
         .eq("tutor_name", tutorName)
         .in("status", ["confirmed", "completed"])
-        .order("lesson_date", { ascending: true })
-        .order("start_time", { ascending: true });
+        .order("lesson_start_at", { ascending: true });
 
       setBookings((data as TutorBooking[]) ?? []);
       setLoading(false);
@@ -49,11 +53,16 @@ export default function TutorDashboard() {
     void loadBookings();
   }, [tutorName]);
 
-  const today = new Date().toISOString().split("T")[0];
+  const now = new Date();
+  const todayKey = getDateKeyInTimeZone(now, timezone);
 
   const stats = useMemo(() => {
-    const todaysLessons = bookings.filter((booking) => booking.lesson_date === today && booking.status === "confirmed");
-    const upcomingLessons = bookings.filter((booking) => booking.lesson_date >= today && booking.status === "confirmed");
+    const todaysLessons = bookings.filter(
+      (booking) => booking.status === "confirmed" && getDateKeyInTimeZone(booking.lesson_start_at, timezone) === todayKey,
+    );
+    const upcomingLessons = bookings.filter(
+      (booking) => booking.status === "confirmed" && booking.lesson_start_at && new Date(booking.lesson_start_at) >= now,
+    );
     const completedRevenue = bookings
       .filter((booking) => booking.status === "completed")
       .reduce((sum, booking) => sum + booking.price_amount, 0);
@@ -64,18 +73,21 @@ export default function TutorDashboard() {
       completedRevenue,
       currency: bookings[0]?.currency ?? "₾",
     };
-  }, [bookings, today]);
+  }, [bookings, now, timezone, todayKey]);
 
   const nextLesson = stats.upcomingLessons[0] ?? null;
 
-  const formatDate = (dateStr: string) =>
-    new Date(`${dateStr}T00:00:00`).toLocaleDateString(getLocaleForLanguage(lang), {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    });
+  const formatDate = (value?: string | null) =>
+    value
+      ? formatDateInTimeZone(value, lang, timezone, {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        })
+      : "";
 
-  const formatTime = (value: string) => value.slice(0, 5);
+  const formatTimeRange = (booking: TutorBooking) =>
+    formatLessonTimeRange(booking.lesson_start_at, booking.lesson_end_at, lang, timezone);
 
   return (
     <Layout hideFooter>
@@ -148,7 +160,7 @@ export default function TutorDashboard() {
                   <div className="space-y-4 rounded-[1.5rem] border border-border bg-background p-5">
                     <div className="space-y-1">
                       <p className="text-lg font-semibold text-foreground">{nextLesson.student_name || t("tutorSchedule.unknownStudent")} · {localizeSubjectLabel(nextLesson.subject, t)}</p>
-                      <p className="text-sm text-muted-foreground">{formatDate(nextLesson.lesson_date)} · {formatTime(nextLesson.start_time)}–{formatTime(nextLesson.end_time)}</p>
+                      <p className="text-sm text-muted-foreground">{formatDate(nextLesson.lesson_start_at)} · {formatTimeRange(nextLesson)}</p>
                     </div>
                     <Button variant="outline" className="rounded-full" asChild>
                       <Link to="/tutor-schedule">{t("tutorDashboard.viewFullSchedule")}</Link>
