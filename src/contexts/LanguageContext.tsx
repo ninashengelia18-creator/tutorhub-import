@@ -420,7 +420,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // For Business
     "biz.title": "LearnEazy for Business",
     "biz.subtitle": "Upskill your team with personalized tutoring and AI-powered learning tools.",
-    "biz.cta": "Request a Demo",
+    "biz.cta": "Send Enquiry",
     "biz.ctaSub": "Free consultation · No commitment",
     "biz.whyTitle": "Why Companies Choose LearnEazy",
     "biz.feat1.title": "Tailored Training Programs",
@@ -1428,7 +1428,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // For Business
     "biz.title": "LearnEazy ბიზნესისთვის",
     "biz.subtitle": "გაზარდეთ თქვენი გუნდის კვალიფიკაცია პერსონალიზებული რეპეტიტორობით და AI სასწავლო ხელსაწყოებით.",
-    "biz.cta": "მოითხოვეთ დემო",
+    "biz.cta": "შეკითხვის გაგზავნა",
     "biz.ctaSub": "უფასო კონსულტაცია · ვალდებულების გარეშე",
     "biz.whyTitle": "რატომ ირჩევენ კომპანიები LearnEazy-ს",
     "biz.feat1.title": "მორგებული სასწავლო პროგრამები",
@@ -2418,7 +2418,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // For Business
     "biz.title": "LearnEazy для бизнеса",
     "biz.subtitle": "Повышайте квалификацию команды с персонализированным обучением и AI-инструментами.",
-    "biz.cta": "Запросить демо",
+    "biz.cta": "Отправить запрос",
     "biz.ctaSub": "Бесплатная консультация · Без обязательств",
     "biz.whyTitle": "Почему компании выбирают LearnEazy",
     "biz.feat1.title": "Индивидуальные программы",
