@@ -14,9 +14,9 @@ import {
   getTutorApplicationErrorMessage,
   tutorApplicationSchema,
 } from "@/lib/tutorApplicationValidation";
+import { submitFormspree } from "@/lib/formspree";
 
 const TOTAL_STEPS = 4;
-const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
 
 type FieldName =
   | "firstName"
