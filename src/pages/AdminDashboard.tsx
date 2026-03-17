@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle, Clock, XCircle } from "lucide-react";
 
@@ -75,20 +75,21 @@ export default function AdminDashboard() {
   const [savingTutorEdit, setSavingTutorEdit] = useState(false);
   const [deletingTutor, setDeletingTutor] = useState<TutorManagementListItem | null>(null);
   const [bookingsTutor, setBookingsTutor] = useState<TutorManagementListItem | null>(null);
+  const [hasAutoFocusedPendingApplications, setHasAutoFocusedPendingApplications] = useState(false);
 
-  const refreshBookings = async () => {
+  const refreshBookings = useCallback(async () => {
     const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
     if (error) throw error;
     setBookings((data as AdminBooking[] | null) ?? []);
-  };
+  }, []);
 
-  const refreshApplications = async () => {
+  const refreshApplications = useCallback(async () => {
     const { data, error } = await supabase.from("tutor_applications").select("*").order("created_at", { ascending: false });
     if (error) throw error;
     setApplications((data as TutorApplicationListItem[] | null) ?? []);
-  };
+  }, []);
 
-  const refreshTutorProfiles = async () => {
+  const refreshTutorProfiles = useCallback(async () => {
     const { data, error } = await supabase
       .from("public_tutor_profiles" as never)
       .select("*")
@@ -96,7 +97,33 @@ export default function AdminDashboard() {
 
     if (error) throw error;
     setTutors((data as PublicTutorProfile[] | null) ?? []);
-  };
+  }, []);
+
+  const refreshAdminData = useCallback(async () => {
+    const [bookingResult, applicationResult, tutorResult] = await Promise.all([
+      supabase.from("bookings").select("*").order("created_at", { ascending: false }),
+      supabase.from("tutor_applications").select("*").order("created_at", { ascending: false }),
+      supabase.from("public_tutor_profiles" as never).select("*").order("created_at", { ascending: false }),
+    ]);
+
+    if (bookingResult.error) {
+      toast({ title: "Error", description: bookingResult.error.message, variant: "destructive" });
+    } else {
+      setBookings((bookingResult.data as AdminBooking[] | null) ?? []);
+    }
+
+    if (applicationResult.error) {
+      toast({ title: "Error", description: applicationResult.error.message, variant: "destructive" });
+    } else {
+      setApplications((applicationResult.data as TutorApplicationListItem[] | null) ?? []);
+    }
+
+    if (tutorResult.error) {
+      toast({ title: "Error", description: tutorResult.error.message, variant: "destructive" });
+    } else {
+      setTutors((tutorResult.data as PublicTutorProfile[] | null) ?? []);
+    }
+  }, [toast]);
 
   useEffect(() => {
     let cancelled = false;
@@ -130,40 +157,54 @@ export default function AdminDashboard() {
         return;
       }
 
-      const [bookingResult, applicationResult, tutorResult] = await Promise.all([
-        supabase.from("bookings").select("*").order("created_at", { ascending: false }),
-        supabase.from("tutor_applications").select("*").order("created_at", { ascending: false }),
-        supabase.from("public_tutor_profiles" as never).select("*").order("created_at", { ascending: false }),
-      ]);
+      await refreshAdminData();
 
-      if (cancelled) return;
-
-      if (bookingResult.error) {
-        toast({ title: "Error", description: bookingResult.error.message, variant: "destructive" });
-      } else {
-        setBookings((bookingResult.data as AdminBooking[] | null) ?? []);
+      if (!cancelled) {
+        setLoading(false);
       }
-
-      if (applicationResult.error) {
-        toast({ title: "Error", description: applicationResult.error.message, variant: "destructive" });
-      } else {
-        setApplications((applicationResult.data as TutorApplicationListItem[] | null) ?? []);
-      }
-
-      if (tutorResult.error) {
-        toast({ title: "Error", description: tutorResult.error.message, variant: "destructive" });
-      } else {
-        setTutors((tutorResult.data as PublicTutorProfile[] | null) ?? []);
-      }
-
-      setLoading(false);
     };
 
     void loadAdminState();
     return () => {
       cancelled = true;
     };
-  }, [toast, user]);
+  }, [refreshAdminData, toast, user]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const handleFocusRefresh = () => {
+      void refreshAdminData();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        void refreshAdminData();
+      }
+    };
+
+    window.addEventListener("focus", handleFocusRefresh);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("focus", handleFocusRefresh);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isAdmin, refreshAdminData]);
+
+  useEffect(() => {
+    setSearch("");
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (hasAutoFocusedPendingApplications) return;
+
+    const hasPendingApplications = applications.some((application) => application.status === "pending");
+    if (hasPendingApplications) {
+      setActiveTab("tutors");
+      setHasAutoFocusedPendingApplications(true);
+    }
+  }, [applications, hasAutoFocusedPendingApplications]);
 
   const sendTutorDecisionNotification = async (application: TutorApplicationListItem, decision: "approved" | "rejected") => {
     const fullName = `${application.first_name} ${application.last_name}`.trim();
