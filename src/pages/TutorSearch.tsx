@@ -1,209 +1,195 @@
-import { useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { Search, Star, Filter, SlidersHorizontal, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Layout } from "@/components/Layout";
+import { useEffect, useMemo, useState } from "react";
+import { Heart, Search, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Slider } from "@/components/ui/slider";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { getSubjectSearchTerms, normalizeSubjectValue } from "@/lib/localization";
 
-const allTutors = [
-  { id: 1, name: "Nino Beridze", subject: "Mathematics", subjectKey: "td.math", rating: 4.9, reviews: 127, price: 25, avatar: "NB", languageKeys: ["td.lang.georgian", "td.lang.english"], bioKey: "td.search.nino.bio", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face" },
-  { id: 2, name: "Giorgi Kharadze", subject: "Physics", subjectKey: "td.physics", rating: 4.8, reviews: 98, price: 30, avatar: "GK", languageKeys: ["td.lang.georgian", "td.lang.russian"], bioKey: "td.search.giorgi.bio", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face" },
-  { id: 3, name: "Ana Melikishvili", subject: "English", subjectKey: "td.english", rating: 5.0, reviews: 215, price: 20, avatar: "AM", languageKeys: ["td.lang.english", "td.lang.georgian"], bioKey: "td.search.ana.bio", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" },
-  { id: 4, name: "Luka Tsiklauri", subject: "Programming", subjectKey: "td.programming", rating: 4.9, reviews: 164, price: 35, avatar: "LT", languageKeys: ["td.lang.english", "td.lang.georgian"], bioKey: "td.search.luka.bio", nativeSpeaker: false, availability: "evening", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
-  { id: 5, name: "Mariam Jashi", subject: "Chemistry", subjectKey: "td.chemistry", rating: 4.7, reviews: 89, price: 22, avatar: "MJ", languageKeys: ["td.lang.georgian", "td.lang.english"], bioKey: "td.search.mariam.bio", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face" },
-  { id: 6, name: "Davit Lomidze", subject: "Georgian", subjectKey: "td.georgian", rating: 4.9, reviews: 201, price: 15, avatar: "DL", languageKeys: ["td.lang.georgian", "td.lang.russian", "td.lang.english"], bioKey: "td.search.davit.bio", nativeSpeaker: true, availability: "morning", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" },
-  { id: 7, name: "Elena Ivanova", subject: "Russian", subjectKey: "td.russian", rating: 4.8, reviews: 156, price: 18, avatar: "EI", languageKeys: ["td.lang.russian", "td.lang.english"], bioKey: "td.search.elena.bio", nativeSpeaker: true, availability: "evening", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" },
-  { id: 8, name: "Tamta Gogua", subject: "Music", subjectKey: "td.music", rating: 5.0, reviews: 73, price: 40, avatar: "TG", languageKeys: ["td.lang.georgian", "td.lang.english"], bioKey: "td.search.tamta.bio", nativeSpeaker: true, availability: "afternoon", photo: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face" },
-];
-
-const subjectEntries: { value: string; labelKey: string }[] = [
-  { value: "all", labelKey: "search.all" },
-  { value: "georgian", labelKey: "td.georgian" },
-  { value: "mathematics", labelKey: "home.subj.math" },
-  { value: "english", labelKey: "home.subj.english" },
-  { value: "history", labelKey: "home.subj.history" },
-  { value: "geography", labelKey: "home.subj.geography" },
-  { value: "biology", labelKey: "home.subj.biology" },
-  { value: "physics", labelKey: "home.subj.physics" },
-  { value: "chemistry", labelKey: "home.subj.chemistry" },
-  { value: "programming", labelKey: "home.subj.programming" },
-  { value: "russian", labelKey: "td.russian" },
-  { value: "music", labelKey: "td.music" },
-];
-const ratingKeys = ["search.any", "4.5+", "4.7+", "4.9+"];
-const availabilityKeys = ["search.any", "search.morning", "search.afternoon", "search.evening"];
+import { Layout } from "@/components/Layout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import { subscribeToSavedTutors, toggleSavedTutor, isTutorSaved } from "@/lib/savedTutors";
+import {
+  getTutorAvatar,
+  getTutorFullName,
+  getTutorLanguages,
+  getTutorSearchText,
+  type PublicTutorProfile,
+} from "@/lib/publicTutors";
 
 export default function TutorSearch() {
-  const [searchParams] = useSearchParams();
-  const initialSubject = normalizeSubjectValue(searchParams.get("subject") || "All");
+  const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState(initialSubject);
-  const [priceRange, setPriceRange] = useState([0, 50]);
-  const [selectedRating, setSelectedRating] = useState("search.any");
-  const [selectedAvailability, setSelectedAvailability] = useState("search.any");
-  const [showFilters, setShowFilters] = useState(false);
-  const { t } = useLanguage();
+  const [selectedSubject, setSelectedSubject] = useState("All");
+  const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
 
-  const subjectSearchMap = useMemo(
-    () => Object.fromEntries(allTutors.map((tutor) => [tutor.id, getSubjectSearchTerms(tutor.subject)])),
-    [],
+  useEffect(() => {
+    const loadTutors = async () => {
+      setLoading(true);
+      const { data } = await supabase
+        .from("public_tutor_profiles" as never)
+        .select("*")
+        .eq("is_published", true)
+        .order("created_at", { ascending: false });
+
+      setTutors(((data as PublicTutorProfile[] | null) ?? []).filter((tutor) => tutor.is_published));
+      setLoading(false);
+    };
+
+    void loadTutors();
+  }, []);
+
+  useEffect(() => {
+    const syncSaved = () => {
+      setSavedIds(Object.fromEntries(tutors.map((tutor) => [tutor.id, isTutorSaved(tutor.id)])));
+    };
+
+    syncSaved();
+    return subscribeToSavedTutors(syncSaved);
+  }, [tutors]);
+
+  const subjectOptions = useMemo(
+    () => ["All", ...Array.from(new Set(tutors.map((tutor) => tutor.primary_subject).filter(Boolean))).sort()],
+    [tutors],
   );
 
-  const filtered = allTutors.filter((tutor) => {
-    if (selectedSubject !== "all" && normalizeSubjectValue(tutor.subject) !== selectedSubject) return false;
-    if (search) {
-      const q = search.trim().toLowerCase();
-      const nameMatch = tutor.name.toLowerCase().includes(q);
-      const subjectMatch = (subjectSearchMap[tutor.id] || []).some((term) => term.includes(q));
-      const subjectKeyMatch = t(tutor.subjectKey).toLowerCase().includes(q);
-      if (!nameMatch && !subjectMatch && !subjectKeyMatch) return false;
-    }
-    if (tutor.price < priceRange[0] || tutor.price > priceRange[1]) return false;
-    if (selectedRating === "4.5+" && tutor.rating < 4.5) return false;
-    if (selectedRating === "4.7+" && tutor.rating < 4.7) return false;
-    if (selectedRating === "4.9+" && tutor.rating < 4.9) return false;
-    if (selectedAvailability !== "search.any") {
-      const avMap: Record<string, string> = { "search.morning": "morning", "search.afternoon": "afternoon", "search.evening": "evening" };
-      if (tutor.availability !== avMap[selectedAvailability]) return false;
-    }
+  const filteredTutors = useMemo(() => {
+    const query = search.trim().toLowerCase();
 
-    return true;
-  });
-
-  const FilterSection = ({ title, options, value, onChange }: { title: string; options: string[]; value: string; onChange: (v: string) => void }) => (
-    <div className="mb-6">
-      <h4 className="text-sm font-semibold mb-3">{title}</h4>
-      <div className="space-y-1.5">
-        {options.map((opt) => (
-          <button
-            key={opt}
-            onClick={() => onChange(opt)}
-            className={`block w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors ${
-              value === opt ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
-            }`}
-          >
-            {opt.startsWith("search.") ? t(opt) : opt}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+    return tutors.filter((tutor) => {
+      if (selectedSubject !== "All" && tutor.primary_subject !== selectedSubject) return false;
+      if (query && !getTutorSearchText(tutor).includes(query)) return false;
+      return true;
+    });
+  }, [search, selectedSubject, tutors]);
 
   return (
     <Layout>
       <div className="container py-8">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex-1 flex items-center gap-2 rounded-lg border bg-card px-3 py-2">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("search.placeholder")}
-              className="flex-1 bg-transparent outline-none text-sm"
-            />
-            {search && (
-              <button onClick={() => setSearch("")}>
-                <X className="h-4 w-4 text-muted-foreground" />
-              </button>
-            )}
+        <div className="mb-8 space-y-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Find approved tutors</h1>
+            <p className="text-sm text-muted-foreground">Browse live LearnEazy tutors approved by your admin team.</p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="md:hidden"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <SlidersHorizontal className="h-4 w-4 mr-1" />
-            {t("search.filters")}
-          </Button>
+
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search by tutor, subject, language, or country"
+                className="pl-9"
+              />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {subjectOptions.map((subject) => (
+                <Button
+                  key={subject}
+                  variant={selectedSubject === subject ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedSubject(subject)}
+                >
+                  {subject}
+                </Button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="flex gap-6">
-          <aside className={`w-56 shrink-0 ${showFilters ? "block" : "hidden"} md:block`}>
-            <div className="sticky top-20 rounded-xl border bg-card p-4">
-              <div className="flex items-center gap-2 mb-4">
-                <Filter className="h-4 w-4 text-primary" />
-                <h3 className="font-semibold text-sm">{t("search.filters")}</h3>
-              </div>
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold mb-3">{t("search.subject")}</h4>
-                <div className="space-y-1.5">
-                  {subjectEntries.map((subj) => (
-                    <button
-                      key={subj.value}
-                      onClick={() => setSelectedSubject(subj.value)}
-                      className={`block w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors ${
-                        selectedSubject === subj.value ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
-                      }`}
-                    >
-                      {t(subj.labelKey)}
-                    </button>
-                  ))}
-                </div>
-              </div>
+        <p className="mb-4 text-sm text-muted-foreground">{filteredTutors.length} tutor{filteredTutors.length === 1 ? "" : "s"} available</p>
 
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold mb-3">{t("search.pricePerHour")}</h4>
-                <Slider value={priceRange} onValueChange={setPriceRange} min={0} max={50} step={5} className="mb-2" />
-                <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
-                  <span>₾{priceRange[0]}</span>
-                  <span>₾{priceRange[1]}</span>
-                </div>
-              </div>
+        {loading ? (
+          <div className="rounded-3xl border bg-card p-10 text-center text-muted-foreground">Loading tutors...</div>
+        ) : filteredTutors.length === 0 ? (
+          <div className="rounded-3xl border bg-card p-10 text-center">
+            <h2 className="text-xl font-semibold text-foreground">No approved tutors found</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Try another subject or a broader search.</p>
+          </div>
+        ) : (
+          <div className="grid gap-4 xl:grid-cols-2">
+            {filteredTutors.map((tutor, index) => {
+              const fullName = getTutorFullName(tutor);
+              const languages = getTutorLanguages(tutor);
+              const isSaved = savedIds[tutor.id] ?? false;
 
-              <FilterSection title={t("search.rating")} options={ratingKeys} value={selectedRating} onChange={setSelectedRating} />
-              <FilterSection title={t("search.availability")} options={availabilityKeys} value={selectedAvailability} onChange={setSelectedAvailability} />
+              return (
+                <motion.article
+                  key={tutor.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.04 }}
+                  className="rounded-3xl border bg-card p-5"
+                >
+                  <div className="flex flex-col gap-5 sm:flex-row">
+                    <img
+                      src={getTutorAvatar(tutor)}
+                      alt={fullName}
+                      className="h-24 w-24 rounded-2xl object-cover"
+                      loading="lazy"
+                    />
 
-            </div>
-          </aside>
-
-          <div className="flex-1">
-            <p className="text-sm text-muted-foreground mb-4">
-              {filtered.length} {filtered.length !== 1 ? t("search.tutors") : t("search.tutor")} {t("search.found")}
-            </p>
-            <div className="space-y-3">
-              {filtered.map((tutor, i) => (
-                <motion.div key={tutor.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                  <Link
-                    to={`/tutor/${tutor.id}`}
-                    className="flex gap-4 rounded-xl border bg-card p-4 card-shadow hover:card-shadow-hover hover:border-primary/30 transition-all group"
-                  >
-                    <img src={tutor.photo} alt={tutor.name} className="h-16 w-16 rounded-lg object-cover shrink-0" loading="lazy" decoding="async" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div>
-                          <h3 className="font-semibold group-hover:text-primary transition-colors">{tutor.name}</h3>
-                          <p className="text-sm text-primary font-medium">{t(tutor.subjectKey)}</p>
+                          <Link to={`/tutor/${tutor.id}`} className="text-xl font-semibold text-foreground hover:text-primary">
+                            {fullName}
+                          </Link>
+                          <p className="text-sm font-medium text-primary">{tutor.primary_subject}</p>
                         </div>
-                        <div className="text-right shrink-0">
-                          <p className="text-xl font-bold tabular-nums">₾{tutor.price}<span className="text-xs font-normal text-muted-foreground">{t("search.perHour")}</span></p>
+                        <div className="text-left sm:text-right">
+                          <p className="text-2xl font-bold text-foreground">${Number(tutor.hourly_rate).toFixed(0)}</p>
+                          <p className="text-xs text-muted-foreground">per hour</p>
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1 line-clamp-1">{t(tutor.bioKey)}</p>
-                      <div className="flex items-center gap-3 mt-2">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-3.5 w-3.5 fill-warning text-warning" />
-                          <span className="text-sm font-medium tabular-nums">{tutor.rating}</span>
-                          <span className="text-xs text-muted-foreground">({tutor.reviews})</span>
-                        </div>
-                        <span className="text-xs text-muted-foreground">{tutor.languageKeys.map(k => t(k)).join(" · ")}</span>
+
+                      <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                        <span>{tutor.experience}</span>
+                        {tutor.country ? <span>• {tutor.country}</span> : null}
+                        <span>• {languages.length > 0 ? languages.join(", ") : "Languages not listed"}</span>
+                      </div>
+
+                      <div className="mt-3 flex items-center gap-2 text-sm">
+                        <Star className="h-4 w-4 fill-warning text-warning" />
+                        <span className="font-semibold text-foreground">{Number(tutor.rating).toFixed(1)}</span>
+                        <span className="text-muted-foreground">({tutor.review_count} reviews)</span>
+                      </div>
+
+                      <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{tutor.bio}</p>
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <Button asChild>
+                          <Link to={`/booking/${tutor.id}`}>Book a Lesson</Link>
+                        </Button>
+                        <Button variant="outline" asChild>
+                          <Link to={`/tutor/${tutor.id}`}>View Profile</Link>
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="text-muted-foreground"
+                          onClick={() => {
+                            toggleSavedTutor({
+                              id: tutor.id,
+                              name: fullName,
+                              subject: tutor.primary_subject,
+                              price: Number(tutor.hourly_rate),
+                              photo: getTutorAvatar(tutor),
+                            });
+                            setSavedIds((current) => ({ ...current, [tutor.id]: !isSaved }));
+                          }}
+                        >
+                          <Heart className={`mr-2 h-4 w-4 ${isSaved ? "fill-primary text-primary" : ""}`} />
+                          {isSaved ? "Saved" : "Save"}
+                        </Button>
                       </div>
                     </div>
-                  </Link>
-                </motion.div>
-              ))}
-              {filtered.length === 0 && (
-                <div className="text-center py-12 text-muted-foreground">
-                  <p className="text-lg font-medium">{t("search.noResults")}</p>
-                  <p className="text-sm mt-1">{t("search.adjustFilters")}</p>
-                </div>
-              )}
-            </div>
+                  </div>
+                </motion.article>
+              );
+            })}
           </div>
-        </div>
+        )}
       </div>
     </Layout>
   );
