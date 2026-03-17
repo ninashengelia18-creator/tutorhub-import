@@ -425,6 +425,7 @@ export type Database = {
           first_name: string
           hourly_rate: number
           id: string
+          id_document_url: string | null
           last_name: string
           native_language: string | null
           other_languages: string | null
@@ -446,6 +447,7 @@ export type Database = {
           first_name: string
           hourly_rate: number
           id?: string
+          id_document_url?: string | null
           last_name: string
           native_language?: string | null
           other_languages?: string | null
@@ -467,6 +469,7 @@ export type Database = {
           first_name?: string
           hourly_rate?: number
           id?: string
+          id_document_url?: string | null
           last_name?: string
           native_language?: string | null
           other_languages?: string | null
@@ -629,6 +632,7 @@ export type Database = {
           first_name: string
           hourly_rate: number
           id: string
+          id_document_url: string | null
           last_name: string
           native_language: string | null
           other_languages: string | null
@@ -711,6 +715,7 @@ export type Database = {
           first_name: string
           hourly_rate: number
           id: string
+          id_document_url: string | null
           last_name: string
           native_language: string | null
           other_languages: string | null
