@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CheckCircle, Clock, XCircle } from "lucide-react";
+import { CheckCircle, Clock, XCircle, FileText } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface TutorApplicationListItem {
   id: string;
@@ -17,6 +18,7 @@ export interface TutorApplicationListItem {
   bio: string;
   status: string;
   created_at: string;
+  id_document_url: string | null;
 }
 
 const statusConfig: Record<string, { tone: string; icon: typeof Clock; label: string }> = {
@@ -80,6 +82,21 @@ export function TutorApplicationList({
                   ))}
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground line-clamp-2">{app.bio}</p>
+                {app.id_document_url && (
+                  <button
+                    type="button"
+                    className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                    onClick={async () => {
+                      const { data } = await supabase.storage
+                        .from("id-documents")
+                        .createSignedUrl(app.id_document_url!, 300);
+                      if (data?.signedUrl) window.open(data.signedUrl, "_blank");
+                    }}
+                  >
+                    <FileText className="h-3 w-3" />
+                    View ID Document
+                  </button>
+                )}
                 {(app.country || app.native_language || app.other_languages) && (
                   <p className="mt-1 text-xs text-muted-foreground">
                     {[app.country, app.native_language, app.other_languages].filter(Boolean).join(" · ")}
