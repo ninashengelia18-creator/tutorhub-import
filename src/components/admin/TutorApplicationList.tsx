@@ -19,10 +19,10 @@ export interface TutorApplicationListItem {
   created_at: string;
 }
 
-const statusConfig: Record<string, { color: string; icon: typeof Clock; label: string }> = {
-  pending: { color: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30", icon: Clock, label: "Pending" },
-  approved: { color: "bg-green-500/10 text-green-600 border-green-500/30", icon: CheckCircle, label: "Approved" },
-  rejected: { color: "bg-red-500/10 text-red-600 border-red-500/30", icon: XCircle, label: "Rejected" },
+const statusConfig: Record<string, { tone: string; icon: typeof Clock; label: string }> = {
+  pending: { tone: "warning", icon: Clock, label: "Pending" },
+  approved: { tone: "success", icon: CheckCircle, label: "Approved" },
+  rejected: { tone: "destructive", icon: XCircle, label: "Rejected" },
 };
 
 interface TutorApplicationListProps {
