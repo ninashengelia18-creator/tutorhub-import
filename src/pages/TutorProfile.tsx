@@ -6,10 +6,12 @@ import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { formatTimeSlotLabel, getTimeZoneSettingLabel } from "@/lib/datetime";
 import { isTutorSaved, subscribeToSavedTutors, toggleSavedTutor } from "@/lib/savedTutors";
 
 // Translation key-based tutor data
@@ -221,6 +223,7 @@ export default function TutorProfile() {
   const tutor = tutorData[id || "1"] || tutorData["1"];
   const { t, lang } = useLanguage();
   const { user } = useAuth();
+  const { timezone } = useAppLocale();
   const { toast } = useToast();
   const text = useMemo(() => actionCopy[lang], [lang]);
   const [saved, setSaved] = useState(() => isTutorSaved(id || "1"));
@@ -428,7 +431,7 @@ export default function TutorProfile() {
               <div className="overflow-hidden rounded-xl border bg-card">
                 <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
                   <p className="text-sm font-medium text-foreground">{t("td.scheduleRange")}</p>
-                  <p className="text-xs text-muted-foreground">Asia/Tbilisi · GMT +4:00</p>
+                  <p className="text-xs text-muted-foreground">{getTimeZoneSettingLabel(timezone)}</p>
                 </div>
                 <div className="grid grid-cols-7 divide-x">
                   {dayKeys.map((dayKey, i) => (
@@ -441,9 +444,9 @@ export default function TutorProfile() {
                         {(scheduleSlots[dates[i]] || []).map((slot) => (
                           <button
                             key={slot}
-                            className="w-full rounded border px-1 py-1 text-xs font-medium tabular-nums text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                            className="w-full rounded border px-2 py-1.5 text-[11px] font-medium leading-tight text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
                           >
-                            {slot}
+                            {formatTimeSlotLabel(slot, lang, timezone)}
                           </button>
                         ))}
                       </div>

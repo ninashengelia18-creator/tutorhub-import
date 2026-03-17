@@ -83,6 +83,21 @@ export function getHourInTimeZone(value: DateLike, timeZone: string) {
   return Number.parseInt(hour, 10);
 }
 
+const TIMEZONE_CITY_LABELS: Record<string, string> = {
+  "America/New_York": "New York",
+  "America/Chicago": "Chicago",
+  "America/Denver": "Denver",
+  "America/Los_Angeles": "Los Angeles",
+  "Asia/Tbilisi": "Tbilisi",
+  "Europe/London": "London",
+  "Europe/Berlin": "Berlin",
+  "Europe/Warsaw": "Warsaw",
+  "Europe/Madrid": "Madrid",
+  "Europe/Rome": "Rome",
+  "Europe/Moscow": "Moscow",
+  UTC: "UTC",
+};
+
 export function getTimeZoneOffsetLabel(timeZone: string) {
   try {
     const value = new Intl.DateTimeFormat("en-US", {
@@ -90,10 +105,40 @@ export function getTimeZoneOffsetLabel(timeZone: string) {
       timeZoneName: "shortOffset",
     }).formatToParts(new Date()).find((part) => part.type === "timeZoneName")?.value;
 
-    if (value) return value.replace("GMT", "GMT ");
+    if (value) return value.replace(/\s+/g, "");
   } catch {
     // Ignore and fall through to fallback.
   }
 
   return timeZone;
+}
+
+export function getTimeZoneCityLabel(timeZone: string) {
+  return TIMEZONE_CITY_LABELS[timeZone] ?? timeZone.split("/").pop()?.replace(/_/g, " ") ?? timeZone;
+}
+
+export function getTimeZoneSettingLabel(timeZone: string) {
+  return `${getTimeZoneCityLabel(timeZone)} (${getTimeZoneOffsetLabel(timeZone)})`;
+}
+
+export function getTimeZoneInlineLabel(timeZone: string) {
+  const city = getTimeZoneCityLabel(timeZone);
+  const offset = getTimeZoneOffsetLabel(timeZone);
+  return city === "UTC" ? offset : `${offset} ${city}`;
+}
+
+export function formatWallClockTime(value: string, lang: Language) {
+  const [hour, minute] = value.split(":").map(Number);
+
+  if (Number.isNaN(hour) || Number.isNaN(minute)) return value;
+
+  return new Intl.DateTimeFormat(getLocaleForLanguage(lang), {
+    timeZone: "UTC",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(Date.UTC(2000, 0, 1, hour, minute)));
+}
+
+export function formatTimeSlotLabel(value: string, lang: Language, timeZone: string) {
+  return `${formatWallClockTime(value, lang)} (${getTimeZoneInlineLabel(timeZone)})`;
 }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeFileName } from "@/components/messages/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -12,7 +13,8 @@ export function useProfileSettings(redirectPath: string) {
   const { user, refreshProfile, updateProfileState, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { currency, timezone, setLocalePreferences } = useAppLocale();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [displayName, setDisplayName] = useState("");
@@ -28,6 +30,7 @@ export function useProfileSettings(redirectPath: string) {
   const [deleteEmail, setDeleteEmail] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [notificationPreferences, setNotificationPreferences] = useState({ email_transactional: true, email_tips_discount: false, email_surveys: false });
+  const [selectedTimezone, setSelectedTimezone] = useState(timezone);
 
   const fetchProfile = useCallback(async () => {
     if (!user) {
@@ -66,6 +69,10 @@ export function useProfileSettings(redirectPath: string) {
   useEffect(() => {
     setEmail(user?.email || "");
   }, [user?.email]);
+
+  useEffect(() => {
+    setSelectedTimezone(timezone);
+  }, [timezone]);
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -121,6 +128,11 @@ export function useProfileSettings(redirectPath: string) {
       return;
     }
 
+    setLocalePreferences({
+      preferred_language: lang,
+      preferred_currency: currency,
+      preferred_timezone: selectedTimezone,
+    });
     updateProfileState({ display_name: cleanName });
     await refreshProfile();
     toast({ title: t("profile.settings.saved") });
@@ -251,6 +263,7 @@ export function useProfileSettings(redirectPath: string) {
     deleteEmail,
     deleteDialogOpen,
     notificationPreferences,
+    selectedTimezone,
     initials,
     firstName,
     lastName,
@@ -261,6 +274,7 @@ export function useProfileSettings(redirectPath: string) {
     setDeleteEmail,
     setDeleteDialogOpen,
     setNotificationPreferences,
+    setSelectedTimezone,
     handleAvatarUpload,
     handleSaveAccount,
     handleSaveEmail,

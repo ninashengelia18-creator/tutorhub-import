@@ -20,6 +20,7 @@ export default function ProfileSettings() {
     deleteEmail,
     deleteDialogOpen,
     notificationPreferences,
+    selectedTimezone,
     initials,
     firstName,
     lastName,
@@ -33,6 +34,7 @@ export default function ProfileSettings() {
     setNotificationPreferences,
     setDisplayName,
     setEmail,
+    setSelectedTimezone,
     handleAvatarUpload,
     handleSaveAccount,
     handleSaveEmail,
@@ -50,38 +52,40 @@ export default function ProfileSettings() {
       <div className="container py-10 md:py-14">
         <div className="flex flex-col gap-10 lg:flex-row lg:gap-16 xl:gap-24">
           <StudentSettingsSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
-          <StudentSettingsPanels
-            activeSection={activeSection}
-            email={email}
-            avatarUrl={avatarUrl}
-            initials={initials}
-            firstName={firstName}
-            lastName={lastName}
-            loading={loading}
-            uploading={uploading}
-            fileInputRef={fileInputRef}
-            currentPassword={currentPassword}
-            newPassword={newPassword}
-            confirmPassword={confirmPassword}
-            deleteEmail={deleteEmail}
-            deleteDialogOpen={deleteDialogOpen}
-            notificationPreferences={notificationPreferences}
-            onAvatarUpload={handleAvatarUpload}
-            onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
-            onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}
-            onEmailChange={setEmail}
-            onCurrentPasswordChange={setCurrentPassword}
-            onNewPasswordChange={setNewPassword}
-            onConfirmPasswordChange={setConfirmPassword}
-            onDeleteEmailChange={setDeleteEmail}
-            onSaveAccount={handleSaveAccount}
-            onSaveEmail={handleSaveEmail}
-            onSavePassword={handleSavePassword}
-            onSaveNotifications={handleSaveNotifications}
-            onToggleNotification={(key, value) => setNotificationPreferences((current) => ({ ...current, [key]: value }))}
-            onDeleteAccount={handleDeleteAccount}
-            onDeleteDialogOpenChange={setDeleteDialogOpen}
-          />
+            <StudentSettingsPanels
+              activeSection={activeSection}
+              email={email}
+              avatarUrl={avatarUrl}
+              initials={initials}
+              firstName={firstName}
+              lastName={lastName}
+              timezone={selectedTimezone}
+              loading={loading}
+              uploading={uploading}
+              fileInputRef={fileInputRef}
+              currentPassword={currentPassword}
+              newPassword={newPassword}
+              confirmPassword={confirmPassword}
+              deleteEmail={deleteEmail}
+              deleteDialogOpen={deleteDialogOpen}
+              notificationPreferences={notificationPreferences}
+              onAvatarUpload={handleAvatarUpload}
+              onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
+              onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}
+              onEmailChange={setEmail}
+              onTimezoneChange={setSelectedTimezone}
+              onCurrentPasswordChange={setCurrentPassword}
+              onNewPasswordChange={setNewPassword}
+              onConfirmPasswordChange={setConfirmPassword}
+              onDeleteEmailChange={setDeleteEmail}
+              onSaveAccount={handleSaveAccount}
+              onSaveEmail={handleSaveEmail}
+              onSavePassword={handleSavePassword}
+              onSaveNotifications={handleSaveNotifications}
+              onToggleNotification={(key, value) => setNotificationPreferences((current) => ({ ...current, [key]: value }))}
+              onDeleteAccount={handleDeleteAccount}
+              onDeleteDialogOpenChange={setDeleteDialogOpen}
+            />
         </div>
       </div>
     </Layout>

@@ -14,6 +14,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { formatTimeSlotLabel } from "@/lib/datetime";
 import { formatLocalizedDate, localizeSubjectLabel } from "@/lib/localization";
 
 const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
@@ -243,7 +244,7 @@ export default function Booking() {
                 <SelectContent className="rounded-xl border-border bg-popover text-popover-foreground">
                   {TIME_OPTIONS.map((slot) => (
                     <SelectItem key={slot} value={slot} className="rounded-lg">
-                      {slot}
+                      {formatTimeSlotLabel(slot, lang, timezone)}
                     </SelectItem>
                   ))}
                 </SelectContent>
