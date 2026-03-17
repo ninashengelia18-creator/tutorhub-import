@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Bell,
+  ChevronDown,
   Heart,
   HelpCircle,
   LogOut,
@@ -35,6 +36,46 @@ const navLinks = [
   { labelKey: "nav.faq", href: "/faq" },
 ] as const;
 
+const forStudentsMenu = {
+  findATutor: [
+    { label: "Find a Tutor", href: "/search" },
+    { label: "K-12 Subjects", href: "/search?subject=K12" },
+    { label: "GCSE & A-Level", href: "/search?subject=GCSE" },
+    { label: "Professional Courses", href: "/search?subject=Professional" },
+    { label: "Exam Preparation", href: "/search?subject=ExamPrep" },
+  ],
+  subjects: [
+    { label: "Mathematics", href: "/search?subject=Mathematics" },
+    { label: "English Language & Literature", href: "/search?subject=English" },
+    { label: "Physics", href: "/search?subject=Physics" },
+    { label: "Chemistry", href: "/search?subject=Chemistry" },
+    { label: "Biology", href: "/search?subject=Biology" },
+    { label: "History & Geography", href: "/search?subject=History" },
+    { label: "Computer Science & Programming", href: "/search?subject=ComputerScience" },
+    { label: "Business & Finance", href: "/search?subject=BusinessFinance" },
+    { label: "Data Science", href: "/search?subject=DataScience" },
+    { label: "Law", href: "/search?subject=Law" },
+    { label: "Medicine & Healthcare", href: "/search?subject=Medicine" },
+    { label: "English for Professionals", href: "/search?subject=BusinessEnglish" },
+  ],
+  learn: [
+    { label: "Learn English online", href: "/search?subject=English" },
+    { label: "Learn Spanish online", href: "/search?subject=Spanish" },
+    { label: "Learn French online", href: "/search?subject=French" },
+    { label: "Learn German online", href: "/search?subject=German" },
+    { label: "Learn Italian online", href: "/search?subject=Italian" },
+    { label: "Learn another language", href: "/search" },
+  ],
+  tutors: [
+    { label: "English Tutors", href: "/search?subject=English" },
+    { label: "Maths Tutors", href: "/search?subject=Mathematics" },
+    { label: "Science Tutors", href: "/search?subject=Science" },
+    { label: "GCSE Tutors", href: "/search?subject=GCSE" },
+    { label: "A-Level Tutors", href: "/search?subject=ALevel" },
+    { label: "Professional Skills Tutors", href: "/search?subject=Professional" },
+  ],
+};
+
 function initialsFromValue(value: string) {
   return (
     value
@@ -47,8 +88,29 @@ function initialsFromValue(value: string) {
   );
 }
 
+function MegaMenuColumn({ title, items }: { title: string; items: { label: string; href: string }[] }) {
+  return (
+    <div>
+      <h4 className="text-xs font-bold uppercase tracking-wider text-primary mb-3">{title}</h4>
+      <ul className="space-y-1.5">
+        {items.map((item) => (
+          <li key={item.href + item.label}>
+            <Link
+              to={item.href}
+              className="block text-sm text-foreground/80 hover:text-primary transition-colors py-0.5"
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -71,6 +133,12 @@ export function Header() {
     });
   }, [user]);
 
+  // Close mega menu on route change
+  useEffect(() => {
+    setMegaOpen(false);
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   const isPortalHeaderRoute =
     user &&
     [
@@ -92,22 +160,6 @@ export function Header() {
     user && !isTutor
       ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/faq"].includes(link.href))
       : navLinks;
-
-  const headerNavLinks = user
-    ? isTutor
-      ? [
-          { href: "/", label: t("nav.home") },
-          { href: "/search", label: t("nav.findTutors") },
-          { href: dashboardPath, label: t("auth.dashboard") },
-          { href: profilePath, label: t("nav.profile") },
-        ]
-      : [
-          { href: "/", label: t("nav.home") },
-          { href: "/search", label: t("nav.findTutors") },
-          { href: dashboardPath, label: t("auth.dashboard") },
-          { href: "/my-lessons", label: t("msg.myLessons") },
-        ]
-    : visibleNavLinks.map((link) => ({ href: link.href, label: t(link.labelKey) }));
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
 
@@ -142,17 +194,118 @@ export function Header() {
 
         <div className="hidden items-center gap-10 md:flex">
           <nav className="flex items-center gap-6">
-            {headerNavLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  location.pathname === link.href ? "text-primary" : "text-foreground/90"
-                }`}
+            <Link
+              to="/"
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                location.pathname === "/" ? "text-primary" : "text-foreground/90"
+              }`}
+            >
+              {t("nav.home")}
+            </Link>
+
+            {/* For Students mega-menu trigger */}
+            <div
+              className="relative"
+              onMouseEnter={() => setMegaOpen(true)}
+              onMouseLeave={() => setMegaOpen(false)}
+            >
+              <button
+                type="button"
+                className="flex items-center gap-1 text-sm font-medium text-foreground/90 transition-colors hover:text-primary"
+                onClick={() => setMegaOpen((v) => !v)}
               >
-                {link.label}
-              </Link>
-            ))}
+                For Students <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              <AnimatePresence>
+                {megaOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute left-1/2 top-full z-50 mt-2 w-[720px] -translate-x-1/2 rounded-2xl border border-border/70 bg-popover p-6 shadow-xl"
+                  >
+                    <div className="grid grid-cols-4 gap-6">
+                      <MegaMenuColumn title="Find a Tutor" items={forStudentsMenu.findATutor} />
+                      <MegaMenuColumn title="Subjects" items={forStudentsMenu.subjects} />
+                      <MegaMenuColumn title="Learn (Languages)" items={forStudentsMenu.learn} />
+                      <MegaMenuColumn title="1-on-1 Tutors" items={forStudentsMenu.tutors} />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {!user && (
+              <>
+                <Link
+                  to="/for-business"
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname === "/for-business" ? "text-primary" : "text-foreground/90"
+                  }`}
+                >
+                  {t("nav.forBusiness")}
+                </Link>
+                <Link
+                  to="/become-tutor"
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname === "/become-tutor" ? "text-primary" : "text-foreground/90"
+                  }`}
+                >
+                  {t("nav.becomeTutor")}
+                </Link>
+                <Link
+                  to="/faq"
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname === "/faq" ? "text-primary" : "text-foreground/90"
+                  }`}
+                >
+                  {t("nav.faq")}
+                </Link>
+              </>
+            )}
+
+            {user && (
+              <>
+                <Link
+                  to="/search"
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname === "/search" ? "text-primary" : "text-foreground/90"
+                  }`}
+                >
+                  {t("nav.findTutors")}
+                </Link>
+                <Link
+                  to={dashboardPath}
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname === dashboardPath ? "text-primary" : "text-foreground/90"
+                  }`}
+                >
+                  {t("auth.dashboard")}
+                </Link>
+                {!isTutor && (
+                  <Link
+                    to="/my-lessons"
+                    className={`text-sm font-medium transition-colors hover:text-primary ${
+                      location.pathname === "/my-lessons" ? "text-primary" : "text-foreground/90"
+                    }`}
+                  >
+                    {t("msg.myLessons")}
+                  </Link>
+                )}
+                {isTutor && (
+                  <Link
+                    to={profilePath}
+                    className={`text-sm font-medium transition-colors hover:text-primary ${
+                      location.pathname === profilePath ? "text-primary" : "text-foreground/90"
+                    }`}
+                  >
+                    {t("nav.profile")}
+                  </Link>
+                )}
+              </>
+            )}
           </nav>
 
           {user ? (
