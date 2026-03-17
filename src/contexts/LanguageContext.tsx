@@ -420,7 +420,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // For Business
     "biz.title": "LearnEazy for Business",
     "biz.subtitle": "Upskill your team with personalized tutoring and AI-powered learning tools.",
-    "biz.cta": "Request a Demo",
+    "biz.cta": "Send Enquiry",
     "biz.ctaSub": "Free consultation · No commitment",
     "biz.whyTitle": "Why Companies Choose LearnEazy",
     "biz.feat1.title": "Tailored Training Programs",
