@@ -31,6 +31,7 @@ import {
 const navLinks = [
   { labelKey: "nav.home", href: "/" },
   { labelKey: "nav.findTutors", href: "/search" },
+  { labelKey: "nav.conversationPartners", href: "/conversation-partners" },
   { labelKey: "nav.forBusiness", href: "/for-business" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
   { labelKey: "nav.faq", href: "/faq" },
@@ -203,7 +204,7 @@ export function Header() {
   const dashboardPath = isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks =
     user && !isTutor
-      ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/faq"].includes(link.href))
+      ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/faq", "/conversation-partners"].includes(link.href))
       : navLinks;
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
@@ -284,6 +285,14 @@ export function Header() {
 
             {!user && (
               <>
+                <Link
+                  to="/conversation-partners"
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname === "/conversation-partners" ? "text-primary" : "text-foreground/90"
+                  }`}
+                >
+                  {t("nav.conversationPartners")}
+                </Link>
                 <Link
                   to="/for-business"
                   className={`text-sm font-medium transition-colors hover:text-primary ${

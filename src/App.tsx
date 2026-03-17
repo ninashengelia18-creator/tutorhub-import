@@ -20,6 +20,7 @@ import FAQ from "./pages/FAQ.tsx";
 import ForBusiness from "./pages/ForBusiness.tsx";
 import BecomeTutor from "./pages/BecomeTutor.tsx";
 import TutorApply from "./pages/TutorApply.tsx";
+import ConversationPartners from "./pages/ConversationPartners.tsx";
 import Login from "./pages/Login.tsx";
 import Signup from "./pages/Signup.tsx";
 import StudentSignup from "./pages/StudentSignup.tsx";
@@ -68,6 +69,7 @@ const App = () => (
                 <Route path="/for-business" element={<ForBusiness />} />
                 <Route path="/become-tutor" element={<BecomeTutor />} />
                 <Route path="/tutor-apply" element={<TutorApply />} />
+                <Route path="/conversation-partners" element={<ConversationPartners />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/signup/student" element={<StudentSignup />} />

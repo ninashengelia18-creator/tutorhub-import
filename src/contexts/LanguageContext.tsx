@@ -15,6 +15,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Nav
     "nav.home": "Home",
     "nav.findTutors": "Find Tutors",
+    "nav.conversationPartners": "Conversation Partners",
     "nav.forBusiness": "For Business",
     "nav.becomeTutor": "Become a Tutor",
     "nav.provenProgress": "Proven Progress",
@@ -1009,6 +1010,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Nav
     "nav.home": "მთავარი",
     "nav.findTutors": "რეპეტიტორები",
+    "nav.conversationPartners": "საუბრის პარტნიორები",
     "nav.forBusiness": "ბიზნესისთვის",
     "nav.becomeTutor": "გახდი რეპეტიტორი",
     "nav.provenProgress": "პროგრესი",
@@ -1999,6 +2001,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Nav
     "nav.home": "Главная",
     "nav.findTutors": "Репетиторы",
+    "nav.conversationPartners": "Партнёры для разговора",
     "nav.forBusiness": "Для бизнеса",
     "nav.becomeTutor": "Стать репетитором",
     "nav.provenProgress": "Прогресс",
