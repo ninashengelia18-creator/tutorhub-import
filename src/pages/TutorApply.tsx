@@ -326,16 +326,41 @@ export default function TutorApply() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.firstName")} *</Label>
-                    <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                    <Input
+                      value={firstName}
+                      onChange={(e) => {
+                        setFirstName(e.target.value);
+                        setFieldError("firstName", e.target.value);
+                      }}
+                      aria-invalid={Boolean(errors.firstName)}
+                    />
+                    {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
                   </div>
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.lastName")} *</Label>
-                    <Input value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    <Input
+                      value={lastName}
+                      onChange={(e) => {
+                        setLastName(e.target.value);
+                        setFieldError("lastName", e.target.value);
+                      }}
+                      aria-invalid={Boolean(errors.lastName)}
+                    />
+                    {errors.lastName && <p className="text-sm text-destructive">{errors.lastName}</p>}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.email")} *</Label>
-                  <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setFieldError("email", e.target.value);
+                    }}
+                    aria-invalid={Boolean(errors.email)}
+                  />
+                  {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -358,14 +383,23 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.experience")} *</Label>
-                  <Select value={experience} onValueChange={setExperience}>
-                    <SelectTrigger><SelectValue placeholder={t("tutor.apply.selectExp")} /></SelectTrigger>
+                  <Select
+                    value={experience}
+                    onValueChange={(value) => {
+                      setExperience(value);
+                      setFieldError("experience", value);
+                    }}
+                  >
+                    <SelectTrigger aria-invalid={Boolean(errors.experience)}>
+                      <SelectValue placeholder={t("tutor.apply.selectExp")} />
+                    </SelectTrigger>
                     <SelectContent>
                       {experienceOptions.map((opt) => (
                         <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  {errors.experience && <p className="text-sm text-destructive">{errors.experience}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.education")}</Label>
@@ -377,7 +411,17 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.bio")} *</Label>
-                  <Textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={5} placeholder={t("tutor.apply.bioPlaceholder")} />
+                  <Textarea
+                    value={bio}
+                    onChange={(e) => {
+                      setBio(e.target.value);
+                      setFieldError("bio", e.target.value);
+                    }}
+                    rows={5}
+                    placeholder={t("tutor.apply.bioPlaceholder")}
+                    aria-invalid={Boolean(errors.bio)}
+                  />
+                  {errors.bio && <p className="text-sm text-destructive">{errors.bio}</p>}
                 </div>
               </div>
             )}
@@ -406,11 +450,22 @@ export default function TutorApply() {
                       </button>
                     ))}
                   </div>
+                  {errors.selectedSubjects && <p className="text-sm text-destructive">{errors.selectedSubjects}</p>}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.rate")} * (GEL/hr)</Label>
-                    <Input type="number" min="1" value={hourlyRate} onChange={(e) => setHourlyRate(e.target.value)} />
+                    <Input
+                      type="number"
+                      min="1"
+                      value={hourlyRate}
+                      onChange={(e) => {
+                        setHourlyRate(e.target.value);
+                        setFieldError("hourlyRate", e.target.value);
+                      }}
+                      aria-invalid={Boolean(errors.hourlyRate)}
+                    />
+                    {errors.hourlyRate && <p className="text-sm text-destructive">{errors.hourlyRate}</p>}
                   </div>
                   <div className="space-y-2">
                     <Label>{t("tutor.apply.nativeLang")}</Label>
@@ -432,14 +487,23 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.availability")} *</Label>
-                  <Select value={availability} onValueChange={setAvailability}>
-                    <SelectTrigger><SelectValue placeholder={t("tutor.apply.selectAvail")} /></SelectTrigger>
+                  <Select
+                    value={availability}
+                    onValueChange={(value) => {
+                      setAvailability(value);
+                      setFieldError("availability", value);
+                    }}
+                  >
+                    <SelectTrigger aria-invalid={Boolean(errors.availability)}>
+                      <SelectValue placeholder={t("tutor.apply.selectAvail")} />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="part-time">{t("tutor.apply.availPartTime")}</SelectItem>
                       <SelectItem value="full-time">{t("tutor.apply.availFullTime")}</SelectItem>
                       <SelectItem value="flexible">{t("tutor.apply.availFlexible")}</SelectItem>
                     </SelectContent>
                   </Select>
+                  {errors.availability && <p className="text-sm text-destructive">{errors.availability}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.timezone")}</Label>
@@ -473,10 +537,22 @@ export default function TutorApply() {
                   <Textarea value={aboutTeaching} onChange={(e) => setAboutTeaching(e.target.value)} rows={4} placeholder={t("tutor.apply.aboutTeachingPlaceholder")} />
                 </div>
                 <div className="flex items-start gap-3">
-                  <Checkbox id="terms" checked={agreeTerms} onCheckedChange={(v) => setAgreeTerms(v === true)} />
-                  <Label htmlFor="terms" className="text-sm leading-relaxed cursor-pointer">
-                    {t("tutor.apply.terms")}
-                  </Label>
+                  <Checkbox
+                    id="terms"
+                    checked={agreeTerms}
+                    onCheckedChange={(value) => {
+                      const isChecked = value === true;
+                      setAgreeTerms(isChecked);
+                      setFieldError("agreeTerms", isChecked);
+                    }}
+                    aria-invalid={Boolean(errors.agreeTerms)}
+                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="terms" className="text-sm leading-relaxed cursor-pointer">
+                      {t("tutor.apply.terms")}
+                    </Label>
+                    {errors.agreeTerms && <p className="text-sm text-destructive">{errors.agreeTerms}</p>}
+                  </div>
                 </div>
               </div>
             )}
