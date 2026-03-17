@@ -240,6 +240,18 @@ export default function TutorApply() {
         _subject: `New Tutor Application: ${fullName}`,
       };
 
+      // Upload ID document to storage
+      let idDocumentUrl: string | null = null;
+      if (idFile) {
+        const fileExt = idFile.name.split(".").pop() || "jpg";
+        const filePath = `${crypto.randomUUID()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from("id-documents")
+          .upload(filePath, idFile, { upsert: false });
+        if (uploadError) throw new Error("Failed to upload ID document. Please try again.");
+        idDocumentUrl = filePath;
+      }
+
       // Insert into database for admin review
       const { error: dbError } = await supabase.from("tutor_applications").insert({
         first_name: validatedData.firstName.trim(),
@@ -258,7 +270,8 @@ export default function TutorApply() {
         availability: validatedData.availability,
         timezone: validatedData.timezone.trim() || null,
         about_teaching: validatedData.aboutTeaching.trim() || null,
-      });
+        id_document_url: idDocumentUrl,
+      } as any);
 
       if (dbError) throw dbError;
 
