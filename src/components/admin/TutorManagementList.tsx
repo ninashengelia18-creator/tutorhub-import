@@ -90,14 +90,16 @@ export function TutorManagementList({
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button
-                size="sm"
-                onClick={() => onApprove(tutor)}
-                disabled={isPendingAction}
-                className="bg-success text-primary-foreground hover:bg-success/90"
-              >
-                Approve
-              </Button>
+              {!tutor.is_published && (
+                <Button
+                  size="sm"
+                  onClick={() => onApprove(tutor)}
+                  disabled={isPendingAction}
+                  className="bg-success text-primary-foreground hover:bg-success/90"
+                >
+                  Approve
+                </Button>
+              )}
               <Button
                 size="sm"
                 variant="outline"
