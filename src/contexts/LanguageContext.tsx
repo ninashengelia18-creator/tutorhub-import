@@ -585,9 +585,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.apply.next": "Continue",
     "tutor.apply.submit": "Submit Application",
     "tutor.apply.submitting": "Submitting...",
-    "tutor.apply.error": "Something went wrong. Please try again.",
+    "tutor.apply.error": "We couldn't submit your application. Please review your details and try again.",
     "tutor.apply.successTitle": "Application Submitted!",
-    "tutor.apply.successDesc": "Thank you for applying! Our team will review your application and get back to you within 48 hours.",
+    "tutor.apply.successDesc": "Thank you for applying! Our team will review your application within 24 hours and contact you via email.",
     "tutor.apply.backHome": "Back to Home",
 
     // Tutor Apply - Video
