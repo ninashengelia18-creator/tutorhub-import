@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle, User, GraduationCap, BookOpen, Clock } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, User, GraduationCap, BookOpen, Clock, Upload, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   getTutorApplicationErrorMessage,
