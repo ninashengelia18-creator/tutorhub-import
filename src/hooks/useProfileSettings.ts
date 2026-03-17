@@ -128,6 +128,11 @@ export function useProfileSettings(redirectPath: string) {
       return;
     }
 
+    setLocalePreferences({
+      preferred_language: lang,
+      preferred_currency: currency,
+      preferred_timezone: selectedTimezone,
+    });
     updateProfileState({ display_name: cleanName });
     await refreshProfile();
     toast({ title: t("profile.settings.saved") });
