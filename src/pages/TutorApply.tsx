@@ -179,7 +179,7 @@ export default function TutorApply() {
       case 3:
         return !getFieldError("selectedSubjects", selectedSubjects) && !getFieldError("hourlyRate", hourlyRate);
       case 4:
-        return !getFieldError("availability", availability) && !getFieldError("agreeTerms", agreeTerms);
+        return !getFieldError("availability", availability) && !getFieldError("agreeTerms", agreeTerms) && !!idFile && confirmIdOwnership;
       default:
         return false;
     }
