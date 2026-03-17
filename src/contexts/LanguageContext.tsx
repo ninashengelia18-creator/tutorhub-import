@@ -2979,18 +2979,15 @@ export const translations: Record<Language, Record<string, string>> = {
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Language>(() => {
-    const saved = localStorage.getItem("learneazy-lang");
-    return (saved as Language) || "en";
-  });
+  const [lang, setLang] = useState<Language>("en");
 
-  const handleSetLang = (newLang: Language) => {
-    setLang(newLang);
-    localStorage.setItem("learneazy-lang", newLang);
+  const handleSetLang = (_newLang: Language) => {
+    setLang("en");
+    localStorage.setItem("learneazy-lang", "en");
   };
 
   const t = (key: string): string => {
-    return translations[lang][key] || translations.ka[key] || key;
+    return translations.en[key] || key;
   };
 
   return (

@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Bell, ChevronDown, Heart, HelpCircle, LogOut, Mail, Menu, UserCircle } from "lucide-react";
+import { Bell, Heart, HelpCircle, LogOut, Mail, Menu, UserCircle } from "lucide-react";
 
 import logo from "@/assets/owl-logo.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
-import { Language, useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSavedTutors, subscribeToSavedTutors } from "@/lib/savedTutors";
 
@@ -33,20 +32,22 @@ const tutorPrimaryNav = [
 ] as const;
 
 function initialsFromName(name: string) {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2) || "U";
+  return (
+    name
+      .split(" ")
+      .filter(Boolean)
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) || "U"
+  );
 }
 
 export function PortalHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut, profile, isTutor } = useAuth();
-  const { lang, setLang, t } = useLanguage();
+  const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [savedCount, setSavedCount] = useState(0);
@@ -112,7 +113,12 @@ export function PortalHeader() {
       .channel(`portal-header-${user.id}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "messages", filter: isTutor ? `tutor_name=eq.${displayName}` : `student_id=eq.${user.id}` },
+        {
+          event: "*",
+          schema: "public",
+          table: "messages",
+          filter: isTutor ? `tutor_name=eq.${displayName}` : `student_id=eq.${user.id}`,
+        },
         () => {
           void loadUnread();
         },
@@ -155,21 +161,33 @@ export function PortalHeader() {
             <Link to={isTutor ? "/tutor-dashboard" : "/dashboard"} className="flex items-center gap-4">
               <div className="flex flex-col items-center gap-1">
                 <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
-                <span className="text-foreground uppercase tracking-[0.25em]" style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}>
+                <span
+                  className="text-foreground uppercase tracking-[0.25em]"
+                  style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}
+                >
                   LearnEazy
                 </span>
               </div>
               <span className="hidden lg:flex flex-col border-l border-border pl-4 text-sm font-semibold leading-tight tracking-wide text-muted-foreground">
-                {t("brand.tagline").split(". ").map((line, i, arr) => (
-                  <span key={i}>{line}{i < arr.length - 1 ? "." : ""}</span>
-                ))}
+                {t("brand.tagline")
+                  .split(". ")
+                  .map((line, index, items) => (
+                    <span key={index}>
+                      {line}
+                      {index < items.length - 1 ? "." : ""}
+                    </span>
+                  ))}
               </span>
             </Link>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-
-            <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+              asChild
+            >
               <Link to={isTutor ? "/tutor-messages" : "/messages"} aria-label={t("msg.messages")}>
                 <Mail className="h-5 w-5" />
                 {unreadCount > 0 ? (
@@ -181,7 +199,12 @@ export function PortalHeader() {
             </Button>
 
             {!isTutor ? (
-              <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+                asChild
+              >
                 <Link to="/saved-tutors" aria-label="Saved tutors">
                   <Heart className="h-5 w-5" />
                   {savedCount > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
@@ -189,7 +212,12 @@ export function PortalHeader() {
               </Button>
             ) : null}
 
-            <Button variant="ghost" size="icon" className="h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+              asChild
+            >
               <Link to="/faq" aria-label="FAQ">
                 <HelpCircle className="h-5 w-5" />
               </Link>
@@ -197,7 +225,12 @@ export function PortalHeader() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground" aria-label="Notifications">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative h-11 w-11 rounded-2xl border border-border bg-secondary/60 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+                  aria-label="Notifications"
+                >
                   <Bell className="h-5 w-5" />
                   {notifications.length > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
                 </Button>
@@ -212,25 +245,10 @@ export function PortalHeader() {
                     </DropdownMenuItem>
                   ))
                 ) : (
-                  <DropdownMenuItem className="rounded-xl px-3 py-3 text-sm text-muted-foreground">No new notifications</DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-11 rounded-2xl border border-border bg-secondary/60 px-4 text-primary-foreground transition-colors hover:bg-primary hover:text-primary-foreground">
-                  <span className="hidden sm:inline">{lang === "en" ? "English" : lang === "ka" ? "ქართული" : "Русский"}</span>
-                  <span className="sm:hidden">{lang.toUpperCase()}</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-40 rounded-2xl border-border/70 bg-popover p-1">
-                {(["en", "ru", "ka"] as const).map((language) => (
-                  <DropdownMenuItem key={language} className="rounded-xl px-3 py-2" onClick={() => setLang(language)}>
-                    {language === "en" ? "English" : language === "ru" ? "Русский" : "ქართული"}
+                  <DropdownMenuItem className="rounded-xl px-3 py-3 text-sm text-muted-foreground">
+                    No new notifications
                   </DropdownMenuItem>
-                ))}
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -243,7 +261,9 @@ export function PortalHeader() {
                 >
                   <Avatar className="h-11 w-11 rounded-2xl">
                     <AvatarImage src={profile?.avatar_url || undefined} alt={displayName || user?.email || "User"} className="object-cover" />
-                    <AvatarFallback className="rounded-2xl bg-primary text-sm font-semibold text-primary-foreground">{initials}</AvatarFallback>
+                    <AvatarFallback className="rounded-2xl bg-primary text-sm font-semibold text-primary-foreground">
+                      {initials}
+                    </AvatarFallback>
                   </Avatar>
                 </button>
               </DropdownMenuTrigger>
@@ -251,7 +271,9 @@ export function PortalHeader() {
                 <div className="flex items-center gap-3 px-3 py-3">
                   <Avatar className="h-12 w-12 rounded-2xl">
                     <AvatarImage src={profile?.avatar_url || undefined} alt={displayName || user?.email || "User"} className="object-cover" />
-                    <AvatarFallback className="rounded-2xl bg-primary text-base font-semibold text-primary-foreground">{initials}</AvatarFallback>
+                    <AvatarFallback className="rounded-2xl bg-primary text-base font-semibold text-primary-foreground">
+                      {initials}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0">
                     <p className="truncate text-base font-semibold text-foreground">{displayName || user?.email}</p>
@@ -259,9 +281,15 @@ export function PortalHeader() {
                 </div>
                 <DropdownMenuSeparator />
                 {primaryNav.map((item) => (
-                  <DropdownMenuItem key={item.to} className="rounded-xl px-3 py-3" onClick={() => navigate(item.to)}>{item.label}</DropdownMenuItem>
+                  <DropdownMenuItem key={item.to} className="rounded-xl px-3 py-3" onClick={() => navigate(item.to)}>
+                    {item.label}
+                  </DropdownMenuItem>
                 ))}
-                {!isTutor ? <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/saved-tutors")}>Saved tutors</DropdownMenuItem> : null}
+                {!isTutor ? (
+                  <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/saved-tutors")}>
+                    Saved tutors
+                  </DropdownMenuItem>
+                ) : null}
                 <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(profilePath)}>
                   <UserCircle className="mr-2 h-4 w-4" />
                   {t("nav.profile")}
@@ -302,12 +330,19 @@ export function PortalHeader() {
         <div className="border-b border-border/60 bg-background sm:hidden">
           <div className="container flex flex-col gap-2 py-4">
             <div className="mb-2 border-b border-border/60 pb-4">
-              <p className="uppercase tracking-[0.25em] text-foreground" style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}>
+              <p
+                className="text-foreground uppercase tracking-[0.25em]"
+                style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}
+              >
                 LearnEazy
               </p>
               <p className="mt-1 text-sm font-semibold leading-tight tracking-wide text-muted-foreground">{t("brand.tagline")}</p>
             </div>
-            <Link to={profilePath} className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent" onClick={() => setMobileMenuOpen(false)}>
+            <Link
+              to={profilePath}
+              className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               {t("nav.profile")}
             </Link>
             <button
