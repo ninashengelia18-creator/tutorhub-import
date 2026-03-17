@@ -16,12 +16,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { Lock } from "lucide-react";
 
 import type { StudentSettingsSection } from "@/components/profile/StudentSettingsSidebar";
+import { TIMEZONE_OPTIONS } from "@/contexts/AppLocaleContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getTimeZoneSettingLabel } from "@/lib/datetime";
 
 interface StudentSettingsPanelsProps {
   activeSection: StudentSettingsSection;

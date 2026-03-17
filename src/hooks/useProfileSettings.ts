@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeFileName } from "@/components/messages/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
