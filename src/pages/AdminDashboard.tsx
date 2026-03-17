@@ -691,6 +691,13 @@ export default function AdminDashboard() {
               <GraduationCap className="h-4 w-4" />
               Tutor management ({tutorStats.total})
             </button>
+            <button
+              onClick={() => setActiveTab("enquiries")}
+              className={`flex items-center gap-2 border-b-2 py-3 text-sm font-medium transition-colors ${activeTab === "enquiries" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            >
+              <Building2 className="h-4 w-4" />
+              Enquiries ({enquiries.length})
+            </button>
           </div>
 
           {activeTab === "bookings" && (
