@@ -109,19 +109,43 @@ function initialsFromValue(value: string) {
   );
 }
 
-function MegaMenuColumn({ title, items }: { title: string; items: { label: string; href: string }[] }) {
+function MegaMenuColumn({ title, items }: { title: string; items: { label: string; href: string; children?: { label: string; href: string }[] }[] }) {
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
   return (
     <div>
       <h4 className="text-xs font-bold uppercase tracking-wider text-primary mb-3">{title}</h4>
       <ul className="space-y-1.5">
         {items.map((item) => (
-          <li key={item.href + item.label}>
+          <li
+            key={item.href + item.label}
+            className="relative"
+            onMouseEnter={() => item.children && setHoveredItem(item.label)}
+            onMouseLeave={() => setHoveredItem(null)}
+          >
             <Link
               to={item.href}
-              className="block text-sm text-foreground/80 hover:text-primary transition-colors py-0.5"
+              className="flex items-center justify-between text-sm text-foreground/80 hover:text-primary transition-colors py-0.5"
             >
               {item.label}
+              {item.children && <ChevronDown className="h-3 w-3 -rotate-90" />}
             </Link>
+            {item.children && hoveredItem === item.label && (
+              <div className="absolute left-full top-0 z-50 ml-2 w-56 rounded-xl border border-border/70 bg-popover p-3 shadow-lg">
+                <ul className="space-y-1">
+                  {item.children.map((child) => (
+                    <li key={child.href + child.label}>
+                      <Link
+                        to={child.href}
+                        className="block text-sm text-foreground/80 hover:text-primary transition-colors py-0.5"
+                      >
+                        {child.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </li>
         ))}
       </ul>

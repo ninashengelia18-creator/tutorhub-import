@@ -464,7 +464,7 @@ export default function TutorApply() {
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>{t("tutor.apply.rate")} * (GEL/hr)</Label>
+                    <Label>{t("tutor.apply.rate")} * (USD/hr)</Label>
                     <Input
                       type="number"
                       min="1"
