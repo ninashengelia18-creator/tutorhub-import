@@ -5,6 +5,8 @@ import { ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle,
 import { Layout } from "@/components/Layout";
 import { TutorApplicationList, type TutorApplicationListItem } from "@/components/admin/TutorApplicationList";
 import { ManualTutorDialog, type ManualTutorFormValues } from "@/components/admin/ManualTutorDialog";
+import { TutorManagementList, type TutorManagementListItem } from "@/components/admin/TutorManagementList";
+import { TutorProfileEditorDialog, type TutorProfileEditorValues } from "@/components/admin/TutorProfileEditorDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -15,6 +17,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { submitFormspree } from "@/lib/formspree";
+import { getTutorFullName, type PublicTutorProfile } from "@/lib/publicTutors";
 import { cn } from "@/lib/utils";
 
 interface AdminBooking {
@@ -36,12 +39,19 @@ interface AdminBooking {
   created_at: string;
 }
 
-const statusConfig: Record<string, { color: string; icon: typeof Clock; label: string }> = {
-  pending: { color: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30", icon: Clock, label: "Pending" },
-  confirmed: { color: "bg-green-500/10 text-green-600 border-green-500/30", icon: CheckCircle, label: "Confirmed" },
-  completed: { color: "bg-blue-500/10 text-blue-600 border-blue-500/30", icon: CheckCircle, label: "Completed" },
-  cancelled: { color: "bg-red-500/10 text-red-600 border-red-500/30", icon: XCircle, label: "Cancelled" },
+const bookingStatusConfig: Record<string, { color: string; icon: typeof Clock; label: string }> = {
+  pending: { color: "border-warning/30 bg-warning/10 text-warning", icon: Clock, label: "Pending" },
+  confirmed: { color: "border-success/30 bg-success/10 text-success", icon: CheckCircle, label: "Confirmed" },
+  completed: { color: "border-info/30 bg-info/10 text-info", icon: CheckCircle, label: "Completed" },
+  cancelled: { color: "border-destructive/30 bg-destructive/10 text-destructive", icon: XCircle, label: "Cancelled" },
 };
+
+function buildLanguagesSpoken(nativeLanguage: string, otherLanguages: string) {
+  return [nativeLanguage, otherLanguages]
+    .flatMap((value) => value.split(/[;,]/))
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -51,6 +61,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<"bookings" | "tutors">("bookings");
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [applications, setApplications] = useState<TutorApplicationListItem[]>([]);
+  const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [search, setSearch] = useState("");
@@ -60,6 +71,32 @@ export default function AdminDashboard() {
   const [adminNotes, setAdminNotes] = useState("");
   const [pendingTutorActionId, setPendingTutorActionId] = useState<string | null>(null);
   const [publishingTutor, setPublishingTutor] = useState(false);
+  const [editingTutor, setEditingTutor] = useState<TutorManagementListItem | null>(null);
+  const [savingTutorEdit, setSavingTutorEdit] = useState(false);
+  const [deletingTutor, setDeletingTutor] = useState<TutorManagementListItem | null>(null);
+  const [bookingsTutor, setBookingsTutor] = useState<TutorManagementListItem | null>(null);
+
+  const refreshBookings = async () => {
+    const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
+    if (error) throw error;
+    setBookings((data as AdminBooking[] | null) ?? []);
+  };
+
+  const refreshApplications = async () => {
+    const { data, error } = await supabase.from("tutor_applications").select("*").order("created_at", { ascending: false });
+    if (error) throw error;
+    setApplications((data as TutorApplicationListItem[] | null) ?? []);
+  };
+
+  const refreshTutorProfiles = async () => {
+    const { data, error } = await supabase
+      .from("public_tutor_profiles" as never)
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    setTutors((data as PublicTutorProfile[] | null) ?? []);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -93,9 +130,10 @@ export default function AdminDashboard() {
         return;
       }
 
-      const [bookingResult, applicationResult] = await Promise.all([
+      const [bookingResult, applicationResult, tutorResult] = await Promise.all([
         supabase.from("bookings").select("*").order("created_at", { ascending: false }),
         supabase.from("tutor_applications").select("*").order("created_at", { ascending: false }),
+        supabase.from("public_tutor_profiles" as never).select("*").order("created_at", { ascending: false }),
       ]);
 
       if (cancelled) return;
@@ -112,6 +150,12 @@ export default function AdminDashboard() {
         setApplications((applicationResult.data as TutorApplicationListItem[] | null) ?? []);
       }
 
+      if (tutorResult.error) {
+        toast({ title: "Error", description: tutorResult.error.message, variant: "destructive" });
+      } else {
+        setTutors((tutorResult.data as PublicTutorProfile[] | null) ?? []);
+      }
+
       setLoading(false);
     };
 
@@ -120,18 +164,6 @@ export default function AdminDashboard() {
       cancelled = true;
     };
   }, [toast, user]);
-
-  const refreshBookings = async () => {
-    const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
-    if (error) throw error;
-    setBookings((data as AdminBooking[] | null) ?? []);
-  };
-
-  const refreshApplications = async () => {
-    const { data, error } = await supabase.from("tutor_applications").select("*").order("created_at", { ascending: false });
-    if (error) throw error;
-    setApplications((data as TutorApplicationListItem[] | null) ?? []);
-  };
 
   const sendTutorDecisionNotification = async (application: TutorApplicationListItem, decision: "approved" | "rejected") => {
     const fullName = `${application.first_name} ${application.last_name}`.trim();
@@ -151,6 +183,24 @@ export default function AdminDashboard() {
       decision,
       tutor_message: tutorMessage,
       _subject: `Tutor application ${decision}: ${fullName}`,
+    });
+  };
+
+  const sendTutorStatusNotification = async (tutor: TutorManagementListItem, type: "suspended" | "unsuspended") => {
+    if (!tutor.email) return;
+
+    const fullName = getTutorFullName(tutor);
+    const tutorMessage =
+      type === "suspended"
+        ? "Your LearnEazy tutor profile has been temporarily suspended. Please contact info@learneazy.org for more information."
+        : "Your LearnEazy tutor profile is live again. Please contact info@learneazy.org if you have any questions.";
+
+    await submitFormspree({
+      email: tutor.email,
+      full_name: fullName,
+      tutor_email: tutor.email,
+      tutor_message: tutorMessage,
+      _subject: `Tutor profile ${type}: ${fullName}`,
     });
   };
 
@@ -179,10 +229,7 @@ export default function AdminDashboard() {
   const handleSaveMeetLink = async () => {
     if (!meetLinkModal) return;
 
-    const { error } = await supabase
-      .from("bookings")
-      .update({ google_meet_link: meetLink.trim() || null })
-      .eq("id", meetLinkModal.id);
+    const { error } = await supabase.from("bookings").update({ google_meet_link: meetLink.trim() || null }).eq("id", meetLinkModal.id);
 
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
@@ -228,7 +275,7 @@ export default function AdminDashboard() {
         });
       }
 
-      await refreshApplications();
+      await Promise.all([refreshApplications(), refreshTutorProfiles()]);
     } catch (error) {
       toast({
         title: "Error",
@@ -257,7 +304,7 @@ export default function AdminDashboard() {
         });
       }
 
-      await refreshApplications();
+      await Promise.all([refreshApplications(), refreshTutorProfiles()]);
     } catch (error) {
       toast({
         title: "Error",
@@ -266,6 +313,145 @@ export default function AdminDashboard() {
       });
     } finally {
       setPendingTutorActionId(null);
+    }
+  };
+
+  const handleSetTutorLiveState = async (tutor: TutorManagementListItem, makeLive: boolean) => {
+    setPendingTutorActionId(tutor.id);
+
+    try {
+      if (makeLive && tutor.application_id) {
+        const application = applications.find((item) => item.id === tutor.application_id);
+        if (application && application.status !== "approved") {
+          const { error } = await supabase.rpc("approve_tutor_application", { _application_id: application.id });
+          if (error) throw error;
+        } else {
+          const { error } = await supabase
+            .from("public_tutor_profiles" as never)
+            .update({ is_published: true, updated_at: new Date().toISOString() } as never)
+            .eq("id", tutor.id);
+          if (error) throw error;
+        }
+      } else {
+        const { error } = await supabase
+          .from("public_tutor_profiles" as never)
+          .update({ is_published: makeLive, updated_at: new Date().toISOString() } as never)
+          .eq("id", tutor.id);
+        if (error) throw error;
+      }
+
+      if (!makeLive) {
+        try {
+          await sendTutorStatusNotification(tutor, "suspended");
+        } catch (notificationError) {
+          toast({
+            title: "Tutor suspended",
+            description: notificationError instanceof Error ? notificationError.message : "Tutor was suspended, but the notification email could not be sent.",
+          });
+        }
+      }
+
+      if (makeLive && !tutor.is_published) {
+        try {
+          await sendTutorStatusNotification(tutor, "unsuspended");
+        } catch {
+          // ignore secondary notification errors here
+        }
+      }
+
+      toast({ title: makeLive ? "Tutor is live" : "Tutor suspended" });
+      await Promise.all([refreshApplications(), refreshTutorProfiles()]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to update tutor status.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingTutorActionId(null);
+    }
+  };
+
+  const handleDeleteTutor = async () => {
+    if (!deletingTutor) return;
+
+    setPendingTutorActionId(deletingTutor.id);
+    try {
+      const { error } = await supabase.functions.invoke("admin-delete-tutor", {
+        body: { tutorProfileId: deletingTutor.id },
+      });
+      if (error) throw error;
+
+      toast({ title: "Tutor deleted permanently" });
+      setDeletingTutor(null);
+      await Promise.all([refreshApplications(), refreshTutorProfiles(), refreshBookings()]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to delete tutor.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingTutorActionId(null);
+    }
+  };
+
+  const handleSaveTutorProfile = async (values: TutorProfileEditorValues) => {
+    if (!editingTutor) return;
+
+    setSavingTutorEdit(true);
+    const payload = {
+      primary_subject: values.primarySubject.trim(),
+      subjects: values.subjects,
+      experience: values.experience.trim(),
+      hourly_rate: Number(values.hourlyRate),
+      country: values.country.trim() || null,
+      native_language: values.nativeLanguage.trim() || null,
+      other_languages: values.otherLanguages.trim() || null,
+      languages_spoken: buildLanguagesSpoken(values.nativeLanguage, values.otherLanguages),
+      bio: values.bio.trim(),
+      education: values.education.trim() || null,
+      certifications: values.certifications.trim() || null,
+      avatar_url: values.avatarUrl.trim() || null,
+      updated_at: new Date().toISOString(),
+    };
+
+    try {
+      const updates = [
+        supabase.from("public_tutor_profiles" as never).update(payload as never).eq("id", editingTutor.id),
+      ];
+
+      if (editingTutor.application_id) {
+        updates.push(
+          supabase.from("tutor_applications").update({
+            subjects: values.subjects,
+            experience: values.experience.trim(),
+            hourly_rate: Number(values.hourlyRate),
+            country: values.country.trim() || null,
+            native_language: values.nativeLanguage.trim() || null,
+            other_languages: values.otherLanguages.trim() || null,
+            bio: values.bio.trim(),
+            education: values.education.trim() || null,
+            certifications: values.certifications.trim() || null,
+          }).eq("id", editingTutor.application_id),
+        );
+      }
+
+      const results = await Promise.all(updates);
+      const failed = results.find((result) => result.error);
+      if (failed?.error) throw failed.error;
+
+      toast({ title: "Tutor profile updated" });
+      setEditingTutor(null);
+      await Promise.all([refreshApplications(), refreshTutorProfiles()]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to save tutor profile.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingTutorEdit(false);
     }
   };
 
@@ -306,6 +492,7 @@ export default function AdminDashboard() {
         _subject: `Manual tutor published: ${values.firstName.trim()} ${values.lastName.trim()}`,
       });
 
+      await refreshTutorProfiles();
       toast({ title: "Tutor published successfully" });
     } catch (error) {
       toast({
@@ -322,30 +509,63 @@ export default function AdminDashboard() {
   const filteredBookings = useMemo(() => {
     const query = search.toLowerCase();
     return bookings.filter((booking) =>
-      [booking.student_name || "", booking.student_email || "", booking.tutor_name, booking.subject]
-        .join(" ")
-        .toLowerCase()
-        .includes(query),
+      [booking.student_name || "", booking.student_email || "", booking.tutor_name, booking.subject].join(" ").toLowerCase().includes(query),
     );
   }, [bookings, search]);
 
   const filteredApplications = useMemo(() => {
     const query = search.toLowerCase();
     return applications.filter((application) =>
-      [
-        `${application.first_name} ${application.last_name}`,
-        application.email,
-        application.subjects.join(" "),
-        application.experience,
-      ]
+      [`${application.first_name} ${application.last_name}`, application.email, application.subjects.join(" "), application.experience]
         .join(" ")
         .toLowerCase()
         .includes(query),
     );
   }, [applications, search]);
 
+  const managedTutors = useMemo<TutorManagementListItem[]>(() => {
+    return tutors.map((tutor) => {
+      const tutorName = getTutorFullName(tutor);
+      const tutorBookings = bookings.filter((booking) => booking.tutor_name === tutorName);
+      const completedLessons = tutorBookings.filter((booking) => booking.status === "completed");
+      const totalEarnings = completedLessons.reduce((sum, booking) => sum + booking.price_amount, 0);
+
+      return {
+        ...tutor,
+        bookingsCount: tutorBookings.length,
+        completedLessonsCount: completedLessons.length,
+        totalEarnings,
+      };
+    });
+  }, [bookings, tutors]);
+
+  const filteredManagedTutors = useMemo(() => {
+    const query = search.toLowerCase();
+    return managedTutors.filter((tutor) =>
+      [getTutorFullName(tutor), tutor.email ?? "", tutor.primary_subject, tutor.subjects.join(" "), tutor.experience, tutor.country ?? ""]
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [managedTutors, search]);
+
   const pendingApplications = filteredApplications.filter((application) => application.status === "pending");
   const reviewedApplications = filteredApplications.filter((application) => application.status !== "pending");
+
+  const selectedTutorBookings = useMemo(() => {
+    if (!bookingsTutor) return [];
+    const tutorName = getTutorFullName(bookingsTutor);
+    return bookings.filter((booking) => booking.tutor_name === tutorName);
+  }, [bookings, bookingsTutor]);
+
+  const tutorBookingSummary = useMemo(() => {
+    const completed = selectedTutorBookings.filter((booking) => booking.status === "completed");
+    return {
+      total: selectedTutorBookings.length,
+      completed: completed.length,
+      earnings: completed.reduce((sum, booking) => sum + booking.price_amount, 0),
+    };
+  }, [selectedTutorBookings]);
 
   const stats = {
     total: bookings.length,
@@ -354,10 +574,11 @@ export default function AdminDashboard() {
     completed: bookings.filter((booking) => booking.status === "completed").length,
   };
 
-  const appStats = {
-    total: applications.length,
+  const tutorStats = {
+    total: managedTutors.length,
+    live: managedTutors.filter((tutor) => tutor.is_published).length,
+    suspended: managedTutors.filter((tutor) => !tutor.is_published).length,
     pending: applications.filter((application) => application.status === "pending").length,
-    approved: applications.filter((application) => application.status === "approved").length,
   };
 
   if (!isAdmin && !loading) {
@@ -393,7 +614,7 @@ export default function AdminDashboard() {
             ) : null}
           </div>
 
-          <div className="mb-6 flex items-center gap-6 border-b">
+          <div className="mb-6 flex items-center gap-6 border-b border-border">
             <button
               onClick={() => setActiveTab("bookings")}
               className={`flex items-center gap-2 border-b-2 py-3 text-sm font-medium transition-colors ${activeTab === "bookings" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
@@ -406,7 +627,7 @@ export default function AdminDashboard() {
               className={`flex items-center gap-2 border-b-2 py-3 text-sm font-medium transition-colors ${activeTab === "tutors" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
             >
               <GraduationCap className="h-4 w-4" />
-              {t("admin.tutorAppsTab")} ({appStats.pending})
+              Tutor management ({tutorStats.total})
             </button>
           </div>
 
@@ -415,9 +636,9 @@ export default function AdminDashboard() {
               <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
                 {[
                   { label: t("admin.totalBookings"), value: stats.total, color: "text-foreground" },
-                  { label: t("admin.pendingPayment"), value: stats.pending, color: "text-yellow-600" },
-                  { label: t("admin.confirmed"), value: stats.confirmed, color: "text-green-600" },
-                  { label: t("admin.completedStat"), value: stats.completed, color: "text-blue-600" },
+                  { label: t("admin.pendingPayment"), value: stats.pending, color: "text-warning" },
+                  { label: t("admin.confirmed"), value: stats.confirmed, color: "text-success" },
+                  { label: t("admin.completedStat"), value: stats.completed, color: "text-info" },
                 ].map((stat) => (
                   <div key={stat.label} className="rounded-xl border bg-card p-4">
                     <p className={cn("text-2xl font-bold", stat.color)}>{stat.value}</p>
@@ -436,7 +657,7 @@ export default function AdminDashboard() {
               ) : (
                 <div className="space-y-3">
                   {filteredBookings.map((booking) => {
-                    const sc = statusConfig[booking.status] || statusConfig.pending;
+                    const sc = bookingStatusConfig[booking.status] || bookingStatusConfig.pending;
                     const StatusIcon = sc.icon;
 
                     return (
@@ -469,22 +690,12 @@ export default function AdminDashboard() {
                           </div>
 
                           <div className="flex shrink-0 flex-wrap gap-2">
-                            {booking.status === "pending" ? (
-                              <Button size="sm" onClick={() => handleMarkPaid(booking)}>{t("admin.markPaid")}</Button>
-                            ) : null}
-                            {booking.status === "confirmed" ? (
-                              <Button size="sm" variant="outline" onClick={() => handleMarkCompleted(booking)}>{t("admin.markCompleted")}</Button>
-                            ) : null}
-                            <Button size="sm" variant="outline" onClick={() => {
-                              setMeetLinkModal(booking);
-                              setMeetLink(booking.google_meet_link || "");
-                            }}>
+                            {booking.status === "pending" ? <Button size="sm" onClick={() => handleMarkPaid(booking)}>{t("admin.markPaid")}</Button> : null}
+                            {booking.status === "confirmed" ? <Button size="sm" variant="outline" onClick={() => handleMarkCompleted(booking)}>{t("admin.markCompleted")}</Button> : null}
+                            <Button size="sm" variant="outline" onClick={() => { setMeetLinkModal(booking); setMeetLink(booking.google_meet_link || ""); }}>
                               <Video className="mr-1 h-3.5 w-3.5" />Meet Link
                             </Button>
-                            <Button size="sm" variant="ghost" onClick={() => {
-                              setNotesModal(booking);
-                              setAdminNotes(booking.notes || "");
-                            }}>
+                            <Button size="sm" variant="ghost" onClick={() => { setNotesModal(booking); setAdminNotes(booking.notes || ""); }}>
                               📝 Notes
                             </Button>
                           </div>
@@ -493,11 +704,7 @@ export default function AdminDashboard() {
                     );
                   })}
 
-                  {filteredBookings.length === 0 ? (
-                    <div className="py-12 text-center text-muted-foreground">
-                      {bookings.length === 0 ? t("admin.noBookings") : "No results found"}
-                    </div>
-                  ) : null}
+                  {filteredBookings.length === 0 ? <div className="py-12 text-center text-muted-foreground">{bookings.length === 0 ? t("admin.noBookings") : "No results found"}</div> : null}
                 </div>
               )}
             </>
@@ -505,30 +712,51 @@ export default function AdminDashboard() {
 
           {activeTab === "tutors" && (
             <>
-              <div className="mb-6 grid grid-cols-3 gap-4">
+              <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-foreground">{appStats.total}</p>
-                  <p className="text-xs text-muted-foreground">{t("admin.totalApps")}</p>
+                  <p className="text-2xl font-bold text-foreground">{tutorStats.total}</p>
+                  <p className="text-xs text-muted-foreground">Tutors</p>
                 </div>
                 <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-yellow-600">{appStats.pending}</p>
-                  <p className="text-xs text-muted-foreground">{t("admin.pendingApps")}</p>
+                  <p className="text-2xl font-bold text-success">{tutorStats.live}</p>
+                  <p className="text-xs text-muted-foreground">Live</p>
                 </div>
                 <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-green-600">{appStats.approved}</p>
-                  <p className="text-xs text-muted-foreground">{t("admin.approvedApps")}</p>
+                  <p className="text-2xl font-bold text-warning">{tutorStats.suspended}</p>
+                  <p className="text-xs text-muted-foreground">Suspended</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-info">{tutorStats.pending}</p>
+                  <p className="text-xs text-muted-foreground">Pending applications</p>
                 </div>
               </div>
 
               <div className="relative mb-6">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("admin.searchTutors")} className="pl-9" />
+                <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tutors, subjects, or bookings" className="pl-9" />
               </div>
 
               <section className="mb-8 space-y-4">
                 <div>
-                  <h2 className="text-lg font-semibold">Pending Tutor Applications</h2>
-                  <p className="text-sm text-muted-foreground">Review new tutor submissions and publish approved profiles to the site instantly.</p>
+                  <h2 className="text-lg font-semibold">Live & suspended tutors</h2>
+                  <p className="text-sm text-muted-foreground">Approve, suspend, delete, edit, and inspect tutor bookings and earnings.</p>
+                </div>
+                <TutorManagementList
+                  tutors={filteredManagedTutors}
+                  emptyLabel="No tutors found"
+                  pendingActionId={pendingTutorActionId}
+                  onApprove={(tutor) => void handleSetTutorLiveState(tutor, true)}
+                  onSuspend={(tutor) => void handleSetTutorLiveState(tutor, !tutor.is_published)}
+                  onDelete={setDeletingTutor}
+                  onEdit={setEditingTutor}
+                  onViewBookings={setBookingsTutor}
+                />
+              </section>
+
+              <section className="mb-8 space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold">Pending tutor applications</h2>
+                  <p className="text-sm text-muted-foreground">Review new tutor submissions before they go live.</p>
                 </div>
                 <TutorApplicationList
                   applications={pendingApplications}
@@ -543,7 +771,7 @@ export default function AdminDashboard() {
 
               <section className="space-y-4">
                 <div>
-                  <h2 className="text-lg font-semibold">Reviewed Applications</h2>
+                  <h2 className="text-lg font-semibold">Reviewed applications</h2>
                   <p className="text-sm text-muted-foreground">Previously approved and rejected tutor applications.</p>
                 </div>
                 <TutorApplicationList
@@ -580,6 +808,71 @@ export default function AdminDashboard() {
           <Button onClick={handleSaveNotes} className="w-full">Save Notes</Button>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!bookingsTutor} onOpenChange={(open) => !open && setBookingsTutor(null)}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>{bookingsTutor ? `${getTutorFullName(bookingsTutor)} · bookings & earnings` : "Tutor bookings"}</DialogTitle>
+          </DialogHeader>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-xl border bg-card p-4">
+              <p className="text-xs text-muted-foreground">Bookings</p>
+              <p className="mt-1 text-2xl font-bold text-foreground">{tutorBookingSummary.total}</p>
+            </div>
+            <div className="rounded-xl border bg-card p-4">
+              <p className="text-xs text-muted-foreground">Completed</p>
+              <p className="mt-1 text-2xl font-bold text-foreground">{tutorBookingSummary.completed}</p>
+            </div>
+            <div className="rounded-xl border bg-card p-4">
+              <p className="text-xs text-muted-foreground">Earnings</p>
+              <p className="mt-1 text-2xl font-bold text-foreground">${tutorBookingSummary.earnings.toFixed(2)}</p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {selectedTutorBookings.length === 0 ? (
+              <div className="rounded-xl border border-dashed p-6 text-center text-muted-foreground">No bookings for this tutor yet.</div>
+            ) : (
+              selectedTutorBookings.map((booking) => (
+                <div key={booking.id} className="rounded-xl border bg-card p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{booking.student_name || "Unknown student"} · {booking.subject}</p>
+                      <p className="text-sm text-muted-foreground">{booking.lesson_date} · {booking.start_time.slice(0, 5)} – {booking.end_time.slice(0, 5)}</p>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="outline" className={cn((bookingStatusConfig[booking.status] || bookingStatusConfig.pending).color)}>{booking.status}</Badge>
+                      <p className="mt-2 text-sm font-semibold text-foreground">{booking.currency}{booking.price_amount.toFixed(2)}</p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!deletingTutor} onOpenChange={(open) => !open && setDeletingTutor(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete tutor</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">Are you sure you want to delete this tutor? This cannot be undone.</p>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setDeletingTutor(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleDeleteTutor} disabled={!deletingTutor || pendingTutorActionId === deletingTutor?.id}>Delete tutor</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <TutorProfileEditorDialog
+        open={!!editingTutor}
+        tutor={editingTutor}
+        saving={savingTutorEdit}
+        onOpenChange={(open) => !open && setEditingTutor(null)}
+        onSubmit={handleSaveTutorProfile}
+      />
     </Layout>
   );
 }
