@@ -261,7 +261,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "cookie.section3.title": "3. Types of Cookies We Use",
     "cookie.section3.body": "Essential cookies: Required for the website to function properly, including authentication and security. Functional cookies: Remember your preferences such as language and display settings. Analytics cookies: Help us understand how visitors interact with our website by collecting anonymous usage data. Marketing cookies: Used to deliver relevant advertisements and track campaign performance.",
     "cookie.section4.title": "4. Third-Party Cookies",
-    "cookie.section4.body": "Some cookies are placed by third-party services that appear on our pages, such as analytics providers (e.g., Google Analytics), customer support tools (e.g., Tawk.to), and social media platforms. These third parties may use cookies to collect information about your online activities across different websites.",
+    "cookie.section4.body": "Some cookies are placed by third-party services that appear on our pages, such as analytics providers (e.g., Google Analytics) and social media platforms. These third parties may use cookies to collect information about your online activities across different websites.",
     "cookie.section5.title": "5. Managing Cookies",
     "cookie.section5.body": "You can control and manage cookies through your browser settings. Most browsers allow you to refuse or delete cookies. However, please note that disabling cookies may affect the functionality of our website and limit your ability to use certain features.",
     "cookie.section6.title": "6. Cookie Retention",
