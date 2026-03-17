@@ -135,6 +135,14 @@ export default function TutorApply() {
     if (step === 4) {
       nextErrors.availability = getFieldError("availability", availability);
       nextErrors.agreeTerms = getFieldError("agreeTerms", agreeTerms);
+
+      if (!idFile) {
+        setIdError("Please upload a photo of your government-issued ID.");
+      } else if (!confirmIdOwnership) {
+        setIdError("Please confirm the uploaded ID belongs to you.");
+      } else {
+        setIdError(null);
+      }
     }
 
     const filteredErrors = Object.fromEntries(
