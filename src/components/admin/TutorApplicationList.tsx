@@ -18,6 +18,7 @@ export interface TutorApplicationListItem {
   bio: string;
   status: string;
   created_at: string;
+  id_document_url: string | null;
 }
 
 const statusConfig: Record<string, { tone: string; icon: typeof Clock; label: string }> = {
