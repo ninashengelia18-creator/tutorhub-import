@@ -1428,7 +1428,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // For Business
     "biz.title": "LearnEazy ბიზნესისთვის",
     "biz.subtitle": "გაზარდეთ თქვენი გუნდის კვალიფიკაცია პერსონალიზებული რეპეტიტორობით და AI სასწავლო ხელსაწყოებით.",
-    "biz.cta": "მოითხოვეთ დემო",
+    "biz.cta": "შეკითხვის გაგზავნა",
     "biz.ctaSub": "უფასო კონსულტაცია · ვალდებულების გარეშე",
     "biz.whyTitle": "რატომ ირჩევენ კომპანიები LearnEazy-ს",
     "biz.feat1.title": "მორგებული სასწავლო პროგრამები",
