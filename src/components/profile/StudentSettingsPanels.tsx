@@ -114,6 +114,14 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
     onDeleteDialogOpenChange,
   } = props;
 
+  const timezoneOptions = useMemo(() => {
+    if (TIMEZONE_OPTIONS.some((option) => option.value === timezone)) {
+      return TIMEZONE_OPTIONS;
+    }
+
+    return [{ value: timezone, label: getTimeZoneSettingLabel(timezone) }, ...TIMEZONE_OPTIONS];
+  }, [timezone]);
+
   if (activeSection === "password") {
     return (
       <SectionShell title={t("profile.settings.passwordTitle")} description={t("profile.settings.passwordDesc")}>
