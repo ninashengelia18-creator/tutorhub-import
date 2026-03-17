@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       bookings: {
         Row: {
+          availability_slot_id: string | null
           created_at: string
           currency: string
           duration_minutes: number
@@ -38,9 +39,11 @@ export type Database = {
           subject: string
           tutor_avatar_url: string | null
           tutor_name: string
+          tutor_timezone: string
           updated_at: string
         }
         Insert: {
+          availability_slot_id?: string | null
           created_at?: string
           currency?: string
           duration_minutes?: number
@@ -63,9 +66,11 @@ export type Database = {
           subject: string
           tutor_avatar_url?: string | null
           tutor_name: string
+          tutor_timezone?: string
           updated_at?: string
         }
         Update: {
+          availability_slot_id?: string | null
           created_at?: string
           currency?: string
           duration_minutes?: number
@@ -88,9 +93,18 @@ export type Database = {
           subject?: string
           tutor_avatar_url?: string | null
           tutor_name?: string
+          tutor_timezone?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "bookings_availability_slot_id_fkey"
+            columns: ["availability_slot_id"]
+            isOneToOne: false
+            referencedRelation: "tutor_availability_slots"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       business_inquiries: {
         Row: {
@@ -377,6 +391,42 @@ export type Database = {
         }
         Relationships: []
       }
+      tutor_availability_slots: {
+        Row: {
+          availability_status: string
+          booked_at: string | null
+          created_at: string
+          id: string
+          slot_end_at: string
+          slot_start_at: string
+          tutor_name: string
+          tutor_timezone: string
+          updated_at: string
+        }
+        Insert: {
+          availability_status?: string
+          booked_at?: string | null
+          created_at?: string
+          id?: string
+          slot_end_at: string
+          slot_start_at: string
+          tutor_name: string
+          tutor_timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          availability_status?: string
+          booked_at?: string | null
+          created_at?: string
+          id?: string
+          slot_end_at?: string
+          slot_start_at?: string
+          tutor_name?: string
+          tutor_timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           created_at: string
@@ -453,6 +503,51 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "tutor_applications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      book_tutor_availability_slot: {
+        Args: {
+          _currency?: string
+          _price_amount: number
+          _scheduled_timezone: string
+          _slot_id: string
+          _student_email: string
+          _student_message: string
+          _student_name: string
+          _subject: string
+        }
+        Returns: {
+          availability_slot_id: string | null
+          created_at: string
+          currency: string
+          duration_minutes: number
+          end_time: string
+          google_meet_link: string | null
+          id: string
+          is_trial: boolean
+          lesson_date: string
+          lesson_end_at: string | null
+          lesson_start_at: string | null
+          notes: string | null
+          price_amount: number
+          scheduled_timezone: string
+          start_time: string
+          status: string
+          student_email: string | null
+          student_id: string
+          student_message: string | null
+          student_name: string | null
+          subject: string
+          tutor_avatar_url: string | null
+          tutor_name: string
+          tutor_timezone: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "bookings"
           isOneToOne: true
           isSetofReturn: false
         }

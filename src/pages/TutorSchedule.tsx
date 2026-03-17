@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAppLocale } from "@/contexts/AppLocaleContext";
@@ -6,9 +6,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet } from "lucide-react";
-import { formatDateInTimeZone, formatLessonTimeRange, getDateFromKey, getDateKeyInTimeZone } from "@/lib/datetime";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useToast } from "@/hooks/use-toast";
+import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet, Plus, Calendar as CalendarIcon } from "lucide-react";
+import {
+  convertLocalDateTimeToUtc,
+  formatDateInTimeZone,
+  formatLessonTimeRange,
+  formatWallClockTime,
+  getDateFromKey,
+  getDateKeyInTimeZone,
+  getTimeZoneSettingLabel,
+} from "@/lib/datetime";
 import { localizeSubjectLabel } from "@/lib/localization";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +39,21 @@ interface TutorBooking {
   currency: string;
 }
 
+interface AvailabilitySlot {
+  id: string;
+  slot_start_at: string;
+  slot_end_at: string;
+  tutor_timezone: string;
+  availability_status: "open" | "booked";
+}
+
+const TIME_OPTIONS = Array.from({ length: 36 }, (_, index) => {
+  const totalMinutes = 6 * 60 + index * 30;
+  const hours = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
+  const minutes = String(totalMinutes % 60).padStart(2, "0");
+  return `${hours}:${minutes}`;
+});
+
 function getLocalDateKey(date: Date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -36,47 +62,60 @@ function getLocalDateKey(date: Date) {
 }
 
 export default function TutorSchedule() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { timezone } = useAppLocale();
   const { t, lang } = useLanguage();
+  const { toast } = useToast();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [allBookings, setAllBookings] = useState<TutorBooking[]>([]);
+  const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlot[]>([]);
   const [loading, setLoading] = useState(true);
+  const [savingSlot, setSavingSlot] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(new Date());
+  const [slotStartTime, setSlotStartTime] = useState("09:00");
+  const [slotEndTime, setSlotEndTime] = useState("10:00");
+  const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
 
-  useEffect(() => {
+  const loadScheduleData = useCallback(async () => {
     if (!user) return;
 
-    const fetchBookings = async () => {
-      setLoading(true);
+    setLoading(true);
 
-      const selectFields = "id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, duration_minutes, status, google_meet_link, price_amount, currency";
+    const selectFields = "id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, duration_minutes, status, google_meet_link, price_amount, currency";
 
-      const [upcomingRes, allRes] = await Promise.all([
-        supabase
-          .from("bookings")
-          .select(selectFields)
-          .in("status", ["confirmed", "completed"])
-          .order("lesson_start_at", { ascending: true }),
-        supabase
-          .from("bookings")
-          .select(selectFields)
-          .in("status", ["confirmed", "completed"])
-          .order("lesson_start_at", { ascending: false }),
-      ]);
+    const [upcomingRes, allRes, slotsRes] = await Promise.all([
+      supabase
+        .from("bookings")
+        .select(selectFields)
+        .in("status", ["confirmed", "completed"])
+        .order("lesson_start_at", { ascending: true }),
+      supabase
+        .from("bookings")
+        .select(selectFields)
+        .in("status", ["confirmed", "completed"])
+        .order("lesson_start_at", { ascending: false }),
+      supabase
+        .from("tutor_availability_slots" as never)
+        .select("id, slot_start_at, slot_end_at, tutor_timezone, availability_status")
+        .eq("tutor_name", tutorName)
+        .gte("slot_end_at", new Date().toISOString())
+        .order("slot_start_at", { ascending: true }),
+    ]);
 
-      setBookings((upcomingRes.data as TutorBooking[]) ?? []);
-      setAllBookings((allRes.data as TutorBooking[]) ?? []);
-      setLoading(false);
-    };
+    setBookings((upcomingRes.data as TutorBooking[]) ?? []);
+    setAllBookings((allRes.data as TutorBooking[]) ?? []);
+    setAvailabilitySlots((slotsRes.data as AvailabilitySlot[] | null) ?? []);
+    setLoading(false);
+  }, [tutorName, user]);
 
-    void fetchBookings();
-  }, [user]);
+  useEffect(() => {
+    void loadScheduleData();
+  }, [loadScheduleData]);
 
   const now = new Date();
   const todayKey = getDateKeyInTimeZone(now, timezone);
   const selectedDateKey = useMemo(() => getLocalDateKey(selectedDate), [selectedDate]);
-
   const upcomingBookings = useMemo(
     () => bookings.filter((booking) => booking.lesson_start_at && new Date(booking.lesson_start_at) >= now),
     [bookings, now],
@@ -95,6 +134,10 @@ export default function TutorSchedule() {
   );
 
   const selectedDayLessons = grouped[selectedDateKey] ?? [];
+  const upcomingAvailability = useMemo(
+    () => availabilitySlots.filter((slot) => new Date(slot.slot_end_at) > now),
+    [availabilitySlots, now],
+  );
 
   const stats = useMemo(() => {
     const todaysLessons = upcomingBookings.filter((booking) => getDateKeyInTimeZone(booking.lesson_start_at, timezone) === todayKey);
@@ -120,6 +163,42 @@ export default function TutorSchedule() {
   const formatTimeRange = (booking: TutorBooking) =>
     formatLessonTimeRange(booking.lesson_start_at, booking.lesson_end_at, lang, timezone);
 
+  const handleAddAvailabilitySlot = async () => {
+    const dateKey = availabilityDate ? getDateKeyInTimeZone(availabilityDate, timezone) : "";
+    const slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
+    const slotEndAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotEndTime, timezone) : null;
+
+    if (!dateKey || !slotStartAt || !slotEndAt) {
+      toast({ title: "Unable to save slot", description: "Choose a valid date and time range.", variant: "destructive" });
+      return;
+    }
+
+    if (slotEndAt <= slotStartAt) {
+      toast({ title: "Invalid time range", description: "End time must be later than start time.", variant: "destructive" });
+      return;
+    }
+
+    setSavingSlot(true);
+
+    const { error } = await supabase.from("tutor_availability_slots" as never).insert({
+      tutor_name: tutorName,
+      slot_start_at: slotStartAt.toISOString(),
+      slot_end_at: slotEndAt.toISOString(),
+      tutor_timezone: timezone,
+      availability_status: "open",
+    } as never);
+
+    setSavingSlot(false);
+
+    if (error) {
+      toast({ title: "Unable to save slot", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    toast({ title: "Availability saved", description: `Shown in ${getTimeZoneSettingLabel(timezone, slotStartAt)} and stored in UTC.` });
+    void loadScheduleData();
+  };
+
   return (
     <Layout hideFooter>
       <div className="container py-8">
@@ -128,12 +207,110 @@ export default function TutorSchedule() {
             <CalendarDays className="h-6 w-6 text-primary" />
             <h1 className="text-2xl font-bold">{t("tutorSchedule.title")}</h1>
           </div>
-          <p className="mb-8 text-muted-foreground">{t("tutorSchedule.subtitle")}</p>
+          <p className="mb-3 text-muted-foreground">{t("tutorSchedule.subtitle")}</p>
+          <p className="mb-8 text-sm text-muted-foreground">Your availability is shown in <span className="font-medium text-foreground">{getTimeZoneSettingLabel(timezone)}</span> and saved in UTC automatically.</p>
 
           {loading ? (
             <div className="py-12 text-center text-muted-foreground">{t("tutorSchedule.loading")}</div>
           ) : (
             <>
+              <div className="mb-8 rounded-[1.75rem] border border-border bg-card p-6 shadow-sm">
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
+                    <Plus className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Add availability</p>
+                    <p className="text-xs text-muted-foreground">Students will see these slots in their own timezone.</p>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 lg:grid-cols-[240px_repeat(2,minmax(0,180px))_auto] lg:items-end">
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-foreground">Date</p>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="w-full justify-start text-left font-normal">
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {availabilityDate ? formatDateInTimeZone(availabilityDate, lang, timezone, { month: "short", day: "numeric", year: "numeric" }) : "Select date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={availabilityDate}
+                          onSelect={setAvailabilityDate}
+                          disabled={(date) => getDateKeyInTimeZone(date, timezone) < todayKey}
+                          initialFocus
+                          className="pointer-events-auto p-3"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-foreground">Start</p>
+                    <select
+                      value={slotStartTime}
+                      onChange={(event) => setSlotStartTime(event.target.value)}
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      {TIME_OPTIONS.map((time) => (
+                        <option key={time} value={time}>{formatWallClockTime(time, lang)}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-foreground">End</p>
+                    <select
+                      value={slotEndTime}
+                      onChange={(event) => setSlotEndTime(event.target.value)}
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      {TIME_OPTIONS.map((time) => (
+                        <option key={time} value={time}>{formatWallClockTime(time, lang)}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <Button type="button" onClick={handleAddAvailabilitySlot} disabled={savingSlot} className="h-10 rounded-md px-5">
+                    {savingSlot ? "Saving..." : "Save slot"}
+                  </Button>
+                </div>
+
+                <div className="mt-6 space-y-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-semibold text-foreground">Upcoming availability</p>
+                    <Badge variant="outline" className="text-xs">{upcomingAvailability.length}</Badge>
+                  </div>
+
+                  {upcomingAvailability.length === 0 ? (
+                    <div className="rounded-2xl border border-dashed border-border bg-background p-5 text-sm text-muted-foreground">
+                      No availability slots saved yet.
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {upcomingAvailability.map((slot) => (
+                        <div key={slot.id} className="flex flex-col gap-3 rounded-2xl border bg-background p-4 sm:flex-row sm:items-center sm:justify-between">
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">
+                              {formatDateInTimeZone(slot.slot_start_at, lang, timezone, { weekday: "short", month: "short", day: "numeric" })}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {formatLessonTimeRange(slot.slot_start_at, slot.slot_end_at, lang, timezone)} · {getTimeZoneSettingLabel(slot.tutor_timezone, slot.slot_start_at)}
+                            </p>
+                          </div>
+                          <Badge variant={slot.availability_status === "booked" ? "secondary" : "outline"}>
+                            {slot.availability_status === "booked" ? "Booked" : "Open"}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="mb-8 rounded-[1.75rem] border border-border bg-card p-4 shadow-sm">
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div>

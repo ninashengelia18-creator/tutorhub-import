@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, CheckCircle, Shield, Calendar as CalendarIcon, LogIn } from "lucide-react";
+import { ChevronLeft, Shield, Calendar as CalendarIcon, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -9,29 +9,21 @@ import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { formatTimeSlotLabel } from "@/lib/datetime";
+import {
+  formatDateInTimeZone,
+  formatTimeInTimeZone,
+  getDateFromKey,
+  getDateKeyInTimeZone,
+  getDurationMinutes,
+  getTimeZoneDisplayLabel,
+  getTimeZoneInlineLabel,
+} from "@/lib/datetime";
 import { formatLocalizedDate, localizeSubjectLabel } from "@/lib/localization";
 
 const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
-
-const DURATIONS = [
-  { labelKey: "booking.duration30", value: 30 },
-  { labelKey: "booking.duration45", value: 45 },
-  { labelKey: "booking.duration60", value: 60 },
-  { labelKey: "booking.duration90", value: 90 },
-];
-
-const TIME_OPTIONS = Array.from({ length: 27 }, (_, index) => {
-  const totalMinutes = 8 * 60 + index * 30;
-  const hours = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
-  const minutes = String(totalMinutes % 60).padStart(2, "0");
-  return `${hours}:${minutes}`;
-});
 
 const tutorData: Record<string, { name: string; subject: string; price: number }> = {
   "1": { name: "Nino B.", subject: "Mathematics", price: 25 },
@@ -39,6 +31,55 @@ const tutorData: Record<string, { name: string; subject: string; price: number }
   "3": { name: "Ana M.", subject: "English", price: 20 },
   "4": { name: "Luka T.", subject: "Programming", price: 35 },
 };
+
+const slotCopy = {
+  en: {
+    yourTime: "your time",
+    tutorTime: "tutor's time",
+    showingIn: "Showing available slots in",
+    noSlots: "No available slots yet for this tutor.",
+    noSlotsForDate: "No available slots on this date.",
+    chooseSlot: "Choose a time slot",
+    availability: "Available slots",
+  },
+  ka: {
+    yourTime: "თქვენი დრო",
+    tutorTime: "რეპეტიტორის დრო",
+    showingIn: "ხელმისაწვდომი დრო ნაჩვენებია",
+    noSlots: "ამ რეპეტიტორს ჯერ თავისუფალი დრო არ დაუმატებია.",
+    noSlotsForDate: "ამ თარიღზე თავისუფალი დრო არ არის.",
+    chooseSlot: "აირჩიეთ დრო",
+    availability: "თავისუფალი დროები",
+  },
+  ru: {
+    yourTime: "ваше время",
+    tutorTime: "время репетитора",
+    showingIn: "Свободные слоты показаны в часовом поясе",
+    noSlots: "У этого репетитора пока нет доступных слотов.",
+    noSlotsForDate: "На эту дату свободных слотов нет.",
+    chooseSlot: "Выберите слот",
+    availability: "Доступные слоты",
+  },
+} as const;
+
+interface AvailabilitySlot {
+  id: string;
+  tutor_name: string;
+  slot_start_at: string;
+  slot_end_at: string;
+  tutor_timezone: string;
+  availability_status: "open" | "booked";
+}
+
+interface BookingRecord {
+  id: string;
+  lesson_date: string;
+  start_time: string;
+  end_time: string;
+  duration_minutes: number;
+  lesson_start_at: string | null;
+  lesson_end_at: string | null;
+}
 
 export default function Booking() {
   const { id } = useParams();
@@ -50,18 +91,90 @@ export default function Booking() {
 
   const tutor = tutorData[id || "1"] || tutorData["1"];
   const localizedTutorSubject = localizeSubjectLabel(tutor.subject, t);
+  const copy = slotCopy[lang];
 
   const [subject, setSubject] = useState(localizedTutorSubject);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [time, setTime] = useState("");
-  const [duration, setDuration] = useState(60);
+  const [selectedSlotId, setSelectedSlotId] = useState("");
   const [message, setMessage] = useState("");
   const [studentName, setStudentName] = useState("");
   const [studentEmail, setStudentEmail] = useState(user?.email || "");
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [loadingSlots, setLoadingSlots] = useState(true);
+  const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlot[]>([]);
 
-  const price = (tutor.price / 60) * duration;
+  useEffect(() => {
+    setStudentEmail(user?.email || "");
+  }, [user?.email]);
+
+  useEffect(() => {
+    const loadAvailability = async () => {
+      setLoadingSlots(true);
+
+      const { data, error } = await supabase
+        .from("tutor_availability_slots" as never)
+        .select("id, tutor_name, slot_start_at, slot_end_at, tutor_timezone, availability_status")
+        .eq("tutor_name", tutor.name)
+        .eq("availability_status", "open")
+        .gte("slot_start_at", new Date().toISOString())
+        .order("slot_start_at", { ascending: true });
+
+      if (error) {
+        toast({ title: t("booking.failed"), description: error.message, variant: "destructive" });
+        setAvailabilitySlots([]);
+        setLoadingSlots(false);
+        return;
+      }
+
+      setAvailabilitySlots(((data as AvailabilitySlot[] | null) ?? []).filter((slot) => new Date(slot.slot_end_at) > new Date()));
+      setLoadingSlots(false);
+    };
+
+    void loadAvailability();
+  }, [toast, tutor.name, t]);
+
+  const availableDateKeys = useMemo(() => {
+    return Array.from(new Set(availabilitySlots.map((slot) => getDateKeyInTimeZone(slot.slot_start_at, timezone)).filter(Boolean)));
+  }, [availabilitySlots, timezone]);
+
+  useEffect(() => {
+    if (availableDateKeys.length === 0) {
+      setDate(undefined);
+      setSelectedSlotId("");
+      return;
+    }
+
+    const selectedDateKey = date ? getDateKeyInTimeZone(date, timezone) : "";
+    if (!selectedDateKey || !availableDateKeys.includes(selectedDateKey)) {
+      setDate(getDateFromKey(availableDateKeys[0]));
+    }
+  }, [availableDateKeys, date, timezone]);
+
+  const selectedDateKey = date ? getDateKeyInTimeZone(date, timezone) : "";
+
+  const visibleSlots = useMemo(
+    () => availabilitySlots.filter((slot) => getDateKeyInTimeZone(slot.slot_start_at, timezone) === selectedDateKey),
+    [availabilitySlots, selectedDateKey, timezone],
+  );
+
+  useEffect(() => {
+    if (visibleSlots.length === 0) {
+      setSelectedSlotId("");
+      return;
+    }
+
+    if (!visibleSlots.some((slot) => slot.id === selectedSlotId)) {
+      setSelectedSlotId(visibleSlots[0].id);
+    }
+  }, [selectedSlotId, visibleSlots]);
+
+  const selectedSlot = visibleSlots.find((slot) => slot.id === selectedSlotId) ?? null;
+  const duration = selectedSlot ? getDurationMinutes(selectedSlot.slot_start_at, selectedSlot.slot_end_at) : 0;
+  const price = selectedSlot ? (tutor.price / 60) * duration : 0;
+  const studentTimezoneLabel = getTimeZoneDisplayLabel(timezone, selectedSlot?.slot_start_at);
+  const tutorTimezoneLabel = selectedSlot
+    ? getTimeZoneInlineLabel(selectedSlot.tutor_timezone, selectedSlot.slot_start_at)
+    : null;
 
   const handleSubmit = async () => {
     if (!user) {
@@ -69,38 +182,29 @@ export default function Booking() {
       return;
     }
 
-    if (!date || !time || !studentName.trim() || !studentEmail.trim()) {
+    if (!selectedSlot || !studentName.trim() || !studentEmail.trim()) {
       toast({ title: t("booking.failed"), description: t("booking.fillRequired"), variant: "destructive" });
       return;
     }
 
     setSubmitting(true);
 
-    const lessonDate = format(date, "yyyy-MM-dd");
-    const [hours, minutes] = time.split(":").map(Number);
-    const endMinutes = hours * 60 + minutes + duration;
-    const endTime = `${String(Math.floor(endMinutes / 60)).padStart(2, "0")}:${String(endMinutes % 60).padStart(2, "0")}`;
-
     try {
-      const { error } = await supabase.from("bookings").insert({
-        student_id: user.id,
-        tutor_name: tutor.name,
-        subject,
-        lesson_date: lessonDate,
-        start_time: time,
-        end_time: endTime,
-        duration_minutes: duration,
-        price_amount: price,
-        status: "pending",
-        student_name: studentName.trim(),
-        student_email: studentEmail.trim(),
-        student_message: message.trim() || null,
-        notes: message.trim() || null,
-        scheduled_timezone: timezone,
+      const { data, error } = await supabase.rpc("book_tutor_availability_slot" as never, {
+        _slot_id: selectedSlot.id,
+        _subject: subject,
+        _student_name: studentName.trim(),
+        _student_email: studentEmail.trim(),
+        _student_message: message.trim(),
+        _scheduled_timezone: timezone,
+        _price_amount: price,
+        _currency: "₾",
       } as never);
+
       if (error) throw error;
 
-      // Send email via Formspree
+      const booking = data as BookingRecord;
+
       await fetch(FORMSPREE_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -109,9 +213,10 @@ export default function Booking() {
           studentEmail: studentEmail.trim(),
           tutorName: tutor.name,
           subject,
-          lessonDate,
-          startTime: time,
-          endTime,
+          lessonDate: booking.lesson_date,
+          startTime: formatTimeInTimeZone(selectedSlot.slot_start_at, lang, timezone),
+          endTime: formatTimeInTimeZone(selectedSlot.slot_end_at, lang, timezone),
+          tutorTime: formatTimeInTimeZone(selectedSlot.slot_start_at, lang, selectedSlot.tutor_timezone),
           duration: `${duration} min`,
           price: `₾${price.toFixed(2)}`,
           message: message.trim(),
@@ -120,12 +225,24 @@ export default function Booking() {
         }),
       });
 
-      setSubmitted(true);
-
-      // Open Tawk.to chat automatically
       if (typeof window !== "undefined" && (window as any).Tawk_API) {
         (window as any).Tawk_API.maximize();
       }
+
+      navigate("/booking-confirmation", {
+        state: {
+          tutorName: tutor.name,
+          subject,
+          date: booking.lesson_date,
+          startTime: booking.start_time,
+          endTime: booking.end_time,
+          duration,
+          lessonStartAt: booking.lesson_start_at ?? selectedSlot.slot_start_at,
+          lessonEndAt: booking.lesson_end_at ?? selectedSlot.slot_end_at,
+          studentTimezone: timezone,
+          tutorTimezone: selectedSlot.tutor_timezone,
+        },
+      });
     } catch (err: any) {
       toast({ title: t("booking.failed"), description: err?.message || "Something went wrong", variant: "destructive" });
     } finally {
@@ -133,54 +250,26 @@ export default function Booking() {
     }
   };
 
-  if (submitted) {
-    return (
-      <Layout>
-        <div className="bg-primary/10 py-12 text-center">
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-            <div className="flex items-center justify-center mb-4">
-              <CheckCircle className="h-16 w-16 text-primary" />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold mb-2">{t("booking.thankYouTitle")}</h1>
-          </motion.div>
-        </div>
-        <div className="container max-w-lg py-8">
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <div className="rounded-xl border bg-card p-6 mb-6">
-              <p className="text-muted-foreground leading-relaxed">{t("booking.thankYouMsg")}</p>
-            </div>
-            <div className="flex gap-3">
-              <Button asChild className="flex-1 hero-gradient text-primary-foreground border-0">
-                <Link to="/">{t("booking.backHome")}</Link>
-              </Button>
-              <Button asChild variant="outline" className="flex-1">
-                <Link to="/my-lessons">{t("booking.viewLessons")}</Link>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </Layout>
-    );
-  }
-
   return (
     <Layout>
       <div className="container max-w-2xl py-8">
-        <Link to={`/tutor/${id}`} className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-6">
-          <ChevronLeft className="h-4 w-4 mr-1" />
+        <Link to={`/tutor/${id}`} className="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-primary">
+          <ChevronLeft className="mr-1 h-4 w-4" />
           {t("booking.back")}
         </Link>
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-2xl font-bold mb-2">{t("booking.title")}</h1>
-          <p className="text-muted-foreground mb-6">
+          <h1 className="mb-2 text-2xl font-bold">{t("booking.title")}</h1>
+          <p className="mb-2 text-muted-foreground">
             {t("booking.bookingWith")} {tutor.name}
           </p>
+          <p className="mb-6 text-sm text-muted-foreground">
+            {copy.showingIn} <span className="font-medium text-foreground">{studentTimezoneLabel}</span>
+          </p>
 
-          {/* Auth prompt banner for guests */}
           {!user && (
-            <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3">
-              <LogIn className="h-5 w-5 text-primary shrink-0" />
+            <div className="mb-6 flex flex-col gap-3 rounded-xl border border-primary/30 bg-primary/5 p-4 sm:flex-row sm:items-center">
+              <LogIn className="h-5 w-5 shrink-0 text-primary" />
               <div className="flex-1">
                 <p className="text-sm font-medium">{t("booking.loginRequired")}</p>
                 <p className="text-xs text-muted-foreground">{t("booking.loginRequiredDesc")}</p>
@@ -196,26 +285,25 @@ export default function Booking() {
             </div>
           )}
 
-          <div className="rounded-xl border bg-card p-6 space-y-5">
-            {/* Subject */}
+          <div className="space-y-5 rounded-xl border bg-card p-6">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{t("booking.subject")}</label>
+              <label className="mb-1.5 block text-sm font-medium">{t("booking.subject")}</label>
               <input
                 type="text"
                 value={subject}
-                onChange={e => setSubject(e.target.value)}
+                onChange={(e) => setSubject(e.target.value)}
                 className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
               />
             </div>
 
-            {/* Date */}
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{t("booking.date")}</label>
+              <label className="mb-1.5 block text-sm font-medium">{t("booking.date")}</label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
+                    disabled={availableDateKeys.length === 0}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {date ? formatLocalizedDate(date, lang) : t("booking.selectDate")}
@@ -226,99 +314,121 @@ export default function Booking() {
                     mode="single"
                     selected={date}
                     onSelect={setDate}
-                    disabled={(d) => d < new Date()}
+                    disabled={(currentDate) => {
+                      const dateKey = getDateKeyInTimeZone(currentDate, timezone);
+                      const todayKey = getDateKeyInTimeZone(new Date(), timezone);
+                      return !availableDateKeys.includes(dateKey) || (todayKey ? dateKey < todayKey : false);
+                    }}
                     initialFocus
-                    className={cn("p-3 pointer-events-auto")}
+                    className={cn("pointer-events-auto p-3")}
                   />
                 </PopoverContent>
               </Popover>
             </div>
 
-            {/* Time */}
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{t("booking.time")}</label>
-              <Select value={time} onValueChange={setTime}>
-                <SelectTrigger className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm focus:ring-primary">
-                  <SelectValue placeholder={t("booking.selectTime")} />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl border-border bg-popover text-popover-foreground">
-                  {TIME_OPTIONS.map((slot) => (
-                    <SelectItem key={slot} value={slot} className="rounded-lg">
-                      {formatTimeSlotLabel(slot, lang, timezone)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+              <label className="mb-1.5 block text-sm font-medium">{copy.availability}</label>
+              <div className="rounded-xl border bg-background p-3">
+                {loadingSlots ? (
+                  <p className="text-sm text-muted-foreground">{t("tutorSchedule.loading")}</p>
+                ) : availableDateKeys.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">{copy.noSlots}</p>
+                ) : visibleSlots.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">{copy.noSlotsForDate}</p>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{copy.chooseSlot}</p>
+                    {visibleSlots.map((slot) => {
+                      const isSelected = slot.id === selectedSlotId;
 
-            {/* Duration */}
-            <div>
-              <label className="text-sm font-medium mb-1.5 block">{t("booking.duration")}</label>
-              <div className="grid grid-cols-4 gap-2">
-                {DURATIONS.map(d => (
-                  <button
-                    key={d.value}
-                    onClick={() => setDuration(d.value)}
-                    className={`rounded-lg border py-2.5 text-sm font-medium transition-colors ${
-                      duration === d.value ? "border-primary bg-primary/5 text-primary" : "border-border hover:bg-muted/50"
-                    }`}
-                  >
-                    {t(d.labelKey)}
-                  </button>
-                ))}
+                      return (
+                        <button
+                          key={slot.id}
+                          type="button"
+                          onClick={() => setSelectedSlotId(slot.id)}
+                          className={cn(
+                            "w-full rounded-xl border px-4 py-3 text-left transition-colors",
+                            isSelected
+                              ? "border-primary bg-primary/5"
+                              : "border-border bg-card hover:border-primary/40 hover:bg-muted/40",
+                          )}
+                        >
+                          <p className="text-sm font-semibold text-foreground">
+                            {formatTimeInTimeZone(slot.slot_start_at, lang, timezone)} ({copy.yourTime})
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {formatTimeInTimeZone(slot.slot_start_at, lang, slot.tutor_timezone)} ({copy.tutorTime} {getTimeZoneInlineLabel(slot.tutor_timezone, slot.slot_start_at)})
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Student Name */}
-            <div>
-              <label className="text-sm font-medium mb-1.5 block">{t("booking.studentName")}</label>
-              <input
-                type="text"
-                value={studentName}
-                onChange={e => setStudentName(e.target.value)}
-                placeholder={t("booking.studentNamePlaceholder")}
-                className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
-                required
-              />
+            <div className="grid gap-6 md:grid-cols-2">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium">{t("booking.studentName")}</label>
+                <input
+                  type="text"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                  placeholder={t("booking.studentNamePlaceholder")}
+                  className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium">{t("booking.studentEmail")}</label>
+                <input
+                  type="email"
+                  value={studentEmail}
+                  onChange={(e) => setStudentEmail(e.target.value)}
+                  placeholder={t("booking.studentEmailPlaceholder")}
+                  className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+                  required
+                />
+              </div>
             </div>
 
-            {/* Student Email */}
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{t("booking.studentEmail")}</label>
-              <input
-                type="email"
-                value={studentEmail}
-                onChange={e => setStudentEmail(e.target.value)}
-                placeholder={t("booking.studentEmailPlaceholder")}
-                className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
-                required
-              />
-            </div>
-
-            {/* Message */}
-            <div>
-              <label className="text-sm font-medium mb-1.5 block">{t("booking.messageToTutor")}</label>
+              <label className="mb-1.5 block text-sm font-medium">{t("booking.messageToTutor")}</label>
               <textarea
                 value={message}
-                onChange={e => setMessage(e.target.value)}
+                onChange={(e) => setMessage(e.target.value)}
                 placeholder={t("booking.notesPlaceholder")}
                 rows={3}
-                className="w-full rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary resize-none"
+                className="w-full resize-none rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
               />
             </div>
 
-            {/* Price summary */}
             <div className="rounded-lg bg-muted/50 p-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">{t(`booking.duration${duration}`)} {t("booking.lessonWith")} {tutor.name}</span>
-                <span className="font-semibold tabular-nums">₾{price.toFixed(2)}</span>
-              </div>
+              {selectedSlot ? (
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">{formatDateInTimeZone(selectedSlot.slot_start_at, lang, timezone, { weekday: "long", month: "long", day: "numeric" })}</span>
+                    <span className="font-medium text-foreground">{duration} min</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="text-muted-foreground">{formatTimeInTimeZone(selectedSlot.slot_start_at, lang, timezone)} ({copy.yourTime})</span>
+                    <span className="font-semibold tabular-nums">₾{price.toFixed(2)}</span>
+                  </div>
+                  {tutorTimezoneLabel ? (
+                    <p className="text-xs text-muted-foreground">
+                      {formatTimeInTimeZone(selectedSlot.slot_start_at, lang, selectedSlot.tutor_timezone)} ({copy.tutorTime} {tutorTimezoneLabel})
+                    </p>
+                  ) : null}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">{copy.noSlotsForDate}</p>
+              )}
             </div>
 
             <Button
               onClick={handleSubmit}
-              disabled={submitting}
-              className="w-full h-12 text-base font-semibold hero-gradient text-primary-foreground border-0"
+              disabled={submitting || loadingSlots || !selectedSlot}
+              className="hero-gradient h-12 w-full border-0 text-base font-semibold text-primary-foreground"
             >
               {!user ? t("booking.signupToBook") : submitting ? t("booking.submitting") : t("booking.submitRequest")}
             </Button>
