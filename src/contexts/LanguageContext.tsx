@@ -1010,6 +1010,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Nav
     "nav.home": "მთავარი",
     "nav.findTutors": "რეპეტიტორები",
+    "nav.conversationPartners": "საუბრის პარტნიორები",
     "nav.forBusiness": "ბიზნესისთვის",
     "nav.becomeTutor": "გახდი რეპეტიტორი",
     "nav.provenProgress": "პროგრესი",
