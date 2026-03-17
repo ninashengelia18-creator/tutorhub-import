@@ -15,6 +15,7 @@ import {
   tutorApplicationSchema,
 } from "@/lib/tutorApplicationValidation";
 import { submitFormspree } from "@/lib/formspree";
+import { supabase } from "@/integrations/supabase/client";
 
 const TOTAL_STEPS = 4;
 
@@ -240,7 +241,30 @@ export default function TutorApply() {
         _subject: `New Tutor Application: ${fullName}`,
       };
 
-      await submitFormspree(payload);
+      // Insert into database for admin review
+      const { error: dbError } = await supabase.from("tutor_applications").insert({
+        first_name: validatedData.firstName.trim(),
+        last_name: validatedData.lastName.trim(),
+        email: validatedData.email.trim(),
+        phone: validatedData.phone?.trim() || null,
+        country: validatedData.country.trim() || null,
+        experience: validatedData.experience,
+        education: validatedData.education.trim() || null,
+        certifications: validatedData.certifications.trim() || null,
+        bio: validatedData.bio.trim(),
+        subjects: validatedData.selectedSubjects,
+        hourly_rate: Number(validatedData.hourlyRate),
+        native_language: validatedData.nativeLanguage.trim() || null,
+        other_languages: validatedData.otherLanguages.trim() || null,
+        availability: validatedData.availability,
+        timezone: validatedData.timezone.trim() || null,
+        about_teaching: validatedData.aboutTeaching.trim() || null,
+      });
+
+      if (dbError) throw dbError;
+
+      // Also notify via Formspree
+      await submitFormspree(payload).catch(() => {});
 
       clearStepErrors(["availability", "agreeTerms"]);
       setSubmitted(true);
