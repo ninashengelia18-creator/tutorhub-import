@@ -86,6 +86,10 @@ export default function TutorApply() {
   const [timezone, setTimezone] = useState("");
   const [aboutTeaching, setAboutTeaching] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [idFile, setIdFile] = useState<File | null>(null);
+  const [confirmIdOwnership, setConfirmIdOwnership] = useState(false);
+  const [idError, setIdError] = useState<string | null>(null);
+  const idInputRef = useRef<HTMLInputElement>(null);
 
   const fullName = useMemo(() => [firstName.trim(), lastName.trim()].filter(Boolean).join(" "), [firstName, lastName]);
 
