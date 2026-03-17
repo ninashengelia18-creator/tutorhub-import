@@ -244,7 +244,7 @@ export default function Booking() {
                 <SelectContent className="rounded-xl border-border bg-popover text-popover-foreground">
                   {TIME_OPTIONS.map((slot) => (
                     <SelectItem key={slot} value={slot} className="rounded-lg">
-                      {slot}
+                      {formatTimeSlotLabel(slot, lang, timezone)}
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -253,6 +253,22 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
             <div className="space-y-3"><Label htmlFor="lastName">{t("profile.settings.lastName")}</Label><Input id="lastName" value={lastName} onChange={(e) => onLastNameChange(e.target.value)} className="h-16 rounded-2xl border-border bg-background px-6 text-lg" /></div>
           </div>
           <div className="space-y-3"><Label htmlFor="accountEmail">{t("profile.settings.accountEmail")}</Label><Input id="accountEmail" value={email} disabled className="h-16 rounded-2xl border-border bg-background px-6 text-lg" /></div>
+          <div className="space-y-3">
+            <Label htmlFor="accountTimezone">{t("profile.settings.timezone")}</Label>
+            <Select value={timezone} onValueChange={onTimezoneChange}>
+              <SelectTrigger id="accountTimezone" className="h-16 rounded-2xl border-border bg-background px-6 text-lg">
+                <SelectValue placeholder={t("profile.settings.timezone")} />
+              </SelectTrigger>
+              <SelectContent>
+                {TIMEZONE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {getTimeZoneSettingLabel(option.value)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">{getTimeZoneSettingLabel(timezone)}</p>
+          </div>
           <Button type="submit" className="h-16 w-full rounded-2xl text-lg font-semibold" disabled={loading || uploading}>{loading ? t("profile.settings.saving") : t("profile.settings.save")}</Button>
         </form>
       </div>
