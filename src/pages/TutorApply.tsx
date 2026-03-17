@@ -14,9 +14,9 @@ import {
   getTutorApplicationErrorMessage,
   tutorApplicationSchema,
 } from "@/lib/tutorApplicationValidation";
+import { submitFormspree } from "@/lib/formspree";
 
 const TOTAL_STEPS = 4;
-const FORMSPREE_URL = "https://formspree.io/f/mojknpqp";
 
 type FieldName =
   | "firstName"
@@ -227,24 +227,7 @@ export default function TutorApply() {
         _subject: `New Tutor Application: ${fullName}`,
       };
 
-      const res = await fetch(FORMSPREE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        const formspreeMessage = Array.isArray(result?.errors)
-          ? result.errors.map((issue: { message?: string }) => issue.message).filter(Boolean).join(" ")
-          : result?.error;
-
-        throw new Error(formspreeMessage || "We couldn't submit your application right now. Please try again in a moment.");
-      }
+      await submitFormspree(payload);
 
       clearStepErrors(["availability", "agreeTerms"]);
       setSubmitted(true);
