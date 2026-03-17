@@ -20,6 +20,7 @@ import FAQ from "./pages/FAQ.tsx";
 import ForBusiness from "./pages/ForBusiness.tsx";
 import BecomeTutor from "./pages/BecomeTutor.tsx";
 import TutorApply from "./pages/TutorApply.tsx";
+import ConversationPartners from "./pages/ConversationPartners.tsx";
 import Login from "./pages/Login.tsx";
 import Signup from "./pages/Signup.tsx";
 import StudentSignup from "./pages/StudentSignup.tsx";
