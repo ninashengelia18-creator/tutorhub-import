@@ -855,6 +855,50 @@ export default function AdminDashboard() {
               </section>
             </>
           )}
+
+          {activeTab === "enquiries" && (
+            <>
+              <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-2">
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-foreground">{enquiries.length}</p>
+                  <p className="text-xs text-muted-foreground">Total enquiries</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-info">
+                    {enquiries.filter((e) => {
+                      const d = new Date(e.created_at);
+                      const now = new Date();
+                      return now.getTime() - d.getTime() < 7 * 24 * 60 * 60 * 1000;
+                    }).length}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Last 7 days</p>
+                </div>
+              </div>
+
+              {loading ? (
+                <div className="py-12 text-center text-muted-foreground">Loading...</div>
+              ) : enquiries.length === 0 ? (
+                <div className="py-12 text-center text-muted-foreground">No business enquiries yet</div>
+              ) : (
+                <div className="space-y-3">
+                  {enquiries.map((enquiry) => (
+                    <div key={enquiry.id} className="rounded-xl border bg-card p-4">
+                      <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                        <div className="min-w-0 flex-1 space-y-1">
+                          <p className="text-sm font-semibold">{enquiry.company_name}</p>
+                          <p className="text-sm text-muted-foreground">{enquiry.contact_name} · {enquiry.email}</p>
+                          {enquiry.phone && <p className="text-sm text-muted-foreground">📞 {enquiry.phone}</p>}
+                          {enquiry.team_size && <p className="text-sm text-muted-foreground">👥 Team size: {enquiry.team_size}</p>}
+                          {enquiry.message && <p className="mt-2 text-sm italic text-muted-foreground">"{enquiry.message}"</p>}
+                        </div>
+                        <span className="shrink-0 text-xs text-muted-foreground">{new Date(enquiry.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </motion.div>
       </div>
 
