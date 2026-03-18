@@ -1,5 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { HeroSection } from "@/components/home/HeroSection";
+import { FeaturedTutors } from "@/components/home/FeaturedTutors";
 import { StatsBar } from "@/components/home/StatsBar";
 import { SubjectCards } from "@/components/home/SubjectCards";
 import { ProgressSection } from "@/components/home/ProgressSection";
@@ -7,12 +8,14 @@ import { HowItWorks } from "@/components/home/HowItWorks";
 import { GuaranteeSection } from "@/components/home/GuaranteeSection";
 import { BecomeTutorSection } from "@/components/home/BecomeTutorSection";
 import { CorporateSection } from "@/components/home/CorporateSection";
+import { StudentReviews } from "@/components/home/StudentReviews";
 import { BottomCta } from "@/components/home/BottomCta";
 
 const Index = () => {
   return (
     <Layout>
       <HeroSection />
+      <FeaturedTutors />
       <StatsBar />
       <SubjectCards />
       <ProgressSection />
@@ -20,6 +23,7 @@ const Index = () => {
       <GuaranteeSection />
       <BecomeTutorSection />
       <CorporateSection />
+      <StudentReviews />
       <BottomCta />
     </Layout>
   );
