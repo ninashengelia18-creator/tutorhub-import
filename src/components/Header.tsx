@@ -35,7 +35,7 @@ const navLinks = [
   { labelKey: "nav.becomeConversationPartner", href: "/become-conversation-partner" },
   { labelKey: "nav.forBusiness", href: "/for-business" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
-  { labelKey: "nav.faq", href: "/faq" },
+  
 ] as const;
 
 const k12Subjects = [
@@ -222,7 +222,7 @@ export function Header() {
   const dashboardPath = isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks =
     user && !isTutor
-      ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/faq", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
+      ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
       : navLinks;
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
@@ -358,11 +358,12 @@ export function Header() {
                 </Link>
                 <Link
                   to="/faq"
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`flex items-center justify-center rounded-full p-1.5 transition-colors hover:text-primary ${
                     location.pathname === "/faq" ? "text-primary" : "text-white"
                   }`}
+                  aria-label="FAQ"
                 >
-                  {t("nav.faq")}
+                  <HelpCircle className="h-5 w-5" />
                 </Link>
               </>
             )}
