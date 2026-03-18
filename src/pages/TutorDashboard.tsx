@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, CalendarDays, Clock3, Wallet } from "lucide-react";
+import { BookOpen, CalendarDays, Clock3, Video, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
