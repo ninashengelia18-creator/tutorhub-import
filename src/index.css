@@ -112,12 +112,12 @@
   }
 
   .card-glow {
-    box-shadow: 0 0 20px -5px hsla(271, 81%, 56%, 0.2),
-                inset 0 1px 0 0 hsla(271, 81%, 56%, 0.1);
+    box-shadow: 0 0 20px -5px hsla(280, 50%, 50%, 0.2),
+                inset 0 1px 0 0 hsla(280, 50%, 50%, 0.1);
   }
 
   .card-glow:hover {
-    box-shadow: 0 0 30px -5px hsla(271, 81%, 56%, 0.35),
-                inset 0 1px 0 0 hsla(271, 81%, 56%, 0.15);
+    box-shadow: 0 0 30px -5px hsla(280, 50%, 50%, 0.35),
+                inset 0 1px 0 0 hsla(280, 50%, 50%, 0.15);
   }
 }
