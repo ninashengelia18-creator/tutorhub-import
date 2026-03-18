@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, User } from "lucide-react";
@@ -25,40 +24,6 @@ const steps = [
 ];
 
 export default function FindConversationPartner() {
-  const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      setLoading(true);
-      const { data } = await supabase
-        .from("public_tutor_profiles" as never)
-        .select("*")
-        .eq("is_published", true)
-        .eq("primary_subject", "Conversation Practice")
-        .order("created_at", { ascending: false });
-
-      if (!active) return;
-      setTutors((data as PublicTutorProfile[] | null) ?? []);
-      setLoading(false);
-    };
-    void load();
-    return () => { active = false; };
-  }, []);
-
-  useEffect(() => {
-    const sync = () => setSavedIds(Object.fromEntries(tutors.map((t) => [t.id, isTutorSaved(t.id)])));
-    sync();
-    return subscribeToSavedTutors(sync);
-  }, [tutors]);
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return q ? tutors.filter((t) => getTutorSearchText(t).includes(q)) : tutors;
-  }, [search, tutors]);
 
   return (
     <Layout>
