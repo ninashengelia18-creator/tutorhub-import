@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-type Language = "en" | "ka" | "ru";
+type Language = "en";
 type CurrencyCode = "USD" | "GEL" | "EUR";
 
 const EUROPEAN_COUNTRY_CODES = new Set([
