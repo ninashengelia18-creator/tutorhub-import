@@ -158,6 +158,7 @@ function MegaMenuColumn({ title, items }: { title: string; items: { label: strin
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [convDropdownOpen, setConvDropdownOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
