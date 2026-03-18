@@ -2,3 +2,6 @@ project_id = "zaosprjxvwuavmcjaqna"
 
 [functions.create-calendar-event]
 verify_jwt = false
+
+[functions.send-application-confirmation-email]
+verify_jwt = false

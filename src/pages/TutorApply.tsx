@@ -278,6 +278,15 @@ export default function TutorApply() {
       // Also notify via Formspree
       await submitFormspree(payload).catch(() => {});
 
+      // Send confirmation email to applicant
+      await supabase.functions.invoke("send-application-confirmation-email", {
+        body: {
+          first_name: validatedData.firstName.trim(),
+          email: validatedData.email.trim(),
+          application_type: "tutor",
+        },
+      }).catch(() => {});
+
       clearStepErrors(["availability", "agreeTerms"]);
       setSubmitted(true);
     } catch (error: unknown) {

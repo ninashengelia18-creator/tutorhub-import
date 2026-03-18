@@ -95,6 +95,15 @@ export default function ConvoPartnerApply() {
         _subject: `New Conversation Partner Application: ${fullName}`,
       }).catch(() => {});
 
+      // Send confirmation email to applicant
+      await supabase.functions.invoke("send-application-confirmation-email", {
+        body: {
+          first_name: firstName.trim(),
+          email: email.trim(),
+          application_type: "conversation_partner",
+        },
+      }).catch(() => {});
+
       setSubmitted(true);
     } catch (error: any) {
       toast({
