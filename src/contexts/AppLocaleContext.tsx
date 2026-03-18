@@ -310,7 +310,7 @@ export function useAppLocale() {
 
 export function getCurrencyForCountry(countryCode?: string | null, browserLanguage = "en-US") {
   if (countryCode === "GE") return "GEL" satisfies CurrencyCode;
-  if (detectLanguageFromBrowser(browserLanguage) === "ru") return "USD" satisfies CurrencyCode;
+  // Russian detection removed - English only
   if (countryCode && EUROPEAN_COUNTRY_CODES.has(countryCode)) return "EUR" satisfies CurrencyCode;
   return "USD" satisfies CurrencyCode;
 }
