@@ -68,7 +68,7 @@ export function SubjectCards() {
                   <card.icon className="h-5 w-5 text-muted-foreground shrink-0 group-hover:text-primary transition-colors" />
                   <div className="flex-1">
                     <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{t(card.nameKey)}</h3>
-                    <p className="text-xs text-muted-foreground">{card.teacherCount} {t("home.teachers")}</p>
+                    
                   </div>
                   <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </Link>
