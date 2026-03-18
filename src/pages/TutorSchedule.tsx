@@ -84,7 +84,7 @@ export default function TutorSchedule() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(new Date());
   const [slotStartTime, setSlotStartTime] = useState("09:00");
-  const [slotEndTime, setSlotEndTime] = useState("10:00");
+  const [slotDuration, setSlotDuration] = useState<25 | 50>(50);
   const [completingBooking, setCompletingBooking] = useState<TutorBooking | null>(null);
   const [isCompleting, setIsCompleting] = useState(false);
   const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
