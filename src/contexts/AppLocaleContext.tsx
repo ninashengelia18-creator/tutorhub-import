@@ -132,7 +132,7 @@ function fallbackPreferences(browserLanguage: string, browserTimeZone: string) {
 
   return normalizePreferences({
     preferred_language: language,
-    preferred_currency: detectedTimeZone === "Asia/Tbilisi" ? "GEL" : "USD",
+    preferred_currency: "USD",
     preferred_timezone: detectedTimeZone,
   });
 }
