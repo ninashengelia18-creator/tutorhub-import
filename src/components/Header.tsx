@@ -358,9 +358,7 @@ export function Header() {
                 </Link>
                 <Link
                   to="/faq"
-                  className={`flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/25 ${
-                    location.pathname === "/faq" ? "bg-white/25" : ""
-                  }`}
+                  className="flex items-center justify-center transition-all hover:scale-110"
                   aria-label="FAQ"
                 >
                   <div className="flex h-7 w-7 items-center justify-center rounded-full border-[2.5px] border-white">
