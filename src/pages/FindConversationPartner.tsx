@@ -1,20 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Heart, Search, Star } from "lucide-react";
+import { Search, User } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
-import { subscribeToSavedTutors, toggleSavedTutor, isTutorSaved } from "@/lib/savedTutors";
-import {
-  getTutorAvatar,
-  getTutorFullName,
-  getTutorLanguages,
-  getTutorSearchText,
-  type PublicTutorProfile,
-} from "@/lib/publicTutors";
 
 const languages = [
   { name: "English", flag: "🇬🇧" },
@@ -34,40 +24,6 @@ const steps = [
 ];
 
 export default function FindConversationPartner() {
-  const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      setLoading(true);
-      const { data } = await supabase
-        .from("public_tutor_profiles" as never)
-        .select("*")
-        .eq("is_published", true)
-        .eq("primary_subject", "Conversation Practice")
-        .order("created_at", { ascending: false });
-
-      if (!active) return;
-      setTutors((data as PublicTutorProfile[] | null) ?? []);
-      setLoading(false);
-    };
-    void load();
-    return () => { active = false; };
-  }, []);
-
-  useEffect(() => {
-    const sync = () => setSavedIds(Object.fromEntries(tutors.map((t) => [t.id, isTutorSaved(t.id)])));
-    sync();
-    return subscribeToSavedTutors(sync);
-  }, [tutors]);
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return q ? tutors.filter((t) => getTutorSearchText(t).includes(q)) : tutors;
-  }, [search, tutors]);
 
   return (
     <Layout>
@@ -151,83 +107,40 @@ export default function FindConversationPartner() {
 
       {/* Browse */}
       <section id="browse" className="container py-16">
-        <h2 className="text-3xl md:text-4xl font-bold mb-8 text-foreground">Browse Conversation Partners</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Browse Conversation Partners</h2>
+        <p className="text-muted-foreground mb-10 text-lg">
+          Our tutors are being verified — be the first to join!
+        </p>
 
-        <div className="relative max-w-md mb-8">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name, language, or country" className="pl-9" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="relative rounded-3xl border bg-card p-6 flex flex-col items-center text-center gap-4 select-none"
+            >
+              <div className="absolute inset-0 rounded-3xl bg-muted/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3">
+                <Badge className="bg-primary text-primary-foreground text-sm px-4 py-1">
+                  Launching Soon
+                </Badge>
+              </div>
+              <div className="h-20 w-20 rounded-2xl bg-muted flex items-center justify-center">
+                <User className="h-10 w-10 text-muted-foreground/40" />
+              </div>
+              <div className="space-y-2 w-full">
+                <div className="h-5 w-28 mx-auto rounded bg-muted" />
+                <div className="h-3 w-20 mx-auto rounded bg-muted" />
+              </div>
+              <div className="h-3 w-32 rounded bg-muted" />
+              <div className="h-8 w-24 rounded-full bg-muted" />
+            </div>
+          ))}
         </div>
 
-        <p className="mb-4 text-sm text-muted-foreground">{filtered.length} partner{filtered.length === 1 ? "" : "s"} available</p>
-
-        {loading ? (
-          <div className="rounded-3xl border bg-card p-10 text-center text-muted-foreground">Loading conversation partners...</div>
-        ) : filtered.length === 0 ? (
-          <div className="rounded-3xl border bg-card p-10 text-center">
-            <h3 className="text-xl font-semibold text-foreground">No conversation partners found</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Check back soon — we're growing fast!</p>
-          </div>
-        ) : (
-          <div className="grid gap-4 xl:grid-cols-2">
-            {filtered.map((tutor, index) => {
-              const fullName = getTutorFullName(tutor);
-              const langs = getTutorLanguages(tutor);
-              const isSaved = savedIds[tutor.id] ?? false;
-
-              return (
-                <motion.article
-                  key={tutor.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.04 }}
-                  className="rounded-3xl border bg-card p-5"
-                >
-                  <div className="flex flex-col gap-5 sm:flex-row">
-                    <img src={getTutorAvatar(tutor)} alt={fullName} className="h-24 w-24 rounded-2xl object-cover" loading="lazy" />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                        <div>
-                          <Link to={`/tutor/${tutor.id}`} className="text-xl font-semibold text-foreground hover:text-primary">{fullName}</Link>
-                          <p className="text-sm font-medium text-primary">Conversation Partner</p>
-                        </div>
-                        <div className="text-left sm:text-right">
-                          <p className="text-2xl font-bold text-foreground">${Number(tutor.hourly_rate).toFixed(0)} USD</p>
-                          <p className="text-xs text-muted-foreground">per hour</p>
-                        </div>
-                      </div>
-                      <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                        {tutor.country && <span>{tutor.country}</span>}
-                        <span>{langs.length > 0 ? langs.join(", ") : "Languages not listed"}</span>
-                      </div>
-                      <div className="mt-3 flex items-center gap-2 text-sm">
-                        <Star className="h-4 w-4 fill-warning text-warning" />
-                        <span className="font-semibold text-foreground">{Number(tutor.rating).toFixed(1)}</span>
-                        <span className="text-muted-foreground">({tutor.review_count} reviews)</span>
-                      </div>
-                      <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{tutor.bio}</p>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        <Button asChild><Link to={`/booking/${tutor.id}`}>Book a Session</Link></Button>
-                        <Button variant="outline" asChild><Link to={`/tutor/${tutor.id}`}>View Profile</Link></Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className="text-muted-foreground"
-                          onClick={() => {
-                            toggleSavedTutor({ id: tutor.id, name: fullName, subject: "Conversation Practice", price: Number(tutor.hourly_rate), photo: getTutorAvatar(tutor) });
-                            setSavedIds((c) => ({ ...c, [tutor.id]: !isSaved }));
-                          }}
-                        >
-                          <Heart className={`mr-2 h-4 w-4 ${isSaved ? "fill-primary text-primary" : ""}`} />
-                          {isSaved ? "Saved" : "Save"}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </motion.article>
-              );
-            })}
-          </div>
-        )}
+        <div className="text-center mt-8">
+          <Button size="lg" asChild>
+            <Link to="/tutor-apply">Become Our First Tutor</Link>
+          </Button>
+        </div>
       </section>
     </Layout>
   );
