@@ -46,7 +46,7 @@ const subjectKeys = [
   { value: "French", key: "tutor.apply.subj.french" },
   { value: "German", key: "tutor.apply.subj.german" },
   { value: "Spanish", key: "tutor.apply.subj.spanish" },
-  { value: "Georgian", key: "tutor.apply.subj.georgian" },
+  
   { value: "Russian", key: "tutor.apply.subj.russian" },
   { value: "National Exams", key: "tutor.apply.subj.nationalExams" },
   { value: "IELTS", key: "tutor.apply.subj.ielts" },
