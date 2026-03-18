@@ -17,7 +17,6 @@ const SUBJECT_TRANSLATION_KEYS: Record<string, string> = {
   "data science": "home.subj.dataScience",
   marketing: "home.subj.marketing",
   law: "home.subj.law",
-  medicine: "home.subj.medicine",
   "business english": "home.subj.businessEnglish",
 };
 

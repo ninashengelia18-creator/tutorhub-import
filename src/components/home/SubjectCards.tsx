@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Languages, Code, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Briefcase, Scale, Heart, BarChart3, Megaphone, MapPin } from "lucide-react";
+import { BookOpen, Languages, Code, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Briefcase, Scale, BarChart3, Megaphone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -31,7 +31,6 @@ const subjectCategories = [
       { icon: BarChart3, nameKey: "home.subj.dataScience", href: "/search?subject=DataScience", teacherCount: "8" },
       { icon: Megaphone, nameKey: "home.subj.marketing", href: "/search?subject=Marketing", teacherCount: "6" },
       { icon: Scale, nameKey: "home.subj.law", href: "/search?subject=Law", teacherCount: "5" },
-      { icon: Heart, nameKey: "home.subj.medicine", href: "/search?subject=Medicine", teacherCount: "7" },
       { icon: Globe, nameKey: "home.subj.businessEnglish", href: "/search?subject=BusinessEnglish", teacherCount: "9" },
     ],
   },

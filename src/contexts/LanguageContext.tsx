@@ -141,7 +141,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "home.subj.dataScience": "Data Science & Analytics",
     "home.subj.marketing": "Marketing & Communications",
     "home.subj.law": "Law & Legal Studies",
-    "home.subj.medicine": "Medicine & Healthcare",
+    
     "home.subj.businessEnglish": "English for Professionals",
     "home.progressBadge": "Verified Results Platform",
     "home.progressTitle": "Real progress, measurable results, improved learning methods",

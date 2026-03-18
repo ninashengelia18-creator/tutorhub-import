@@ -66,7 +66,6 @@ export function Footer() {
     { label: "Business & Finance", href: "/search?subject=BusinessFinance" },
     { label: "Data Science", href: "/search?subject=DataScience" },
     { label: "Law", href: "/search?subject=Law" },
-    { label: "Medicine & Healthcare", href: "/search?subject=Medicine" },
     { label: "English for Professionals", href: "/search?subject=BusinessEnglish" },
   ];
 
