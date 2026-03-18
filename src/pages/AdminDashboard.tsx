@@ -227,6 +227,22 @@ export default function AdminDashboard() {
 
   const sendTutorDecisionNotification = async (application: TutorApplicationListItem, decision: "approved" | "rejected") => {
     const fullName = `${application.first_name} ${application.last_name}`.trim();
+
+    // Send email via edge function
+    try {
+      await supabase.functions.invoke("notify-tutor-decision", {
+        body: {
+          email: application.email,
+          first_name: application.first_name,
+          last_name: application.last_name,
+          decision,
+        },
+      });
+    } catch (err) {
+      console.error("Edge function email failed:", err);
+    }
+
+    // Also notify via Formspree
     const tutorMessage =
       decision === "approved"
         ? "Congratulations! Your LearnEazy tutor profile is now live. Log in at learneazy.org to set up your availability and start receiving student bookings."
