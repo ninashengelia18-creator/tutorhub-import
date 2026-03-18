@@ -181,7 +181,7 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
                     {dayBookings.map((booking) => (
                       <div
                         key={booking.id}
-                        className={`absolute inset-x-0.5 top-0.5 rounded px-1 py-0.5 overflow-hidden cursor-pointer transition-colors ${
+                        className={`absolute inset-x-0.5 top-0.5 rounded px-1 py-0.5 overflow-hidden transition-colors ${
                           booking.status === "pending"
                             ? "bg-yellow-500/15 border border-yellow-500/30 hover:bg-yellow-500/25"
                             : "bg-primary/15 border border-primary/30 hover:bg-primary/25"
@@ -190,6 +190,17 @@ function CalendarView({ bookings }: { bookings: Booking[] }) {
                       >
                         <p className="text-[10px] font-medium truncate">{localizeSubjectLabel(booking.subject, t)}</p>
                         <p className="text-[10px] opacity-70 truncate tabular-nums">{formatTime(booking)}</p>
+                        {booking.google_meet_link && booking.status === "confirmed" && (
+                          <a
+                            href={booking.google_meet_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-0.5 text-[9px] font-semibold text-primary hover:underline mt-0.5"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Video className="h-2.5 w-2.5" /> Join
+                          </a>
+                        )}
                       </div>
                     ))}
                   </div>
