@@ -574,7 +574,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.apply.subj.spanish": "Spanish",
     "tutor.apply.subj.georgian": "Georgian",
     "tutor.apply.subj.russian": "Russian",
-    "tutor.apply.rate": "Hourly Rate",
+    "tutor.apply.rate": "Price Per Lesson (50 min)",
     "tutor.apply.nativeLang": "Native Language",
     "tutor.apply.otherLangs": "Other Languages",
     "tutor.apply.availability": "Weekly Availability",
