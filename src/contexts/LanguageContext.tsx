@@ -98,7 +98,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "profile.settings.deleteFailed": "Unable to delete account.",
 
     // Hero
-    "hero.badge": "Join 500+ students learning today",
+    "hero.badge": "Share your knowledge with our international community of students today!",
     "hero.title1": "Find the perfect",
     "hero.title2": "tutor for you",
     "hero.subtitle": "Connect with expert tutors in any subject. Personalized 1-on-1 lessons that fit your schedule and learning goals.",
