@@ -278,7 +278,7 @@ export function Header() {
                 className="flex items-center gap-1 text-sm font-medium text-foreground/90 transition-colors hover:text-primary"
                 onClick={() => setMegaOpen((v) => !v)}
               >
-                For Students <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
+                Find a Tutor <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
               </button>
 
               <AnimatePresence>
