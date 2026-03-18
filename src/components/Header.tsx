@@ -388,8 +388,8 @@ export function Header() {
                 {!isTutor && (
                   <Link
                     to="/my-lessons"
-                    className={`text-sm font-medium transition-colors hover:text-primary ${
-                      location.pathname === "/my-lessons" ? "text-primary" : "text-foreground/90"
+                    className={`text-sm font-bold transition-colors hover:text-primary ${
+                      location.pathname === "/my-lessons" ? "text-primary" : "text-white"
                     }`}
                   >
                     {t("msg.myLessons")}
