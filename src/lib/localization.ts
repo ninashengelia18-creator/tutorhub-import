@@ -51,8 +51,6 @@ const SUBJECT_CANONICAL_VALUES: Record<string, string> = {
 
 const DATE_LOCALES: Record<Language, string> = {
   en: "en-US",
-  ka: "ka-GE",
-  ru: "ru-RU",
 };
 
 function normalizeTerm(value: string) {

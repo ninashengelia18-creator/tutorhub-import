@@ -9,7 +9,7 @@ export function getInitials(name: string) {
     .toUpperCase();
 }
 
-export function formatConversationTime(value: string | null | undefined, lang: "en" | "ka" | "ru") {
+export function formatConversationTime(value: string | null | undefined, lang: "en") {
   if (!value) return "";
 
   const date = new Date(value);
