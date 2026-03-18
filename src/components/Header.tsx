@@ -65,7 +65,7 @@ const professionalSubjects = [
   { label: "Data Science & Analytics", href: "/search?subject=DataScience" },
   { label: "Marketing & Communications", href: "/search?subject=Marketing" },
   { label: "Law & Legal Studies", href: "/search?subject=Law" },
-  { label: "Medicine & Healthcare", href: "/search?subject=Medicine" },
+  
   { label: "English for Professionals", href: "/search?subject=BusinessEnglish" },
 ];
 
