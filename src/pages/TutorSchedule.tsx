@@ -196,15 +196,10 @@ export default function TutorSchedule() {
   const handleAddAvailabilitySlot = async () => {
     const dateKey = availabilityDate ? getDateKeyInTimeZone(availabilityDate, timezone) : "";
     const slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
-    const slotEndAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotEndTime, timezone) : null;
+    const slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + slotDuration * 60 * 1000) : null;
 
     if (!dateKey || !slotStartAt || !slotEndAt) {
-      toast({ title: "Unable to save slot", description: "Choose a valid date and time range.", variant: "destructive" });
-      return;
-    }
-
-    if (slotEndAt <= slotStartAt) {
-      toast({ title: "Invalid time range", description: "End time must be later than start time.", variant: "destructive" });
+      toast({ title: "Unable to save slot", description: "Choose a valid date and time.", variant: "destructive" });
       return;
     }
 
