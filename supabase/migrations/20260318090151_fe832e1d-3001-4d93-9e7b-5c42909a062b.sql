@@ -1,0 +1,1 @@
+DELETE FROM public_tutor_profiles WHERE source = 'manual';
