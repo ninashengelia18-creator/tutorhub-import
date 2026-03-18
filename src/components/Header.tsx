@@ -50,10 +50,6 @@ const k12Subjects = [
   { label: "Geography", href: "/search?subject=Geography" },
   { label: "Computer Science", href: "/search?subject=ComputerScience" },
   { label: "Modern Foreign Languages", href: "/search?subject=Languages" },
-  { label: "Art & Design", href: "/search?subject=Art" },
-  { label: "Music", href: "/search?subject=Music" },
-  { label: "Physical Education", href: "/search?subject=PE" },
-  { label: "Religious Studies", href: "/search?subject=RS" },
 ];
 
 const gcseSubjects = [
