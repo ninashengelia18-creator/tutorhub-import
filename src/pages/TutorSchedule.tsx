@@ -388,7 +388,7 @@ export default function TutorSchedule() {
                 </div>
                 <div className="rounded-xl border bg-card p-4">
                   <p className="text-2xl font-bold text-foreground">
-                    ₾{upcomingBookings.reduce((sum, booking) => sum + booking.price_amount, 0).toFixed(0)}
+                    ${upcomingBookings.reduce((sum, booking) => sum + booking.price_amount, 0).toFixed(0)}
                   </p>
                   <p className="text-xs text-muted-foreground">{t("tutorSchedule.upcomingRevenue")}</p>
                 </div>

@@ -85,7 +85,7 @@ const SubscribePlansDialog = forwardRef<HTMLButtonElement, SubscribePlansDialogP
         setTutorName(booking.tutor_name ?? null);
       } else {
         setPricePerLesson(null);
-        setCurrency("₾");
+        setCurrency("$");
         setTutorName(null);
       }
     };
