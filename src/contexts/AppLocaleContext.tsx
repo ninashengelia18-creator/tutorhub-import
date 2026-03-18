@@ -30,15 +30,13 @@ const DEFAULT_CURRENCY: CurrencyCode = "USD";
 const DEFAULT_LANGUAGE: Language = "en";
 const DEFAULT_TIMEZONE = "UTC";
 
-const EXCHANGE_RATE_FROM_GEL: Record<CurrencyCode, number> = {
-  GEL: 1,
-  USD: 0.37,
-  EUR: 0.34,
+const EXCHANGE_RATE_FROM_USD: Record<CurrencyCode, number> = {
+  USD: 1,
+  EUR: 0.92,
 };
 
 const CURRENCY_SYMBOLS: Record<CurrencyCode, string> = {
   USD: "$",
-  GEL: "₾",
   EUR: "€",
 };
 
