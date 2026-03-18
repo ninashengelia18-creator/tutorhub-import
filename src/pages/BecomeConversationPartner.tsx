@@ -49,7 +49,7 @@ export default function BecomeConversationPartner() {
               Earn money doing what you love — just having conversations. Help language learners practise speaking with a native speaker like you.
             </p>
             <Button size="lg" asChild>
-              <Link to="/tutor-apply">Apply Now</Link>
+              <Link to="/convo-partner-apply">Apply Now</Link>
             </Button>
           </motion.div>
         </div>
