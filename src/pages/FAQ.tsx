@@ -11,83 +11,73 @@ import {
 
 const faqSections = [
   {
-    category: "Booking & Lessons",
+    category: "For Students",
     questions: [
       {
-        q: "How do I find and book a tutor?",
-        a: "Use the search page to browse tutors by subject, price, availability, and rating. Click on a tutor's profile, pick a time slot, and complete the booking.",
+        q: "How do I register as a student?",
+        a: "Sign up for free at learneazy.org/signup/student. Registration takes less than a minute — you just need your name, email address, and a password.",
       },
       {
-        q: "Can I try a lesson before committing?",
-        a: "Yes! Most tutors offer a free trial lesson so you can see if they're the right fit.",
+        q: "How do I find a tutor?",
+        a: "After creating your account, browse tutors by subject on the LearnEazy platform. Filter by subject, availability, and price. Once you find a tutor, book a session directly through the platform.",
       },
       {
-        q: "Can I reschedule a lesson?",
-        a: "You can reschedule up to 4 hours before the lesson starts without any penalty.",
+        q: "How do lessons work?",
+        a: "All lessons take place online via Google Meet or Zoom. Once a session is booked, both the student and tutor receive a link to join the video call. Sessions are live, one-on-one, with real-time video and audio. No software installation is required beyond a web browser.",
       },
-    ],
-  },
-  {
-    category: "Payments",
-    questions: [
       {
         q: "How do I pay for lessons?",
-        a: "After booking, we'll send you payment details (IBAN) via email or chat. All prices are in Georgian Lari (₾). You can also message us directly through the support chat to get payment information.",
+        a: "Payments are made securely in USD by credit or debit card through the LearnEazy platform. You pay in advance when booking a session. All major cards are accepted.",
       },
       {
-        q: "Can I get a refund?",
-        a: "If you're not satisfied, request a refund within 24 hours. Our support team will review your request.",
-      },
-    ],
-  },
-  {
-    category: "Tutors",
-    questions: [
-      {
-        q: "How do I become a tutor?",
-        a: "Click 'Become a Tutor' in the footer, fill out your qualifications and experience, and our team reviews within 48 hours.",
-      },
-      {
-        q: "Are tutors verified?",
-        a: "Yes, all tutors go through a verification process including identity check, qualification review, and a trial teaching session.",
-      },
-      {
-        q: "Can I choose a native speaker?",
-        a: "Yes! Use the 'Native Speaker' filter on the search page to find tutors who are native speakers of the language you're learning.",
+        q: "Can I cancel or reschedule a lesson?",
+        a: "Yes. You can cancel or reschedule through your student dashboard. Please cancel at least 24 hours before the session to avoid cancellation fees.",
       },
     ],
   },
   {
-    category: "AI Features",
+    category: "For Tutors",
     questions: [
       {
-        q: "What is the AI-powered classroom?",
-        a: "Our classroom includes video chat, shared whiteboard, AI-assisted note-taking, and smart lesson insights generated after each session.",
+        q: "How do I register as a tutor?",
+        a: "Apply at learneazy.org/tutor-apply. Fill in your application with your name, subjects, experience, and qualifications. Our team reviews all applications and responds within a few business days.",
       },
       {
-        q: "How does AI Practice work?",
-        a: "AI Practice provides daily exercises tailored to your goals plus scenario-based conversations for job interviews, travel, and business situations.",
+        q: "Is it free to join as a tutor?",
+        a: "Yes. It is completely free to sign up and create a tutor profile on LearnEazy. We only charge a commission when you earn from lessons.",
       },
       {
-        q: "What are Lesson Insights?",
-        a: "After each lesson, AI generates a summary with key topics covered, areas for improvement, and recommended exercises.",
+        q: "What commission does LearnEazy charge?",
+        a: "The first lesson with any new student (trial lesson) is charged at 100% commission. For subsequent lessons, the rate depends on your total teaching hours: 0–20 hours = 22%, 20–50 hours = 19%, 50–100 hours = 17%, 100+ hours = 15%. The more you teach, the lower your commission.",
+      },
+      {
+        q: "What is a trial lesson?",
+        a: "A trial lesson is your first session with a new student. Spend the first 10 minutes understanding the student's level and goals, outline a basic study plan, and agree on a learning routine. Trial lessons have 100% commission, but students who enjoy their trial often become regular clients.",
+      },
+      {
+        q: "How and when do I get paid?",
+        a: "Earnings are paid out weekly in USD to your preferred payment method. You can track your earnings in your tutor dashboard.",
+      },
+      {
+        q: "Can I set my own schedule and price?",
+        a: "Yes. You have full control over your availability and hourly rate. You can update these at any time from your tutor profile.",
+      },
+      {
+        q: "How do I improve my profile visibility?",
+        a: "Add a clear, professional profile photo. Write a detailed profile description highlighting your experience and teaching style. Add your qualifications and certificates. Keep your availability up to date. Encourage students to leave reviews after sessions.",
       },
     ],
   },
   {
-    category: "Technical & Support",
+    category: "Support",
     questions: [
       {
-        q: "What devices are supported?",
-        a: "LearnEazy works on any modern browser — Chrome, Firefox, Safari, Edge — on desktop, tablet, and mobile.",
+        q: "How do I contact support?",
+        a: "Chat with us directly on the website or email hello@learneazy.org. We typically respond within a few hours.",
       },
       {
-        q: "In what language is support available?",
-        a: "Support is currently available in English. Use the chat widget or email support@learneazy.ge.",
-      },
-      {
-        q: "How do I delete my account?",
-        a: "Go to Settings > Account > Delete Account. This action is permanent and cannot be undone.",
+        q: "How do I report an issue?",
+        a: "Contact our support team at hello@learneazy.org with details of the issue and we will investigate promptly.",
       },
     ],
   },
