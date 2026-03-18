@@ -760,6 +760,15 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutorSchedule.lessonSingle": "lesson",
     "tutorSchedule.lessonPlural": "lessons",
     "tutorSchedule.minutes": "min",
+    "tutorSchedule.markComplete": "Mark Complete",
+    "tutorSchedule.confirmCompleteTitle": "Mark Lesson as Complete?",
+    "tutorSchedule.confirmCompleteDesc": "This will mark the lesson with {student} ({subject}) as completed and calculate your earnings automatically.",
+    "tutorSchedule.confirmComplete": "Yes, Mark Complete",
+    "tutorSchedule.completing": "Completing…",
+    "tutorSchedule.cancel": "Cancel",
+    "tutorSchedule.lessonCompleted": "Lesson completed",
+    "tutorSchedule.lessonCompletedDesc": "Earnings have been calculated and added to your balance.",
+    "tutorSchedule.error": "Error",
 
     // Tutor Profile page
     "tp.findTutors": "Find Tutors",
