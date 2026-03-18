@@ -191,7 +191,8 @@ export default function Booking() {
 
       const booking = data as BookingRecord;
 
-      await fetch(FORMSPREE_URL, {
+      // Fire-and-forget: send notification email
+      fetch(FORMSPREE_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
@@ -209,7 +210,34 @@ export default function Booking() {
           message: message.trim() || "No message provided",
           _subject: `New booking request for ${tutorName}`,
         }),
-      });
+      }).catch(() => {});
+
+      // Create Google Calendar event with Meet link
+      const lessonStart = booking.lesson_start_at ?? selectedSlot.slot_start_at;
+      const lessonEnd = booking.lesson_end_at ?? selectedSlot.slot_end_at;
+
+      let meetLink: string | null = null;
+      try {
+        const { data: calData, error: calError } = await supabase.functions.invoke(
+          "create-calendar-event",
+          {
+            body: {
+              booking_id: booking.id,
+              summary: `${subject.trim()} – LearnEazy Lesson`,
+              description: `Lesson with ${tutorName}\nStudent: ${studentName.trim()}`,
+              start_time: lessonStart,
+              end_time: lessonEnd,
+              tutor_email: tutor.email || undefined,
+              student_email: studentEmail.trim(),
+            },
+          }
+        );
+        if (!calError && calData?.meet_link) {
+          meetLink = calData.meet_link;
+        }
+      } catch {
+        // Calendar event creation is non-blocking
+      }
 
       navigate("/booking-confirmation", {
         state: {
@@ -219,10 +247,11 @@ export default function Booking() {
           startTime: booking.start_time,
           endTime: booking.end_time,
           duration,
-          lessonStartAt: booking.lesson_start_at ?? selectedSlot.slot_start_at,
-          lessonEndAt: booking.lesson_end_at ?? selectedSlot.slot_end_at,
+          lessonStartAt: lessonStart,
+          lessonEndAt: lessonEnd,
           studentTimezone: timezone,
           tutorTimezone: selectedSlot.tutor_timezone,
+          meetLink,
         },
       });
     } catch (error: any) {
