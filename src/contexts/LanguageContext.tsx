@@ -914,13 +914,9 @@ export const translations: Record<Language, Record<string, string>> = {
     "td.english": "English",
     "td.programming": "Programming",
     "td.chemistry": "Chemistry",
-    "td.georgian": "Georgian",
     "td.russian": "Russian",
     "td.music": "Music",
-    // Tutor data - countries
-    "td.georgia": "Georgia",
     // Tutor data - languages
-    "td.lang.georgian": "Georgian",
     "td.lang.english": "English",
     "td.lang.russian": "Russian",
     // Tutor data - language levels
