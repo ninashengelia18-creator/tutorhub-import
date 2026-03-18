@@ -846,6 +846,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutorDashboard.nextLesson": "Next lesson",
     "tutorDashboard.loadingLessons": "Loading your upcoming lessons…",
     "tutorDashboard.viewFullSchedule": "View full schedule",
+    "tutorDashboard.joinLesson": "Join Lesson",
     "tutorDashboard.noUpcomingLessons": "No upcoming lessons yet.",
     "tutorDashboard.noUpcomingLessonsDescription": "Your next booking will appear here as soon as a student confirms a lesson.",
     "tutorDashboard.quickActions": "Quick actions",

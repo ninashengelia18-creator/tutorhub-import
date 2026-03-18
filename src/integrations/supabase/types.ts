@@ -21,6 +21,7 @@ export type Database = {
           currency: string
           duration_minutes: number
           end_time: string
+          google_event_id: string | null
           google_meet_link: string | null
           id: string
           is_trial: boolean
@@ -48,6 +49,7 @@ export type Database = {
           currency?: string
           duration_minutes?: number
           end_time: string
+          google_event_id?: string | null
           google_meet_link?: string | null
           id?: string
           is_trial?: boolean
@@ -75,6 +77,7 @@ export type Database = {
           currency?: string
           duration_minutes?: number
           end_time?: string
+          google_event_id?: string | null
           google_meet_link?: string | null
           id?: string
           is_trial?: boolean
@@ -755,6 +758,7 @@ export type Database = {
           currency: string
           duration_minutes: number
           end_time: string
+          google_event_id: string | null
           google_meet_link: string | null
           id: string
           is_trial: boolean

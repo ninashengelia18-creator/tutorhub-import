@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, CalendarDays, Clock3, Wallet } from "lucide-react";
+import { BookOpen, CalendarDays, Clock3, Video, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
@@ -27,6 +27,7 @@ interface TutorBooking {
   status: string;
   price_amount: number;
   currency: string;
+  google_meet_link: string | null;
 }
 
 export default function TutorDashboard() {
@@ -43,7 +44,7 @@ export default function TutorDashboard() {
     const loadBookings = async () => {
       const { data } = await supabase
         .from("bookings")
-        .select("id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, status, price_amount, currency")
+        .select("id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, status, price_amount, currency, google_meet_link")
         .eq("tutor_name", tutorName)
         .in("status", ["confirmed", "completed"])
         .order("lesson_start_at", { ascending: true });
@@ -171,9 +172,19 @@ export default function TutorDashboard() {
                           <p className="text-lg font-semibold text-foreground">{nextLesson.student_name || t("tutorSchedule.unknownStudent")} · {localizeSubjectLabel(nextLesson.subject, t)}</p>
                           <p className="text-sm text-muted-foreground">{formatDate(nextLesson.lesson_start_at)} · {formatTimeRange(nextLesson)}</p>
                         </div>
-                        <Button variant="outline" className="rounded-full" asChild>
-                          <Link to="/tutor-schedule">{t("tutorDashboard.viewFullSchedule")}</Link>
-                        </Button>
+                        <div className="flex flex-wrap gap-2">
+                          {nextLesson.google_meet_link && (
+                            <Button className="rounded-full" asChild>
+                              <a href={nextLesson.google_meet_link} target="_blank" rel="noopener noreferrer">
+                                <Video className="mr-2 h-4 w-4" />
+                                {t("tutorDashboard.joinLesson")}
+                              </a>
+                            </Button>
+                          )}
+                          <Button variant="outline" className="rounded-full" asChild>
+                            <Link to="/tutor-schedule">{t("tutorDashboard.viewFullSchedule")}</Link>
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       <div className="space-y-4 rounded-[1.5rem] border border-dashed border-border bg-background p-5">

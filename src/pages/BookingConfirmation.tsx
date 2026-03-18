@@ -1,5 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
-import { BookOpen, Clock, Monitor, CheckCircle } from "lucide-react";
+import { BookOpen, Clock, Monitor, CheckCircle, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -34,6 +34,7 @@ export default function BookingConfirmation() {
     lessonEndAt?: string | null;
     studentTimezone?: string;
     tutorTimezone?: string;
+    meetLink?: string | null;
   } | null;
 
   const displayName = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Student";
@@ -107,6 +108,15 @@ export default function BookingConfirmation() {
               <p className="font-medium text-foreground">Your time: <span className="font-semibold">{yourTimeLabel}</span></p>
               <p className="mt-2 text-muted-foreground">Tutor time: <span className="font-medium text-foreground">{tutorTimeLabel}</span></p>
             </div>
+
+            {state.meetLink && (
+              <Button className="w-full hero-gradient border-0 text-primary-foreground font-semibold" asChild>
+                <a href={state.meetLink} target="_blank" rel="noopener noreferrer">
+                  <Video className="mr-2 h-5 w-5" />
+                  Join Lesson via Google Meet
+                </a>
+              </Button>
+            )}
 
             <Button variant="outline" className="w-full" asChild>
               <a
