@@ -27,6 +27,7 @@ interface TutorBooking {
   status: string;
   price_amount: number;
   currency: string;
+  google_meet_link: string | null;
 }
 
 export default function TutorDashboard() {
