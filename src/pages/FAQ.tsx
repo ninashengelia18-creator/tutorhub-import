@@ -31,7 +31,7 @@ const faqSections = [
       },
       {
         q: "Can I cancel or reschedule a lesson?",
-        a: "Yes. You can cancel or reschedule through your student dashboard. Please cancel at least 24 hours before the session to avoid cancellation fees.",
+        a: "Yes. You can cancel or reschedule through your student dashboard. Please cancel at least 12 hours before the session to avoid cancellation fees.",
       },
     ],
   },
