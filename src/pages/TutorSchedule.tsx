@@ -287,15 +287,14 @@ export default function TutorSchedule() {
                   </div>
 
                   <div className="space-y-2">
-                    <p className="text-sm font-medium text-foreground">End</p>
+                    <p className="text-sm font-medium text-foreground">Duration</p>
                     <select
-                      value={slotEndTime}
-                      onChange={(event) => setSlotEndTime(event.target.value)}
+                      value={slotDuration}
+                      onChange={(event) => setSlotDuration(Number(event.target.value) as 25 | 50)}
                       className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                     >
-                      {TIME_OPTIONS.map((time) => (
-                        <option key={time} value={time}>{formatWallClockTime(time, lang)}</option>
-                      ))}
+                      <option value={25}>25 min</option>
+                      <option value={50}>50 min</option>
                     </select>
                   </div>
 
