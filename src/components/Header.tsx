@@ -379,8 +379,8 @@ export function Header() {
                 </Link>
                 <Link
                   to={dashboardPath}
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === dashboardPath ? "text-primary" : "text-foreground/90"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === dashboardPath ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("auth.dashboard")}
