@@ -53,7 +53,7 @@ export const TIMEZONE_OPTIONS: Array<{ value: string; label: string }> = [
   { value: "America/Chicago", label: "US Central (CST/CDT)" },
   { value: "America/Denver", label: "US Mountain (MST/MDT)" },
   { value: "America/Los_Angeles", label: "US West Coast (PST/PDT)" },
-  { value: "Asia/Tbilisi", label: "Georgia (GET)" },
+  
   { value: "Europe/London", label: "United Kingdom (GMT/BST)" },
   { value: "Europe/Berlin", label: "Central Europe (CET/CEST)" },
   { value: "Europe/Warsaw", label: "Poland (CET/CEST)" },
