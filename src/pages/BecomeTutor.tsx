@@ -154,14 +154,12 @@ export default function BecomeTutor() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="rounded-2xl bg-muted/50 p-8 md:p-10">
-              <div className="flex items-start gap-4 mb-6">
-                <MessageSquareQuote className="h-8 w-8 text-primary shrink-0 mt-1" />
-              </div>
-              <blockquote className="text-lg font-medium leading-relaxed mb-4 italic">
-                "{t("tutor.testimonialQuote")}"
-              </blockquote>
-              <p className="text-sm text-muted-foreground font-semibold">{t("tutor.testimonialAuthor")}</p>
+            <div className="rounded-2xl overflow-hidden">
+              <img
+                src={tutorHeroImg}
+                alt="Tutor teaching online"
+                className="w-full h-full object-cover rounded-2xl"
+              />
             </div>
           </motion.div>
         </div>
