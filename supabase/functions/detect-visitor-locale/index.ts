@@ -67,18 +67,8 @@ serve(async (req) => {
     let preferred_language: Language = "en";
     let preferred_currency: CurrencyCode = "USD";
 
-    if (countryCode === "GE") {
-      preferred_language = "ka";
-      preferred_currency = "GEL";
-
-      if (!isValidTimeZone(timeZone)) {
-        timeZone = "Asia/Tbilisi";
-      }
-    } else if (countryCode === "US") {
+    if (countryCode === "US") {
       preferred_language = "en";
-      preferred_currency = "USD";
-    } else if (detectedLanguage === "ru") {
-      preferred_language = "ru";
       preferred_currency = "USD";
     } else if (countryCode && EUROPEAN_COUNTRY_CODES.has(countryCode)) {
       preferred_language = "en";
