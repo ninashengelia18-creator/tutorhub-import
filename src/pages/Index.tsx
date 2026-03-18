@@ -8,7 +8,7 @@ import { HowItWorks } from "@/components/home/HowItWorks";
 import { GuaranteeSection } from "@/components/home/GuaranteeSection";
 import { BecomeTutorSection } from "@/components/home/BecomeTutorSection";
 import { CorporateSection } from "@/components/home/CorporateSection";
-import { StudentReviews } from "@/components/home/StudentReviews";
+
 import { BottomCta } from "@/components/home/BottomCta";
 
 const Index = () => {
