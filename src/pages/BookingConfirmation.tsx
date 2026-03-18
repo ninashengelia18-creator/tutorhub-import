@@ -34,6 +34,7 @@ export default function BookingConfirmation() {
     lessonEndAt?: string | null;
     studentTimezone?: string;
     tutorTimezone?: string;
+    meetLink?: string | null;
   } | null;
 
   const displayName = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Student";
