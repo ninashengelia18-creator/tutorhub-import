@@ -163,7 +163,7 @@ export default function BecomeConversationPartner() {
             Join our growing community of conversation partners and start earning today.
           </p>
           <Button size="lg" asChild>
-            <Link to="/tutor-apply">Apply as a Conversation Partner</Link>
+            <Link to="/convo-partner-apply">Apply as a Conversation Partner</Link>
           </Button>
         </motion.div>
       </section>
