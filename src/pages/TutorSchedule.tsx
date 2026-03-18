@@ -9,8 +9,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet, Plus, Calendar as CalendarIcon } from "lucide-react";
+import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet, Plus, Calendar as CalendarIcon, CheckCircle2 } from "lucide-react";
 import {
   convertLocalDateTimeToUtc,
   formatDateInTimeZone,
@@ -75,7 +85,27 @@ export default function TutorSchedule() {
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(new Date());
   const [slotStartTime, setSlotStartTime] = useState("09:00");
   const [slotEndTime, setSlotEndTime] = useState("10:00");
+  const [completingBooking, setCompletingBooking] = useState<TutorBooking | null>(null);
+  const [isCompleting, setIsCompleting] = useState(false);
   const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
+
+  const handleMarkComplete = async () => {
+    if (!completingBooking) return;
+    setIsCompleting(true);
+    try {
+      const { error } = await supabase.rpc("tutor_complete_booking", {
+        _booking_id: completingBooking.id,
+      });
+      if (error) throw error;
+      toast({ title: t("tutorSchedule.lessonCompleted"), description: t("tutorSchedule.lessonCompletedDesc") });
+      void loadScheduleData();
+    } catch (err: unknown) {
+      toast({ title: t("tutorSchedule.error"), description: (err as Error).message, variant: "destructive" });
+    } finally {
+      setIsCompleting(false);
+      setCompletingBooking(null);
+    }
+  };
 
   const loadScheduleData = useCallback(async () => {
     if (!user) return;
@@ -416,22 +446,35 @@ export default function TutorSchedule() {
                               <span className="tabular-nums">{formatTimeRange(booking)}</span>
                             </div>
 
-                            {booking.google_meet_link ? (
-                              <a
-                                href={booking.google_meet_link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={cn("inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20")}
-                              >
-                                <Video className="h-3.5 w-3.5" />
-                                {t("tutorSchedule.joinMeet")}
-                                <ExternalLink className="h-3 w-3" />
-                              </a>
-                            ) : (
-                              <span className="shrink-0 text-xs italic text-muted-foreground">
-                                {t("tutorSchedule.noMeetLink")}
-                              </span>
-                            )}
+                            <div className="flex shrink-0 items-center gap-2">
+                              {booking.google_meet_link ? (
+                                <a
+                                  href={booking.google_meet_link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={cn("inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20")}
+                                >
+                                  <Video className="h-3.5 w-3.5" />
+                                  {t("tutorSchedule.joinMeet")}
+                                  <ExternalLink className="h-3 w-3" />
+                                </a>
+                              ) : (
+                                <span className="text-xs italic text-muted-foreground">
+                                  {t("tutorSchedule.noMeetLink")}
+                                </span>
+                              )}
+                              {booking.status === "confirmed" && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="rounded-lg text-xs"
+                                  onClick={() => setCompletingBooking(booking)}
+                                >
+                                  <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
+                                  {t("tutorSchedule.markComplete")}
+                                </Button>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -472,22 +515,35 @@ export default function TutorSchedule() {
                                   <span className="tabular-nums">{formatTimeRange(booking)}</span>
                                 </div>
 
-                                {booking.google_meet_link ? (
-                                  <a
-                                    href={booking.google_meet_link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={cn("inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20")}
-                                  >
-                                    <Video className="h-3.5 w-3.5" />
-                                    {t("tutorSchedule.joinMeet")}
-                                    <ExternalLink className="h-3 w-3" />
-                                  </a>
-                                ) : (
-                                  <span className="shrink-0 text-xs italic text-muted-foreground">
-                                    {t("tutorSchedule.noMeetLink")}
-                                  </span>
-                                )}
+                                <div className="flex shrink-0 items-center gap-2">
+                                  {booking.google_meet_link ? (
+                                    <a
+                                      href={booking.google_meet_link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={cn("inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20")}
+                                    >
+                                      <Video className="h-3.5 w-3.5" />
+                                      {t("tutorSchedule.joinMeet")}
+                                      <ExternalLink className="h-3 w-3" />
+                                    </a>
+                                  ) : (
+                                    <span className="text-xs italic text-muted-foreground">
+                                      {t("tutorSchedule.noMeetLink")}
+                                    </span>
+                                  )}
+                                  {booking.status === "confirmed" && (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="rounded-lg text-xs"
+                                      onClick={() => setCompletingBooking(booking)}
+                                    >
+                                      <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
+                                      {t("tutorSchedule.markComplete")}
+                                    </Button>
+                                  )}
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -501,6 +557,25 @@ export default function TutorSchedule() {
           )}
         </motion.div>
       </div>
+
+      <AlertDialog open={!!completingBooking} onOpenChange={(open) => !open && setCompletingBooking(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("tutorSchedule.confirmCompleteTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("tutorSchedule.confirmCompleteDesc")
+                .replace("{student}", completingBooking?.student_name || t("tutorSchedule.unknownStudent"))
+                .replace("{subject}", completingBooking ? localizeSubjectLabel(completingBooking.subject, t) : "")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isCompleting}>{t("tutorSchedule.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleMarkComplete} disabled={isCompleting}>
+              {isCompleting ? t("tutorSchedule.completing") : t("tutorSchedule.confirmComplete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
   );
 }

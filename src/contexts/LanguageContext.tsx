@@ -760,6 +760,15 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutorSchedule.lessonSingle": "lesson",
     "tutorSchedule.lessonPlural": "lessons",
     "tutorSchedule.minutes": "min",
+    "tutorSchedule.markComplete": "Mark Complete",
+    "tutorSchedule.confirmCompleteTitle": "Mark Lesson as Complete?",
+    "tutorSchedule.confirmCompleteDesc": "This will mark the lesson with {student} ({subject}) as completed and calculate your earnings automatically.",
+    "tutorSchedule.confirmComplete": "Yes, Mark Complete",
+    "tutorSchedule.completing": "Completing…",
+    "tutorSchedule.cancel": "Cancel",
+    "tutorSchedule.lessonCompleted": "Lesson completed",
+    "tutorSchedule.lessonCompletedDesc": "Earnings have been calculated and added to your balance.",
+    "tutorSchedule.error": "Error",
 
     // Tutor Profile page
     "tp.findTutors": "Find Tutors",
@@ -1760,6 +1769,15 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutorSchedule.lessonSingle": "გაკვეთილი",
     "tutorSchedule.lessonPlural": "გაკვეთილი",
     "tutorSchedule.minutes": "წთ",
+    "tutorSchedule.markComplete": "დასრულება",
+    "tutorSchedule.confirmCompleteTitle": "გაკვეთილის დასრულება?",
+    "tutorSchedule.confirmCompleteDesc": "ეს მონიშნავს გაკვეთილს {student}-თან ({subject}) დასრულებულად და ავტომატურად დაითვლის შემოსავალს.",
+    "tutorSchedule.confirmComplete": "დიახ, დასრულება",
+    "tutorSchedule.completing": "სრულდება…",
+    "tutorSchedule.cancel": "გაუქმება",
+    "tutorSchedule.lessonCompleted": "გაკვეთილი დასრულდა",
+    "tutorSchedule.lessonCompletedDesc": "შემოსავალი დაითვალა და დაემატა თქვენს ბალანსს.",
+    "tutorSchedule.error": "შეცდომა",
 
     // Tutor Profile page
     "tp.findTutors": "რეპეტიტორების ძიება",
@@ -2751,6 +2769,15 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutorSchedule.lessonSingle": "урок",
     "tutorSchedule.lessonPlural": "уроков",
     "tutorSchedule.minutes": "мин",
+    "tutorSchedule.markComplete": "Завершить",
+    "tutorSchedule.confirmCompleteTitle": "Отметить урок как завершённый?",
+    "tutorSchedule.confirmCompleteDesc": "Урок с {student} ({subject}) будет отмечен как завершённый, и заработок будет рассчитан автоматически.",
+    "tutorSchedule.confirmComplete": "Да, завершить",
+    "tutorSchedule.completing": "Завершение…",
+    "tutorSchedule.cancel": "Отмена",
+    "tutorSchedule.lessonCompleted": "Урок завершён",
+    "tutorSchedule.lessonCompletedDesc": "Заработок рассчитан и добавлен на ваш баланс.",
+    "tutorSchedule.error": "Ошибка",
 
     // Tutor Profile page
     "tp.findTutors": "Найти репетиторов",
