@@ -233,7 +233,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.frenchTutors": "French Tutors",
     "footer.germanTutors": "German Tutors",
     "footer.arabicTutors": "Arabic Tutors",
-    "footer.georgianTutors": "Georgian Tutors",
+    
     "footer.chineseTutors": "Chinese Tutors",
     "footer.portugueseTutors": "Portuguese Tutors",
     "footer.mathTutors": "Math Tutors",
