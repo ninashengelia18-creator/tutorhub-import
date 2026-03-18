@@ -238,8 +238,8 @@ export function Header() {
           <Link to="/" className="flex flex-col items-center gap-1">
             <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
             <span
-              className="text-foreground uppercase tracking-[0.25em]"
-              style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}
+              className="text-white uppercase tracking-[0.25em] font-bold"
+              style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px" }}
             >
               LearnEazy
             </span>
