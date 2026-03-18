@@ -153,6 +153,20 @@ export default function Login() {
             </div>
           </CardHeader>
 
+          {pendingApplication ? (
+            <div className="p-6 text-center space-y-3">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-warning/10">
+                <Clock className="h-6 w-6 text-warning" />
+              </div>
+              <h3 className="text-lg font-semibold">Application Under Review</h3>
+              <p className="text-sm text-muted-foreground">
+                Your tutor application is currently being reviewed. We will email you within 2–3 business days with our decision.
+              </p>
+              <Button variant="outline" className="mt-2" onClick={() => setPendingApplication(false)}>
+                Back to login
+              </Button>
+            </div>
+          ) : (
           <form onSubmit={handleLogin}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
