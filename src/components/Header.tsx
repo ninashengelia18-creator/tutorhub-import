@@ -275,7 +275,7 @@ export function Header() {
             >
               <button
                 type="button"
-                className="flex items-center gap-1 text-sm font-medium text-foreground/90 transition-colors hover:text-primary"
+                className="flex items-center gap-1 text-sm font-bold text-white transition-colors hover:text-primary"
                 onClick={() => setMegaOpen((v) => !v)}
               >
                 Find a Tutor <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
