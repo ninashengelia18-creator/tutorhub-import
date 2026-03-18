@@ -244,7 +244,7 @@ export function Header() {
               LearnEazy
             </span>
           </Link>
-          <span className="hidden lg:flex flex-col border-l border-border pl-4 text-sm font-semibold leading-tight tracking-wide text-muted-foreground">
+          <span className="hidden lg:flex flex-col border-l border-border pl-4 text-sm font-bold italic leading-tight tracking-wide text-white">
             {t("brand.tagline")
               .split(". ")
               .map((line, index, items) => (
