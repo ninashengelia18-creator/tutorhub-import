@@ -31,7 +31,8 @@ import {
 const navLinks = [
   { labelKey: "nav.home", href: "/" },
   { labelKey: "nav.findTutors", href: "/search" },
-  { labelKey: "nav.conversationPartners", href: "/conversation-partners" },
+  { labelKey: "nav.findConversationPartner", href: "/conversation-partners" },
+  { labelKey: "nav.becomeConversationPartner", href: "/become-conversation-partner" },
   { labelKey: "nav.forBusiness", href: "/for-business" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
   { labelKey: "nav.faq", href: "/faq" },
@@ -157,6 +158,7 @@ function MegaMenuColumn({ title, items }: { title: string; items: { label: strin
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [convDropdownOpen, setConvDropdownOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -182,6 +184,7 @@ export function Header() {
   // Close mega menu on route change
   useEffect(() => {
     setMegaOpen(false);
+    setConvDropdownOpen(false);
     setMobileOpen(false);
   }, [location.pathname]);
 
@@ -204,7 +207,7 @@ export function Header() {
   const dashboardPath = isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks =
     user && !isTutor
-      ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/faq", "/conversation-partners"].includes(link.href))
+      ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/faq", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
       : navLinks;
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
@@ -285,14 +288,48 @@ export function Header() {
 
             {!user && (
               <>
-                <Link
-                  to="/conversation-partners"
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === "/conversation-partners" ? "text-primary" : "text-foreground/90"
-                  }`}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setConvDropdownOpen(true)}
+                  onMouseLeave={() => setConvDropdownOpen(false)}
                 >
-                  {t("nav.conversationPartners")}
-                </Link>
+                  <button
+                    type="button"
+                    className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
+                      ["/conversation-partners", "/become-conversation-partner"].includes(location.pathname) ? "text-primary" : "text-foreground/90"
+                    }`}
+                    onClick={() => setConvDropdownOpen((v) => !v)}
+                  >
+                    Conversation Partners <ChevronDown className={`h-3.5 w-3.5 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  <AnimatePresence>
+                    {convDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute left-0 top-full z-50 mt-2 w-60 rounded-xl border border-border/70 bg-popover p-2 shadow-xl"
+                      >
+                        <Link
+                          to="/conversation-partners"
+                          className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
+                        >
+                          Find a Partner
+                          <span className="block text-xs font-normal text-muted-foreground">Browse & book conversation sessions</span>
+                        </Link>
+                        <Link
+                          to="/become-conversation-partner"
+                          className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
+                        >
+                          Become a Partner
+                          <span className="block text-xs font-normal text-muted-foreground">Earn money having conversations</span>
+                        </Link>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
                 <Link
                   to="/for-business"
                   className={`text-sm font-medium transition-colors hover:text-primary ${
