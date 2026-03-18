@@ -258,14 +258,9 @@ export function Header() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute left-1/2 top-full z-50 mt-2 w-[720px] -translate-x-1/2 rounded-2xl border border-border/70 bg-popover p-6 shadow-xl"
+                    className="absolute left-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border/70 bg-popover p-5 shadow-xl"
                   >
-                    <div className="grid grid-cols-4 gap-6">
-                      <MegaMenuColumn title="Find a Tutor" items={forStudentsMenu.findATutor} />
-                      <MegaMenuColumn title="Subjects" items={forStudentsMenu.subjects} />
-                      <MegaMenuColumn title="Learn (Languages)" items={forStudentsMenu.learn} />
-                      <MegaMenuColumn title="1-on-1 Tutors" items={forStudentsMenu.tutors} />
-                    </div>
+                    <MegaMenuColumn title="Find a Tutor" items={forStudentsMenu} />
                   </motion.div>
                 )}
               </AnimatePresence>
