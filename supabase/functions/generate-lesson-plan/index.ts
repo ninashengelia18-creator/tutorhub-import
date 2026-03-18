@@ -100,9 +100,7 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const langMap: Record<string, string> = {
-      ka: "Georgian (ქართული)",
       en: "English",
-      ru: "Russian (Русский)",
     };
     const outputLang = langMap[language] || "English";
 
