@@ -172,9 +172,19 @@ export default function TutorDashboard() {
                           <p className="text-lg font-semibold text-foreground">{nextLesson.student_name || t("tutorSchedule.unknownStudent")} · {localizeSubjectLabel(nextLesson.subject, t)}</p>
                           <p className="text-sm text-muted-foreground">{formatDate(nextLesson.lesson_start_at)} · {formatTimeRange(nextLesson)}</p>
                         </div>
-                        <Button variant="outline" className="rounded-full" asChild>
-                          <Link to="/tutor-schedule">{t("tutorDashboard.viewFullSchedule")}</Link>
-                        </Button>
+                        <div className="flex flex-wrap gap-2">
+                          {nextLesson.google_meet_link && (
+                            <Button className="rounded-full" asChild>
+                              <a href={nextLesson.google_meet_link} target="_blank" rel="noopener noreferrer">
+                                <Video className="mr-2 h-4 w-4" />
+                                {t("tutorDashboard.joinLesson")}
+                              </a>
+                            </Button>
+                          )}
+                          <Button variant="outline" className="rounded-full" asChild>
+                            <Link to="/tutor-schedule">{t("tutorDashboard.viewFullSchedule")}</Link>
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       <div className="space-y-4 rounded-[1.5rem] border border-dashed border-border bg-background p-5">
