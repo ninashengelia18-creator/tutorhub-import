@@ -6,61 +6,58 @@
 
 @layer base {
   :root {
-    /* Further lightened premium purple theme */
-    --background: 267 56% 24%;
-    --foreground: 0 0% 100%;
+    /* Soft lilac / lavender theme */
+    --background: 280 45% 78%;
+    --foreground: 280 40% 15%;
 
-    --card: 267 48% 29%;
-    --card-foreground: 0 0% 100%;
+    --card: 280 42% 83%;
+    --card-foreground: 280 40% 15%;
 
-    --popover: 267 48% 29%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 280 42% 83%;
+    --popover-foreground: 280 40% 15%;
 
-    /* Bright purple #9333EA */
-    --primary: 271 81% 58%;
+    --primary: 280 55% 60%;
     --primary-foreground: 0 0% 100%;
 
-    /* Lighter secondary purple */
-    --secondary: 268 56% 36%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 280 35% 72%;
+    --secondary-foreground: 280 40% 15%;
 
-    /* Softer purple surfaces */
-    --muted: 267 38% 31%;
-    --muted-foreground: 263 80% 90%;
+    --muted: 280 30% 74%;
+    --muted-foreground: 280 25% 35%;
 
-    --accent: 268 48% 38%;
+    --accent: 280 40% 68%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 268 30% 38%;
-    --input: 268 30% 38%;
-    --ring: 271 81% 58%;
+    --border: 280 25% 70%;
+    --input: 280 25% 70%;
+    --ring: 280 55% 60%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 267 52% 22%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 271 81% 58%;
+    --sidebar-background: 280 42% 75%;
+    --sidebar-foreground: 280 40% 15%;
+    --sidebar-primary: 280 55% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 267 38% 31%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 268 30% 38%;
-    --sidebar-ring: 271 81% 58%;
+    --sidebar-accent: 280 30% 74%;
+    --sidebar-accent-foreground: 280 40% 15%;
+    --sidebar-border: 280 25% 70%;
+    --sidebar-ring: 280 55% 60%;
 
     /* Custom tokens */
-    --primary-hover: 271 81% 50%;
-    --primary-light: 267 48% 29%;
+    --primary-hover: 280 55% 52%;
+    --primary-light: 280 42% 83%;
     --success: 142 71% 45%;
     --warning: 38 92% 50%;
     --info: 210 79% 46%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(271, 81%, 63%), hsl(286, 70%, 60%));
-    --gradient-cta: linear-gradient(135deg, hsl(271, 81%, 60%), hsl(254, 76%, 64%));
-    --shadow-card: 0 0 20px -5px hsla(271, 81%, 56%, 0.14);
-    --shadow-card-hover: 0 0 30px -5px hsla(271, 81%, 56%, 0.24);
-    --shadow-elevated: 0 20px 40px -10px hsla(271, 81%, 56%, 0.18);
+    --gradient-hero: linear-gradient(135deg, hsl(280, 50%, 72%), hsl(300, 45%, 75%));
+    --gradient-cta: linear-gradient(135deg, hsl(280, 55%, 65%), hsl(260, 50%, 68%));
+    --shadow-card: 0 0 20px -5px hsla(280, 50%, 50%, 0.14);
+    --shadow-card-hover: 0 0 30px -5px hsla(280, 50%, 50%, 0.24);
+    --shadow-elevated: 0 20px 40px -10px hsla(280, 50%, 50%, 0.18);
   }
 }
 
@@ -115,12 +112,12 @@
   }
 
   .card-glow {
-    box-shadow: 0 0 20px -5px hsla(271, 81%, 56%, 0.2),
-                inset 0 1px 0 0 hsla(271, 81%, 56%, 0.1);
+    box-shadow: 0 0 20px -5px hsla(280, 50%, 50%, 0.2),
+                inset 0 1px 0 0 hsla(280, 50%, 50%, 0.1);
   }
 
   .card-glow:hover {
-    box-shadow: 0 0 30px -5px hsla(271, 81%, 56%, 0.35),
-                inset 0 1px 0 0 hsla(271, 81%, 56%, 0.15);
+    box-shadow: 0 0 30px -5px hsla(280, 50%, 50%, 0.35),
+                inset 0 1px 0 0 hsla(280, 50%, 50%, 0.15);
   }
 }
