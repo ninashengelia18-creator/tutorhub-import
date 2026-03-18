@@ -40,23 +40,54 @@ const navLinks = [
 
 const k12Subjects = [
   { label: "Mathematics", href: "/search?subject=Mathematics" },
-  { label: "English Language & Literature", href: "/search?subject=English" },
+  { label: "English Language", href: "/search?subject=English" },
+  { label: "English Literature", href: "/search?subject=EnglishLit" },
+  { label: "Science", href: "/search?subject=Science" },
   { label: "Physics", href: "/search?subject=Physics" },
   { label: "Chemistry", href: "/search?subject=Chemistry" },
   { label: "Biology", href: "/search?subject=Biology" },
-  { label: "History & Geography", href: "/search?subject=History" },
+  { label: "History", href: "/search?subject=History" },
+  { label: "Geography", href: "/search?subject=Geography" },
   { label: "Computer Science", href: "/search?subject=ComputerScience" },
+  { label: "Modern Foreign Languages", href: "/search?subject=Languages" },
+  { label: "Art & Design", href: "/search?subject=Art" },
+  { label: "Music", href: "/search?subject=Music" },
+  { label: "Physical Education", href: "/search?subject=PE" },
+  { label: "Religious Studies", href: "/search?subject=RS" },
 ];
 
-const gcseALevelSubjects = [
+const gcseSubjects = [
   { label: "GCSE Mathematics", href: "/search?subject=Mathematics" },
-  { label: "GCSE English", href: "/search?subject=English" },
-  { label: "GCSE Sciences", href: "/search?subject=Science" },
+  { label: "GCSE English Language", href: "/search?subject=English" },
+  { label: "GCSE English Literature", href: "/search?subject=EnglishLit" },
+  { label: "GCSE Physics", href: "/search?subject=Physics" },
+  { label: "GCSE Chemistry", href: "/search?subject=Chemistry" },
+  { label: "GCSE Biology", href: "/search?subject=Biology" },
+  { label: "GCSE Combined Science", href: "/search?subject=Science" },
+  { label: "GCSE History", href: "/search?subject=History" },
+  { label: "GCSE Geography", href: "/search?subject=Geography" },
+  { label: "GCSE Computer Science", href: "/search?subject=ComputerScience" },
+  { label: "GCSE French", href: "/search?subject=French" },
+  { label: "GCSE Spanish", href: "/search?subject=Spanish" },
+  { label: "GCSE German", href: "/search?subject=German" },
+  { label: "GCSE Business Studies", href: "/search?subject=Business" },
+  { label: "GCSE Economics", href: "/search?subject=Economics" },
+];
+
+const aLevelSubjects = [
   { label: "A-Level Mathematics", href: "/search?subject=Mathematics" },
+  { label: "A-Level Further Maths", href: "/search?subject=FurtherMaths" },
   { label: "A-Level Physics", href: "/search?subject=Physics" },
   { label: "A-Level Chemistry", href: "/search?subject=Chemistry" },
   { label: "A-Level Biology", href: "/search?subject=Biology" },
+  { label: "A-Level English Literature", href: "/search?subject=EnglishLit" },
+  { label: "A-Level History", href: "/search?subject=History" },
+  { label: "A-Level Geography", href: "/search?subject=Geography" },
   { label: "A-Level Economics", href: "/search?subject=Economics" },
+  { label: "A-Level Business Studies", href: "/search?subject=Business" },
+  { label: "A-Level Psychology", href: "/search?subject=Psychology" },
+  { label: "A-Level Computer Science", href: "/search?subject=ComputerScience" },
+  { label: "A-Level Law", href: "/search?subject=Law" },
 ];
 
 const professionalSubjects = [
@@ -65,7 +96,6 @@ const professionalSubjects = [
   { label: "Data Science & Analytics", href: "/search?subject=DataScience" },
   { label: "Marketing & Communications", href: "/search?subject=Marketing" },
   { label: "Law & Legal Studies", href: "/search?subject=Law" },
-  
   { label: "English for Professionals", href: "/search?subject=BusinessEnglish" },
 ];
 
@@ -77,9 +107,9 @@ const examPrepSubjects = [
 ];
 
 const forStudentsMenu = [
-  
   { label: "K-12 Subjects", href: "/search?subject=K12", children: k12Subjects },
-  { label: "GCSE & A-Level", href: "/search?subject=GCSE", children: gcseALevelSubjects },
+  { label: "GCSE", href: "/search?subject=GCSE", children: gcseSubjects },
+  { label: "A-Level", href: "/search?subject=ALevel", children: aLevelSubjects },
   { label: "Professional Courses", href: "/search?subject=Professional", children: professionalSubjects },
   { label: "Exam Preparation", href: "/search?subject=ExamPrep", children: examPrepSubjects },
 ];
