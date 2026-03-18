@@ -238,13 +238,13 @@ export function Header() {
           <Link to="/" className="flex flex-col items-center gap-1">
             <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
             <span
-              className="text-foreground uppercase tracking-[0.25em]"
-              style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px", fontWeight: 600 }}
+              className="text-white uppercase tracking-[0.25em] font-bold"
+              style={{ fontFamily: "'Playfair Display', serif", fontSize: "16px" }}
             >
               LearnEazy
             </span>
           </Link>
-          <span className="hidden lg:flex flex-col border-l border-border pl-4 text-sm font-semibold leading-tight tracking-wide text-muted-foreground">
+          <span className="hidden lg:flex flex-col border-l border-border pl-4 text-sm font-bold italic leading-tight tracking-wide text-white">
             {t("brand.tagline")
               .split(". ")
               .map((line, index, items) => (
@@ -260,8 +260,8 @@ export function Header() {
           <nav className="flex items-center gap-6">
             <Link
               to="/"
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === "/" ? "text-primary" : "text-foreground/90"
+              className={`text-sm font-bold transition-colors hover:text-primary ${
+                location.pathname === "/" ? "text-primary" : "text-white"
               }`}
             >
               {t("nav.home")}
@@ -275,7 +275,7 @@ export function Header() {
             >
               <button
                 type="button"
-                className="flex items-center gap-1 text-sm font-medium text-foreground/90 transition-colors hover:text-primary"
+                className="flex items-center gap-1 text-sm font-bold text-white transition-colors hover:text-primary"
                 onClick={() => setMegaOpen((v) => !v)}
               >
                 Find a Tutor <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
@@ -305,8 +305,8 @@ export function Header() {
                 >
                   <button
                     type="button"
-                    className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
-                      ["/conversation-partners", "/become-conversation-partner"].includes(location.pathname) ? "text-primary" : "text-foreground/90"
+                    className={`flex items-center gap-1 text-sm font-bold transition-colors hover:text-primary ${
+                      ["/conversation-partners", "/become-conversation-partner"].includes(location.pathname) ? "text-primary" : "text-white"
                     }`}
                     onClick={() => setConvDropdownOpen((v) => !v)}
                   >
@@ -342,24 +342,24 @@ export function Header() {
                 </div>
                 <Link
                   to="/for-business"
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === "/for-business" ? "text-primary" : "text-foreground/90"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === "/for-business" ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("nav.forBusiness")}
                 </Link>
                 <Link
                   to="/become-tutor"
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === "/become-tutor" ? "text-primary" : "text-foreground/90"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === "/become-tutor" ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("nav.becomeTutor")}
                 </Link>
                 <Link
                   to="/faq"
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === "/faq" ? "text-primary" : "text-foreground/90"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === "/faq" ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("nav.faq")}
@@ -371,16 +371,16 @@ export function Header() {
               <>
                 <Link
                   to="/search"
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === "/search" ? "text-primary" : "text-foreground/90"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === "/search" ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("nav.findTutors")}
                 </Link>
                 <Link
                   to={dashboardPath}
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === dashboardPath ? "text-primary" : "text-foreground/90"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === dashboardPath ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("auth.dashboard")}
@@ -388,8 +388,8 @@ export function Header() {
                 {!isTutor && (
                   <Link
                     to="/my-lessons"
-                    className={`text-sm font-medium transition-colors hover:text-primary ${
-                      location.pathname === "/my-lessons" ? "text-primary" : "text-foreground/90"
+                    className={`text-sm font-bold transition-colors hover:text-primary ${
+                      location.pathname === "/my-lessons" ? "text-primary" : "text-white"
                     }`}
                   >
                     {t("msg.myLessons")}
@@ -398,8 +398,8 @@ export function Header() {
                 {isTutor && (
                   <Link
                     to={profilePath}
-                    className={`text-sm font-medium transition-colors hover:text-primary ${
-                      location.pathname === profilePath ? "text-primary" : "text-foreground/90"
+                    className={`text-sm font-bold transition-colors hover:text-primary ${
+                      location.pathname === profilePath ? "text-primary" : "text-white"
                     }`}
                   >
                     {t("nav.profile")}
