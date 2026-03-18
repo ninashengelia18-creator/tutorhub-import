@@ -305,8 +305,8 @@ export function Header() {
                 >
                   <button
                     type="button"
-                    className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
-                      ["/conversation-partners", "/become-conversation-partner"].includes(location.pathname) ? "text-primary" : "text-foreground/90"
+                    className={`flex items-center gap-1 text-sm font-bold transition-colors hover:text-primary ${
+                      ["/conversation-partners", "/become-conversation-partner"].includes(location.pathname) ? "text-primary" : "text-white"
                     }`}
                     onClick={() => setConvDropdownOpen((v) => !v)}
                   >
