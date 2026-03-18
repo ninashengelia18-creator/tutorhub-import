@@ -135,8 +135,8 @@ function fallbackPreferences(browserLanguage: string, browserTimeZone: string) {
 }
 
 function convertCurrency(amount: number, fromCurrency: CurrencyCode, toCurrency: CurrencyCode) {
-  const gelAmount = fromCurrency === "GEL" ? amount : amount / EXCHANGE_RATE_FROM_GEL[fromCurrency];
-  return gelAmount * EXCHANGE_RATE_FROM_GEL[toCurrency];
+  const usdAmount = fromCurrency === "USD" ? amount : amount / EXCHANGE_RATE_FROM_USD[fromCurrency];
+  return usdAmount * EXCHANGE_RATE_FROM_USD[toCurrency];
 }
 
 function formatMoney(amount: number, currency: CurrencyCode) {
