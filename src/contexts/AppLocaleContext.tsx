@@ -82,10 +82,9 @@ function getBrowserTimeZone() {
 }
 
 function normalizeCurrencyCode(value: string | null | undefined): CurrencyCode {
-  if (value === "₾") return "GEL";
   if (value === "$") return "USD";
   if (value === "€") return "EUR";
-  if (value === "GEL" || value === "USD" || value === "EUR") return value;
+  if (value === "USD" || value === "EUR") return value;
   return DEFAULT_CURRENCY;
 }
 
