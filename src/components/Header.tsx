@@ -35,7 +35,7 @@ const navLinks = [
   { labelKey: "nav.becomeConversationPartner", href: "/become-conversation-partner" },
   { labelKey: "nav.forBusiness", href: "/for-business" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
-  { labelKey: "nav.faq", href: "/faq" },
+  
 ] as const;
 
 const k12Subjects = [
