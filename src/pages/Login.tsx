@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { GraduationCap, LogIn, Lock, Mail, Presentation } from "lucide-react";
+import { Clock, GraduationCap, LogIn, Lock, Mail, Presentation } from "lucide-react";
 
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { Layout } from "@/components/Layout";
@@ -70,15 +70,44 @@ export default function Login() {
     setSearchParams(nextParams, { replace: true });
   };
 
+  const [pendingApplication, setPendingApplication] = useState(false);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: signInData, error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
 
     if (error) {
       toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
       return;
+    }
+
+    // Check if tutor with pending application (no tutor role yet)
+    if (signInData?.user) {
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", signInData.user.id);
+
+      const userRoles = (roles ?? []).map((r) => r.role);
+      const isTutorOrAdmin = userRoles.includes("tutor") || userRoles.includes("admin");
+
+      if (!isTutorOrAdmin) {
+        // Check if they have a pending tutor application
+        const { data: apps } = await supabase
+          .from("tutor_applications")
+          .select("status")
+          .eq("email", email.toLowerCase())
+          .eq("status", "pending")
+          .limit(1);
+
+        if (apps && apps.length > 0) {
+          setPendingApplication(true);
+          await supabase.auth.signOut();
+          return;
+        }
+      }
     }
 
     toast({ title: t("auth.welcomeBack") });
@@ -124,6 +153,20 @@ export default function Login() {
             </div>
           </CardHeader>
 
+          {pendingApplication ? (
+            <div className="p-6 text-center space-y-3">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-warning/10">
+                <Clock className="h-6 w-6 text-warning" />
+              </div>
+              <h3 className="text-lg font-semibold">Application Under Review</h3>
+              <p className="text-sm text-muted-foreground">
+                Your tutor application is currently being reviewed. We will email you within 2–3 business days with our decision.
+              </p>
+              <Button variant="outline" className="mt-2" onClick={() => setPendingApplication(false)}>
+                Back to login
+              </Button>
+            </div>
+          ) : (
           <form onSubmit={handleLogin}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -171,6 +214,7 @@ export default function Login() {
               </p>
             </CardFooter>
           </form>
+          )}
         </Card>
       </div>
     </Layout>
