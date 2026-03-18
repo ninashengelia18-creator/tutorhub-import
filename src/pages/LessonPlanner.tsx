@@ -186,9 +186,7 @@ const optionsByLanguage: Record<string, { subjects: string[]; levels: string[]; 
 };
 
 const planLanguages = [
-  { value: "ka", label: "ქართული" },
   { value: "en", label: "English" },
-  { value: "ru", label: "Русский" },
 ];
 
 export default function LessonPlanner() {

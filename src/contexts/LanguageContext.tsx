@@ -1005,7 +1005,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "td.search.ana.bio": "IELTS & TOEFL specialist. Native-level English teacher.",
     "td.search.luka.bio": "Full-stack developer teaching Python, JavaScript, and more.",
     "td.search.mariam.bio": "University professor with a passion for organic chemistry.",
-    "td.search.davit.bio": "Georgian language specialist for foreigners and native speakers.",
+    "td.search.davit.bio": "Language specialist for international learners.",
     "td.search.elena.bio": "Certified Russian teacher with 8 years of experience.",
     "td.search.tamta.bio": "Conservatory graduate. Piano and vocal lessons for all levels.",
 
