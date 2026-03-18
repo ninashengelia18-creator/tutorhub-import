@@ -477,7 +477,7 @@ export default function TutorApply() {
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>{t("tutor.apply.rate")} * (USD/hr)</Label>
+                    <Label>Price Per Lesson (USD) *</Label>
                     <Input
                       type="number"
                       min="1"
@@ -488,6 +488,7 @@ export default function TutorApply() {
                       }}
                       aria-invalid={Boolean(errors.hourlyRate)}
                     />
+                    <p className="text-xs text-muted-foreground">Lessons are either 25 min or 50 min. Enter your rate for a 50-minute lesson.</p>
                     {errors.hourlyRate && <p className="text-sm text-destructive">{errors.hourlyRate}</p>}
                   </div>
                   <div className="space-y-2">
