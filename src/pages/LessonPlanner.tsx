@@ -178,7 +178,7 @@ const labels: Record<string, Record<string, string>> = {
 
 const optionsByLanguage: Record<string, { subjects: string[]; levels: string[]; durations: string[]; studentCounts: string[] }> = {
   en: {
-    subjects: ["Math", "English", "Science", "History", "Georgian", "Russian", "SAT Prep", "IELTS", "National Exam Prep", "Other"],
+    subjects: ["Math", "English", "Science", "History", "Russian", "SAT Prep", "IELTS", "Other"],
     levels: ["6-8", "9-11", "12-14", "15-17", "University", "Adult/Professional"],
     durations: ["25 min", "50 min"],
     studentCounts: ["1", "2-5", "6-10", "10+"],
