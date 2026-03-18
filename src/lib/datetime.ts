@@ -99,7 +99,7 @@ const TIMEZONE_CITY_LABELS: Record<string, string> = {
   "America/Chicago": "Chicago",
   "America/Denver": "Denver",
   "America/Los_Angeles": "Los Angeles",
-  "Asia/Tbilisi": "Tbilisi",
+  
   "Europe/London": "London",
   "Europe/Berlin": "Berlin",
   "Europe/Warsaw": "Warsaw",

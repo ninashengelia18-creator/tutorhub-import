@@ -46,7 +46,7 @@ const subjectKeys = [
   { value: "French", key: "tutor.apply.subj.french" },
   { value: "German", key: "tutor.apply.subj.german" },
   { value: "Spanish", key: "tutor.apply.subj.spanish" },
-  { value: "Georgian", key: "tutor.apply.subj.georgian" },
+  
   { value: "Russian", key: "tutor.apply.subj.russian" },
   { value: "National Exams", key: "tutor.apply.subj.nationalExams" },
   { value: "IELTS", key: "tutor.apply.subj.ielts" },
@@ -533,7 +533,7 @@ export default function TutorApply() {
                   <Select value={timezone} onValueChange={setTimezone}>
                     <SelectTrigger><SelectValue placeholder={t("tutor.apply.selectTimezone")} /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="GMT+4 (Tbilisi)">GMT+4 (Tbilisi)</SelectItem>
+                      <SelectItem value="GMT+0 (London)">GMT+0 (London)</SelectItem>
                       <SelectItem value="GMT+0 (London)">GMT+0 (London)</SelectItem>
                       <SelectItem value="GMT+1 (Berlin/Paris)">GMT+1 (Berlin/Paris)</SelectItem>
                       <SelectItem value="GMT+2 (Athens/Istanbul)">GMT+2 (Athens/Istanbul)</SelectItem>

@@ -178,29 +178,15 @@ const labels: Record<string, Record<string, string>> = {
 
 const optionsByLanguage: Record<string, { subjects: string[]; levels: string[]; durations: string[]; studentCounts: string[] }> = {
   en: {
-    subjects: ["Math", "English", "Science", "History", "Georgian", "Russian", "SAT Prep", "IELTS", "National Exam Prep", "Other"],
+    subjects: ["Math", "English", "Science", "History", "Russian", "SAT Prep", "IELTS", "Other"],
     levels: ["6-8", "9-11", "12-14", "15-17", "University", "Adult/Professional"],
     durations: ["25 min", "50 min"],
-    studentCounts: ["1", "2-5", "6-10", "10+"],
-  },
-  ka: {
-    subjects: ["მათემატიკა", "ინგლისური", "მეცნიერება", "ისტორია", "ქართული", "რუსული", "SAT მოსამზადებელი", "IELTS", "ეროვნული გამოცდებისთვის მომზადება", "სხვა"],
-    levels: ["6-8", "9-11", "12-14", "15-17", "უნივერსიტეტი", "ზრდასრული / პროფესიული"],
-    durations: ["30 წთ", "45 წთ", "60 წთ", "90 წთ"],
-    studentCounts: ["1", "2-5", "6-10", "10+"],
-  },
-  ru: {
-    subjects: ["Математика", "Английский", "Наука", "История", "Грузинский", "Русский", "Подготовка к SAT", "IELTS", "Подготовка к национальным экзаменам", "Другое"],
-    levels: ["6-8", "9-11", "12-14", "15-17", "Университет", "Взрослый / Профессиональный"],
-    durations: ["30 мин", "45 мин", "60 мин", "90 мин"],
     studentCounts: ["1", "2-5", "6-10", "10+"],
   },
 };
 
 const planLanguages = [
-  { value: "ka", label: "ქართული" },
   { value: "en", label: "English" },
-  { value: "ru", label: "Русский" },
 ];
 
 export default function LessonPlanner() {

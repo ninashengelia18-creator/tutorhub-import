@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { type Language, useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 
-export type CurrencyCode = "USD" | "GEL" | "EUR";
+export type CurrencyCode = "USD" | "EUR";
 
 export interface LocalePreferences {
   preferred_language: Language;
@@ -30,15 +30,13 @@ const DEFAULT_CURRENCY: CurrencyCode = "USD";
 const DEFAULT_LANGUAGE: Language = "en";
 const DEFAULT_TIMEZONE = "UTC";
 
-const EXCHANGE_RATE_FROM_GEL: Record<CurrencyCode, number> = {
-  GEL: 1,
-  USD: 0.37,
-  EUR: 0.34,
+const EXCHANGE_RATE_FROM_USD: Record<CurrencyCode, number> = {
+  USD: 1,
+  EUR: 0.92,
 };
 
 const CURRENCY_SYMBOLS: Record<CurrencyCode, string> = {
   USD: "$",
-  GEL: "₾",
   EUR: "€",
 };
 
@@ -53,7 +51,7 @@ export const TIMEZONE_OPTIONS: Array<{ value: string; label: string }> = [
   { value: "America/Chicago", label: "US Central (CST/CDT)" },
   { value: "America/Denver", label: "US Mountain (MST/MDT)" },
   { value: "America/Los_Angeles", label: "US West Coast (PST/PDT)" },
-  { value: "Asia/Tbilisi", label: "Georgia (GET)" },
+  
   { value: "Europe/London", label: "United Kingdom (GMT/BST)" },
   { value: "Europe/Berlin", label: "Central Europe (CET/CEST)" },
   { value: "Europe/Warsaw", label: "Poland (CET/CEST)" },
@@ -84,10 +82,9 @@ function getBrowserTimeZone() {
 }
 
 function normalizeCurrencyCode(value: string | null | undefined): CurrencyCode {
-  if (value === "₾") return "GEL";
   if (value === "$") return "USD";
   if (value === "€") return "EUR";
-  if (value === "GEL" || value === "USD" || value === "EUR") return value;
+  if (value === "USD" || value === "EUR") return value;
   return DEFAULT_CURRENCY;
 }
 
@@ -132,14 +129,14 @@ function fallbackPreferences(browserLanguage: string, browserTimeZone: string) {
 
   return normalizePreferences({
     preferred_language: language,
-    preferred_currency: detectedTimeZone === "Asia/Tbilisi" ? "GEL" : "USD",
+    preferred_currency: "USD",
     preferred_timezone: detectedTimeZone,
   });
 }
 
 function convertCurrency(amount: number, fromCurrency: CurrencyCode, toCurrency: CurrencyCode) {
-  const gelAmount = fromCurrency === "GEL" ? amount : amount / EXCHANGE_RATE_FROM_GEL[fromCurrency];
-  return gelAmount * EXCHANGE_RATE_FROM_GEL[toCurrency];
+  const usdAmount = fromCurrency === "USD" ? amount : amount / EXCHANGE_RATE_FROM_USD[fromCurrency];
+  return usdAmount * EXCHANGE_RATE_FROM_USD[toCurrency];
 }
 
 function formatMoney(amount: number, currency: CurrencyCode) {
@@ -283,7 +280,7 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
     };
   }, [applyDetectedPreferences, applyManualPreferences, persistPreferences, user?.id]);
 
-  const formatCurrency = useCallback((amount: number, sourceCurrency: CurrencyCode | string = "GEL") => {
+  const formatCurrency = useCallback((amount: number, sourceCurrency: CurrencyCode | string = "USD") => {
     const normalizedSourceCurrency = normalizeCurrencyCode(sourceCurrency);
     return formatMoney(convertCurrency(amount, normalizedSourceCurrency, currency), currency);
   }, [currency]);
@@ -309,7 +306,7 @@ export function useAppLocale() {
 }
 
 export function getCurrencyForCountry(countryCode?: string | null, browserLanguage = "en-US") {
-  if (countryCode === "GE") return "GEL" satisfies CurrencyCode;
+  
   // Russian detection removed - English only
   if (countryCode && EUROPEAN_COUNTRY_CODES.has(countryCode)) return "EUR" satisfies CurrencyCode;
   return "USD" satisfies CurrencyCode;

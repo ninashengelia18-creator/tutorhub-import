@@ -23,30 +23,16 @@ const SUBJECT_TRANSLATION_KEYS: Record<string, string> = {
 
 const SUBJECT_CANONICAL_VALUES: Record<string, string> = {
   ...Object.fromEntries(Object.keys(SUBJECT_TRANSLATION_KEYS).map((key) => [key, key])),
-  ქართული: "georgian",
-  ქართული_ენა: "georgian",
-  грузинский: "georgian",
-  русული: "russian",
   русский: "russian",
-  რუსული: "russian",
   математика: "mathematics",
-  მათემატიკა: "mathematics",
   физика: "physics",
-  ფიზიკა: "physics",
   английский: "english",
-  ინგლისური: "english",
   программирование: "programming",
-  პროგრამირება: "programming",
   химия: "chemistry",
-  ქიმია: "chemistry",
   биология: "biology",
-  ბიოლოგია: "biology",
   история: "history",
-  ისტორია: "history",
   география: "geography",
-  გეოგრაფია: "geography",
   музыка: "music",
-  მუსიკა: "music",
 };
 
 const DATE_LOCALES: Record<Language, string> = {

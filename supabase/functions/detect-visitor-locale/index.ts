@@ -5,8 +5,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-type Language = "en" | "ka" | "ru";
-type CurrencyCode = "USD" | "GEL" | "EUR";
+type Language = "en";
+type CurrencyCode = "USD" | "EUR";
 
 const EUROPEAN_COUNTRY_CODES = new Set([
   "AL", "AD", "AT", "BE", "BA", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IS", "IE", "IT",
@@ -14,10 +14,7 @@ const EUROPEAN_COUNTRY_CODES = new Set([
   "ES", "SE", "CH", "UA", "GB", "VA",
 ]);
 
-function detectLanguage(browserLanguage: string): Language {
-  const normalized = browserLanguage.toLowerCase();
-  if (normalized.startsWith("ka")) return "ka";
-  if (normalized.startsWith("ru")) return "ru";
+function detectLanguage(_browserLanguage: string): Language {
   return "en";
 }
 
@@ -70,18 +67,8 @@ serve(async (req) => {
     let preferred_language: Language = "en";
     let preferred_currency: CurrencyCode = "USD";
 
-    if (countryCode === "GE") {
-      preferred_language = "ka";
-      preferred_currency = "GEL";
-
-      if (!isValidTimeZone(timeZone)) {
-        timeZone = "Asia/Tbilisi";
-      }
-    } else if (countryCode === "US") {
+    if (countryCode === "US") {
       preferred_language = "en";
-      preferred_currency = "USD";
-    } else if (detectedLanguage === "ru") {
-      preferred_language = "ru";
       preferred_currency = "USD";
     } else if (countryCode && EUROPEAN_COUNTRY_CODES.has(countryCode)) {
       preferred_language = "en";
