@@ -855,6 +855,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      tutor_complete_booking: {
+        Args: { _booking_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "tutor"
