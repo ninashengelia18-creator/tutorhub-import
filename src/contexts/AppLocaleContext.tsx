@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { type Language, useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 
-export type CurrencyCode = "USD" | "GEL" | "EUR";
+export type CurrencyCode = "USD" | "EUR";
 
 export interface LocalePreferences {
   preferred_language: Language;
