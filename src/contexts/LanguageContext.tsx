@@ -330,7 +330,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "booking.trialDesc": "To discuss your level and learning plan",
     "booking.duration25": "25 mins",
     "booking.duration50": "50 mins",
-    "booking.timezone": "In your time zone, Asia/Tbilisi (GMT +4:00)",
+    "booking.timezone": "In your time zone",
     "booking.morning": "Morning",
     "booking.afternoon": "Afternoon",
     "booking.evening": "Evening",
