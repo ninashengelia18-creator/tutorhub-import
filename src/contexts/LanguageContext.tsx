@@ -978,7 +978,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "td.giorgi.headline": "PhD in Physics — making physics intuitive, not intimidating. Consistent grade improvements guaranteed!",
     "td.giorgi.superDesc": "Giorgi K. is a highly rated and experienced tutor.",
     "td.giorgi.teaches": "Physics lessons",
-    "td.giorgi.bio": "PhD in Physics from Tbilisi State University. I believe physics should be intuitive, not intimidating. My students consistently improve their grades and develop a genuine curiosity for science.\n\nI use real-world examples and visual demonstrations to make abstract concepts concrete. Every lesson is tailored to your current level and goals.",
+    "td.giorgi.bio": "PhD in Physics. I believe physics should be intuitive, not intimidating. My students consistently improve their grades and develop a genuine curiosity for science.\n\nI use real-world examples and visual demonstrations to make abstract concepts concrete. Every lesson is tailored to your current level and goals.",
     "td.ana.headline": "IELTS & TOEFL specialist with Cambridge CELTA certification. Achieve your target scores with structured preparation and real exam practice!",
     "td.ana.superDesc": "Ana M. is a highly rated and experienced tutor.",
     "td.ana.teaches": "English lessons",
