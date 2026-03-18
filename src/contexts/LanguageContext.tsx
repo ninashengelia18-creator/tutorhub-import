@@ -945,7 +945,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "td.spec.dataScience": "Data Science",
     // Tutor data - organizations & roles
     "td.org.learneazy": "LearnEazy",
-    "td.org.tsu": "Tbilisi State University",
+    "td.org.university": "University",
     "td.org.freelance": "Freelance",
     "td.org.britishCouncil": "British Council",
     "td.org.tbcBank": "TBC Bank",
