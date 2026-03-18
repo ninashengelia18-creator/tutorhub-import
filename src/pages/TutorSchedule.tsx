@@ -85,7 +85,27 @@ export default function TutorSchedule() {
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(new Date());
   const [slotStartTime, setSlotStartTime] = useState("09:00");
   const [slotEndTime, setSlotEndTime] = useState("10:00");
+  const [completingBooking, setCompletingBooking] = useState<TutorBooking | null>(null);
+  const [isCompleting, setIsCompleting] = useState(false);
   const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
+
+  const handleMarkComplete = async () => {
+    if (!completingBooking) return;
+    setIsCompleting(true);
+    try {
+      const { error } = await supabase.rpc("tutor_complete_booking", {
+        _booking_id: completingBooking.id,
+      });
+      if (error) throw error;
+      toast({ title: t("tutorSchedule.lessonCompleted"), description: t("tutorSchedule.lessonCompletedDesc") });
+      void loadScheduleData();
+    } catch (err: unknown) {
+      toast({ title: t("tutorSchedule.error"), description: (err as Error).message, variant: "destructive" });
+    } finally {
+      setIsCompleting(false);
+      setCompletingBooking(null);
+    }
+  };
 
   const loadScheduleData = useCallback(async () => {
     if (!user) return;
