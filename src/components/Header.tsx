@@ -222,7 +222,7 @@ export function Header() {
   const dashboardPath = isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks =
     user && !isTutor
-      ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/faq", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
+      ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
       : navLinks;
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
