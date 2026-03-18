@@ -1769,6 +1769,15 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutorSchedule.lessonSingle": "გაკვეთილი",
     "tutorSchedule.lessonPlural": "გაკვეთილი",
     "tutorSchedule.minutes": "წთ",
+    "tutorSchedule.markComplete": "დასრულება",
+    "tutorSchedule.confirmCompleteTitle": "გაკვეთილის დასრულება?",
+    "tutorSchedule.confirmCompleteDesc": "ეს მონიშნავს გაკვეთილს {student}-თან ({subject}) დასრულებულად და ავტომატურად დაითვლის შემოსავალს.",
+    "tutorSchedule.confirmComplete": "დიახ, დასრულება",
+    "tutorSchedule.completing": "სრულდება…",
+    "tutorSchedule.cancel": "გაუქმება",
+    "tutorSchedule.lessonCompleted": "გაკვეთილი დასრულდა",
+    "tutorSchedule.lessonCompletedDesc": "შემოსავალი დაითვალა და დაემატა თქვენს ბალანსს.",
+    "tutorSchedule.error": "შეცდომა",
 
     // Tutor Profile page
     "tp.findTutors": "რეპეტიტორების ძიება",
