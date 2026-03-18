@@ -63,7 +63,7 @@ const SubscribePlansDialog = forwardRef<HTMLButtonElement, SubscribePlansDialogP
     if (!user) {
       setPricePerLesson(null);
       setTutorName(null);
-      setCurrency("₾");
+      setCurrency("$");
       return;
     }
 
