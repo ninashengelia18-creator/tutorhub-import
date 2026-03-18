@@ -215,7 +215,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.learnSpanish": "Learn Spanish online",
     "footer.learnFrench": "Learn French online",
     "footer.learnGerman": "Learn German online",
-    "footer.learnGeorgian": "Learn Georgian online",
     "footer.learnItalian": "Learn Italian online",
     "footer.learnAnother": "Learn another language",
     "footer.onlineClasses": "Online Language Classes and Courses",
