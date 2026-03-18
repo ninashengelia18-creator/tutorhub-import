@@ -47,6 +47,7 @@
     --sidebar-ring: 280 55% 60%;
 
     /* Custom tokens */
+    --header: 280 45% 42%;
     --primary-hover: 280 55% 52%;
     --primary-light: 280 42% 83%;
     --success: 142 71% 45%;
