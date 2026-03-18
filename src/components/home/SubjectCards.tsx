@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Languages, Code, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Briefcase, Scale, Heart, BarChart3, Megaphone, MapPin } from "lucide-react";
+import { BookOpen, Languages, Code, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Briefcase, Scale, BarChart3, Megaphone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
