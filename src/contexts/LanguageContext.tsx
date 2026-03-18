@@ -442,7 +442,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "biz.stat4": "Languages Taught",
     "biz.useCases": "Popular Use Cases",
     "biz.use1.title": "Language Training",
-    "biz.use1.desc": "English, Georgian, Russian and more — prepare your team for international business.",
+    "biz.use1.desc": "English, Spanish, French and more — prepare your team for international business.",
     "biz.use2.title": "Tech Upskilling",
     "biz.use2.desc": "Python, JavaScript, data science — keep your engineering team ahead of the curve.",
     "biz.use3.title": "Onboarding Programs",
