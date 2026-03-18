@@ -31,7 +31,6 @@ const subjectCategories = [
       { icon: BarChart3, nameKey: "home.subj.dataScience", href: "/search?subject=DataScience", teacherCount: "8" },
       { icon: Megaphone, nameKey: "home.subj.marketing", href: "/search?subject=Marketing", teacherCount: "6" },
       { icon: Scale, nameKey: "home.subj.law", href: "/search?subject=Law", teacherCount: "5" },
-      { icon: Heart, nameKey: "home.subj.medicine", href: "/search?subject=Medicine", teacherCount: "7" },
       { icon: Globe, nameKey: "home.subj.businessEnglish", href: "/search?subject=BusinessEnglish", teacherCount: "9" },
     ],
   },
