@@ -14,10 +14,7 @@ const EUROPEAN_COUNTRY_CODES = new Set([
   "ES", "SE", "CH", "UA", "GB", "VA",
 ]);
 
-function detectLanguage(browserLanguage: string): Language {
-  const normalized = browserLanguage.toLowerCase();
-  if (normalized.startsWith("ka")) return "ka";
-  if (normalized.startsWith("ru")) return "ru";
+function detectLanguage(_browserLanguage: string): Language {
   return "en";
 }
 
