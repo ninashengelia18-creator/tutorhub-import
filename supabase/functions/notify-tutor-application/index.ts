@@ -57,7 +57,7 @@ serve(async (req) => {
     `;
 
     if (RESEND_API_KEY) {
-      // Use Resend API
+      // Send admin notification
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -74,11 +74,41 @@ serve(async (req) => {
 
       if (!res.ok) {
         const errText = await res.text();
-        console.error("Resend error:", errText);
-        throw new Error(`Email send failed [${res.status}]: ${errText}`);
+        console.error("Resend error (admin):", errText);
+        throw new Error(`Admin email send failed [${res.status}]: ${errText}`);
+      }
+
+      // Send confirmation email to the applicant
+      const confirmationHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #16a34a;">Thank you for applying to LearnEazy!</h2>
+          <p>Dear ${first_name},</p>
+          <p>We have received your application and will review it within 2-3 business days. We will email you with our decision.</p>
+          <p>If you have any questions, contact us at <a href="mailto:info@learneazy.org">info@learneazy.org</a></p>
+          <p style="margin-top: 24px; color: #666;">— The LearnEazy Team</p>
+        </div>
+      `;
+
+      const confirmRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "LearnEazy <noreply@notify.www.getaiwhisper.com>",
+          to: [email],
+          subject: "We received your LearnEazy tutor application!",
+          html: confirmationHtml,
+        }),
+      });
+
+      if (!confirmRes.ok) {
+        const errText = await confirmRes.text();
+        console.error("Resend error (confirmation):", errText);
+        // Don't throw — admin email already sent successfully
       }
     } else {
-      // Fallback: log the application (email not configured)
       console.log("RESEND_API_KEY not set. Application logged but email not sent.");
       console.log("Application from:", first_name, last_name, email);
     }
