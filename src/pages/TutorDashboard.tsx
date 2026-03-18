@@ -6,12 +6,14 @@ import { motion } from "framer-motion";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateInTimeZone, formatLessonTimeRange, getDateKeyInTimeZone } from "@/lib/datetime";
 import { localizeSubjectLabel } from "@/lib/localization";
+import { TutorEarnings } from "@/components/tutor/TutorEarnings";
 
 interface TutorBooking {
   id: string;
