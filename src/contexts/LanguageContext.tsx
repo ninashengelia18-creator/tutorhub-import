@@ -224,7 +224,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "footer.onlineFrenchClasses": "Online French Classes",
     "footer.onlineGermanClasses": "Online German Classes",
     "footer.onlineChineseClasses": "Online Chinese Classes",
-    "footer.onlineGeorgianClasses": "Online Georgian Classes",
+    
     "footer.onlineTurkishClasses": "Online Turkish Classes",
     "footer.onlinePortugueseClasses": "Online Portuguese Classes",
     "footer.oneOnOneTutors": "1-on-1 Tutors",
