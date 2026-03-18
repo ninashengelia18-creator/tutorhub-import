@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookOpen, Languages, Code, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Briefcase, Scale, BarChart3, Megaphone, MapPin } from "lucide-react";
+import { BookOpen, Languages, Code, GraduationCap, Calculator, ChevronRight, FlaskConical, Globe, Cpu, Briefcase, Scale, BarChart3, Megaphone, MapPin, Atom, Leaf, PenLine, BookMarked, Dumbbell, Church } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -8,11 +8,18 @@ const subjectCategories = [
     categoryKey: "home.cat.k12",
     subjects: [
       { icon: Calculator, nameKey: "home.subj.math", href: "/search?subject=Mathematics", teacherCount: "24" },
-      { icon: BookOpen, nameKey: "home.subj.english", href: "/search?subject=English", teacherCount: "32" },
+      { icon: BookOpen, nameKey: "home.subj.englishLang", href: "/search?subject=English+Language", teacherCount: "32" },
+      { icon: PenLine, nameKey: "home.subj.englishLit", href: "/search?subject=English+Literature", teacherCount: "28" },
       { icon: FlaskConical, nameKey: "home.subj.science", href: "/search?subject=Science", teacherCount: "41" },
-      { icon: MapPin, nameKey: "home.subj.history", href: "/search?subject=History", teacherCount: "18" },
-      { icon: Languages, nameKey: "home.subj.foreignLangs", href: "/search?subject=ForeignLanguages", teacherCount: "26" },
+      { icon: Atom, nameKey: "home.subj.physics", href: "/search?subject=Physics", teacherCount: "19" },
+      { icon: FlaskConical, nameKey: "home.subj.chemistry", href: "/search?subject=Chemistry", teacherCount: "17" },
+      { icon: Leaf, nameKey: "home.subj.biology", href: "/search?subject=Biology", teacherCount: "16" },
+      { icon: BookMarked, nameKey: "home.subj.historyOnly", href: "/search?subject=History", teacherCount: "18" },
+      { icon: MapPin, nameKey: "home.subj.geography", href: "/search?subject=Geography", teacherCount: "14" },
       { icon: Cpu, nameKey: "home.subj.computerScience", href: "/search?subject=ComputerScience", teacherCount: "15" },
+      { icon: Languages, nameKey: "home.subj.foreignLangs", href: "/search?subject=ForeignLanguages", teacherCount: "26" },
+      { icon: Dumbbell, nameKey: "home.subj.pe", href: "/search?subject=Physical+Education", teacherCount: "8" },
+      { icon: Church, nameKey: "home.subj.rs", href: "/search?subject=Religious+Studies", teacherCount: "7" },
     ],
   },
   {
