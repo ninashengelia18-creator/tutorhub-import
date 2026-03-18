@@ -6,7 +6,7 @@ const corsHeaders = {
 };
 
 type Language = "en";
-type CurrencyCode = "USD" | "GEL" | "EUR";
+type CurrencyCode = "USD" | "EUR";
 
 const EUROPEAN_COUNTRY_CODES = new Set([
   "AL", "AD", "AT", "BE", "BA", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IS", "IE", "IT",
