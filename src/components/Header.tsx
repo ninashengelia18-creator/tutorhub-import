@@ -342,8 +342,8 @@ export function Header() {
                 </div>
                 <Link
                   to="/for-business"
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === "/for-business" ? "text-primary" : "text-foreground/90"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === "/for-business" ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("nav.forBusiness")}
