@@ -84,7 +84,7 @@ export default function TutorSchedule() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(new Date());
   const [slotStartTime, setSlotStartTime] = useState("09:00");
-  const [slotEndTime, setSlotEndTime] = useState("10:00");
+  const [slotDuration, setSlotDuration] = useState<25 | 50>(50);
   const [completingBooking, setCompletingBooking] = useState<TutorBooking | null>(null);
   const [isCompleting, setIsCompleting] = useState(false);
   const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
@@ -196,15 +196,10 @@ export default function TutorSchedule() {
   const handleAddAvailabilitySlot = async () => {
     const dateKey = availabilityDate ? getDateKeyInTimeZone(availabilityDate, timezone) : "";
     const slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
-    const slotEndAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotEndTime, timezone) : null;
+    const slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + slotDuration * 60 * 1000) : null;
 
     if (!dateKey || !slotStartAt || !slotEndAt) {
-      toast({ title: "Unable to save slot", description: "Choose a valid date and time range.", variant: "destructive" });
-      return;
-    }
-
-    if (slotEndAt <= slotStartAt) {
-      toast({ title: "Invalid time range", description: "End time must be later than start time.", variant: "destructive" });
+      toast({ title: "Unable to save slot", description: "Choose a valid date and time.", variant: "destructive" });
       return;
     }
 
@@ -292,15 +287,14 @@ export default function TutorSchedule() {
                   </div>
 
                   <div className="space-y-2">
-                    <p className="text-sm font-medium text-foreground">End</p>
+                    <p className="text-sm font-medium text-foreground">Duration</p>
                     <select
-                      value={slotEndTime}
-                      onChange={(event) => setSlotEndTime(event.target.value)}
+                      value={slotDuration}
+                      onChange={(event) => setSlotDuration(Number(event.target.value) as 25 | 50)}
                       className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                     >
-                      {TIME_OPTIONS.map((time) => (
-                        <option key={time} value={time}>{formatWallClockTime(time, lang)}</option>
-                      ))}
+                      <option value={25}>25 min</option>
+                      <option value={50}>50 min</option>
                     </select>
                   </div>
 
