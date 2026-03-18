@@ -601,7 +601,8 @@ export default function TutorApply() {
                       }}
                     />
                     <Label htmlFor="confirmId" className="text-sm leading-relaxed cursor-pointer">
-                      I confirm the uploaded ID belongs to me.
+                      I confirm the uploaded ID belongs to me and I agree to the{" "}
+                      <a href="/privacy-policy" target="_blank" className="text-primary underline hover:text-primary/80">Privacy Policy</a>.
                     </Label>
                   </div>
 
