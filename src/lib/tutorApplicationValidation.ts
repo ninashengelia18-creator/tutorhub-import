@@ -14,8 +14,8 @@ export const tutorApplicationSchema = z.object({
   hourlyRate: z
     .string()
     .trim()
-    .min(1, "Hourly rate is required.")
-    .refine((value) => !Number.isNaN(Number(value)) && Number(value) > 0, "Please enter a valid hourly rate."),
+    .min(1, "Price per lesson is required.")
+    .refine((value) => !Number.isNaN(Number(value)) && Number(value) > 0, "Please enter a valid price per lesson."),
   nativeLanguage: z.string().trim().max(100, "Native language is too long.").optional().or(z.literal("")),
   otherLanguages: z.string().trim().max(255, "Languages spoken are too long.").optional().or(z.literal("")),
   availability: z.string().trim().min(1, "Please select your availability."),
