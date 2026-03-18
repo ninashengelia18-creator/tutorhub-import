@@ -142,6 +142,57 @@ export type Database = {
         }
         Relationships: []
       }
+      conversation_partner_applications: {
+        Row: {
+          agreed_to_terms: boolean
+          conversation_style: string | null
+          country: string | null
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          id_document_url: string | null
+          last_name: string
+          motivation: string
+          phone: string | null
+          status: string
+          updated_at: string
+          video_intro_url: string | null
+        }
+        Insert: {
+          agreed_to_terms?: boolean
+          conversation_style?: string | null
+          country?: string | null
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          id_document_url?: string | null
+          last_name: string
+          motivation: string
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          video_intro_url?: string | null
+        }
+        Update: {
+          agreed_to_terms?: boolean
+          conversation_style?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          id_document_url?: string | null
+          last_name?: string
+          motivation?: string
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          video_intro_url?: string | null
+        }
+        Relationships: []
+      }
       lesson_plans: {
         Row: {
           created_at: string

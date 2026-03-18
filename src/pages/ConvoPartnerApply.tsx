@@ -65,21 +65,18 @@ export default function ConvoPartnerApply() {
         idDocumentUrl = filePath;
       }
 
-      // Insert into tutor_applications with "Conversation Partner" subject
-      const { error: dbError } = await supabase.from("tutor_applications").insert({
+      // Insert into conversation_partner_applications
+      const { error: dbError } = await supabase.from("conversation_partner_applications" as any).insert({
         first_name: firstName.trim(),
         last_name: lastName.trim(),
         email: email.trim(),
         phone: phone.trim() || null,
         country: country.trim() || null,
-        experience: "Conversation Partner",
-        bio: whyPartner.trim(),
-        subjects: ["Conversation Partner"],
-        hourly_rate: 0,
-        availability: "flexible",
-        about_teaching: convoStyle.trim() || null,
-        certifications: videoLink.trim() || null,
+        motivation: whyPartner.trim(),
+        conversation_style: convoStyle.trim() || null,
+        video_intro_url: videoLink.trim() || null,
         id_document_url: idDocumentUrl,
+        agreed_to_terms: true,
       } as any);
 
       if (dbError) throw dbError;
