@@ -131,7 +131,7 @@ function MegaMenuColumn({ title, items }: { title: string; items: { label: strin
 
   return (
     <div>
-      <h4 className="text-xs font-bold uppercase tracking-wider text-primary mb-3">{title}</h4>
+      {title && <h4 className="text-xs font-bold uppercase tracking-wider text-primary mb-3">{title}</h4>}
       <ul className="space-y-1.5">
         {items.map((item) => (
           <li
@@ -278,7 +278,7 @@ export function Header() {
                 className="flex items-center gap-1 text-sm font-medium text-foreground/90 transition-colors hover:text-primary"
                 onClick={() => setMegaOpen((v) => !v)}
               >
-                For Students <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
+                Find a Tutor <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
               </button>
 
               <AnimatePresence>
@@ -290,7 +290,7 @@ export function Header() {
                     transition={{ duration: 0.15 }}
                     className="absolute left-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border/70 bg-popover p-5 shadow-xl"
                   >
-                    <MegaMenuColumn title="Find a Tutor" items={forStudentsMenu} />
+                    <MegaMenuColumn title="" items={forStudentsMenu} />
                   </motion.div>
                 )}
               </AnimatePresence>
