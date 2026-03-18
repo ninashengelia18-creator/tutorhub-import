@@ -381,7 +381,7 @@ export default function TutorSchedule() {
                   <div className="flex items-center gap-1.5">
                     <Wallet className="h-5 w-5 text-primary" />
                     <p className="text-2xl font-bold text-foreground">
-                      ₾{stats.completedRevenue.toFixed(0)}
+                      ${stats.completedRevenue.toFixed(0)}
                     </p>
                   </div>
                   <p className="text-xs text-muted-foreground">{t("tutorSchedule.earnedTotal")}</p>
