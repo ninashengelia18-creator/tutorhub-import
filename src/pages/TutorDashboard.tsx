@@ -73,7 +73,7 @@ export default function TutorDashboard() {
       todaysLessons,
       upcomingLessons,
       completedRevenue,
-      currency: bookings[0]?.currency ?? "₾",
+      currency: bookings[0]?.currency ?? "$",
     };
   }, [bookings, now, timezone, todayKey]);
 

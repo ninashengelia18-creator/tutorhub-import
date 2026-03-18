@@ -280,7 +280,7 @@ export function AppLocaleProvider({ children }: { children: ReactNode }) {
     };
   }, [applyDetectedPreferences, applyManualPreferences, persistPreferences, user?.id]);
 
-  const formatCurrency = useCallback((amount: number, sourceCurrency: CurrencyCode | string = "GEL") => {
+  const formatCurrency = useCallback((amount: number, sourceCurrency: CurrencyCode | string = "USD") => {
     const normalizedSourceCurrency = normalizeCurrencyCode(sourceCurrency);
     return formatMoney(convertCurrency(amount, normalizedSourceCurrency, currency), currency);
   }, [currency]);
