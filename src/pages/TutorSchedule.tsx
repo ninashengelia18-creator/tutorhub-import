@@ -514,23 +514,35 @@ export default function TutorSchedule() {
                                   <span className="tabular-nums">{formatTimeRange(booking)}</span>
                                 </div>
 
-                                {booking.google_meet_link ? (
-                                  <a
-                                    href={booking.google_meet_link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={cn("inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20")}
-                                  >
-                                    <Video className="h-3.5 w-3.5" />
-                                    {t("tutorSchedule.joinMeet")}
-                                    <ExternalLink className="h-3 w-3" />
-                                  </a>
-                                ) : (
-                                  <span className="shrink-0 text-xs italic text-muted-foreground">
-                                    {t("tutorSchedule.noMeetLink")}
-                                  </span>
-                                )}
-                              </div>
+                                <div className="flex shrink-0 items-center gap-2">
+                                  {booking.google_meet_link ? (
+                                    <a
+                                      href={booking.google_meet_link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={cn("inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20")}
+                                    >
+                                      <Video className="h-3.5 w-3.5" />
+                                      {t("tutorSchedule.joinMeet")}
+                                      <ExternalLink className="h-3 w-3" />
+                                    </a>
+                                  ) : (
+                                    <span className="text-xs italic text-muted-foreground">
+                                      {t("tutorSchedule.noMeetLink")}
+                                    </span>
+                                  )}
+                                  {booking.status === "confirmed" && (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="rounded-lg text-xs"
+                                      onClick={() => setCompletingBooking(booking)}
+                                    >
+                                      <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
+                                      {t("tutorSchedule.markComplete")}
+                                    </Button>
+                                  )}
+                                </div>
                             ))}
                           </div>
                         </div>
