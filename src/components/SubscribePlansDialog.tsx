@@ -47,7 +47,7 @@ const SubscribePlansDialog = forwardRef<HTMLButtonElement, SubscribePlansDialogP
   const [submitted, setSubmitted] = useState(false);
   const [selectedWeekly, setSelectedWeekly] = useState<number>(3);
   const [pricePerLesson, setPricePerLesson] = useState<number | null>(null);
-  const [currency, setCurrency] = useState("₾");
+  const [currency, setCurrency] = useState("$");
   const [tutorName, setTutorName] = useState<string | null>(null);
 
   useEffect(() => {
