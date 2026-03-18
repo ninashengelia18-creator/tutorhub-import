@@ -290,7 +290,7 @@ export function Header() {
                     transition={{ duration: 0.15 }}
                     className="absolute left-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border/70 bg-popover p-5 shadow-xl"
                   >
-                    <MegaMenuColumn title="Find a Tutor" items={forStudentsMenu} />
+                    <MegaMenuColumn title="" items={forStudentsMenu} />
                   </motion.div>
                 )}
               </AnimatePresence>
