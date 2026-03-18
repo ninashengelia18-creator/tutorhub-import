@@ -73,11 +73,11 @@ const faqSections = [
     questions: [
       {
         q: "How do I contact support?",
-        a: "Chat with us directly on the website or email hello@learneazy.org. We typically respond within a few hours.",
+        a: "Write to Hugo AI on our website or email info@learneazy.org. We typically respond within a few hours.",
       },
       {
         q: "How do I report an issue?",
-        a: "Contact our support team at hello@learneazy.org with details of the issue and we will investigate promptly.",
+        a: "Contact our support team at info@learneazy.org with details of the issue and we will investigate promptly.",
       },
     ],
   },
