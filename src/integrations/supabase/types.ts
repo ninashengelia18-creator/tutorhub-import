@@ -501,6 +501,33 @@ export type Database = {
           },
         ]
       }
+      sent_emails: {
+        Row: {
+          application_type: string
+          body_preview: string | null
+          id: string
+          recipient_email: string
+          sent_at: string
+          subject: string
+        }
+        Insert: {
+          application_type: string
+          body_preview?: string | null
+          id?: string
+          recipient_email: string
+          sent_at?: string
+          subject: string
+        }
+        Update: {
+          application_type?: string
+          body_preview?: string | null
+          id?: string
+          recipient_email?: string
+          sent_at?: string
+          subject?: string
+        }
+        Relationships: []
+      }
       tutor_applications: {
         Row: {
           about_teaching: string | null
