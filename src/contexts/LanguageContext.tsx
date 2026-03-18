@@ -16,6 +16,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.home": "Home",
     "nav.findTutors": "Find Tutors",
     "nav.conversationPartners": "Conversation Partners",
+    "nav.findConversationPartner": "Find a Conversation Partner",
+    "nav.becomeConversationPartner": "Become a Conversation Partner",
     "nav.forBusiness": "For Business",
     "nav.becomeTutor": "Become a Tutor",
     "nav.provenProgress": "Proven Progress",
