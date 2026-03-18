@@ -30,8 +30,10 @@ function replaceTokens(template: string, values: Record<string, string | number>
 }
 
 function normalizeCurrency(currency?: string | null) {
-  if (!currency) return "₾";
-  return currency === "GEL" ? "₾" : currency;
+  if (!currency) return "$";
+  if (currency === "USD") return "$";
+  if (currency === "EUR") return "€";
+  return currency;
 }
 
 const SubscribePlansDialog = forwardRef<HTMLButtonElement, SubscribePlansDialogProps>(function SubscribePlansDialog(

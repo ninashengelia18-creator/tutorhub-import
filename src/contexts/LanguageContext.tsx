@@ -948,7 +948,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "td.org.university": "University",
     "td.org.freelance": "Freelance",
     "td.org.britishCouncil": "British Council",
-    "td.org.tbcBank": "TBC Bank",
+    
     "td.role.seniorMathTutor": "Senior Mathematics Tutor",
     "td.role.teachingAssistant": "Teaching Assistant",
     "td.role.physicsTutor": "Physics Tutor",
