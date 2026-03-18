@@ -70,15 +70,44 @@ export default function Login() {
     setSearchParams(nextParams, { replace: true });
   };
 
+  const [pendingApplication, setPendingApplication] = useState(false);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: signInData, error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
 
     if (error) {
       toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
       return;
+    }
+
+    // Check if tutor with pending application (no tutor role yet)
+    if (signInData?.user) {
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", signInData.user.id);
+
+      const userRoles = (roles ?? []).map((r) => r.role);
+      const isTutorOrAdmin = userRoles.includes("tutor") || userRoles.includes("admin");
+
+      if (!isTutorOrAdmin) {
+        // Check if they have a pending tutor application
+        const { data: apps } = await supabase
+          .from("tutor_applications")
+          .select("status")
+          .eq("email", email.toLowerCase())
+          .eq("status", "pending")
+          .limit(1);
+
+        if (apps && apps.length > 0) {
+          setPendingApplication(true);
+          await supabase.auth.signOut();
+          return;
+        }
+      }
     }
 
     toast({ title: t("auth.welcomeBack") });

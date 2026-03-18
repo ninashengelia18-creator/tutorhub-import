@@ -37,6 +37,7 @@ import CookiePolicy from "./pages/CookiePolicy.tsx";
 import TermsOfService from "./pages/TermsOfService.tsx";
 import LessonPlanner from "./pages/LessonPlanner.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
+import AdminApplications from "./pages/AdminApplications.tsx";
 import TutorDashboard from "./pages/TutorDashboard.tsx";
 import TutorSchedule from "./pages/TutorSchedule.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
