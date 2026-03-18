@@ -260,8 +260,8 @@ export function Header() {
           <nav className="flex items-center gap-6">
             <Link
               to="/"
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === "/" ? "text-primary" : "text-foreground/90"
+              className={`text-sm font-bold transition-colors hover:text-primary ${
+                location.pathname === "/" ? "text-primary" : "text-white"
               }`}
             >
               {t("nav.home")}
