@@ -131,7 +131,7 @@ function MegaMenuColumn({ title, items }: { title: string; items: { label: strin
 
   return (
     <div>
-      <h4 className="text-xs font-bold uppercase tracking-wider text-primary mb-3">{title}</h4>
+      {title && <h4 className="text-xs font-bold uppercase tracking-wider text-primary mb-3">{title}</h4>}
       <ul className="space-y-1.5">
         {items.map((item) => (
           <li
