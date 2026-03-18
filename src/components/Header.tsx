@@ -77,7 +77,7 @@ const examPrepSubjects = [
 ];
 
 const forStudentsMenu = [
-  { label: "Find a Tutor", href: "/search" },
+  
   { label: "K-12 Subjects", href: "/search?subject=K12", children: k12Subjects },
   { label: "GCSE & A-Level", href: "/search?subject=GCSE", children: gcseALevelSubjects },
   { label: "Professional Courses", href: "/search?subject=Professional", children: professionalSubjects },
