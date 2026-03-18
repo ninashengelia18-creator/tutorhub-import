@@ -2769,6 +2769,15 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutorSchedule.lessonSingle": "урок",
     "tutorSchedule.lessonPlural": "уроков",
     "tutorSchedule.minutes": "мин",
+    "tutorSchedule.markComplete": "Завершить",
+    "tutorSchedule.confirmCompleteTitle": "Отметить урок как завершённый?",
+    "tutorSchedule.confirmCompleteDesc": "Урок с {student} ({subject}) будет отмечен как завершённый, и заработок будет рассчитан автоматически.",
+    "tutorSchedule.confirmComplete": "Да, завершить",
+    "tutorSchedule.completing": "Завершение…",
+    "tutorSchedule.cancel": "Отмена",
+    "tutorSchedule.lessonCompleted": "Урок завершён",
+    "tutorSchedule.lessonCompletedDesc": "Заработок рассчитан и добавлен на ваш баланс.",
+    "tutorSchedule.error": "Ошибка",
 
     // Tutor Profile page
     "tp.findTutors": "Найти репетиторов",
