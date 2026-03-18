@@ -57,8 +57,8 @@ serve(async (req) => {
     `;
 
     if (RESEND_API_KEY) {
-      // Send admin notification
-      const adminRes = await fetch("https://api.resend.com/emails", {
+      // Use Resend API
+      const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${RESEND_API_KEY}`,
@@ -72,40 +72,13 @@ serve(async (req) => {
         }),
       });
 
-      if (!adminRes.ok) {
-        const errText = await adminRes.text();
-        console.error("Resend admin notification error:", errText);
-      }
-
-      // Send confirmation email to applicant
-      const confirmationHtml = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2>Thank you for applying to LearnEazy!</h2>
-          <p>Dear ${first_name},</p>
-          <p>We have received your application and will review it within 2–3 business days. We will email you with our decision.</p>
-          <p>In the meantime if you have any questions, contact us at <a href="mailto:info@learneazy.org">info@learneazy.org</a></p>
-          <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
-        </div>`;
-
-      const applicantRes = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "LearnEazy <noreply@notify.www.getaiwhisper.com>",
-          to: [email],
-          subject: "We've received your LearnEazy tutor application!",
-          html: confirmationHtml,
-        }),
-      });
-
-      if (!applicantRes.ok) {
-        const errText = await applicantRes.text();
-        console.error("Resend applicant confirmation error:", errText);
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error("Resend error:", errText);
+        throw new Error(`Email send failed [${res.status}]: ${errText}`);
       }
     } else {
+      // Fallback: log the application (email not configured)
       console.log("RESEND_API_KEY not set. Application logged but email not sent.");
       console.log("Application from:", first_name, last_name, email);
     }

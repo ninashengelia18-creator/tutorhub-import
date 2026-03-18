@@ -34,7 +34,6 @@ serve(async (req) => {
             Log in to LearnEazy
           </a>
         </div>
-        <p>Once you complete your first session, we will be in touch to collect your payment details for earnings withdrawals.</p>
         <p style="color: #666; font-size: 14px;">If you have any questions, contact us at info@learneazy.org</p>
         <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
       </div>`

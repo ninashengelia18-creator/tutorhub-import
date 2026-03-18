@@ -275,30 +275,8 @@ export default function TutorApply() {
 
       if (dbError) throw dbError;
 
-      // Notify admin + send confirmation email to applicant
-      await Promise.all([
-        submitFormspree(payload).catch(() => {}),
-        supabase.functions.invoke("notify-tutor-application", {
-          body: {
-            first_name: validatedData.firstName.trim(),
-            last_name: validatedData.lastName.trim(),
-            email: validatedData.email.trim(),
-            phone: validatedData.phone?.trim() || "",
-            country: validatedData.country?.trim() || "",
-            experience: validatedData.experience,
-            education: validatedData.education?.trim() || "",
-            certifications: validatedData.certifications?.trim() || "",
-            bio: validatedData.bio.trim(),
-            subjects: validatedData.selectedSubjects,
-            hourly_rate: Number(validatedData.hourlyRate),
-            native_language: validatedData.nativeLanguage?.trim() || "",
-            other_languages: validatedData.otherLanguages?.trim() || "",
-            availability: validatedData.availability,
-            timezone: validatedData.timezone?.trim() || "",
-            about_teaching: validatedData.aboutTeaching?.trim() || "",
-          },
-        }).catch((err) => console.error("notify-tutor-application error:", err)),
-      ]);
+      // Also notify via Formspree
+      await submitFormspree(payload).catch(() => {});
 
       clearStepErrors(["availability", "agreeTerms"]);
       setSubmitted(true);

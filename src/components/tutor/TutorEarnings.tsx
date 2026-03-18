@@ -194,9 +194,6 @@ export function TutorEarnings({ tutorName }: Props) {
               Request Payout · ${stats.pending.toFixed(2)}
             </Button>
           </DialogTrigger>
-          <p className="mt-2 text-xs text-muted-foreground">
-            Payouts are sent via Wise. Transfer fees are deducted from your earnings. Wise typically charges 0.5–1.5% depending on your country.
-          </p>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Request Payout</DialogTitle>
