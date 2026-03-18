@@ -543,6 +543,7 @@ export default function TutorSchedule() {
                                     </Button>
                                   )}
                                 </div>
+                              </div>
                             ))}
                           </div>
                         </div>
@@ -555,6 +556,25 @@ export default function TutorSchedule() {
           )}
         </motion.div>
       </div>
+
+      <AlertDialog open={!!completingBooking} onOpenChange={(open) => !open && setCompletingBooking(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("tutorSchedule.confirmCompleteTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("tutorSchedule.confirmCompleteDesc")
+                .replace("{student}", completingBooking?.student_name || t("tutorSchedule.unknownStudent"))
+                .replace("{subject}", completingBooking ? localizeSubjectLabel(completingBooking.subject, t) : "")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isCompleting}>{t("tutorSchedule.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleMarkComplete} disabled={isCompleting}>
+              {isCompleting ? t("tutorSchedule.completing") : t("tutorSchedule.confirmComplete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
   );
 }
