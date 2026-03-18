@@ -294,7 +294,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "search.placeholder": "Search tutors by name or subject...",
     "search.filters": "Filters",
     "search.subject": "Subject",
-    "search.pricePerHour": "Price per hour (₾)",
+    "search.pricePerHour": "Price per hour ($)",
     "search.rating": "Rating",
     "search.availability": "Availability",
     "search.nativeSpeaker": "Native Speaker",
