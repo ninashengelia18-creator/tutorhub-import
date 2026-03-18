@@ -350,8 +350,8 @@ export function Header() {
                 </Link>
                 <Link
                   to="/become-tutor"
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname === "/become-tutor" ? "text-primary" : "text-foreground/90"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === "/become-tutor" ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("nav.becomeTutor")}
