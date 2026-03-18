@@ -475,6 +475,7 @@ export default function TutorSchedule() {
                                 </Button>
                               )}
                             </div>
+                          </div>
                         ))}
                       </div>
                     )}
