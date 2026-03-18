@@ -358,12 +358,14 @@ export function Header() {
                 </Link>
                 <Link
                   to="/faq"
-                  className={`flex h-9 w-9 items-center justify-center rounded-full border-2 transition-all hover:scale-110 hover:border-primary hover:text-primary ${
-                    location.pathname === "/faq" ? "border-primary text-primary" : "border-white/50 text-white"
+                  className={`flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/25 ${
+                    location.pathname === "/faq" ? "bg-white/25" : ""
                   }`}
                   aria-label="FAQ"
                 >
-                  <HelpCircle className="h-5 w-5" strokeWidth={2.5} />
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border-[2.5px] border-white">
+                    <span className="text-sm font-bold leading-none text-white">?</span>
+                  </div>
                 </Link>
               </>
             )}
