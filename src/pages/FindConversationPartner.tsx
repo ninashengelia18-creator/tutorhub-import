@@ -6,16 +6,6 @@ import { Search, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
-import { subscribeToSavedTutors, toggleSavedTutor, isTutorSaved } from "@/lib/savedTutors";
-import {
-  getTutorAvatar,
-  getTutorFullName,
-  getTutorLanguages,
-  getTutorSearchText,
-  type PublicTutorProfile,
-} from "@/lib/publicTutors";
 
 const languages = [
   { name: "English", flag: "🇬🇧" },
