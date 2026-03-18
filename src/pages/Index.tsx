@@ -16,7 +16,7 @@ const Index = () => {
     <Layout>
       <HeroSection />
       <FeaturedTutors />
-      <StatsBar />
+      
       <SubjectCards />
       <ProgressSection />
       <HowItWorks />
