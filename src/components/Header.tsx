@@ -59,45 +59,30 @@ const gcseALevelSubjects = [
   { label: "A-Level Economics", href: "/search?subject=Economics" },
 ];
 
-const forStudentsMenu = {
-  findATutor: [
-    { label: "Find a Tutor", href: "/search" },
-    { label: "K-12 Subjects", href: "/search?subject=K12", children: k12Subjects },
-    { label: "GCSE & A-Level", href: "/search?subject=GCSE", children: gcseALevelSubjects },
-    { label: "Professional Courses", href: "/search?subject=Professional" },
-    { label: "Exam Preparation", href: "/search?subject=ExamPrep" },
-  ],
-  subjects: [
-    { label: "Mathematics", href: "/search?subject=Mathematics" },
-    { label: "English Language & Literature", href: "/search?subject=English" },
-    { label: "Physics", href: "/search?subject=Physics" },
-    { label: "Chemistry", href: "/search?subject=Chemistry" },
-    { label: "Biology", href: "/search?subject=Biology" },
-    { label: "History & Geography", href: "/search?subject=History" },
-    { label: "Computer Science & Programming", href: "/search?subject=ComputerScience" },
-    { label: "Business & Finance", href: "/search?subject=BusinessFinance" },
-    { label: "Data Science", href: "/search?subject=DataScience" },
-    { label: "Law", href: "/search?subject=Law" },
-    { label: "Medicine & Healthcare", href: "/search?subject=Medicine" },
-    { label: "English for Professionals", href: "/search?subject=BusinessEnglish" },
-  ],
-  learn: [
-    { label: "Learn English online", href: "/search?subject=English" },
-    { label: "Learn Spanish online", href: "/search?subject=Spanish" },
-    { label: "Learn French online", href: "/search?subject=French" },
-    { label: "Learn German online", href: "/search?subject=German" },
-    { label: "Learn Italian online", href: "/search?subject=Italian" },
-    { label: "Learn another language", href: "/search" },
-  ],
-  tutors: [
-    { label: "English Tutors", href: "/search?subject=English" },
-    { label: "Maths Tutors", href: "/search?subject=Mathematics" },
-    { label: "Science Tutors", href: "/search?subject=Science" },
-    { label: "GCSE Tutors", href: "/search?subject=GCSE" },
-    { label: "A-Level Tutors", href: "/search?subject=ALevel" },
-    { label: "Professional Skills Tutors", href: "/search?subject=Professional" },
-  ],
-};
+const professionalSubjects = [
+  { label: "Business & Finance", href: "/search?subject=BusinessFinance" },
+  { label: "Programming & Software Dev", href: "/search?subject=ComputerScience" },
+  { label: "Data Science & Analytics", href: "/search?subject=DataScience" },
+  { label: "Marketing & Communications", href: "/search?subject=Marketing" },
+  { label: "Law & Legal Studies", href: "/search?subject=Law" },
+  { label: "Medicine & Healthcare", href: "/search?subject=Medicine" },
+  { label: "English for Professionals", href: "/search?subject=BusinessEnglish" },
+];
+
+const examPrepSubjects = [
+  { label: "GCSE Exam Prep", href: "/search?subject=GCSE" },
+  { label: "A-Level Exam Prep", href: "/search?subject=ALevel" },
+  { label: "SAT / ACT Prep", href: "/search?subject=SAT" },
+  { label: "IELTS / TOEFL Prep", href: "/search?subject=IELTS" },
+];
+
+const forStudentsMenu = [
+  { label: "Find a Tutor", href: "/search" },
+  { label: "K-12 Subjects", href: "/search?subject=K12", children: k12Subjects },
+  { label: "GCSE & A-Level", href: "/search?subject=GCSE", children: gcseALevelSubjects },
+  { label: "Professional Courses", href: "/search?subject=Professional", children: professionalSubjects },
+  { label: "Exam Preparation", href: "/search?subject=ExamPrep", children: examPrepSubjects },
+];
 
 function initialsFromValue(value: string) {
   return (
