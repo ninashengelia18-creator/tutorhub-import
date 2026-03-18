@@ -184,6 +184,7 @@ export function Header() {
   // Close mega menu on route change
   useEffect(() => {
     setMegaOpen(false);
+    setConvDropdownOpen(false);
     setMobileOpen(false);
   }, [location.pathname]);
 
