@@ -109,6 +109,15 @@ export default function BookingConfirmation() {
               <p className="mt-2 text-muted-foreground">Tutor time: <span className="font-medium text-foreground">{tutorTimeLabel}</span></p>
             </div>
 
+            {state.meetLink && (
+              <Button className="w-full hero-gradient border-0 text-primary-foreground font-semibold" asChild>
+                <a href={state.meetLink} target="_blank" rel="noopener noreferrer">
+                  <Video className="mr-2 h-5 w-5" />
+                  Join Lesson via Google Meet
+                </a>
+              </Button>
+            )}
+
             <Button variant="outline" className="w-full" asChild>
               <a
                 href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${state.subject} with ${state.tutorName}`)}&dates=${formatGoogleCalendarDate(lessonStartAt)}/${formatGoogleCalendarDate(lessonEndAt)}&details=${encodeURIComponent("LearnEazy lesson")}`}
