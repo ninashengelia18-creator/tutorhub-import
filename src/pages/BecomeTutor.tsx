@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { DollarSign, Clock, TrendingUp, Users, Calendar, Monitor, Banknote, Headphones, MessageSquareQuote, ArrowRight } from "lucide-react";
+import { DollarSign, Clock, TrendingUp, Users, Calendar, Monitor, Banknote, Headphones, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
