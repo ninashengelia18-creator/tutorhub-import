@@ -257,7 +257,7 @@ export function Header() {
         </div>
 
         <div className="hidden items-center gap-10 md:flex">
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-6 font-display">
             <Link
               to="/"
               className={`text-sm font-bold transition-colors hover:text-primary ${
