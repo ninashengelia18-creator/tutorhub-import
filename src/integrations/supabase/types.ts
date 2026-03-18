@@ -298,6 +298,42 @@ export type Database = {
         }
         Relationships: []
       }
+      payout_requests: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          payment_details: string
+          payment_method: string
+          processed_at: string | null
+          status: string
+          tutor_name: string
+          tutor_user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          payment_details: string
+          payment_method?: string
+          processed_at?: string | null
+          status?: string
+          tutor_name: string
+          tutor_user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          payment_details?: string
+          payment_method?: string
+          processed_at?: string | null
+          status?: string
+          tutor_name?: string
+          tutor_user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -513,6 +549,60 @@ export type Database = {
           tutor_name?: string
           tutor_timezone?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      tutor_earnings: {
+        Row: {
+          booking_id: string
+          commission_amount: number
+          commission_rate: number
+          created_at: string
+          duration_minutes: number
+          gross_amount: number
+          id: string
+          is_trial: boolean
+          lesson_date: string
+          lesson_start_at: string | null
+          net_amount: number
+          payout_status: string
+          student_name: string | null
+          subject: string
+          tutor_name: string
+        }
+        Insert: {
+          booking_id: string
+          commission_amount?: number
+          commission_rate?: number
+          created_at?: string
+          duration_minutes?: number
+          gross_amount?: number
+          id?: string
+          is_trial?: boolean
+          lesson_date: string
+          lesson_start_at?: string | null
+          net_amount?: number
+          payout_status?: string
+          student_name?: string | null
+          subject: string
+          tutor_name: string
+        }
+        Update: {
+          booking_id?: string
+          commission_amount?: number
+          commission_rate?: number
+          created_at?: string
+          duration_minutes?: number
+          gross_amount?: number
+          id?: string
+          is_trial?: boolean
+          lesson_date?: string
+          lesson_start_at?: string | null
+          net_amount?: number
+          payout_status?: string
+          student_name?: string | null
+          subject?: string
+          tutor_name?: string
         }
         Relationships: []
       }

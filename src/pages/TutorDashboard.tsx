@@ -6,12 +6,14 @@ import { motion } from "framer-motion";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAppLocale } from "@/contexts/AppLocaleContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateInTimeZone, formatLessonTimeRange, getDateKeyInTimeZone } from "@/lib/datetime";
 import { localizeSubjectLabel } from "@/lib/localization";
+import { TutorEarnings } from "@/components/tutor/TutorEarnings";
 
 interface TutorBooking {
   id: string;
@@ -113,88 +115,101 @@ export default function TutorDashboard() {
             </div>
           </section>
 
-          <section className="grid gap-4 md:grid-cols-3">
-            <Card className="border-border">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t("tutorDashboard.today")}</CardTitle>
-                <CalendarDays className="h-5 w-5 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-foreground">{stats.todaysLessons.length}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{t("tutorDashboard.todayDescription")}</p>
-              </CardContent>
-            </Card>
+          <Tabs defaultValue="overview">
+            <TabsList>
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="earnings">Earnings</TabsTrigger>
+            </TabsList>
 
-            <Card className="border-border">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t("tutorDashboard.upcoming")}</CardTitle>
-                <Clock3 className="h-5 w-5 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-foreground">{stats.upcomingLessons.length}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{t("tutorDashboard.upcomingDescription")}</p>
-              </CardContent>
-            </Card>
+            <TabsContent value="overview" className="space-y-6 mt-4">
+              <section className="grid gap-4 md:grid-cols-3">
+                <Card className="border-border">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{t("tutorDashboard.today")}</CardTitle>
+                    <CalendarDays className="h-5 w-5 text-primary" />
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-3xl font-bold text-foreground">{stats.todaysLessons.length}</p>
+                    <p className="mt-2 text-sm text-muted-foreground">{t("tutorDashboard.todayDescription")}</p>
+                  </CardContent>
+                </Card>
 
-            <Card className="border-border">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t("tutorDashboard.earned")}</CardTitle>
-                <Wallet className="h-5 w-5 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-foreground">{stats.currency}{stats.completedRevenue.toFixed(0)}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{t("tutorDashboard.earnedDescription")}</p>
-              </CardContent>
-            </Card>
-          </section>
+                <Card className="border-border">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{t("tutorDashboard.upcoming")}</CardTitle>
+                    <Clock3 className="h-5 w-5 text-primary" />
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-3xl font-bold text-foreground">{stats.upcomingLessons.length}</p>
+                    <p className="mt-2 text-sm text-muted-foreground">{t("tutorDashboard.upcomingDescription")}</p>
+                  </CardContent>
+                </Card>
 
-          <section className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
-            <Card className="border-border">
-              <CardHeader>
-                <CardTitle className="text-xl text-foreground">{t("tutorDashboard.nextLesson")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {loading ? (
-                  <p className="text-sm text-muted-foreground">{t("tutorDashboard.loadingLessons")}</p>
-                ) : nextLesson ? (
-                  <div className="space-y-4 rounded-[1.5rem] border border-border bg-background p-5">
-                    <div className="space-y-1">
-                      <p className="text-lg font-semibold text-foreground">{nextLesson.student_name || t("tutorSchedule.unknownStudent")} · {localizeSubjectLabel(nextLesson.subject, t)}</p>
-                      <p className="text-sm text-muted-foreground">{formatDate(nextLesson.lesson_start_at)} · {formatTimeRange(nextLesson)}</p>
-                    </div>
-                    <Button variant="outline" className="rounded-full" asChild>
-                      <Link to="/tutor-schedule">{t("tutorDashboard.viewFullSchedule")}</Link>
+                <Card className="border-border">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{t("tutorDashboard.earned")}</CardTitle>
+                    <Wallet className="h-5 w-5 text-primary" />
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-3xl font-bold text-foreground">{stats.currency}{stats.completedRevenue.toFixed(0)}</p>
+                    <p className="mt-2 text-sm text-muted-foreground">{t("tutorDashboard.earnedDescription")}</p>
+                  </CardContent>
+                </Card>
+              </section>
+
+              <section className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
+                <Card className="border-border">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-foreground">{t("tutorDashboard.nextLesson")}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {loading ? (
+                      <p className="text-sm text-muted-foreground">{t("tutorDashboard.loadingLessons")}</p>
+                    ) : nextLesson ? (
+                      <div className="space-y-4 rounded-[1.5rem] border border-border bg-background p-5">
+                        <div className="space-y-1">
+                          <p className="text-lg font-semibold text-foreground">{nextLesson.student_name || t("tutorSchedule.unknownStudent")} · {localizeSubjectLabel(nextLesson.subject, t)}</p>
+                          <p className="text-sm text-muted-foreground">{formatDate(nextLesson.lesson_start_at)} · {formatTimeRange(nextLesson)}</p>
+                        </div>
+                        <Button variant="outline" className="rounded-full" asChild>
+                          <Link to="/tutor-schedule">{t("tutorDashboard.viewFullSchedule")}</Link>
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4 rounded-[1.5rem] border border-dashed border-border bg-background p-5">
+                        <p className="text-base font-medium text-foreground">{t("tutorDashboard.noUpcomingLessons")}</p>
+                        <p className="text-sm text-muted-foreground">{t("tutorDashboard.noUpcomingLessonsDescription")}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="border-border">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-foreground">{t("tutorDashboard.quickActions")}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button variant="outline" className="h-14 w-full justify-start rounded-2xl" asChild>
+                      <Link to="/tutor-schedule">
+                        <CalendarDays className="mr-2 h-4 w-4" />
+                        {t("tutorDashboard.manageSchedule")}
+                      </Link>
                     </Button>
-                  </div>
-                ) : (
-                  <div className="space-y-4 rounded-[1.5rem] border border-dashed border-border bg-background p-5">
-                    <p className="text-base font-medium text-foreground">{t("tutorDashboard.noUpcomingLessons")}</p>
-                    <p className="text-sm text-muted-foreground">{t("tutorDashboard.noUpcomingLessonsDescription")}</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                    <Button variant="outline" className="h-14 w-full justify-start rounded-2xl" asChild>
+                      <Link to="/lesson-planner">
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        {t("tutorDashboard.buildLessonPlans")}
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </section>
+            </TabsContent>
 
-            <Card className="border-border">
-              <CardHeader>
-                <CardTitle className="text-xl text-foreground">{t("tutorDashboard.quickActions")}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button variant="outline" className="h-14 w-full justify-start rounded-2xl" asChild>
-                  <Link to="/tutor-schedule">
-                    <CalendarDays className="mr-2 h-4 w-4" />
-                    {t("tutorDashboard.manageSchedule")}
-                  </Link>
-                </Button>
-                <Button variant="outline" className="h-14 w-full justify-start rounded-2xl" asChild>
-                  <Link to="/lesson-planner">
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    {t("tutorDashboard.buildLessonPlans")}
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </section>
+            <TabsContent value="earnings" className="mt-4">
+              <TutorEarnings tutorName={tutorName} />
+            </TabsContent>
+          </Tabs>
         </motion.div>
       </div>
     </Layout>
