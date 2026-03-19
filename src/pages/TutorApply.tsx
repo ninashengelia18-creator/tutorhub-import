@@ -49,7 +49,6 @@ const subjectKeys = [
   { value: "French", key: "tutor.apply.subj.french" },
   { value: "German", key: "tutor.apply.subj.german" },
   { value: "Spanish", key: "tutor.apply.subj.spanish" },
-  
   { value: "Russian", key: "tutor.apply.subj.russian" },
   { value: "National Exams", key: "tutor.apply.subj.nationalExams" },
   { value: "IELTS", key: "tutor.apply.subj.ielts" },
@@ -257,8 +256,6 @@ export default function TutorApply() {
       // Sign out immediately so the applicant doesn't get a logged-in session
       await supabase.auth.signOut();
 
-
-
       // Upload ID document to storage
       let idDocumentUrl: string | null = null;
       if (idFile) {
@@ -323,7 +320,7 @@ export default function TutorApply() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+              apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
             },
             body: JSON.stringify(emailPayload),
           },
@@ -643,7 +640,6 @@ export default function TutorApply() {
                     <SelectTrigger><SelectValue placeholder={t("tutor.apply.selectTimezone")} /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="GMT+0 (London)">GMT+0 (London)</SelectItem>
-                      <SelectItem value="GMT+0 (London)">GMT+0 (London)</SelectItem>
                       <SelectItem value="GMT+1 (Berlin/Paris)">GMT+1 (Berlin/Paris)</SelectItem>
                       <SelectItem value="GMT+2 (Athens/Istanbul)">GMT+2 (Athens/Istanbul)</SelectItem>
                       <SelectItem value="GMT+3 (Moscow)">GMT+3 (Moscow)</SelectItem>
@@ -661,7 +657,6 @@ export default function TutorApply() {
                   <Label>{t("tutor.apply.videoLabel")}</Label>
                   <p className="text-xs text-muted-foreground">{t("tutor.apply.videoDesc")}</p>
                   <Input type="url" placeholder={t("tutor.apply.videoPlaceholder")} className="mt-1" />
-
                 </div>
 
                 {/* ID Verification */}
