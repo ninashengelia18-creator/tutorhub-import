@@ -6,6 +6,10 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// NOTE: This function is kept for backwards compatibility but
+// admin notification is now handled by send-application-confirmation-email.
+// This function can be removed in the future.
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -13,104 +17,45 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const {
-      first_name,
-      last_name,
-      email,
-      phone,
-      country,
-      experience,
-      education,
-      certifications,
-      bio,
-      subjects,
-      hourly_rate,
-      native_language,
-      other_languages,
-      availability,
-      timezone,
-      about_teaching,
-    } = body;
+    const { first_name, last_name, email } = body;
 
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
+    if (!BREVO_API_KEY) {
+      console.log("BREVO_API_KEY not set. Application logged but email not sent.");
+      console.log("Application from:", first_name, last_name, email);
+      return new Response(JSON.stringify({ success: true, note: "No API key" }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-    // Build a simple HTML email with the application details
     const html = `
-      <h2>New Tutor Application</h2>
-      <table style="border-collapse:collapse;width:100%;max-width:600px;">
-        <tr><td style="padding:6px;font-weight:bold;">Name</td><td style="padding:6px;">${first_name} ${last_name}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Email</td><td style="padding:6px;">${email}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Phone</td><td style="padding:6px;">${phone || "—"}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Country</td><td style="padding:6px;">${country || "—"}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Experience</td><td style="padding:6px;">${experience}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Education</td><td style="padding:6px;">${education || "—"}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Certifications</td><td style="padding:6px;">${certifications || "—"}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Bio</td><td style="padding:6px;">${bio}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Subjects</td><td style="padding:6px;">${(subjects || []).join(", ")}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Hourly Rate</td><td style="padding:6px;">$${hourly_rate}/hr</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Native Language</td><td style="padding:6px;">${native_language || "—"}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Other Languages</td><td style="padding:6px;">${other_languages || "—"}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Availability</td><td style="padding:6px;">${availability}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">Timezone</td><td style="padding:6px;">${timezone || "—"}</td></tr>
-        <tr><td style="padding:6px;font-weight:bold;">About Teaching</td><td style="padding:6px;">${about_teaching || "—"}</td></tr>
-      </table>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2>New Tutor Application</h2>
+        <p>A new tutor application has been submitted by <strong>${first_name} ${last_name}</strong> (${email}).</p>
+        <p>Please review it in the <a href="https://learneazy.org/admin/applications">Admin Dashboard</a>.</p>
+      </div>
     `;
 
-    if (RESEND_API_KEY) {
-      // Send admin notification
-      const res = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "LearnEazy <noreply@notify.www.getaiwhisper.com>",
-          to: ["info@learneazy.org"],
-          subject: `New Tutor Application: ${first_name} ${last_name}`,
-          html,
-        }),
-      });
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "api-key": BREVO_API_KEY,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        sender: { name: "LearnEazy", email: "info@learneazy.org" },
+        to: [{ email: "info@learneazy.org", name: "LearnEazy Admin" }],
+        subject: `New Tutor Application: ${first_name} ${last_name}`,
+        htmlContent: html,
+      }),
+    });
 
-      if (!res.ok) {
-        const errText = await res.text();
-        console.error("Resend error (admin):", errText);
-        throw new Error(`Admin email send failed [${res.status}]: ${errText}`);
-      }
-
-      // Send confirmation email to the applicant
-      const confirmationHtml = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #16a34a;">Thank you for applying to LearnEazy!</h2>
-          <p>Dear ${first_name},</p>
-          <p>We have received your application and will review it within 2-3 business days. We will email you with our decision.</p>
-          <p>If you have any questions, contact us at <a href="mailto:info@learneazy.org">info@learneazy.org</a></p>
-          <p style="margin-top: 24px; color: #666;">— The LearnEazy Team</p>
-        </div>
-      `;
-
-      const confirmRes = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "LearnEazy <noreply@notify.www.getaiwhisper.com>",
-          to: [email],
-          subject: "We received your LearnEazy tutor application!",
-          html: confirmationHtml,
-        }),
-      });
-
-      if (!confirmRes.ok) {
-        const errText = await confirmRes.text();
-        console.error("Resend error (confirmation):", errText);
-        // Don't throw — admin email already sent successfully
-      }
-    } else {
-      console.log("RESEND_API_KEY not set. Application logged but email not sent.");
-      console.log("Application from:", first_name, last_name, email);
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("Brevo error:", errText);
+      throw new Error(`Email send failed [${res.status}]: ${errText}`);
     }
 
     return new Response(JSON.stringify({ success: true }), {

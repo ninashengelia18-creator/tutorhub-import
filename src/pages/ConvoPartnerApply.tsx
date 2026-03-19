@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle, User, MessageCircle, Upload, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { submitFormspree } from "@/lib/formspree";
+
 import { supabase } from "@/integrations/supabase/client";
 
 const TOTAL_STEPS = 2;
@@ -81,26 +81,18 @@ export default function ConvoPartnerApply() {
 
       if (dbError) throw dbError;
 
-      // Notify via Formspree
-      await submitFormspree({
-        name: fullName,
-        email: email.trim(),
-        full_name: fullName,
-        subject_taught: "Conversation Partner",
-        bio: whyPartner.trim(),
-        conversation_style: convoStyle.trim() || "Not provided",
-        video_link: videoLink.trim() || "Not provided",
-        country: country.trim() || "Not provided",
-        phone: phone.trim() || "Not provided",
-        _subject: `New Conversation Partner Application: ${fullName}`,
-      }).catch(() => {});
-
-      // Send confirmation email to applicant
+      // Send confirmation email to applicant + admin notification via Brevo
       await supabase.functions.invoke("send-application-confirmation-email", {
         body: {
           first_name: firstName.trim(),
+          last_name: lastName.trim(),
           email: email.trim(),
           application_type: "conversation_partner",
+          phone: phone.trim() || null,
+          country: country.trim() || null,
+          motivation: whyPartner.trim(),
+          conversation_style: convoStyle.trim() || null,
+          video_intro_url: videoLink.trim() || null,
         },
       }).catch(() => {});
 
