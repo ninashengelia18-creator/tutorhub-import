@@ -103,23 +103,25 @@ serve(async (req) => {
     if (isTutor) {
       adminHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h2 style="color: #16a34a;">New Tutor Application</h2>
+          <h2 style="color: #16a34a;">New Tutor Application Received</h2>
+          <p>A new tutor application has been submitted. Here are the details:</p>
           <table style="border-collapse:collapse;width:100%;">
-            <tr><td style="padding:6px;font-weight:bold;">Name</td><td style="padding:6px;">${fullName}</td></tr>
+            <tr><td style="padding:6px;font-weight:bold;">Full Name</td><td style="padding:6px;">${fullName}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Email</td><td style="padding:6px;">${email}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Phone</td><td style="padding:6px;">${phone || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Country</td><td style="padding:6px;">${country || "—"}</td></tr>
+            <tr><td style="padding:6px;font-weight:bold;">Subjects</td><td style="padding:6px;">${(subjects || []).join(", ") || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Experience</td><td style="padding:6px;">${experience || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Education</td><td style="padding:6px;">${education || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Certifications</td><td style="padding:6px;">${certifications || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Bio</td><td style="padding:6px;">${bio || "—"}</td></tr>
-            <tr><td style="padding:6px;font-weight:bold;">Subjects</td><td style="padding:6px;">${(subjects || []).join(", ") || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Hourly Rate</td><td style="padding:6px;">$${hourly_rate || "—"}/hr</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Native Language</td><td style="padding:6px;">${native_language || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Other Languages</td><td style="padding:6px;">${other_languages || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Availability</td><td style="padding:6px;">${availability || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">Timezone</td><td style="padding:6px;">${timezone || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">About Teaching</td><td style="padding:6px;">${about_teaching || "—"}</td></tr>
+            <tr><td style="padding:6px;font-weight:bold;">ID Document</td><td style="padding:6px;">✅ Uploaded</td></tr>
           </table>
           <p style="margin-top: 16px; color: #666; font-size: 13px;">Review this application in the <a href="https://learneazy.org/admin/applications">Admin Dashboard</a>.</p>
         </div>
