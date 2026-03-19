@@ -16,20 +16,48 @@ serve(async (req) => {
     const { email, first_name, last_name, decision } = await req.json();
 
     const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     let resetLink = "";
 
     if (decision === "approved") {
-      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-      const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-      const supabase = createClient(supabaseUrl, supabaseServiceKey);
+      // Step 1: Create the Supabase auth account for the tutor
+      // Use a random temporary password — they'll set their own via the reset link
+      const tempPassword = crypto.randomUUID();
+      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+        email,
+        password: tempPassword,
+        email_confirm: true, // skip email confirmation, we handle it ourselves
+        user_metadata: {
+          display_name: `${first_name} ${last_name}`,
+        },
+      });
 
+      if (createError && !createError.message.toLowerCase().includes("already registered")) {
+        console.error("Failed to create tutor account:", createError.message);
+        throw new Error(`Account creation failed: ${createError.message}`);
+      }
+
+      // Step 2: Assign tutor role in user_roles table
+      const userId = newUser?.user?.id;
+      if (userId) {
+        const { error: roleError } = await supabase
+          .from("user_roles")
+          .insert({ user_id: userId, role: "tutor" });
+        if (roleError) {
+          console.error("Failed to assign tutor role:", roleError.message);
+        }
+      }
+
+      // Step 3: Generate password setup link pointing to tutor dashboard
       try {
         const { data, error } = await supabase.auth.admin.generateLink({
           type: "recovery",
           email,
           options: {
-            redirectTo: "https://www.learneazy.org/reset-password",
+            redirectTo: "https://www.learneazy.org/reset-password?role=tutor",
           },
         });
         if (error) {
@@ -55,18 +83,18 @@ serve(async (req) => {
             Set Up Your Password
           </a>
         </div>
-        <p style="color: #555; font-size: 14px;">Once you've set your password, you can log in anytime at:</p>
+        <p style="color: #555; font-size: 14px;">Once you've set your password, you can log in to your tutor dashboard at:</p>
         <div style="margin: 12px 0 24px 0;">
-          <a href="https://www.learneazy.org/login"
+          <a href="https://www.learneazy.org/tutor-dashboard"
              style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-            Log in to LearnEazy
+            Go to Tutor Dashboard
           </a>
         </div>`
       : `
         <div style="margin: 24px 0;">
-          <a href="https://www.learneazy.org/login"
+          <a href="https://www.learneazy.org/login?portal=tutor"
              style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-            Log in to LearnEazy
+            Log in to Tutor Portal
           </a>
         </div>`;
 
@@ -123,27 +151,6 @@ serve(async (req) => {
       }
     } else {
       console.log("BREVO_API_KEY not set. Decision logged but email not sent.");
-      console.log(`Decision: ${decision} for ${first_name} ${last_name} (${email})`);
-    }
-
-    // Also trigger a Supabase password reset email for approved tutors
-    if (decision === "approved") {
-      try {
-        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-        const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-        const resetSupabase = createClient(supabaseUrl, supabaseServiceKey);
-
-        const { error: resetError } = await resetSupabase.auth.resetPasswordForEmail(email, {
-          redirectTo: "https://www.learneazy.org/reset-password",
-        });
-        if (resetError) {
-          console.error("Failed to send Supabase password reset email:", resetError.message);
-        } else {
-          console.log("Supabase password reset email sent to:", email);
-        }
-      } catch (resetErr) {
-        console.error("Error sending Supabase password reset email:", resetErr);
-      }
     }
 
     return new Response(JSON.stringify({ success: true }), {
