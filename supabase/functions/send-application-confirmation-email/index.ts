@@ -19,9 +19,9 @@ serve(async (req) => {
       throw new Error("Missing required fields: first_name, email, application_type");
     }
 
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    if (!RESEND_API_KEY) {
-      throw new Error("RESEND_API_KEY is not configured");
+    const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
+    if (!BREVO_API_KEY) {
+      throw new Error("BREVO_API_KEY is not configured");
     }
 
     const roleLabel = application_type === "tutor" ? "Tutor" : "Conversation Partner";
@@ -39,24 +39,25 @@ serve(async (req) => {
 
     const bodyPreview = `Hi ${first_name}, thank you for applying as a ${roleLabel}. We'll respond within 3–5 business days.`;
 
-    // Send email via Resend
-    const res = await fetch("https://api.resend.com/emails", {
+    // Send email via Brevo
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "api-key": BREVO_API_KEY,
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify({
-        from: "Learneazy Applications <applications@my-domain.com>",
-        to: [email],
+        sender: { name: "LearnEazy", email: "info@learneazy.org" },
+        to: [{ email, name: first_name }],
         subject,
-        html: htmlBody,
+        htmlContent: htmlBody,
       }),
     });
 
     if (!res.ok) {
       const errText = await res.text();
-      console.error("Resend error:", errText);
+      console.error("Brevo error:", errText);
       throw new Error(`Email send failed [${res.status}]: ${errText}`);
     }
 

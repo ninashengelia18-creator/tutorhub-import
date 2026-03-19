@@ -14,7 +14,7 @@ serve(async (req) => {
   try {
     const { email, first_name, last_name, decision } = await req.json();
 
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
 
     const subject =
       decision === "approved"
@@ -47,28 +47,29 @@ serve(async (req) => {
         <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
       </div>`;
 
-    if (RESEND_API_KEY) {
-      const res = await fetch("https://api.resend.com/emails", {
+    if (BREVO_API_KEY) {
+      const res = await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
+          "api-key": BREVO_API_KEY,
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
-          from: "LearnEazy <noreply@notify.www.getaiwhisper.com>",
-          to: [email],
+          sender: { name: "LearnEazy", email: "info@learneazy.org" },
+          to: [{ email, name: `${first_name} ${last_name}` }],
           subject,
-          html,
+          htmlContent: html,
         }),
       });
 
       if (!res.ok) {
         const errText = await res.text();
-        console.error("Resend error:", errText);
+        console.error("Brevo error:", errText);
         throw new Error(`Email send failed [${res.status}]: ${errText}`);
       }
     } else {
-      console.log("RESEND_API_KEY not set. Decision logged but email not sent.");
+      console.log("BREVO_API_KEY not set. Decision logged but email not sent.");
       console.log(`Decision: ${decision} for ${first_name} ${last_name} (${email})`);
     }
 
