@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,10 +17,58 @@ serve(async (req) => {
 
     const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
 
+    let resetLink = "";
+
+    if (decision === "approved") {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+      try {
+        const { data, error } = await supabase.auth.admin.generateLink({
+          type: "recovery",
+          email,
+          options: {
+            redirectTo: "https://www.learneazy.org/reset-password",
+          },
+        });
+        if (error) {
+          console.error("Failed to generate reset link:", error.message);
+        } else if (data?.properties?.action_link) {
+          resetLink = data.properties.action_link;
+        }
+      } catch (err) {
+        console.error("Error generating reset link:", err);
+      }
+    }
+
     const subject =
       decision === "approved"
         ? `Congratulations! You've been accepted as a tutor on LearnEazy`
         : `Your LearnEazy tutor application update`;
+
+    const resetButton = resetLink
+      ? `
+        <div style="margin: 24px 0;">
+          <a href="${resetLink}"
+             style="display: inline-block; background: #2563eb; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            Set Up Your Password
+          </a>
+        </div>
+        <p style="color: #555; font-size: 14px;">Once you've set your password, you can log in anytime at:</p>
+        <div style="margin: 12px 0 24px 0;">
+          <a href="https://www.learneazy.org/login"
+             style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            Log in to LearnEazy
+          </a>
+        </div>`
+      : `
+        <div style="margin: 24px 0;">
+          <a href="https://www.learneazy.org/login"
+             style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            Log in to LearnEazy
+          </a>
+        </div>`;
 
     const html =
       decision === "approved"
@@ -30,16 +79,12 @@ serve(async (req) => {
         <p>You are now an official LearnEazy tutor and can start teaching on the platform right away.</p>
         <p>Here's what to do next:</p>
         <ol style="line-height: 1.8;">
+          <li><strong>Set up your password</strong> using the button below</li>
           <li>Log in to your tutor dashboard</li>
           <li>Set up your availability so students can book lessons with you</li>
           <li>Start accepting bookings and teaching!</li>
         </ol>
-        <div style="margin: 24px 0;">
-          <a href="https://www.learneazy.org/login"
-             style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-            Log in to LearnEazy
-          </a>
-        </div>
+        ${resetButton}
         <p style="color: #555; font-size: 14px;">Once you complete your first session, we will be in touch to collect your payment details for earnings withdrawals.</p>
         <p style="color: #666; font-size: 14px;">If you have any questions, contact us at <a href="mailto:info@learneazy.org">info@learneazy.org</a>.</p>
         <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
