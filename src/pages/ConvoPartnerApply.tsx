@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle, User, MessageCircle, Upload, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { submitFormspree } from "@/lib/formspree";
+
 import { supabase } from "@/integrations/supabase/client";
 
 const TOTAL_STEPS = 2;
