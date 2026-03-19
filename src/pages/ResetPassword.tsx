@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,10 @@ import { Lock } from "lucide-react";
 
 export default function ResetPassword() {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -26,20 +28,48 @@ export default function ResetPassword() {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (password.length < 6) {
       toast({ title: t("auth.error"), description: t("auth.passwordMin"), variant: "destructive" });
       return;
     }
-    setLoading(true);
 
-    const { error } = await supabase.auth.updateUser({ password });
+    if (password !== confirmPassword) {
+      toast({ title: t("auth.error"), description: "Passwords do not match.", variant: "destructive" });
+      return;
+    }
+
+    setLoading(true);
+    const { data, error } = await supabase.auth.updateUser({ password });
 
     if (error) {
       toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: t("auth.passwordUpdated") });
-      navigate("/login");
+      setLoading(false);
+      return;
     }
+
+    toast({ title: t("auth.passwordUpdated") });
+
+    // Check if the user is a tutor and redirect accordingly
+    if (data?.user) {
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", data.user.id);
+
+      const userRoles = (roles ?? []).map((r) => r.role);
+
+      if (userRoles.includes("admin")) {
+        navigate("/admin", { replace: true });
+      } else if (userRoles.includes("tutor")) {
+        navigate("/tutor-dashboard", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
+    } else {
+      navigate("/login", { replace: true });
+    }
+
     setLoading(false);
   };
 
@@ -68,6 +98,18 @@ export default function ResetPassword() {
                   minLength={6}
                 />
                 <p className="text-xs text-muted-foreground">{t("auth.passwordMin")}</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
               </div>
             </CardContent>
             <CardFooter>
