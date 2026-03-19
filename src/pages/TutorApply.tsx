@@ -235,6 +235,7 @@ export default function TutorApply() {
       };
 
       try {
+        console.log("Calling email function:", `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-application-confirmation-email`);
         const emailResponse = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-application-confirmation-email`,
           {
