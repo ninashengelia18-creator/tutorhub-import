@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   getTutorApplicationErrorMessage,
   tutorApplicationSchema,
+  tutorApplicationFieldSchemas,
 } from "@/lib/tutorApplicationValidation";
 
 import { supabase } from "@/integrations/supabase/client";
