@@ -151,7 +151,7 @@ serve(async (req) => {
 
     await sendBrevoEmail(
       BREVO_API_KEY,
-      [{ email: "info@learneazy.org", name: "LearnEazy Admin" }],
+      [{ email: "galinakutubidze1@gmail.com", name: "LearnEazy Admin" }],
       adminSubject,
       adminHtml,
     );
