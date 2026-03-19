@@ -260,33 +260,63 @@ export default function TutorApply() {
       if (dbError) throw dbError;
 
       // Send confirmation email to applicant + admin notification via Brevo
+      const emailPayload = {
+        first_name: validatedData.firstName.trim(),
+        last_name: validatedData.lastName.trim(),
+        email: validatedData.email.trim(),
+        application_type: "tutor",
+        phone: validatedData.phone?.trim() || null,
+        country: validatedData.country.trim() || null,
+        experience: validatedData.experience,
+        education: validatedData.education.trim() || null,
+        certifications: validatedData.certifications.trim() || null,
+        bio: validatedData.bio.trim(),
+        subjects: validatedData.selectedSubjects,
+        hourly_rate: Number(validatedData.hourlyRate),
+        native_language: validatedData.nativeLanguage.trim() || null,
+        other_languages: validatedData.otherLanguages.trim() || null,
+        availability: validatedData.availability,
+        timezone: validatedData.timezone.trim() || null,
+        about_teaching: validatedData.aboutTeaching.trim() || null,
+        id_document_url: idDocumentUrl,
+      };
+
       try {
-        const { error: emailError } = await supabase.functions.invoke("send-application-confirmation-email", {
-          body: {
-            first_name: validatedData.firstName.trim(),
-            last_name: validatedData.lastName.trim(),
-            email: validatedData.email.trim(),
-            application_type: "tutor",
-            phone: validatedData.phone?.trim() || null,
-            country: validatedData.country.trim() || null,
-            experience: validatedData.experience,
-            education: validatedData.education.trim() || null,
-            certifications: validatedData.certifications.trim() || null,
-            bio: validatedData.bio.trim(),
-            subjects: validatedData.selectedSubjects,
-            hourly_rate: Number(validatedData.hourlyRate),
-            native_language: validatedData.nativeLanguage.trim() || null,
-            other_languages: validatedData.otherLanguages.trim() || null,
-            availability: validatedData.availability,
-            timezone: validatedData.timezone.trim() || null,
-            about_teaching: validatedData.aboutTeaching.trim() || null,
+        const emailResponse = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-application-confirmation-email`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            },
+            body: JSON.stringify(emailPayload),
           },
-        });
-        if (emailError) {
-          console.error("Email notification error:", emailError);
+        );
+
+        const responseText = await emailResponse.text();
+        const responseData = responseText ? JSON.parse(responseText) : null;
+
+        if (!emailResponse.ok || responseData?.success === false) {
+          console.error("Tutor application email notification failed:", {
+            status: emailResponse.status,
+            body: responseData ?? responseText,
+            payload: emailPayload,
+          });
+          toast({
+            title: "Application submitted",
+            description: "Your application was saved, but the email notification could not be sent automatically.",
+          });
         }
       } catch (emailErr) {
-        console.error("Failed to send notification email:", emailErr);
+        console.error("Failed to call tutor application email notification endpoint:", {
+          error: emailErr,
+          payload: emailPayload,
+        });
+        toast({
+          title: "Application submitted",
+          description: "Your application was saved, but the email notification request failed.",
+        });
       }
 
       clearStepErrors(["availability", "agreeTerms"]);
