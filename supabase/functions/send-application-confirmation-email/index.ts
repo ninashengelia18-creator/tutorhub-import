@@ -12,6 +12,7 @@ async function sendBrevoEmail(
   to: { email: string; name: string }[],
   subject: string,
   htmlContent: string,
+  senderEmail = "info@learneazy.org",
 ) {
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -21,7 +22,7 @@ async function sendBrevoEmail(
       Accept: "application/json",
     },
     body: JSON.stringify({
-      sender: { name: "LearnEazy", email: "info@learneazy.org" },
+      sender: { name: "LearnEazy", email: senderEmail },
       to,
       subject,
       htmlContent,
