@@ -35,7 +35,7 @@ serve(async (req) => {
           <li>Start accepting bookings and teaching!</li>
         </ol>
         <div style="margin: 24px 0;">
-          <a href="https://learneazy.org/login?portal=tutor"
+          <a href="https://www.learneazy.org/login"
              style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
             Log in to LearnEazy
           </a>
