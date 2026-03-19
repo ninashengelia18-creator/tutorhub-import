@@ -472,6 +472,38 @@ export default function TutorApply() {
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
+                    <Label>Password *</Label>
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setFieldError("password", e.target.value);
+                        if (confirmPassword) setFieldError("confirmPassword", confirmPassword);
+                      }}
+                      aria-invalid={Boolean(errors.password)}
+                    />
+                    <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
+                    {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Confirm Password *</Label>
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        setFieldError("confirmPassword", e.target.value);
+                      }}
+                      aria-invalid={Boolean(errors.confirmPassword)}
+                    />
+                    {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
                     <Label>{t("tutor.apply.phone")}</Label>
                     <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
                   </div>
