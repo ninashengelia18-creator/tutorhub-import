@@ -188,7 +188,7 @@ export default function TutorApply() {
   const canProceed = () => {
     switch (step) {
       case 1:
-        return !getFieldError("firstName", firstName) && !getFieldError("lastName", lastName) && !getFieldError("email", email);
+        return !getFieldError("firstName", firstName) && !getFieldError("lastName", lastName) && !getFieldError("email", email) && !getFieldError("password", password) && !getFieldError("confirmPassword", confirmPassword);
       case 2:
         return !getFieldError("experience", experience) && !getFieldError("bio", bio);
       case 3:
