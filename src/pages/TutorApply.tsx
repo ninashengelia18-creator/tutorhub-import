@@ -101,7 +101,14 @@ export default function TutorApply() {
   const fullName = useMemo(() => [firstName.trim(), lastName.trim()].filter(Boolean).join(" "), [firstName, lastName]);
 
   const getFieldError = (fieldName: FieldName, value: unknown) => {
-    const result = tutorApplicationSchema.shape[fieldName].safeParse(value);
+    if (fieldName === "confirmPassword") {
+      if (!value || (typeof value === "string" && value.length === 0)) return "Please confirm your password.";
+      if (value !== password) return "Passwords do not match.";
+      return undefined;
+    }
+    const schema = tutorApplicationFieldSchemas[fieldName];
+    if (!schema) return undefined;
+    const result = schema.safeParse(value);
     return result.success ? undefined : result.error.issues[0]?.message;
   };
 
