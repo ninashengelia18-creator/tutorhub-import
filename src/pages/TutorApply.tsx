@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   getTutorApplicationErrorMessage,
   tutorApplicationSchema,
+  tutorApplicationFieldSchemas,
 } from "@/lib/tutorApplicationValidation";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -23,6 +24,8 @@ type FieldName =
   | "firstName"
   | "lastName"
   | "email"
+  | "password"
+  | "confirmPassword"
   | "experience"
   | "bio"
   | "selectedSubjects"
@@ -67,6 +70,8 @@ export default function TutorApply() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
 
@@ -96,7 +101,14 @@ export default function TutorApply() {
   const fullName = useMemo(() => [firstName.trim(), lastName.trim()].filter(Boolean).join(" "), [firstName, lastName]);
 
   const getFieldError = (fieldName: FieldName, value: unknown) => {
-    const result = tutorApplicationSchema.shape[fieldName].safeParse(value);
+    if (fieldName === "confirmPassword") {
+      if (!value || (typeof value === "string" && value.length === 0)) return "Please confirm your password.";
+      if (value !== password) return "Passwords do not match.";
+      return undefined;
+    }
+    const schema = tutorApplicationFieldSchemas[fieldName];
+    if (!schema) return undefined;
+    const result = schema.safeParse(value);
     return result.success ? undefined : result.error.issues[0]?.message;
   };
 
@@ -122,6 +134,8 @@ export default function TutorApply() {
       nextErrors.firstName = getFieldError("firstName", firstName);
       nextErrors.lastName = getFieldError("lastName", lastName);
       nextErrors.email = getFieldError("email", email);
+      nextErrors.password = getFieldError("password", password) as string | undefined;
+      nextErrors.confirmPassword = getFieldError("confirmPassword", confirmPassword) as string | undefined;
     }
 
     if (step === 2) {
@@ -174,7 +188,7 @@ export default function TutorApply() {
   const canProceed = () => {
     switch (step) {
       case 1:
-        return !getFieldError("firstName", firstName) && !getFieldError("lastName", lastName) && !getFieldError("email", email);
+        return !getFieldError("firstName", firstName) && !getFieldError("lastName", lastName) && !getFieldError("email", email) && !getFieldError("password", password) && !getFieldError("confirmPassword", confirmPassword);
       case 2:
         return !getFieldError("experience", experience) && !getFieldError("bio", bio);
       case 3:
@@ -189,7 +203,7 @@ export default function TutorApply() {
   const handleNextStep = () => {
     if (!validateCurrentStep()) return;
 
-    if (step === 1) clearStepErrors(["firstName", "lastName", "email"]);
+    if (step === 1) clearStepErrors(["firstName", "lastName", "email", "password", "confirmPassword"]);
     if (step === 2) clearStepErrors(["experience", "bio"]);
     if (step === 3) clearStepErrors(["selectedSubjects", "hourlyRate"]);
 
@@ -206,6 +220,8 @@ export default function TutorApply() {
         firstName,
         lastName,
         email,
+        password,
+        confirmPassword,
         phone,
         country,
         experience,
@@ -221,6 +237,25 @@ export default function TutorApply() {
         aboutTeaching,
         agreeTerms,
       });
+
+      // Create auth account for the tutor
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: validatedData.email.trim(),
+        password: validatedData.password,
+        options: {
+          data: {
+            display_name: `${validatedData.firstName.trim()} ${validatedData.lastName.trim()}`,
+          },
+        },
+      });
+      if (signUpError) {
+        // If user already exists, continue with the application
+        if (!signUpError.message.toLowerCase().includes("already registered")) {
+          throw new Error(`Account creation failed: ${signUpError.message}`);
+        }
+      }
+      // Sign out immediately so the applicant doesn't get a logged-in session
+      await supabase.auth.signOut();
 
 
 
@@ -434,6 +469,38 @@ export default function TutorApply() {
                     aria-invalid={Boolean(errors.email)}
                   />
                   {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Password *</Label>
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setFieldError("password", e.target.value);
+                        if (confirmPassword) setFieldError("confirmPassword", confirmPassword);
+                      }}
+                      aria-invalid={Boolean(errors.password)}
+                    />
+                    <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
+                    {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Confirm Password *</Label>
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        setFieldError("confirmPassword", e.target.value);
+                      }}
+                      aria-invalid={Boolean(errors.confirmPassword)}
+                    />
+                    {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
+                  </div>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
