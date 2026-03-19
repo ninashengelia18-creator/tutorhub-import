@@ -23,6 +23,8 @@ type FieldName =
   | "firstName"
   | "lastName"
   | "email"
+  | "password"
+  | "confirmPassword"
   | "experience"
   | "bio"
   | "selectedSubjects"

@@ -126,6 +126,26 @@ serve(async (req) => {
       console.log(`Decision: ${decision} for ${first_name} ${last_name} (${email})`);
     }
 
+    // Also trigger a Supabase password reset email for approved tutors
+    if (decision === "approved") {
+      try {
+        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+        const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+        const resetSupabase = createClient(supabaseUrl, supabaseServiceKey);
+
+        const { error: resetError } = await resetSupabase.auth.resetPasswordForEmail(email, {
+          redirectTo: "https://www.learneazy.org/reset-password",
+        });
+        if (resetError) {
+          console.error("Failed to send Supabase password reset email:", resetError.message);
+        } else {
+          console.log("Supabase password reset email sent to:", email);
+        }
+      } catch (resetErr) {
+        console.error("Error sending Supabase password reset email:", resetErr);
+      }
+    }
+
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
