@@ -222,23 +222,7 @@ export default function TutorApply() {
         agreeTerms,
       });
 
-      const payload = {
-        name: fullName,
-        email: validatedData.email.trim(),
-        full_name: fullName,
-        subject_taught: validatedData.selectedSubjects.join(", "),
-        experience: validatedData.experience,
-        qualifications: [validatedData.education.trim(), validatedData.certifications.trim()].filter(Boolean).join(" | ") || "Not provided",
-        languages_spoken: [validatedData.nativeLanguage.trim(), validatedData.otherLanguages.trim()].filter(Boolean).join(", ") || "Not provided",
-        hourly_rate: Number(validatedData.hourlyRate),
-        country: validatedData.country.trim() || "Not provided",
-        phone: validatedData.phone?.trim() || "Not provided",
-        availability: validatedData.availability,
-        timezone: validatedData.timezone.trim() || "Not provided",
-        about_teaching: validatedData.aboutTeaching.trim() || "Not provided",
-        bio: validatedData.bio.trim(),
-        _subject: `New Tutor Application: ${fullName}`,
-      };
+
 
       // Upload ID document to storage
       let idDocumentUrl: string | null = null;
