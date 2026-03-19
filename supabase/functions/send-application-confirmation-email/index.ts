@@ -144,10 +144,14 @@ serve(async (req) => {
       `;
     }
 
+    const adminSubject = isTutor
+      ? `New Tutor Application Received`
+      : `New Conversation Partner Application: ${fullName}`;
+
     await sendBrevoEmail(
       BREVO_API_KEY,
       [{ email: "info@learneazy.org", name: "LearnEazy Admin" }],
-      `New ${roleLabel} Application: ${fullName}`,
+      adminSubject,
       adminHtml,
     );
 

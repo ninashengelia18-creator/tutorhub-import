@@ -18,16 +18,22 @@ serve(async (req) => {
 
     const subject =
       decision === "approved"
-        ? `Congratulations ${first_name}! Your LearnEazy tutor application has been approved!`
-        : `LearnEazy Tutor Application Update`;
+        ? `Congratulations! You've been accepted as a tutor on LearnEazy`
+        : `Your LearnEazy tutor application update`;
 
     const html =
       decision === "approved"
         ? `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #16a34a;">🎉 Congratulations, ${first_name}!</h2>
-        <p>Your LearnEazy tutor application has been <strong>approved</strong>!</p>
-        <p>You can now log in and start setting up your availability to receive student bookings.</p>
+        <h2 style="color: #16a34a;">🎉 Welcome to LearnEazy, ${first_name}!</h2>
+        <p>We're thrilled to let you know that your tutor application has been <strong>approved</strong>!</p>
+        <p>You are now an official LearnEazy tutor and can start teaching on the platform right away.</p>
+        <p>Here's what to do next:</p>
+        <ol style="line-height: 1.8;">
+          <li>Log in to your tutor dashboard</li>
+          <li>Set up your availability so students can book lessons with you</li>
+          <li>Start accepting bookings and teaching!</li>
+        </ol>
         <div style="margin: 24px 0;">
           <a href="https://learneazy.org/login?portal=tutor"
              style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
@@ -35,15 +41,17 @@ serve(async (req) => {
           </a>
         </div>
         <p style="color: #555; font-size: 14px;">Once you complete your first session, we will be in touch to collect your payment details for earnings withdrawals.</p>
-        <p style="color: #666; font-size: 14px;">If you have any questions, contact us at info@learneazy.org</p>
+        <p style="color: #666; font-size: 14px;">If you have any questions, contact us at <a href="mailto:info@learneazy.org">info@learneazy.org</a>.</p>
         <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
       </div>`
         : `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2>Hi ${first_name},</h2>
-        <p>Thank you for applying to become a tutor on LearnEazy.</p>
-        <p>After careful review, we are unable to approve your application at this time.</p>
-        <p>If you have questions or would like to reapply in the future, please contact us at <a href="mailto:info@learneazy.org">info@learneazy.org</a>.</p>
+        <p>Thank you for your interest in becoming a tutor on LearnEazy and for taking the time to apply.</p>
+        <p>After careful review, we regret to inform you that we are unable to approve your application at this time.</p>
+        <p>This doesn't mean the door is closed — we encourage you to <strong>reapply in the future</strong> as our needs and criteria may change.</p>
+        <p>If you have any questions or would like feedback on your application, please don't hesitate to reach out to us at <a href="mailto:info@learneazy.org">info@learneazy.org</a>.</p>
+        <p style="margin-top: 24px; color: #666;">We wish you all the best!</p>
         <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
       </div>`;
 
