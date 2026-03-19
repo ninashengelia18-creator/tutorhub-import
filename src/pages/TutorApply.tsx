@@ -134,6 +134,8 @@ export default function TutorApply() {
       nextErrors.firstName = getFieldError("firstName", firstName);
       nextErrors.lastName = getFieldError("lastName", lastName);
       nextErrors.email = getFieldError("email", email);
+      nextErrors.password = getFieldError("password", password) as string | undefined;
+      nextErrors.confirmPassword = getFieldError("confirmPassword", confirmPassword) as string | undefined;
     }
 
     if (step === 2) {
