@@ -260,27 +260,34 @@ export default function TutorApply() {
       if (dbError) throw dbError;
 
       // Send confirmation email to applicant + admin notification via Brevo
-      await supabase.functions.invoke("send-application-confirmation-email", {
-        body: {
-          first_name: validatedData.firstName.trim(),
-          last_name: validatedData.lastName.trim(),
-          email: validatedData.email.trim(),
-          application_type: "tutor",
-          phone: validatedData.phone?.trim() || null,
-          country: validatedData.country.trim() || null,
-          experience: validatedData.experience,
-          education: validatedData.education.trim() || null,
-          certifications: validatedData.certifications.trim() || null,
-          bio: validatedData.bio.trim(),
-          subjects: validatedData.selectedSubjects,
-          hourly_rate: Number(validatedData.hourlyRate),
-          native_language: validatedData.nativeLanguage.trim() || null,
-          other_languages: validatedData.otherLanguages.trim() || null,
-          availability: validatedData.availability,
-          timezone: validatedData.timezone.trim() || null,
-          about_teaching: validatedData.aboutTeaching.trim() || null,
-        },
-      }).catch(() => {});
+      try {
+        const { error: emailError } = await supabase.functions.invoke("send-application-confirmation-email", {
+          body: {
+            first_name: validatedData.firstName.trim(),
+            last_name: validatedData.lastName.trim(),
+            email: validatedData.email.trim(),
+            application_type: "tutor",
+            phone: validatedData.phone?.trim() || null,
+            country: validatedData.country.trim() || null,
+            experience: validatedData.experience,
+            education: validatedData.education.trim() || null,
+            certifications: validatedData.certifications.trim() || null,
+            bio: validatedData.bio.trim(),
+            subjects: validatedData.selectedSubjects,
+            hourly_rate: Number(validatedData.hourlyRate),
+            native_language: validatedData.nativeLanguage.trim() || null,
+            other_languages: validatedData.otherLanguages.trim() || null,
+            availability: validatedData.availability,
+            timezone: validatedData.timezone.trim() || null,
+            about_teaching: validatedData.aboutTeaching.trim() || null,
+          },
+        });
+        if (emailError) {
+          console.error("Email notification error:", emailError);
+        }
+      } catch (emailErr) {
+        console.error("Failed to send notification email:", emailErr);
+      }
 
       clearStepErrors(["availability", "agreeTerms"]);
       setSubmitted(true);

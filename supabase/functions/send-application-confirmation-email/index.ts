@@ -123,7 +123,7 @@ serve(async (req) => {
             <tr><td style="padding:6px;font-weight:bold;">About Teaching</td><td style="padding:6px;">${about_teaching || "—"}</td></tr>
             <tr><td style="padding:6px;font-weight:bold;">ID Document</td><td style="padding:6px;">✅ Uploaded</td></tr>
           </table>
-          <p style="margin-top: 16px; color: #666; font-size: 13px;">Review this application in the <a href="https://learneazy.org/admin/applications">Admin Dashboard</a>.</p>
+          <p style="margin-top: 16px; color: #666; font-size: 13px;">Review this application in the <a href="https://www.learneazy.org/admin/applications">Admin Dashboard</a>.</p>
         </div>
       `;
     } else {
