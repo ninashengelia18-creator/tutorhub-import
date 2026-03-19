@@ -24,8 +24,6 @@ type FieldName =
   | "firstName"
   | "lastName"
   | "email"
-  | "password"
-  | "confirmPassword"
   | "experience"
   | "bio"
   | "selectedSubjects"
@@ -34,26 +32,6 @@ type FieldName =
   | "agreeTerms";
 
 type FormErrors = Partial<Record<FieldName, string>>;
-
-const subjectKeys = [
-  { value: "English", key: "tutor.apply.subj.english" },
-  { value: "Mathematics", key: "tutor.apply.subj.mathematics" },
-  { value: "Physics", key: "tutor.apply.subj.physics" },
-  { value: "Chemistry", key: "tutor.apply.subj.chemistry" },
-  { value: "Biology", key: "tutor.apply.subj.biology" },
-  { value: "History", key: "tutor.apply.subj.history" },
-  { value: "Geography", key: "tutor.apply.subj.geography" },
-  { value: "Computer Science", key: "tutor.apply.subj.computerScience" },
-  { value: "Business", key: "tutor.apply.subj.business" },
-  { value: "Music", key: "tutor.apply.subj.music" },
-  { value: "French", key: "tutor.apply.subj.french" },
-  { value: "German", key: "tutor.apply.subj.german" },
-  { value: "Spanish", key: "tutor.apply.subj.spanish" },
-  { value: "Russian", key: "tutor.apply.subj.russian" },
-  { value: "National Exams", key: "tutor.apply.subj.nationalExams" },
-  { value: "IELTS", key: "tutor.apply.subj.ielts" },
-  { value: "TOEFL", key: "tutor.apply.subj.toefl" },
-];
 
 const experienceOptions = ["0-1 years", "1-3 years", "3-5 years", "5-10 years", "10+ years"];
 
@@ -69,8 +47,6 @@ export default function TutorApply() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
 
@@ -97,14 +73,7 @@ export default function TutorApply() {
   const [idError, setIdError] = useState<string | null>(null);
   const idInputRef = useRef<HTMLInputElement>(null);
 
-  const fullName = useMemo(() => [firstName.trim(), lastName.trim()].filter(Boolean).join(" "), [firstName, lastName]);
-
   const getFieldError = (fieldName: FieldName, value: unknown) => {
-    if (fieldName === "confirmPassword") {
-      if (!value || (typeof value === "string" && value.length === 0)) return "Please confirm your password.";
-      if (value !== password) return "Passwords do not match.";
-      return undefined;
-    }
     const schema = tutorApplicationFieldSchemas[fieldName];
     if (!schema) return undefined;
     const result = schema.safeParse(value);
@@ -115,13 +84,11 @@ export default function TutorApply() {
     setErrors((prev) => {
       const next = { ...prev };
       const message = getFieldError(fieldName, value);
-
       if (message) {
         next[fieldName] = message;
       } else {
         delete next[fieldName];
       }
-
       return next;
     });
   };
@@ -133,8 +100,6 @@ export default function TutorApply() {
       nextErrors.firstName = getFieldError("firstName", firstName);
       nextErrors.lastName = getFieldError("lastName", lastName);
       nextErrors.email = getFieldError("email", email);
-      nextErrors.password = getFieldError("password", password) as string | undefined;
-      nextErrors.confirmPassword = getFieldError("confirmPassword", confirmPassword) as string | undefined;
     }
 
     if (step === 2) {
@@ -187,7 +152,7 @@ export default function TutorApply() {
   const canProceed = () => {
     switch (step) {
       case 1:
-        return !getFieldError("firstName", firstName) && !getFieldError("lastName", lastName) && !getFieldError("email", email) && !getFieldError("password", password) && !getFieldError("confirmPassword", confirmPassword);
+        return !getFieldError("firstName", firstName) && !getFieldError("lastName", lastName) && !getFieldError("email", email);
       case 2:
         return !getFieldError("experience", experience) && !getFieldError("bio", bio);
       case 3:
@@ -201,61 +166,17 @@ export default function TutorApply() {
 
   const handleNextStep = () => {
     if (!validateCurrentStep()) return;
-
-    if (step === 1) clearStepErrors(["firstName", "lastName", "email", "password", "confirmPassword"]);
+    if (step === 1) clearStepErrors(["firstName", "lastName", "email"]);
     if (step === 2) clearStepErrors(["experience", "bio"]);
     if (step === 3) clearStepErrors(["selectedSubjects", "hourlyRate"]);
-
     setStep((currentStep) => currentStep + 1);
   };
 
   const handleSubmit = async () => {
     if (!validateCurrentStep()) return;
-
     setSubmitting(true);
 
     try {
-      const validatedData = tutorApplicationSchema.parse({
-        firstName,
-        lastName,
-        email,
-        password,
-        confirmPassword,
-        phone,
-        country,
-        experience,
-        education,
-        certifications,
-        bio,
-        selectedSubjects,
-        hourlyRate,
-        nativeLanguage,
-        otherLanguages,
-        availability,
-        timezone,
-        aboutTeaching,
-        agreeTerms,
-      });
-
-      // Create auth account for the tutor
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: validatedData.email.trim(),
-        password: validatedData.password,
-        options: {
-          data: {
-            display_name: `${validatedData.firstName.trim()} ${validatedData.lastName.trim()}`,
-          },
-        },
-      });
-      if (signUpError) {
-        // If user already exists, continue with the application
-        if (!signUpError.message.toLowerCase().includes("already registered")) {
-          throw new Error(`Account creation failed: ${signUpError.message}`);
-        }
-      }
-      // Sign out immediately so the applicant doesn't get a logged-in session
-      await supabase.auth.signOut();
-
       // Upload ID document to storage
       let idDocumentUrl: string | null = null;
       if (idFile) {
@@ -268,24 +189,24 @@ export default function TutorApply() {
         idDocumentUrl = filePath;
       }
 
-      // Insert into database for admin review
+      // Insert into database for admin review — NO account created yet
       const { error: dbError } = await supabase.from("tutor_applications").insert({
-        first_name: validatedData.firstName.trim(),
-        last_name: validatedData.lastName.trim(),
-        email: validatedData.email.trim(),
-        phone: validatedData.phone?.trim() || null,
-        country: validatedData.country.trim() || null,
-        experience: validatedData.experience,
-        education: validatedData.education.trim() || null,
-        certifications: validatedData.certifications.trim() || null,
-        bio: validatedData.bio.trim(),
-        subjects: validatedData.selectedSubjects,
-        hourly_rate: Number(validatedData.hourlyRate),
-        native_language: validatedData.nativeLanguage.trim() || null,
-        other_languages: validatedData.otherLanguages.trim() || null,
-        availability: validatedData.availability,
-        timezone: validatedData.timezone.trim() || null,
-        about_teaching: validatedData.aboutTeaching.trim() || null,
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        email: email.trim().toLowerCase(),
+        phone: phone?.trim() || null,
+        country: country.trim() || null,
+        experience,
+        education: education.trim() || null,
+        certifications: certifications.trim() || null,
+        bio: bio.trim(),
+        subjects: selectedSubjects,
+        hourly_rate: Number(hourlyRate),
+        native_language: nativeLanguage.trim() || null,
+        other_languages: otherLanguages.trim() || null,
+        availability,
+        timezone: timezone.trim() || null,
+        about_teaching: aboutTeaching.trim() || null,
         id_document_url: idDocumentUrl,
       } as any);
 
@@ -293,23 +214,23 @@ export default function TutorApply() {
 
       // Send confirmation email to applicant + admin notification via Brevo
       const emailPayload = {
-        first_name: validatedData.firstName.trim(),
-        last_name: validatedData.lastName.trim(),
-        email: validatedData.email.trim(),
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        email: email.trim().toLowerCase(),
         application_type: "tutor",
-        phone: validatedData.phone?.trim() || null,
-        country: validatedData.country.trim() || null,
-        experience: validatedData.experience,
-        education: validatedData.education.trim() || null,
-        certifications: validatedData.certifications.trim() || null,
-        bio: validatedData.bio.trim(),
-        subjects: validatedData.selectedSubjects,
-        hourly_rate: Number(validatedData.hourlyRate),
-        native_language: validatedData.nativeLanguage.trim() || null,
-        other_languages: validatedData.otherLanguages.trim() || null,
-        availability: validatedData.availability,
-        timezone: validatedData.timezone.trim() || null,
-        about_teaching: validatedData.aboutTeaching.trim() || null,
+        phone: phone?.trim() || null,
+        country: country.trim() || null,
+        experience,
+        education: education.trim() || null,
+        certifications: certifications.trim() || null,
+        bio: bio.trim(),
+        subjects: selectedSubjects,
+        hourly_rate: Number(hourlyRate),
+        native_language: nativeLanguage.trim() || null,
+        other_languages: otherLanguages.trim() || null,
+        availability,
+        timezone: timezone.trim() || null,
+        about_teaching: aboutTeaching.trim() || null,
         id_document_url: idDocumentUrl,
       };
 
@@ -333,22 +254,10 @@ export default function TutorApply() {
           console.error("Tutor application email notification failed:", {
             status: emailResponse.status,
             body: responseData ?? responseText,
-            payload: emailPayload,
-          });
-          toast({
-            title: "Application submitted",
-            description: "Your application was saved, but the email notification could not be sent automatically.",
           });
         }
       } catch (emailErr) {
-        console.error("Failed to call tutor application email notification endpoint:", {
-          error: emailErr,
-          payload: emailPayload,
-        });
-        toast({
-          title: "Application submitted",
-          description: "Your application was saved, but the email notification request failed.",
-        });
+        console.error("Failed to call tutor application email notification endpoint:", emailErr);
       }
 
       clearStepErrors(["availability", "agreeTerms"]);
@@ -433,10 +342,7 @@ export default function TutorApply() {
                     <Label>{t("tutor.apply.firstName")} *</Label>
                     <Input
                       value={firstName}
-                      onChange={(e) => {
-                        setFirstName(e.target.value);
-                        setFieldError("firstName", e.target.value);
-                      }}
+                      onChange={(e) => { setFirstName(e.target.value); setFieldError("firstName", e.target.value); }}
                       aria-invalid={Boolean(errors.firstName)}
                     />
                     {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
@@ -445,10 +351,7 @@ export default function TutorApply() {
                     <Label>{t("tutor.apply.lastName")} *</Label>
                     <Input
                       value={lastName}
-                      onChange={(e) => {
-                        setLastName(e.target.value);
-                        setFieldError("lastName", e.target.value);
-                      }}
+                      onChange={(e) => { setLastName(e.target.value); setFieldError("lastName", e.target.value); }}
                       aria-invalid={Boolean(errors.lastName)}
                     />
                     {errors.lastName && <p className="text-sm text-destructive">{errors.lastName}</p>}
@@ -459,45 +362,10 @@ export default function TutorApply() {
                   <Input
                     type="email"
                     value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setFieldError("email", e.target.value);
-                    }}
+                    onChange={(e) => { setEmail(e.target.value); setFieldError("email", e.target.value); }}
                     aria-invalid={Boolean(errors.email)}
                   />
                   {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
-                </div>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Password *</Label>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        setFieldError("password", e.target.value);
-                        if (confirmPassword) setFieldError("confirmPassword", confirmPassword);
-                      }}
-                      aria-invalid={Boolean(errors.password)}
-                    />
-                    <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
-                    {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Confirm Password *</Label>
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                        setFieldError("confirmPassword", e.target.value);
-                      }}
-                      aria-invalid={Boolean(errors.confirmPassword)}
-                    />
-                    {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
-                  </div>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -520,13 +388,7 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.experience")} *</Label>
-                  <Select
-                    value={experience}
-                    onValueChange={(value) => {
-                      setExperience(value);
-                      setFieldError("experience", value);
-                    }}
-                  >
+                  <Select value={experience} onValueChange={(value) => { setExperience(value); setFieldError("experience", value); }}>
                     <SelectTrigger aria-invalid={Boolean(errors.experience)}>
                       <SelectValue placeholder={t("tutor.apply.selectExp")} />
                     </SelectTrigger>
@@ -550,10 +412,7 @@ export default function TutorApply() {
                   <Label>{t("tutor.apply.bio")} *</Label>
                   <Textarea
                     value={bio}
-                    onChange={(e) => {
-                      setBio(e.target.value);
-                      setFieldError("bio", e.target.value);
-                    }}
+                    onChange={(e) => { setBio(e.target.value); setFieldError("bio", e.target.value); }}
                     rows={5}
                     placeholder={t("tutor.apply.bioPlaceholder")}
                     aria-invalid={Boolean(errors.bio)}
@@ -587,10 +446,7 @@ export default function TutorApply() {
                       type="number"
                       min="1"
                       value={hourlyRate}
-                      onChange={(e) => {
-                        setHourlyRate(e.target.value);
-                        setFieldError("hourlyRate", e.target.value);
-                      }}
+                      onChange={(e) => { setHourlyRate(e.target.value); setFieldError("hourlyRate", e.target.value); }}
                       aria-invalid={Boolean(errors.hourlyRate)}
                     />
                     <p className="text-xs text-muted-foreground">Lessons are either 25 min or 50 min. Enter your rate for a 50-minute lesson.</p>
@@ -616,13 +472,7 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.availability")} *</Label>
-                  <Select
-                    value={availability}
-                    onValueChange={(value) => {
-                      setAvailability(value);
-                      setFieldError("availability", value);
-                    }}
-                  >
+                  <Select value={availability} onValueChange={(value) => { setAvailability(value); setFieldError("availability", value); }}>
                     <SelectTrigger aria-invalid={Boolean(errors.availability)}>
                       <SelectValue placeholder={t("tutor.apply.selectAvail")} />
                     </SelectTrigger>
@@ -745,11 +595,7 @@ export default function TutorApply() {
 
         {/* Navigation */}
         <div className="flex justify-between mt-10 pt-6 border-t">
-          <Button
-            variant="outline"
-            onClick={() => setStep((s) => s - 1)}
-            disabled={step === 1}
-          >
+          <Button variant="outline" onClick={() => setStep((s) => s - 1)} disabled={step === 1}>
             <ArrowLeft className="mr-2 h-4 w-4" /> {t("tutor.apply.back")}
           </Button>
           {step < TOTAL_STEPS ? (
