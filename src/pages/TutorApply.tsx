@@ -220,6 +220,8 @@ export default function TutorApply() {
         firstName,
         lastName,
         email,
+        password,
+        confirmPassword,
         phone,
         country,
         experience,
@@ -235,6 +237,25 @@ export default function TutorApply() {
         aboutTeaching,
         agreeTerms,
       });
+
+      // Create auth account for the tutor
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: validatedData.email.trim(),
+        password: validatedData.password,
+        options: {
+          data: {
+            display_name: `${validatedData.firstName.trim()} ${validatedData.lastName.trim()}`,
+          },
+        },
+      });
+      if (signUpError) {
+        // If user already exists, continue with the application
+        if (!signUpError.message.toLowerCase().includes("already registered")) {
+          throw new Error(`Account creation failed: ${signUpError.message}`);
+        }
+      }
+      // Sign out immediately so the applicant doesn't get a logged-in session
+      await supabase.auth.signOut();
 
 
 
