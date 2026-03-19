@@ -203,7 +203,7 @@ export default function TutorApply() {
   const handleNextStep = () => {
     if (!validateCurrentStep()) return;
 
-    if (step === 1) clearStepErrors(["firstName", "lastName", "email"]);
+    if (step === 1) clearStepErrors(["firstName", "lastName", "email", "password", "confirmPassword"]);
     if (step === 2) clearStepErrors(["experience", "bio"]);
     if (step === 3) clearStepErrors(["selectedSubjects", "hourlyRate"]);
 

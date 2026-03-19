@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const tutorApplicationSchema = z.object({
+const tutorApplicationBaseSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required.").max(100, "First name is too long."),
   lastName: z.string().trim().min(1, "Last name is required.").max(100, "Last name is too long."),
   email: z.string().trim().email("Please enter a valid email address.").max(255, "Email is too long."),
@@ -26,10 +26,17 @@ export const tutorApplicationSchema = z.object({
   agreeTerms: z.literal(true, {
     errorMap: () => ({ message: "You must accept the terms before submitting." }),
   }),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match.",
-  path: ["confirmPassword"],
 });
+
+export const tutorApplicationFieldSchemas = tutorApplicationBaseSchema.shape;
+
+export const tutorApplicationSchema = tutorApplicationBaseSchema.refine(
+  (data) => data.password === data.confirmPassword,
+  {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  }
+);
 
 export type TutorApplicationFormValues = z.infer<typeof tutorApplicationSchema>;
 
