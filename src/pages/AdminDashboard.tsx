@@ -262,22 +262,11 @@ export default function AdminDashboard() {
     });
   };
 
-  const sendTutorStatusNotification = async (tutor: TutorManagementListItem, type: "suspended" | "unsuspended") => {
-    if (!tutor.email) return;
-
-    const fullName = getTutorFullName(tutor);
-    const tutorMessage =
-      type === "suspended"
-        ? "Your LearnEazy tutor profile has been temporarily suspended. Please contact info@learneazy.org for more information."
-        : "Your LearnEazy tutor profile is live again. Please contact info@learneazy.org if you have any questions.";
-
-    await submitFormspree({
-      email: tutor.email,
-      full_name: fullName,
-      tutor_email: tutor.email,
-      tutor_message: tutorMessage,
-      _subject: `Tutor profile ${type}: ${fullName}`,
+  const invokeManageTutor = async (tutorId: string, action: "suspend" | "unsuspend" | "delete") => {
+    const { error } = await supabase.functions.invoke("admin-manage-tutor", {
+      body: { tutorProfileId: tutorId, action },
     });
+    if (error) throw error;
   };
 
   const handleMarkPaid = async (booking: AdminBooking) => {
