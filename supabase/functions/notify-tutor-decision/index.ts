@@ -54,26 +54,18 @@ serve(async (req) => {
         ? `Congratulations! You've been accepted as a tutor on LearnEazy`
         : `Your LearnEazy tutor application update`;
 
-    const resetButton = resetLink
-      ? `
+    const passwordSetupButton = `
         <div style="margin: 24px 0;">
-          <a href="${resetLink}"
+          <a href="https://www.learneazy.org/forgot-password"
              style="display: inline-block; background: #2563eb; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
             Set Up Your Password
           </a>
         </div>
         <p style="color: #555; font-size: 14px;">Once you've set your password, you can log in to your tutor dashboard at:</p>
         <div style="margin: 12px 0 24px 0;">
-          <a href="https://www.learneazy.org/tutor-dashboard"
-             style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-            Go to Tutor Dashboard
-          </a>
-        </div>`
-      : `
-        <div style="margin: 24px 0;">
           <a href="https://www.learneazy.org/login?portal=tutor"
              style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-            Log in to Tutor Portal
+            Go to Tutor Dashboard
           </a>
         </div>`;
 
