@@ -20,16 +20,13 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    let resetLink = "";
-
     if (decision === "approved") {
       // Step 1: Create the Supabase auth account for the tutor
-      // Use a random temporary password — they'll set their own via the reset link
       const tempPassword = crypto.randomUUID();
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
         email,
         password: tempPassword,
-        email_confirm: true, // skip email confirmation, we handle it ourselves
+        email_confirm: true,
         user_metadata: {
           display_name: `${first_name} ${last_name}`,
         },
@@ -49,24 +46,6 @@ serve(async (req) => {
         if (roleError) {
           console.error("Failed to assign tutor role:", roleError.message);
         }
-      }
-
-      // Step 3: Generate password setup link pointing to tutor dashboard
-      try {
-        const { data, error } = await supabase.auth.admin.generateLink({
-          type: "recovery",
-          email,
-          options: {
-            redirectTo: "https://www.learneazy.org/reset-password?role=tutor",
-          },
-        });
-        if (error) {
-          console.error("Failed to generate reset link:", error.message);
-        } else if (data?.properties?.action_link) {
-          resetLink = data.properties.action_link;
-        }
-      } catch (err) {
-        console.error("Error generating reset link:", err);
       }
     }
 
