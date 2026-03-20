@@ -385,43 +385,20 @@ export default function AdminDashboard() {
     setPendingTutorActionId(tutor.id);
 
     try {
-      if (makeLive && tutor.application_id) {
-        const application = applications.find((item) => item.id === tutor.application_id);
-        if (application && application.status !== "approved") {
-          const { error } = await supabase.rpc("approve_tutor_application", { _application_id: application.id });
-          if (error) throw error;
-        } else {
-          const { error } = await supabase
-            .from("public_tutor_profiles" as never)
-            .update({ is_published: true, updated_at: new Date().toISOString() } as never)
-            .eq("id", tutor.id);
-          if (error) throw error;
+      if (makeLive) {
+        // Unsuspend via edge function (removes is_suspended flag + republishes + sends email)
+        await invokeManageTutor(tutor.id, "unsuspend");
+
+        // Also approve application if needed
+        if (tutor.application_id) {
+          const application = applications.find((item) => item.id === tutor.application_id);
+          if (application && application.status !== "approved") {
+            await supabase.rpc("approve_tutor_application", { _application_id: application.id });
+          }
         }
       } else {
-        const { error } = await supabase
-          .from("public_tutor_profiles" as never)
-          .update({ is_published: makeLive, updated_at: new Date().toISOString() } as never)
-          .eq("id", tutor.id);
-        if (error) throw error;
-      }
-
-      if (!makeLive) {
-        try {
-          await sendTutorStatusNotification(tutor, "suspended");
-        } catch (notificationError) {
-          toast({
-            title: "Tutor suspended",
-            description: notificationError instanceof Error ? notificationError.message : "Tutor was suspended, but the notification email could not be sent.",
-          });
-        }
-      }
-
-      if (makeLive && !tutor.is_published) {
-        try {
-          await sendTutorStatusNotification(tutor, "unsuspended");
-        } catch {
-          // ignore secondary notification errors here
-        }
+        // Suspend via edge function (sets is_suspended + unpublishes + sends email)
+        await invokeManageTutor(tutor.id, "suspend");
       }
 
       toast({ title: makeLive ? "Tutor is live" : "Tutor suspended" });
