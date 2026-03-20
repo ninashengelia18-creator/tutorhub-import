@@ -56,7 +56,7 @@ serve(async (req) => {
 
     const passwordSetupButton = `
         <div style="margin: 24px 0;">
-          <a href="https://www.learneazy.org/forgot-password"
+          <a href="https://www.learneazy.org/reset-password"
              style="display: inline-block; background: #2563eb; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
             Set Up Your Password
           </a>
