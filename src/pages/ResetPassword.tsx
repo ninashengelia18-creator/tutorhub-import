@@ -22,24 +22,44 @@ export default function ResetPassword() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Handle both invite (SIGNED_IN) and password recovery (PASSWORD_RECOVERY) events
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth event:", event, "Session:", session?.user?.email);
-      if (
-        (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") && 
-        session
-      ) {
-        setPageState("ready");
+    // Explicitly parse the hash from the URL and set the session
+    const hash = window.location.hash;
+    if (hash && hash.includes("access_token")) {
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get("access_token");
+      const refreshToken = params.get("refresh_token");
+      
+      if (accessToken && refreshToken) {
+        supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        }).then(({ data, error }) => {
+          if (error) {
+            console.error("Failed to set session:", error.message);
+            setPageState("expired");
+          } else if (data.session) {
+            console.log("Session set successfully for:", data.session.user.email);
+            setPageState("ready");
+          }
+        });
+        return;
       }
-    });
+    }
 
-    // Also check if there's already a valid session
+    // No hash — check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("Existing session:", session?.user?.email);
       if (session) {
         setPageState("ready");
       } else {
-        // Wait for auth event — no timeout
+        setPageState("expired");
+      }
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth event:", event, session?.user?.email);
+      if ((event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") && session) {
+        setPageState("ready");
       }
     });
 
