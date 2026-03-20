@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/hooks/use-toast";
 import { Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 
-{/* reset password page */}
+/* reset password page */
 type PageState = "loading" | "ready" | "expired" | "success";
 
 export default function ResetPassword() {
