@@ -83,7 +83,7 @@ serve(async (req) => {
           <li>Set up your availability so students can book lessons with you</li>
           <li>Start accepting bookings and teaching!</li>
         </ol>
-        ${resetButton}
+        ${passwordSetupButton}
         <p style="color: #555; font-size: 14px;">Once you complete your first session, we will be in touch to collect your payment details for earnings withdrawals.</p>
         <p style="color: #666; font-size: 14px;">If you have any questions, contact us at <a href="mailto:info@learneazy.org">info@learneazy.org</a>.</p>
         <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
