@@ -1,73 +1,105 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Lock } from "lucide-react";
+import { Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+
+type PageState = "loading" | "ready" | "expired" | "success";
 
 export default function ResetPassword() {
+  const [pageState, setPageState] = useState<PageState>("loading");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { toast } = useToast();
-  const { t } = useLanguage();
 
   useEffect(() => {
-    const hash = window.location.hash;
-    if (!hash.includes("type=recovery")) {
-      // Not a valid recovery link
-    }
+    // Supabase puts the tokens in the URL hash when coming from an email link.
+    // We need to let supabase-js parse the hash and establish a session.
+    // onAuthStateChange fires with PASSWORD_RECOVERY once it does.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY" && session) {
+        // Session is valid, show the form
+        setPageState("ready");
+      }
+    });
+
+    // supabase-js v2 automatically parses the hash on load.
+    // But if the page loaded without a hash (e.g. already has a session), check that too.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setPageState("ready");
+      } else {
+        // Wait up to 5 seconds for PASSWORD_RECOVERY event, then show expired
+        const timer = setTimeout(() => {
+          setPageState((current) => {
+            if (current === "loading") return "expired";
+            return current;
+          });
+        }, 5000);
+        return () => clearTimeout(timer);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const handleUpdate = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPasswordError("");
 
     if (password.length < 6) {
-      toast({ title: t("auth.error"), description: t("auth.passwordMin"), variant: "destructive" });
+      setPasswordError("Password must be at least 6 characters.");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast({ title: t("auth.error"), description: "Passwords do not match.", variant: "destructive" });
+      setPasswordError("Passwords do not match.");
       return;
     }
 
     setLoading(true);
+
     const { data, error } = await supabase.auth.updateUser({ password });
 
     if (error) {
-      toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
       setLoading(false);
       return;
     }
 
-    toast({ title: t("auth.passwordUpdated") });
+    setPageState("success");
 
-    // Check if the user is a tutor and redirect accordingly
+    // Redirect based on role after short delay
     if (data?.user) {
       const { data: roles } = await supabase
         .from("user_roles")
         .select("role")
         .eq("user_id", data.user.id);
 
-      const userRoles = (roles ?? []).map((r) => r.role);
+      const userRoles = (roles ?? []).map((r: { role: string }) => r.role);
 
-      if (userRoles.includes("admin")) {
-        navigate("/admin", { replace: true });
-      } else if (userRoles.includes("tutor")) {
-        navigate("/tutor-dashboard", { replace: true });
-      } else {
-        navigate("/dashboard", { replace: true });
-      }
-    } else {
-      navigate("/login", { replace: true });
+      setTimeout(() => {
+        if (userRoles.includes("admin")) {
+          navigate("/admin", { replace: true });
+        } else if (userRoles.includes("tutor")) {
+          navigate("/tutor-dashboard", { replace: true });
+        } else {
+          navigate("/dashboard", { replace: true });
+        }
+      }, 2000);
     }
 
     setLoading(false);
@@ -81,43 +113,137 @@ export default function ResetPassword() {
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
               <Lock className="h-6 w-6 text-primary" />
             </div>
-            <CardTitle className="text-2xl">{t("auth.newPassword")}</CardTitle>
-            <CardDescription>{t("auth.newPasswordDesc")}</CardDescription>
+            <CardTitle className="text-2xl">Set Up Your Password</CardTitle>
+            <CardDescription>
+              Create a secure password to access your LearnEazy account
+            </CardDescription>
           </CardHeader>
-          <form onSubmit={handleUpdate}>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="password">{t("auth.password")}</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                />
-                <p className="text-xs text-muted-foreground">{t("auth.passwordMin")}</p>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  minLength={6}
-                />
-              </div>
+
+          {/* Loading state */}
+          {pageState === "loading" && (
+            <CardContent className="flex flex-col items-center gap-3 py-10">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">Verifying your link…</p>
             </CardContent>
-            <CardFooter>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? t("auth.updating") : t("auth.updatePassword")}
+          )}
+
+          {/* Expired/invalid link */}
+          {pageState === "expired" && (
+            <CardContent className="text-center space-y-4 py-8">
+              <p className="text-sm text-muted-foreground">
+                This link has expired or is no longer valid. Please request a new one.
+              </p>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate("/forgot-password")}
+              >
+                Request New Link
               </Button>
-            </CardFooter>
-          </form>
+            </CardContent>
+          )}
+
+          {/* Success state */}
+          {pageState === "success" && (
+            <CardContent className="text-center space-y-3 py-8">
+              <p className="text-lg font-semibold text-green-600">✅ Password set successfully!</p>
+              <p className="text-sm text-muted-foreground">Redirecting you to your dashboard…</p>
+            </CardContent>
+          )}
+
+          {/* Password form */}
+          {pageState === "ready" && (
+            <form onSubmit={handleSubmit}>
+              <CardContent className="space-y-4">
+                {/* Password field */}
+                <div className="space-y-2">
+                  <Label htmlFor="password">New Password</Label>
+                  <div className="relative">
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setPasswordError("");
+                      }}
+                      required
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((v) => !v)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      tabIndex={-1}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
+                </div>
+
+                {/* Confirm password field */}
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <div className="relative">
+                    <input
+                      id="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        setPasswordError("");
+                      }}
+                      required
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((v) => !v)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      tabIndex={-1}
+                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Error message */}
+                {passwordError && (
+                  <p className="text-sm text-destructive">{passwordError}</p>
+                )}
+              </CardContent>
+
+              <CardFooter>
+                <Button
+                  type="submit"
+                  className="w-full hero-gradient text-primary-foreground border-0"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Setting up your account…
+                    </span>
+                  ) : (
+                    "Set Password & Continue"
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          )}
         </Card>
       </div>
     </Layout>
