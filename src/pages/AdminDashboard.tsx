@@ -262,22 +262,11 @@ export default function AdminDashboard() {
     });
   };
 
-  const sendTutorStatusNotification = async (tutor: TutorManagementListItem, type: "suspended" | "unsuspended") => {
-    if (!tutor.email) return;
-
-    const fullName = getTutorFullName(tutor);
-    const tutorMessage =
-      type === "suspended"
-        ? "Your LearnEazy tutor profile has been temporarily suspended. Please contact info@learneazy.org for more information."
-        : "Your LearnEazy tutor profile is live again. Please contact info@learneazy.org if you have any questions.";
-
-    await submitFormspree({
-      email: tutor.email,
-      full_name: fullName,
-      tutor_email: tutor.email,
-      tutor_message: tutorMessage,
-      _subject: `Tutor profile ${type}: ${fullName}`,
+  const invokeManageTutor = async (tutorId: string, action: "suspend" | "unsuspend" | "delete") => {
+    const { error } = await supabase.functions.invoke("admin-manage-tutor", {
+      body: { tutorProfileId: tutorId, action },
     });
+    if (error) throw error;
   };
 
   const handleMarkPaid = async (booking: AdminBooking) => {
@@ -396,43 +385,20 @@ export default function AdminDashboard() {
     setPendingTutorActionId(tutor.id);
 
     try {
-      if (makeLive && tutor.application_id) {
-        const application = applications.find((item) => item.id === tutor.application_id);
-        if (application && application.status !== "approved") {
-          const { error } = await supabase.rpc("approve_tutor_application", { _application_id: application.id });
-          if (error) throw error;
-        } else {
-          const { error } = await supabase
-            .from("public_tutor_profiles" as never)
-            .update({ is_published: true, updated_at: new Date().toISOString() } as never)
-            .eq("id", tutor.id);
-          if (error) throw error;
+      if (makeLive) {
+        // Unsuspend via edge function (removes is_suspended flag + republishes + sends email)
+        await invokeManageTutor(tutor.id, "unsuspend");
+
+        // Also approve application if needed
+        if (tutor.application_id) {
+          const application = applications.find((item) => item.id === tutor.application_id);
+          if (application && application.status !== "approved") {
+            await supabase.rpc("approve_tutor_application", { _application_id: application.id });
+          }
         }
       } else {
-        const { error } = await supabase
-          .from("public_tutor_profiles" as never)
-          .update({ is_published: makeLive, updated_at: new Date().toISOString() } as never)
-          .eq("id", tutor.id);
-        if (error) throw error;
-      }
-
-      if (!makeLive) {
-        try {
-          await sendTutorStatusNotification(tutor, "suspended");
-        } catch (notificationError) {
-          toast({
-            title: "Tutor suspended",
-            description: notificationError instanceof Error ? notificationError.message : "Tutor was suspended, but the notification email could not be sent.",
-          });
-        }
-      }
-
-      if (makeLive && !tutor.is_published) {
-        try {
-          await sendTutorStatusNotification(tutor, "unsuspended");
-        } catch {
-          // ignore secondary notification errors here
-        }
+        // Suspend via edge function (sets is_suspended + unpublishes + sends email)
+        await invokeManageTutor(tutor.id, "suspend");
       }
 
       toast({ title: makeLive ? "Tutor is live" : "Tutor suspended" });
@@ -453,10 +419,7 @@ export default function AdminDashboard() {
 
     setPendingTutorActionId(deletingTutor.id);
     try {
-      const { error } = await supabase.functions.invoke("admin-delete-tutor", {
-        body: { tutorProfileId: deletingTutor.id },
-      });
-      if (error) throw error;
+      await invokeManageTutor(deletingTutor.id, "delete");
 
       toast({ title: "Tutor deleted permanently" });
       setDeletingTutor(null);
