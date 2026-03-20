@@ -60,14 +60,30 @@ export default function AdminApplications() {
 
   const sendDecisionEmail = async (app: TutorApplicationListItem, decision: "approved" | "rejected") => {
     try {
-      await supabase.functions.invoke("notify-tutor-decision", {
-        body: {
-          email: app.email,
-          first_name: app.first_name,
-          last_name: app.last_name,
-          decision,
-        },
-      });
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/notify-tutor-decision`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": supabaseKey,
+          },
+          body: JSON.stringify({
+            email: app.email,
+            first_name: app.first_name,
+            last_name: app.last_name,
+            decision,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errText = await response.text();
+        console.error("Failed to send decision email:", errText);
+      }
     } catch (err) {
       console.error("Failed to send decision email:", err);
     }
