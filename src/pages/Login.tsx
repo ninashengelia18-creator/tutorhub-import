@@ -71,6 +71,7 @@ export default function Login() {
   };
 
   const [pendingApplication, setPendingApplication] = useState(false);
+  const [suspended, setSuspended] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,8 +84,20 @@ export default function Login() {
       return;
     }
 
-    // Check if tutor with pending application (no tutor role yet)
     if (signInData?.user) {
+      // Check if account is suspended
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("is_suspended")
+        .eq("id", signInData.user.id)
+        .maybeSingle();
+
+      if (profileData?.is_suspended) {
+        setSuspended(true);
+        await supabase.auth.signOut();
+        return;
+      }
+
       const { data: roles } = await supabase
         .from("user_roles")
         .select("role")
