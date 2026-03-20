@@ -80,6 +80,7 @@ const App = () => (
                 <Route path="/signup/student" element={<StudentSignup />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/activate-account" element={<ResetPassword />} />
                 <Route path="/profile" element={<ProtectedRoute requiredRole="student"><ProfileSettings /></ProtectedRoute>} />
                 <Route path="/tutor-settings" element={<ProtectedRoute requiredRole="tutor"><TutorSettings /></ProtectedRoute>} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
