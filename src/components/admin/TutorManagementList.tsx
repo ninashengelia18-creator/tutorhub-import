@@ -59,10 +59,15 @@ export function TutorManagementList({
                     <p className="text-sm font-semibold text-foreground">{fullName}</p>
                     <Badge
                       variant="outline"
-                      className={tutor.is_published ? "border-success/30 bg-success/10 text-success" : "border-warning/30 bg-warning/10 text-warning"}
+                      className={tutor.is_published ? "border-success/30 bg-success/10 text-success" : "border-destructive/30 bg-destructive/10 text-destructive"}
                     >
                       {statusLabel}
                     </Badge>
+                    {isSuspended && (
+                      <Badge variant="outline" className="border-destructive/40 bg-destructive/15 text-destructive font-bold">
+                        ⛔ Suspended
+                      </Badge>
+                    )}
                     {tutor.application_id ? <Badge variant="secondary">Application</Badge> : <Badge variant="secondary">Manual</Badge>}
                   </div>
 
