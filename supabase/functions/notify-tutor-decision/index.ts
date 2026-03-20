@@ -20,16 +20,13 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    let resetLink = "";
-
     if (decision === "approved") {
       // Step 1: Create the Supabase auth account for the tutor
-      // Use a random temporary password — they'll set their own via the reset link
       const tempPassword = crypto.randomUUID();
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
         email,
         password: tempPassword,
-        email_confirm: true, // skip email confirmation, we handle it ourselves
+        email_confirm: true,
         user_metadata: {
           display_name: `${first_name} ${last_name}`,
         },
@@ -50,24 +47,6 @@ serve(async (req) => {
           console.error("Failed to assign tutor role:", roleError.message);
         }
       }
-
-      // Step 3: Generate password setup link pointing to tutor dashboard
-      try {
-        const { data, error } = await supabase.auth.admin.generateLink({
-          type: "recovery",
-          email,
-          options: {
-            redirectTo: "https://www.learneazy.org/reset-password?role=tutor",
-          },
-        });
-        if (error) {
-          console.error("Failed to generate reset link:", error.message);
-        } else if (data?.properties?.action_link) {
-          resetLink = data.properties.action_link;
-        }
-      } catch (err) {
-        console.error("Error generating reset link:", err);
-      }
     }
 
     const subject =
@@ -75,26 +54,18 @@ serve(async (req) => {
         ? `Congratulations! You've been accepted as a tutor on LearnEazy`
         : `Your LearnEazy tutor application update`;
 
-    const resetButton = resetLink
-      ? `
+    const passwordSetupButton = `
         <div style="margin: 24px 0;">
-          <a href="${resetLink}"
+          <a href="https://www.learneazy.org/forgot-password"
              style="display: inline-block; background: #2563eb; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
             Set Up Your Password
           </a>
         </div>
         <p style="color: #555; font-size: 14px;">Once you've set your password, you can log in to your tutor dashboard at:</p>
         <div style="margin: 12px 0 24px 0;">
-          <a href="https://www.learneazy.org/tutor-dashboard"
-             style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-            Go to Tutor Dashboard
-          </a>
-        </div>`
-      : `
-        <div style="margin: 24px 0;">
           <a href="https://www.learneazy.org/login?portal=tutor"
              style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-            Log in to Tutor Portal
+            Go to Tutor Dashboard
           </a>
         </div>`;
 
@@ -112,7 +83,7 @@ serve(async (req) => {
           <li>Set up your availability so students can book lessons with you</li>
           <li>Start accepting bookings and teaching!</li>
         </ol>
-        ${resetButton}
+        ${passwordSetupButton}
         <p style="color: #555; font-size: 14px;">Once you complete your first session, we will be in touch to collect your payment details for earnings withdrawals.</p>
         <p style="color: #666; font-size: 14px;">If you have any questions, contact us at <a href="mailto:info@learneazy.org">info@learneazy.org</a>.</p>
         <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
