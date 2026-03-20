@@ -40,6 +40,7 @@ export function TutorManagementList({
       {tutors.map((tutor) => {
         const isPendingAction = pendingActionId === tutor.id;
         const fullName = getTutorFullName(tutor);
+        const isSuspended = !tutor.is_published;
         const statusLabel = tutor.is_published ? "Live" : "Suspended";
 
         return (
