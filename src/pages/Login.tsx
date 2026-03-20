@@ -166,7 +166,22 @@ export default function Login() {
             </div>
           </CardHeader>
 
-          {pendingApplication ? (
+          {suspended ? (
+            <div className="p-6 text-center space-y-3">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+                <Shield className="h-6 w-6 text-destructive" />
+              </div>
+              <h3 className="text-lg font-semibold">Account Suspended</h3>
+              <p className="text-sm text-muted-foreground">
+                Your account has been suspended. Please contact{" "}
+                <a href="mailto:info@learneazy.org" className="text-primary hover:underline">info@learneazy.org</a>{" "}
+                if you have any questions.
+              </p>
+              <Button variant="outline" className="mt-2" onClick={() => setSuspended(false)}>
+                Back to login
+              </Button>
+            </div>
+          ) : pendingApplication ? (
             <div className="p-6 text-center space-y-3">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-warning/10">
                 <Clock className="h-6 w-6 text-warning" />
