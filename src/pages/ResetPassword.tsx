@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/hooks/use-toast";
 import { Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 
-/* reset password page */
 type PageState = "loading" | "ready" | "expired" | "success";
 
 export default function ResetPassword() {
@@ -23,23 +22,24 @@ export default function ResetPassword() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Supabase puts the tokens in the URL hash when coming from an email link.
-    // We need to let supabase-js parse the hash and establish a session.
-    // onAuthStateChange fires with PASSWORD_RECOVERY once it does.
+    // Handle both invite (SIGNED_IN) and password recovery (PASSWORD_RECOVERY) events
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "PASSWORD_RECOVERY" && session) {
-        // Session is valid, show the form
+      console.log("Auth event:", event, "Session:", session?.user?.email);
+      if (
+        (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") && 
+        session
+      ) {
         setPageState("ready");
       }
     });
 
-    // supabase-js v2 automatically parses the hash on load.
-    // But if the page loaded without a hash (e.g. already has a session), check that too.
+    // Also check if there's already a valid session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Existing session:", session?.user?.email);
       if (session) {
         setPageState("ready");
       } else {
-        // Wait up to 5 seconds for PASSWORD_RECOVERY event, then show expired
+        // Wait up to 5 seconds for auth event
         const timer = setTimeout(() => {
           setPageState((current) => {
             if (current === "loading") return "expired";
@@ -83,7 +83,6 @@ export default function ResetPassword() {
 
     setPageState("success");
 
-    // Redirect based on role after short delay
     if (data?.user) {
       const { data: roles } = await supabase
         .from("user_roles")
@@ -120,7 +119,6 @@ export default function ResetPassword() {
             </CardDescription>
           </CardHeader>
 
-          {/* Loading state */}
           {pageState === "loading" && (
             <CardContent className="flex flex-col items-center gap-3 py-10">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -128,7 +126,6 @@ export default function ResetPassword() {
             </CardContent>
           )}
 
-          {/* Expired/invalid link */}
           {pageState === "expired" && (
             <CardContent className="text-center space-y-4 py-8">
               <p className="text-sm text-muted-foreground">
@@ -144,7 +141,6 @@ export default function ResetPassword() {
             </CardContent>
           )}
 
-          {/* Success state */}
           {pageState === "success" && (
             <CardContent className="text-center space-y-3 py-8">
               <p className="text-lg font-semibold text-green-600">✅ Password set successfully!</p>
@@ -152,11 +148,9 @@ export default function ResetPassword() {
             </CardContent>
           )}
 
-          {/* Password form */}
           {pageState === "ready" && (
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-4">
-                {/* Password field */}
                 <div className="space-y-2">
                   <Label htmlFor="password">New Password</Label>
                   <div className="relative">
@@ -177,19 +171,13 @@ export default function ResetPassword() {
                       onClick={() => setShowPassword((v) => !v)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                       tabIndex={-1}
-                      aria-label={showPassword ? "Hide password" : "Show password"}
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                   <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
                 </div>
 
-                {/* Confirm password field */}
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <div className="relative">
@@ -210,18 +198,12 @@ export default function ResetPassword() {
                       onClick={() => setShowConfirmPassword((v) => !v)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                       tabIndex={-1}
-                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                     >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                 </div>
 
-                {/* Error message */}
                 {passwordError && (
                   <p className="text-sm text-destructive">{passwordError}</p>
                 )}
