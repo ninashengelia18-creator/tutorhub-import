@@ -419,10 +419,7 @@ export default function AdminDashboard() {
 
     setPendingTutorActionId(deletingTutor.id);
     try {
-      const { error } = await supabase.functions.invoke("admin-delete-tutor", {
-        body: { tutorProfileId: deletingTutor.id },
-      });
-      if (error) throw error;
+      await invokeManageTutor(deletingTutor.id, "delete");
 
       toast({ title: "Tutor deleted permanently" });
       setDeletingTutor(null);
