@@ -39,14 +39,7 @@ export default function ResetPassword() {
       if (session) {
         setPageState("ready");
       } else {
-        // Wait up to 5 seconds for auth event
-        const timer = setTimeout(() => {
-          setPageState((current) => {
-            if (current === "loading") return "expired";
-            return current;
-          });
-        }, 5000);
-        return () => clearTimeout(timer);
+        // Wait for auth event — no timeout
       }
     });
 
