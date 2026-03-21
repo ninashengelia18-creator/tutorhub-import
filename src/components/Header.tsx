@@ -8,6 +8,7 @@ import {
   LogOut,
   Mail,
   Menu,
+  UserCircle,
   X,
 } from "lucide-react";
 import { useState, useEffect } from "react";
