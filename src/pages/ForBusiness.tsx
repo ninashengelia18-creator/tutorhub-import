@@ -80,7 +80,7 @@ export default function ForBusiness() {
       }).catch(() => {/* DB insert succeeded, email is best-effort */});
 
       toast({ title: t("biz.form.success") });
-      setFormData({ company_name: "", contact_name: "", email: "", phone: "", team_size: "", message: "" });
+      setFormData({ company_name: "", contact_name: "", email: "", phone: "", team_size: "", message: "", timezone: "" });
     } catch {
       toast({ title: t("biz.form.error"), variant: "destructive" });
     } finally {
