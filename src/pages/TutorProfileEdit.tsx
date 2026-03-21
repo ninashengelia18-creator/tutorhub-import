@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Camera, ExternalLink, Loader2, Save } from "lucide-react";
+import { Camera, Eye, Loader2, Save } from "lucide-react";
+import { TutorProfilePreviewDialog } from "@/components/tutor/TutorProfilePreviewDialog";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
