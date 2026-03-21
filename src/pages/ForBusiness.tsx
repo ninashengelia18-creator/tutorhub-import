@@ -243,9 +243,24 @@ export default function ForBusiness() {
                 <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} maxLength={30} />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="team_size">{t("biz.form.teamSize")}</Label>
-              <Input id="team_size" name="team_size" value={formData.team_size} onChange={handleChange} placeholder={t("biz.form.teamSizePlaceholder")} maxLength={50} />
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="team_size">{t("biz.form.teamSize")}</Label>
+                <Input id="team_size" name="team_size" value={formData.team_size} onChange={handleChange} placeholder={t("biz.form.teamSizePlaceholder")} maxLength={50} />
+              </div>
+              <div className="space-y-2">
+                <Label>Timezone</Label>
+                <Select value={formData.timezone} onValueChange={(val) => setFormData(prev => ({ ...prev, timezone: val }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select timezone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIMEZONE_OPTIONS.map((tz) => (
+                      <SelectItem key={tz.value} value={tz.value}>{tz.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="message">{t("biz.form.message")}</Label>
