@@ -104,6 +104,11 @@ serve(async (req) => {
         </div>`;
     }
 
+    const subject =
+      decision === "approved"
+        ? `Congratulations! You've been accepted as a tutor on LearnEazy`
+        : `Your LearnEazy tutor application update`;
+
     const html =
       decision === "approved"
         ? `
