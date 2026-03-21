@@ -232,7 +232,7 @@ export function Header() {
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
 
-  if (isPortalHeaderRoute) {
+  if (isPortalHeaderRoute || isStudentPortalRoute) {
     return <PortalHeader />;
   }
 
