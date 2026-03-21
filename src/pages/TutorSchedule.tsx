@@ -57,6 +57,16 @@ interface AvailabilitySlot {
   availability_status: "open" | "booked";
 }
 
+type SlotPreset = "short" | "lesson" | "morning" | "afternoon" | "allday";
+
+const SLOT_PRESETS: Record<SlotPreset, { label: string; duration: number; start?: string; end?: string }> = {
+  short: { label: "25 min", duration: 25 },
+  lesson: { label: "50 min", duration: 50 },
+  morning: { label: "AM half day", duration: 240, start: "08:00", end: "12:00" },
+  afternoon: { label: "PM half day", duration: 240, start: "13:00", end: "17:00" },
+  allday: { label: "All day", duration: 720, start: "08:00", end: "20:00" },
+};
+
 const TIME_OPTIONS = Array.from({ length: 36 }, (_, index) => {
   const totalMinutes = 6 * 60 + index * 30;
   const hours = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
