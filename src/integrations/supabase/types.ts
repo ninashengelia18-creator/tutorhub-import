@@ -119,6 +119,7 @@ export type Database = {
           message: string | null
           phone: string | null
           team_size: string | null
+          timezone: string | null
         }
         Insert: {
           company_name: string
@@ -129,6 +130,7 @@ export type Database = {
           message?: string | null
           phone?: string | null
           team_size?: string | null
+          timezone?: string | null
         }
         Update: {
           company_name?: string
@@ -139,6 +141,7 @@ export type Database = {
           message?: string | null
           phone?: string | null
           team_size?: string | null
+          timezone?: string | null
         }
         Relationships: []
       }
@@ -156,6 +159,7 @@ export type Database = {
           motivation: string
           phone: string | null
           status: string
+          timezone: string | null
           updated_at: string
           video_intro_url: string | null
         }
@@ -172,6 +176,7 @@ export type Database = {
           motivation: string
           phone?: string | null
           status?: string
+          timezone?: string | null
           updated_at?: string
           video_intro_url?: string | null
         }
@@ -188,6 +193,7 @@ export type Database = {
           motivation?: string
           phone?: string | null
           status?: string
+          timezone?: string | null
           updated_at?: string
           video_intro_url?: string | null
         }
