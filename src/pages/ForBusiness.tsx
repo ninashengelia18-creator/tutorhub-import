@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -12,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { submitFormspree } from "@/lib/formspree";
 import { toast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { TIMEZONE_OPTIONS } from "@/contexts/AppLocaleContext";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },

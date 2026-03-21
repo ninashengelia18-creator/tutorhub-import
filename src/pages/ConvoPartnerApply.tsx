@@ -27,6 +27,7 @@ export default function ConvoPartnerApply() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
+  const [timezone, setTimezone] = useState("");
 
   // Step 2 — About You + Verification
   const [whyPartner, setWhyPartner] = useState("");
