@@ -400,7 +400,7 @@ export function Header() {
                       location.pathname === profilePath ? "text-primary" : "text-white"
                     }`}
                   >
-                    {t("nav.profile")}
+                    Account Settings
                   </Link>
                 )}
               </>
@@ -513,7 +513,7 @@ export function Header() {
                   )}
                   <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(profilePath)}>
                     <UserCircle className="mr-2 h-4 w-4" />
-                    {t("nav.profile")}
+                    Account Settings
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={handleSignOut}>
@@ -591,7 +591,7 @@ export function Header() {
                         </Button>
                         <Button variant="ghost" size="sm" className="flex-1" asChild>
                           <Link to={profilePath} onClick={() => setMobileOpen(false)}>
-                            {t("nav.profile")}
+                            Account Settings
                           </Link>
                         </Button>
                       </>
@@ -604,7 +604,7 @@ export function Header() {
                         </Button>
                         <Button variant="ghost" size="sm" className="flex-1" asChild>
                           <Link to={profilePath} onClick={() => setMobileOpen(false)}>
-                            {t("nav.profile")}
+                            Account Settings
                           </Link>
                         </Button>
                       </>

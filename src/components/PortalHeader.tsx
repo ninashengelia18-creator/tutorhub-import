@@ -297,7 +297,7 @@ export function PortalHeader() {
                 ) : null}
                 <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(profilePath)}>
                   <UserCircle className="mr-2 h-4 w-4" />
-                  {t("nav.profile")}
+                  Account Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={handleSignOut}>
@@ -348,7 +348,7 @@ export function PortalHeader() {
               className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t("nav.profile")}
+              Account Settings
             </Link>
             <button
               type="button"
