@@ -184,6 +184,10 @@ export default function TutorSchedule() {
     [availabilityDateKeys],
   );
 
+  const selectedDaySlots = useMemo(
+    () => upcomingAvailability.filter((slot) => getDateKeyInTimeZone(slot.slot_start_at, timezone) === selectedDateKey),
+    [upcomingAvailability, timezone, selectedDateKey],
+  );
   const stats = useMemo(() => {
     const todaysLessons = upcomingBookings.filter((booking) => getDateKeyInTimeZone(booking.lesson_start_at, timezone) === todayKey);
     const completedRevenue = allBookings
