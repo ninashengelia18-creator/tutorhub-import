@@ -43,6 +43,9 @@ import TutorDashboard from "./pages/TutorDashboard.tsx";
 import ConvoPartnerApply from "./pages/ConvoPartnerApply.tsx";
 import TutorSchedule from "./pages/TutorSchedule.tsx";
 import TutorProfileEdit from "./pages/TutorProfileEdit.tsx";
+import PartnerDashboard from "./pages/PartnerDashboard.tsx";
+import PartnerProfileEdit from "./pages/PartnerProfileEdit.tsx";
+import PartnerSettings from "./pages/PartnerSettings.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
