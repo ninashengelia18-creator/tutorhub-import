@@ -71,6 +71,9 @@ export default function TutorSettings() {
               deleteEmail={deleteEmail}
               deleteDialogOpen={deleteDialogOpen}
               notificationPreferences={notificationPreferences}
+              meetLink={meetLink}
+              showMeetLink={true}
+              onMeetLinkChange={setMeetLink}
               onAvatarUpload={handleAvatarUpload}
               onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
               onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}
