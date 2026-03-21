@@ -9,6 +9,31 @@ const TUTOR_PORTAL_PREFIXES = [
   "/tutor-profile-edit",
 ];
 
+function hideHubspotWidget() {
+  // Hide all known HubSpot containers
+  const selectors = [
+    "#hubspot-messages-iframe-container",
+    "#hs-chat-open",
+    "#hubspot-conversations-inline-parent",
+  ];
+  for (const sel of selectors) {
+    const el = document.querySelector<HTMLElement>(sel);
+    if (el) el.style.setProperty("display", "none", "important");
+  }
+}
+
+function showHubspotWidget() {
+  const selectors = [
+    "#hubspot-messages-iframe-container",
+    "#hs-chat-open",
+    "#hubspot-conversations-inline-parent",
+  ];
+  for (const sel of selectors) {
+    const el = document.querySelector<HTMLElement>(sel);
+    if (el) el.style.removeProperty("display");
+  }
+}
+
 export function useHideHubspot() {
   const { pathname } = useLocation();
 
@@ -17,22 +42,23 @@ export function useHideHubspot() {
       pathname.startsWith(prefix)
     );
 
-    const widget = document.getElementById("hubspot-messages-iframe-container");
-    if (widget) {
-      widget.style.display = isTutorPortal ? "none" : "";
-    }
-
-    // HubSpot may load after this effect runs, so observe for it
     if (isTutorPortal) {
-      const observer = new MutationObserver(() => {
-        const el = document.getElementById("hubspot-messages-iframe-container");
-        if (el) {
-          el.style.display = "none";
-          observer.disconnect();
-        }
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
-      return () => observer.disconnect();
+      hideHubspotWidget();
+
+      // Keep observing — HubSpot can re-inject or toggle visibility at any time
+      const observer = new MutationObserver(() => hideHubspotWidget());
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["style", "class"] });
+
+      // Also use an interval as a fallback since HubSpot is aggressive
+      const interval = setInterval(hideHubspotWidget, 1000);
+
+      return () => {
+        observer.disconnect();
+        clearInterval(interval);
+        showHubspotWidget();
+      };
+    } else {
+      showHubspotWidget();
     }
   }, [pathname]);
 }
