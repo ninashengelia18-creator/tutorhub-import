@@ -99,6 +99,11 @@ const App = () => (
                 <Route path="/tutor-messages" element={<ProtectedRoute requiredRole="tutor"><TutorMessages /></ProtectedRoute>} />
                 <Route path="/tutor-schedule" element={<ProtectedRoute requiredRole="tutor"><TutorSchedule /></ProtectedRoute>} />
                 <Route path="/tutor-profile-edit" element={<ProtectedRoute requiredRole="tutor"><TutorProfileEdit /></ProtectedRoute>} />
+                <Route path="/partner-dashboard" element={<ProtectedRoute requiredRole="convo_partner"><PartnerDashboard /></ProtectedRoute>} />
+                <Route path="/partner-profile-edit" element={<ProtectedRoute requiredRole="convo_partner"><PartnerProfileEdit /></ProtectedRoute>} />
+                <Route path="/partner-settings" element={<ProtectedRoute requiredRole="convo_partner"><PartnerSettings /></ProtectedRoute>} />
+                <Route path="/partner-messages" element={<ProtectedRoute requiredRole="convo_partner"><TutorMessages /></ProtectedRoute>} />
+                <Route path="/partner-schedule" element={<ProtectedRoute requiredRole="convo_partner"><TutorSchedule /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
