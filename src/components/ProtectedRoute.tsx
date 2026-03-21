@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 
 import { useAuth } from "@/contexts/AuthContext";
 
-type RequiredRole = "student" | "tutor" | "admin";
+type RequiredRole = "student" | "tutor" | "admin" | "convo_partner";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -12,7 +12,7 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
-  const { user, loading, isAdmin, isTutor, isStudent, defaultRoute } = useAuth();
+  const { user, loading, isAdmin, isTutor, isConvoPartner, isStudent, defaultRoute } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -33,6 +33,10 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   }
 
   if (requiredRole === "tutor" && !isTutor) {
+    return <Navigate to={defaultRoute} replace />;
+  }
+
+  if (requiredRole === "convo_partner" && !isConvoPartner) {
     return <Navigate to={defaultRoute} replace />;
   }
 
