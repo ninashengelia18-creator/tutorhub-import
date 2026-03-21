@@ -8,6 +8,7 @@ import {
   LogOut,
   Mail,
   Menu,
+  UserCircle,
   X,
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -485,6 +486,36 @@ export function Header() {
                       {t("nav.admin")}
                     </DropdownMenuItem>
                   ) : null}
+                  <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(dashboardPath)}>
+                    {t("auth.dashboard")}
+                  </DropdownMenuItem>
+                  {isTutor ? (
+                    <>
+                      <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/tutor-messages")}>
+                        {t("msg.messages")}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/tutor-schedule")}>
+                        {t("nav.schedule")}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/lesson-planner")}>
+                        {t("nav.lessonPlanner")}
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <>
+                      <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/messages")}>
+                        {t("msg.messages")}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/my-lessons")}>
+                        {t("msg.myLessons")}
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                  <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(profilePath)}>
+                    <UserCircle className="mr-2 h-4 w-4" />
+                    {t("nav.profile")}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />
                     {t("auth.logout")}
