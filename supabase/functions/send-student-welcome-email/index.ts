@@ -42,7 +42,7 @@ serve(async (req) => {
           <li><strong>Start learning!</strong></li>
         </ol>
         <div style="margin: 24px 0;">
-          <a href="https://www.learneazy.org/tutors"
+          <a href="https://www.learneazy.org/search"
              style="display: inline-block; background: #7c3aed; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
             Browse Tutors
           </a>
