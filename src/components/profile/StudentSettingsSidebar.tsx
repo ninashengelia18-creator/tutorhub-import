@@ -4,8 +4,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export type StudentSettingsSection =
   | "account"
   | "password"
-  | "email"
-  | "calendar"
   | "notifications"
   | "delete";
 
@@ -21,8 +19,6 @@ export function StudentSettingsSidebar({
   const sections: Array<{ id: StudentSettingsSection; label: string }> = [
     { id: "account", label: t("profile.settings.account") },
     { id: "password", label: t("profile.settings.password") },
-    { id: "email", label: t("profile.settings.emailSection") },
-    { id: "calendar", label: t("profile.settings.calendar") },
     { id: "notifications", label: t("profile.settings.notifications") },
     { id: "delete", label: t("profile.settings.deleteAccount") },
   ];
