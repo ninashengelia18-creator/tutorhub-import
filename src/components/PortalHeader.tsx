@@ -52,7 +52,7 @@ function initialsFromName(name: string) {
 export function PortalHeader() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut, profile, isTutor, isAdmin } = useAuth();
+  const { user, signOut, profile, isTutor, isConvoPartner, isAdmin } = useAuth();
   const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
