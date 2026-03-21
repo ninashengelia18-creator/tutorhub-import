@@ -175,7 +175,7 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { user, signOut, isTutor } = useAuth();
+  const { user, signOut, isTutor, isConvoPartner } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -213,10 +213,15 @@ export function Header() {
       "/tutor-messages",
       "/tutor-schedule",
       "/lesson-planner",
+      "/partner-dashboard",
+      "/partner-messages",
+      "/partner-schedule",
+      "/partner-settings",
+      "/partner-profile-edit",
     ].includes(location.pathname);
 
-  const profilePath = isTutor ? "/tutor-settings" : "/profile";
-  const dashboardPath = isTutor ? "/tutor-dashboard" : "/dashboard";
+  const profilePath = isConvoPartner ? "/partner-settings" : isTutor ? "/tutor-settings" : "/profile";
+  const dashboardPath = isConvoPartner ? "/partner-dashboard" : isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks =
     user && !isTutor
       ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
@@ -501,6 +506,15 @@ export function Header() {
                         {t("nav.lessonPlanner")}
                       </DropdownMenuItem>
                     </>
+                  ) : isConvoPartner ? (
+                    <>
+                      <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/partner-messages")}>
+                        {t("msg.messages")}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/partner-schedule")}>
+                        {t("nav.schedule")}
+                      </DropdownMenuItem>
+                    </>
                   ) : (
                     <>
                       <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/messages")}>
@@ -511,8 +525,8 @@ export function Header() {
                       </DropdownMenuItem>
                     </>
                   )}
-                  {isTutor && (
-                    <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/tutor-profile-edit")}>
+                  {(isTutor || isConvoPartner) && (
+                    <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(isTutor ? "/tutor-profile-edit" : "/partner-profile-edit")}>
                       <UserCircle className="mr-2 h-4 w-4" />
                       Profile
                     </DropdownMenuItem>

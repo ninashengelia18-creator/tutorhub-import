@@ -19,6 +19,7 @@ interface AuthContextType {
   roles: AppRole[];
   isAdmin: boolean;
   isTutor: boolean;
+  isConvoPartner: boolean;
   isStudent: boolean;
   defaultRoute: string;
   signOut: () => Promise<void>;
@@ -180,8 +181,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAdmin = roles.includes("admin");
   const isTutor = roles.includes("tutor");
-  const isStudent = user !== null && !isTutor && !isAdmin;
-  const defaultRoute = isAdmin ? "/admin" : isTutor ? "/tutor-dashboard" : "/dashboard";
+  const isConvoPartner = roles.includes("convo_partner");
+  const isStudent = user !== null && !isTutor && !isAdmin && !isConvoPartner;
+  const defaultRoute = isAdmin ? "/admin" : isTutor ? "/tutor-dashboard" : isConvoPartner ? "/partner-dashboard" : "/dashboard";
   const loading = authLoading || (user !== null && (profileLoading || rolesLoading));
 
   const value = useMemo<AuthContextType>(
@@ -193,6 +195,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       roles,
       isAdmin,
       isTutor,
+      isConvoPartner,
       isStudent,
       defaultRoute,
       signOut,
@@ -200,7 +203,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       refreshRoles,
       updateProfileState,
     }),
-    [user, session, loading, profile, roles, isAdmin, isTutor, isStudent, defaultRoute, signOut, refreshProfile, refreshRoles, updateProfileState],
+    [user, session, loading, profile, roles, isAdmin, isTutor, isConvoPartner, isStudent, defaultRoute, signOut, refreshProfile, refreshRoles, updateProfileState],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

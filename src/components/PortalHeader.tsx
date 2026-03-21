@@ -31,6 +31,12 @@ const tutorPrimaryNav = [
   { to: "/lesson-planner", labelKey: "nav.lessonPlanner" },
 ] as const;
 
+const partnerPrimaryNav = [
+  { to: "/partner-dashboard", labelKey: "nav.dashboard" },
+  { to: "/partner-messages", labelKey: "msg.messages" },
+  { to: "/partner-schedule", labelKey: "nav.schedule" },
+] as const;
+
 function initialsFromName(name: string) {
   return (
     name
@@ -46,7 +52,7 @@ function initialsFromName(name: string) {
 export function PortalHeader() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut, profile, isTutor, isAdmin } = useAuth();
+  const { user, signOut, profile, isTutor, isConvoPartner, isAdmin } = useAuth();
   const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -59,7 +65,7 @@ export function PortalHeader() {
   }, [profile?.display_name, user]);
 
   const initials = useMemo(() => initialsFromName(displayName), [displayName]);
-  const profilePath = isTutor ? "/tutor-settings" : "/profile";
+  const profilePath = isConvoPartner ? "/partner-settings" : isTutor ? "/tutor-settings" : "/profile";
 
   useEffect(() => {
     const syncSaved = () => setSavedCount(getSavedTutors().length);
@@ -142,6 +148,8 @@ export function PortalHeader() {
 
   const primaryNav = isTutor
     ? tutorPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }))
+    : isConvoPartner
+    ? partnerPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }))
     : studentPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }));
 
   return (
@@ -290,13 +298,13 @@ export function PortalHeader() {
                     {item.label}
                   </DropdownMenuItem>
                 ))}
-                {!isTutor ? (
+                {!isTutor && !isConvoPartner ? (
                   <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/saved-tutors")}>
                     Saved tutors
                   </DropdownMenuItem>
                 ) : null}
-                {isTutor && (
-                  <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/tutor-profile-edit")}>
+                {(isTutor || isConvoPartner) && (
+                  <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(isTutor ? "/tutor-profile-edit" : "/partner-profile-edit")}>
                     <UserCircle className="mr-2 h-4 w-4" />
                     Profile
                   </DropdownMenuItem>

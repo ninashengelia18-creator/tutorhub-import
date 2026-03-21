@@ -43,6 +43,9 @@ import TutorDashboard from "./pages/TutorDashboard.tsx";
 import ConvoPartnerApply from "./pages/ConvoPartnerApply.tsx";
 import TutorSchedule from "./pages/TutorSchedule.tsx";
 import TutorProfileEdit from "./pages/TutorProfileEdit.tsx";
+import PartnerDashboard from "./pages/PartnerDashboard.tsx";
+import PartnerProfileEdit from "./pages/PartnerProfileEdit.tsx";
+import PartnerSettings from "./pages/PartnerSettings.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
@@ -96,6 +99,11 @@ const App = () => (
                 <Route path="/tutor-messages" element={<ProtectedRoute requiredRole="tutor"><TutorMessages /></ProtectedRoute>} />
                 <Route path="/tutor-schedule" element={<ProtectedRoute requiredRole="tutor"><TutorSchedule /></ProtectedRoute>} />
                 <Route path="/tutor-profile-edit" element={<ProtectedRoute requiredRole="tutor"><TutorProfileEdit /></ProtectedRoute>} />
+                <Route path="/partner-dashboard" element={<ProtectedRoute requiredRole="convo_partner"><PartnerDashboard /></ProtectedRoute>} />
+                <Route path="/partner-profile-edit" element={<ProtectedRoute requiredRole="convo_partner"><PartnerProfileEdit /></ProtectedRoute>} />
+                <Route path="/partner-settings" element={<ProtectedRoute requiredRole="convo_partner"><PartnerSettings /></ProtectedRoute>} />
+                <Route path="/partner-messages" element={<ProtectedRoute requiredRole="convo_partner"><TutorMessages /></ProtectedRoute>} />
+                <Route path="/partner-schedule" element={<ProtectedRoute requiredRole="convo_partner"><TutorSchedule /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
