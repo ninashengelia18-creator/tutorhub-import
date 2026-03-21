@@ -297,7 +297,7 @@ export function PortalHeader() {
                 ) : null}
                 <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(profilePath)}>
                   <UserCircle className="mr-2 h-4 w-4" />
-                  {t("nav.profile")}
+                  Account Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={handleSignOut}>
