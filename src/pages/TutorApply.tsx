@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { TIMEZONE_OPTIONS } from "@/contexts/AppLocaleContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle, User, GraduationCap, BookOpen, Clock, Upload, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -490,15 +491,9 @@ export default function TutorApply() {
                   <Select value={timezone} onValueChange={setTimezone}>
                     <SelectTrigger><SelectValue placeholder={t("tutor.apply.selectTimezone")} /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="GMT+0 (London)">GMT+0 (London)</SelectItem>
-                      <SelectItem value="GMT+1 (Berlin/Paris)">GMT+1 (Berlin/Paris)</SelectItem>
-                      <SelectItem value="GMT+2 (Athens/Istanbul)">GMT+2 (Athens/Istanbul)</SelectItem>
-                      <SelectItem value="GMT+3 (Moscow)">GMT+3 (Moscow)</SelectItem>
-                      <SelectItem value="GMT-5 (New York)">GMT-5 (New York)</SelectItem>
-                      <SelectItem value="GMT-8 (Los Angeles)">GMT-8 (Los Angeles)</SelectItem>
-                      <SelectItem value="GMT+5:30 (Mumbai)">GMT+5:30 (Mumbai)</SelectItem>
-                      <SelectItem value="GMT+8 (Beijing)">GMT+8 (Beijing)</SelectItem>
-                      <SelectItem value="GMT+9 (Tokyo)">GMT+9 (Tokyo)</SelectItem>
+                      {TIMEZONE_OPTIONS.map((tz) => (
+                        <SelectItem key={tz.value} value={tz.value}>{tz.label}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>

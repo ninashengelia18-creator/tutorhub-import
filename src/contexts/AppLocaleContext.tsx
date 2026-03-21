@@ -47,17 +47,55 @@ const EUROPEAN_COUNTRY_CODES = new Set([
 ]);
 
 export const TIMEZONE_OPTIONS: Array<{ value: string; label: string }> = [
-  { value: "America/New_York", label: "US East Coast (EST/EDT)" },
-  { value: "America/Chicago", label: "US Central (CST/CDT)" },
-  { value: "America/Denver", label: "US Mountain (MST/MDT)" },
-  { value: "America/Los_Angeles", label: "US West Coast (PST/PDT)" },
-  
-  { value: "Europe/London", label: "United Kingdom (GMT/BST)" },
-  { value: "Europe/Berlin", label: "Central Europe (CET/CEST)" },
-  { value: "Europe/Warsaw", label: "Poland (CET/CEST)" },
-  { value: "Europe/Madrid", label: "Spain (CET/CEST)" },
-  { value: "Europe/Rome", label: "Italy (CET/CEST)" },
+  // Americas
+  { value: "America/New_York", label: "New York (EST/EDT)" },
+  { value: "America/Chicago", label: "Chicago (CST/CDT)" },
+  { value: "America/Denver", label: "Denver (MST/MDT)" },
+  { value: "America/Los_Angeles", label: "Los Angeles (PST/PDT)" },
+  { value: "America/Toronto", label: "Toronto (EST/EDT)" },
+  { value: "America/Sao_Paulo", label: "São Paulo (BRT)" },
+
+  // Europe
+  { value: "Europe/London", label: "London (GMT/BST)" },
+  { value: "Europe/Dublin", label: "Dublin (GMT/IST)" },
+  { value: "Europe/Paris", label: "Paris (CET/CEST)" },
+  { value: "Europe/Berlin", label: "Berlin (CET/CEST)" },
+  { value: "Europe/Madrid", label: "Madrid (CET/CEST)" },
+  { value: "Europe/Rome", label: "Rome (CET/CEST)" },
+  { value: "Europe/Amsterdam", label: "Amsterdam (CET/CEST)" },
+  { value: "Europe/Brussels", label: "Brussels (CET/CEST)" },
+  { value: "Europe/Zurich", label: "Zurich (CET/CEST)" },
+  { value: "Europe/Vienna", label: "Vienna (CET/CEST)" },
+  { value: "Europe/Warsaw", label: "Warsaw (CET/CEST)" },
+  { value: "Europe/Prague", label: "Prague (CET/CEST)" },
+  { value: "Europe/Stockholm", label: "Stockholm (CET/CEST)" },
+  { value: "Europe/Athens", label: "Athens (EET/EEST)" },
+  { value: "Europe/Bucharest", label: "Bucharest (EET/EEST)" },
+  { value: "Europe/Helsinki", label: "Helsinki (EET/EEST)" },
+  { value: "Europe/Istanbul", label: "Istanbul (TRT)" },
   { value: "Europe/Moscow", label: "Moscow (MSK)" },
+  { value: "Europe/Kiev", label: "Kyiv (EET/EEST)" },
+
+  // Middle East & Africa
+  { value: "Asia/Dubai", label: "Dubai (GST)" },
+  { value: "Asia/Riyadh", label: "Riyadh (AST)" },
+  { value: "Asia/Qatar", label: "Doha (AST)" },
+  { value: "Asia/Jerusalem", label: "Jerusalem (IST/IDT)" },
+  { value: "Africa/Cairo", label: "Cairo (EET)" },
+  { value: "Africa/Johannesburg", label: "Johannesburg (SAST)" },
+
+  // Asia & Oceania
+  { value: "Asia/Kolkata", label: "Mumbai / Delhi (IST)" },
+  { value: "Asia/Singapore", label: "Singapore (SGT)" },
+  { value: "Asia/Hong_Kong", label: "Hong Kong (HKT)" },
+  { value: "Asia/Shanghai", label: "Beijing / Shanghai (CST)" },
+  { value: "Asia/Tokyo", label: "Tokyo (JST)" },
+  { value: "Asia/Seoul", label: "Seoul (KST)" },
+  { value: "Australia/Sydney", label: "Sydney (AEST/AEDT)" },
+  { value: "Australia/Melbourne", label: "Melbourne (AEST/AEDT)" },
+  { value: "Pacific/Auckland", label: "Auckland (NZST/NZDT)" },
+
+  // Other
   { value: "UTC", label: "UTC" },
 ];
 
