@@ -47,6 +47,9 @@ interface StudentSettingsPanelsProps {
     email_tips_discount: boolean;
     email_surveys: boolean;
   };
+  meetLink?: string;
+  showMeetLink?: boolean;
+  onMeetLinkChange?: (value: string) => void;
   onAvatarUpload: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
@@ -277,6 +280,13 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
             </Select>
             <p className="text-sm text-muted-foreground">{getTimeZoneSettingLabel(timezone)}</p>
           </div>
+          {props.showMeetLink && (
+            <div className="space-y-3">
+              <Label htmlFor="meetLink">Meeting Link</Label>
+              <Input id="meetLink" type="url" value={props.meetLink || ""} onChange={(e) => props.onMeetLinkChange?.(e.target.value)} placeholder="https://meet.google.com/... or Zoom/Teams link" className="h-16 rounded-2xl border-border bg-background px-6 text-lg" />
+              <p className="text-sm text-muted-foreground">Paste your Google Meet, Zoom, or Teams link. Students will see a "Join Session" button.</p>
+            </div>
+          )}
           <Button type="submit" className="h-16 w-full rounded-2xl text-lg font-semibold" disabled={loading || uploading}>{loading ? t("profile.settings.saving") : t("profile.settings.save")}</Button>
         </form>
       </div>

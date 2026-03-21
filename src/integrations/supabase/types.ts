@@ -483,6 +483,7 @@ export type Database = {
           hourly_rate: number | null
           id: string
           is_suspended: boolean
+          meet_link: string | null
           updated_at: string
         }
         Insert: {
@@ -492,6 +493,7 @@ export type Database = {
           hourly_rate?: number | null
           id: string
           is_suspended?: boolean
+          meet_link?: string | null
           updated_at?: string
         }
         Update: {
@@ -501,6 +503,7 @@ export type Database = {
           hourly_rate?: number | null
           id?: string
           is_suspended?: boolean
+          meet_link?: string | null
           updated_at?: string
         }
         Relationships: []

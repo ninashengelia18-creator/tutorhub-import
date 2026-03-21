@@ -113,7 +113,7 @@ export default function BookingConfirmation() {
               <Button className="w-full hero-gradient border-0 text-primary-foreground font-semibold" asChild>
                 <a href={state.meetLink} target="_blank" rel="noopener noreferrer">
                   <Video className="mr-2 h-5 w-5" />
-                  Join Lesson via Google Meet
+                  Join Session
                 </a>
               </Button>
             )}

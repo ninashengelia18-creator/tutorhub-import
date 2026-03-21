@@ -25,6 +25,7 @@ export default function TutorSettings() {
     firstName,
     lastName,
     email,
+    meetLink,
     setActiveSection,
     setCurrentPassword,
     setNewPassword,
@@ -34,6 +35,7 @@ export default function TutorSettings() {
     setNotificationPreferences,
     setDisplayName,
     setEmail,
+    setMeetLink,
     setSelectedTimezone,
     handleAvatarUpload,
     handleSaveAccount,
@@ -69,6 +71,9 @@ export default function TutorSettings() {
               deleteEmail={deleteEmail}
               deleteDialogOpen={deleteDialogOpen}
               notificationPreferences={notificationPreferences}
+              meetLink={meetLink}
+              showMeetLink={true}
+              onMeetLinkChange={setMeetLink}
               onAvatarUpload={handleAvatarUpload}
               onFirstNameChange={(value) => setDisplayName(`${value} ${lastName}`.trim())}
               onLastNameChange={(value) => setDisplayName(`${firstName} ${value}`.trim())}

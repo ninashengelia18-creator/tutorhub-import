@@ -20,6 +20,7 @@ export function useProfileSettings(redirectPath: string) {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [meetLink, setMeetLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -39,7 +40,7 @@ export function useProfileSettings(redirectPath: string) {
     }
 
     const [{ data: profileData }, { data: preferenceData }] = await Promise.all([
-      supabase.from("profiles").select("display_name, avatar_url").eq("id", user.id).single(),
+      supabase.from("profiles").select("display_name, avatar_url, meet_link").eq("id", user.id).single(),
       supabase.from("notification_preferences").select("email_transactional, email_tips_discount, email_surveys").eq("user_id", user.id).maybeSingle(),
     ]);
 
@@ -48,6 +49,7 @@ export function useProfileSettings(redirectPath: string) {
     if (profileData) {
       setDisplayName(profileData.display_name || "");
       setAvatarUrl(profileData.avatar_url);
+      setMeetLink((profileData as any).meet_link || "");
     }
 
     if (preferenceData) {
@@ -120,7 +122,7 @@ export function useProfileSettings(redirectPath: string) {
 
     setLoading(true);
     const cleanName = displayName.trim();
-    const { error } = await supabase.from("profiles").update({ display_name: cleanName, updated_at: new Date().toISOString() }).eq("id", user.id);
+    const { error } = await supabase.from("profiles").update({ display_name: cleanName, meet_link: meetLink.trim() || null, updated_at: new Date().toISOString() } as any).eq("id", user.id);
     setLoading(false);
 
     if (error) {
@@ -253,6 +255,8 @@ export function useProfileSettings(redirectPath: string) {
     email,
     setEmail,
     avatarUrl,
+    meetLink,
+    setMeetLink,
     loading,
     uploading,
     initialLoading,
