@@ -359,9 +359,23 @@ export default function TutorSchedule() {
                               {formatLessonTimeRange(slot.slot_start_at, slot.slot_end_at, lang, timezone)} · {getTimeZoneSettingLabel(slot.tutor_timezone, slot.slot_start_at)}
                             </p>
                           </div>
-                          <Badge variant={slot.availability_status === "booked" ? "secondary" : "outline"}>
-                            {slot.availability_status === "booked" ? "Booked" : "Open"}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <Badge variant={slot.availability_status === "booked" ? "secondary" : "outline"}>
+                              {slot.availability_status === "booked" ? "Booked" : "Open"}
+                            </Badge>
+                            {slot.availability_status === "open" && (
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="ghost"
+                                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                onClick={() => void handleDeleteSlot(slot.id)}
+                                aria-label="Delete slot"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
