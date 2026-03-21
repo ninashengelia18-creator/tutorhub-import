@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet, Plus, Calendar as CalendarIcon, CheckCircle2, Trash2, Repeat } from "lucide-react";
+import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet, Plus, Calendar as CalendarIcon, CheckCircle2, Trash2, Repeat, Eye } from "lucide-react";
 import {
   convertLocalDateTimeToUtc,
   formatDateInTimeZone,
@@ -57,6 +57,16 @@ interface AvailabilitySlot {
   availability_status: "open" | "booked";
 }
 
+type SlotPreset = "short" | "lesson" | "morning" | "afternoon" | "allday";
+
+const SLOT_PRESETS: Record<SlotPreset, { label: string; duration: number; start?: string; end?: string }> = {
+  short: { label: "25 min", duration: 25 },
+  lesson: { label: "50 min", duration: 50 },
+  morning: { label: "AM half day", duration: 240, start: "08:00", end: "12:00" },
+  afternoon: { label: "PM half day", duration: 240, start: "13:00", end: "17:00" },
+  allday: { label: "All day", duration: 720, start: "08:00", end: "20:00" },
+};
+
 const TIME_OPTIONS = Array.from({ length: 36 }, (_, index) => {
   const totalMinutes = 6 * 60 + index * 30;
   const hours = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
@@ -84,8 +94,8 @@ export default function TutorSchedule() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(new Date());
   const [slotStartTime, setSlotStartTime] = useState("09:00");
-  const [slotDuration, setSlotDuration] = useState<25 | 50 | 720>(50);
-  const isAllDay = slotDuration === 720;
+  const [slotPreset, setSlotPreset] = useState<SlotPreset>("lesson");
+  const isTimedPreset = slotPreset === "short" || slotPreset === "lesson";
   const [completingBooking, setCompletingBooking] = useState<TutorBooking | null>(null);
   const [isCompleting, setIsCompleting] = useState(false);
   const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
@@ -226,15 +236,16 @@ export default function TutorSchedule() {
 
   const handleAddAvailabilitySlot = async () => {
     const dateKey = availabilityDate ? getDateKeyInTimeZone(availabilityDate, timezone) : "";
+    const preset = SLOT_PRESETS[slotPreset];
     let slotStartAt: Date | null;
     let slotEndAt: Date | null;
 
-    if (isAllDay) {
-      slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, "08:00", timezone) : null;
-      slotEndAt = dateKey ? convertLocalDateTimeToUtc(dateKey, "20:00", timezone) : null;
+    if (preset.start && preset.end) {
+      slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, preset.start, timezone) : null;
+      slotEndAt = dateKey ? convertLocalDateTimeToUtc(dateKey, preset.end, timezone) : null;
     } else {
       slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
-      slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + slotDuration * 60 * 1000) : null;
+      slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + preset.duration * 60 * 1000) : null;
     }
 
     if (!dateKey || !slotStartAt || !slotEndAt) {
@@ -320,19 +331,19 @@ export default function TutorSchedule() {
                   </div>
 
                   <div className="space-y-2 w-44">
-                    <p className="text-sm font-medium text-foreground">Duration</p>
+                    <p className="text-sm font-medium text-foreground">Availability type</p>
                     <select
-                      value={slotDuration}
-                      onChange={(event) => setSlotDuration(Number(event.target.value) as 25 | 50 | 720)}
+                      value={slotPreset}
+                      onChange={(event) => setSlotPreset(event.target.value as SlotPreset)}
                       className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                     >
-                      <option value={25}>25 min</option>
-                      <option value={50}>50 min</option>
-                      <option value={720}>All day (8 AM – 8 PM)</option>
+                      {Object.entries(SLOT_PRESETS).map(([key, preset]) => (
+                        <option key={key} value={key}>{preset.label}</option>
+                      ))}
                     </select>
                   </div>
 
-                  {!isAllDay && (
+                  {isTimedPreset && (
                     <div className="space-y-2 w-36">
                       <p className="text-sm font-medium text-foreground">Start</p>
                       <select
@@ -390,9 +401,16 @@ export default function TutorSchedule() {
                             </p>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Badge variant={slot.availability_status === "booked" ? "secondary" : "outline"}>
-                              {slot.availability_status === "booked" ? "Booked" : "Open"}
-                            </Badge>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="outline"
+                              className="rounded-full"
+                              onClick={() => setSelectedDate(new Date(slot.slot_start_at))}
+                            >
+                              <Eye className="mr-1 h-3.5 w-3.5" />
+                              Open
+                            </Button>
                             {slot.availability_status === "open" && (
                               <Button
                                 type="button"
@@ -476,7 +494,7 @@ export default function TutorSchedule() {
                 </div>
               </div>
 
-              {upcomingBookings.length === 0 ? (
+              {upcomingBookings.length === 0 && selectedDaySlots.length === 0 ? (
                 <div className="py-16 text-center">
                   <BookOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                   <p className="mb-1 text-lg font-bold">{t("tutorSchedule.noLessons")}</p>

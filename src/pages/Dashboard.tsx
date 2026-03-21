@@ -40,15 +40,22 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function fetchBookings() {
+      if (!user) {
+        setBookings([]);
+        setLoading(false);
+        return;
+      }
+
       const { data } = await supabase
         .from("bookings")
         .select("*")
+        .eq("student_id", user.id)
         .order("lesson_start_at", { ascending: true });
       setBookings((data as Booking[]) || []);
       setLoading(false);
     }
     void fetchBookings();
-  }, []);
+  }, [user]);
 
   const now = new Date();
 
