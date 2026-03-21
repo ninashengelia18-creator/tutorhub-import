@@ -219,11 +219,9 @@ export default function TutorProfileEdit() {
               <h1 className="text-2xl font-bold">Edit Your Profile</h1>
               <p className="text-sm text-muted-foreground">Your tutor application details are prefilled here and can now be updated anytime.</p>
             </div>
-            <Button variant="outline" size="sm" asChild>
-              <Link to={`/tutor/${tutorProfile.id}`}>
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Preview Profile
-              </Link>
+            <Button variant="outline" size="sm" onClick={() => setPreviewOpen(true)}>
+              <Eye className="mr-2 h-4 w-4" />
+              Preview Profile
             </Button>
           </div>
 
