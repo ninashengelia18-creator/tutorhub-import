@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email, display_name } = await req.json();
+    const { email, display_name, password } = await req.json();
 
     if (!email) {
       throw new Error("Missing required field: email");
@@ -23,8 +23,8 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Step 1: Create user account with a random password (auto-confirmed)
-    const tempPassword = crypto.randomUUID();
+    // Step 1: Create user account (auto-confirmed)
+    const tempPassword = password || crypto.randomUUID();
     const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
       email,
       password: tempPassword,
