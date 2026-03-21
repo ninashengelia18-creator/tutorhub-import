@@ -331,19 +331,19 @@ export default function TutorSchedule() {
                   </div>
 
                   <div className="space-y-2 w-44">
-                    <p className="text-sm font-medium text-foreground">Duration</p>
+                    <p className="text-sm font-medium text-foreground">Availability type</p>
                     <select
-                      value={slotDuration}
-                      onChange={(event) => setSlotDuration(Number(event.target.value) as 25 | 50 | 720)}
+                      value={slotPreset}
+                      onChange={(event) => setSlotPreset(event.target.value as SlotPreset)}
                       className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                     >
-                      <option value={25}>25 min</option>
-                      <option value={50}>50 min</option>
-                      <option value={720}>All day (8 AM – 8 PM)</option>
+                      {Object.entries(SLOT_PRESETS).map(([key, preset]) => (
+                        <option key={key} value={key}>{preset.label}</option>
+                      ))}
                     </select>
                   </div>
 
-                  {!isAllDay && (
+                  {isTimedPreset && (
                     <div className="space-y-2 w-36">
                       <p className="text-sm font-medium text-foreground">Start</p>
                       <select
