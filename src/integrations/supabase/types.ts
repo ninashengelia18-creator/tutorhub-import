@@ -1032,6 +1032,32 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      approve_partner_application: {
+        Args: { _application_id: string }
+        Returns: {
+          agreed_to_terms: boolean
+          conversation_style: string | null
+          country: string | null
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          id_document_url: string | null
+          last_name: string
+          motivation: string
+          phone: string | null
+          status: string
+          timezone: string | null
+          updated_at: string
+          video_intro_url: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "conversation_partner_applications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       approve_tutor_application: {
         Args: { _application_id: string }
         Returns: {
@@ -1117,6 +1143,39 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      ensure_my_partner_profile: {
+        Args: never
+        Returns: {
+          application_id: string | null
+          availability: string | null
+          avatar_url: string | null
+          bio: string
+          country: string | null
+          created_at: string
+          email: string | null
+          first_name: string
+          id: string
+          is_published: boolean
+          languages_spoken: string[]
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          price_per_session: number
+          rating: number
+          review_count: number
+          source: string
+          timezone: string | null
+          topics: string[]
+          updated_at: string
+          video_intro_url: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "public_partner_profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       ensure_my_tutor_profile: {
         Args: never
         Returns: {
@@ -1175,6 +1234,32 @@ export type Database = {
           read_ct: number
         }[]
       }
+      reject_partner_application: {
+        Args: { _application_id: string }
+        Returns: {
+          agreed_to_terms: boolean
+          conversation_style: string | null
+          country: string | null
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          id_document_url: string | null
+          last_name: string
+          motivation: string
+          phone: string | null
+          status: string
+          timezone: string | null
+          updated_at: string
+          video_intro_url: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "conversation_partner_applications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       reject_tutor_application: {
         Args: { _application_id: string }
         Returns: {
@@ -1204,6 +1289,50 @@ export type Database = {
           to: "tutor_applications"
           isOneToOne: true
           isSetofReturn: false
+        }
+      }
+      save_my_partner_profile: {
+        Args: {
+          _availability?: string
+          _avatar_url?: string
+          _bio: string
+          _country?: string
+          _native_language?: string
+          _other_languages?: string
+          _price_per_session: number
+          _timezone?: string
+          _topics?: string[]
+          _video_intro_url?: string
+        }
+        Returns: {
+          application_id: string | null
+          availability: string | null
+          avatar_url: string | null
+          bio: string
+          country: string | null
+          created_at: string
+          email: string | null
+          first_name: string
+          id: string
+          is_published: boolean
+          languages_spoken: string[]
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          price_per_session: number
+          rating: number
+          review_count: number
+          source: string
+          timezone: string | null
+          topics: string[]
+          updated_at: string
+          video_intro_url: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "public_partner_profiles"
+          isOneToOne: false
+          isSetofReturn: true
         }
       }
       save_my_tutor_profile:
