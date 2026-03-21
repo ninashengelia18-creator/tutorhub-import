@@ -82,19 +82,31 @@ export default function ConvoPartnerApply() {
       if (dbError) throw dbError;
 
       // Send confirmation email to applicant + admin notification via Brevo
-      await supabase.functions.invoke("send-application-confirmation-email", {
-        body: {
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
-          email: email.trim(),
-          application_type: "conversation_partner",
-          phone: phone.trim() || null,
-          country: country.trim() || null,
-          motivation: whyPartner.trim(),
-          conversation_style: convoStyle.trim() || null,
-          video_intro_url: videoLink.trim() || null,
-        },
-      }).catch(() => {});
+      try {
+        await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-application-confirmation-email`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            },
+            body: JSON.stringify({
+              first_name: firstName.trim(),
+              last_name: lastName.trim(),
+              email: email.trim(),
+              application_type: "conversation_partner",
+              phone: phone.trim() || null,
+              country: country.trim() || null,
+              motivation: whyPartner.trim(),
+              conversation_style: convoStyle.trim() || null,
+              video_intro_url: videoLink.trim() || null,
+            }),
+          },
+        );
+      } catch (emailErr) {
+        console.error("Failed to send confirmation email:", emailErr);
+      }
 
       setSubmitted(true);
     } catch (error: any) {
