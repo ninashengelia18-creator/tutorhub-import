@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,6 +11,7 @@ type PageState = "loading" | "ready" | "expired" | "success";
 
 export default function ResetPassword() {
   const [pageState, setPageState] = useState<PageState>("loading");
+  const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -22,48 +22,15 @@ export default function ResetPassword() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Explicitly parse the hash from the URL and set the session
-    const hash = window.location.hash;
-    if (hash && hash.includes("access_token")) {
-      const params = new URLSearchParams(hash.substring(1));
-      const accessToken = params.get("access_token");
-      const refreshToken = params.get("refresh_token");
-      
-      if (accessToken && refreshToken) {
-        supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        }).then(({ data, error }) => {
-          if (error) {
-            console.error("Failed to set session:", error.message);
-            setPageState("expired");
-          } else if (data.session) {
-            console.log("Session set successfully for:", data.session.user.email);
-            setPageState("ready");
-          }
-        });
-        return;
-      }
+    // Read ?token= from URL
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get("token");
+    if (t) {
+      setToken(t);
+      setPageState("ready");
+    } else {
+      setPageState("expired");
     }
-
-    // No hash — check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setPageState("ready");
-      } else {
-        setPageState("expired");
-      }
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("Auth event:", event, session?.user?.email);
-      if ((event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") && session) {
-        setPageState("ready");
-      }
-    });
-
-    return () => subscription.unsubscribe();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -82,40 +49,41 @@ export default function ResetPassword() {
 
     setLoading(true);
 
-    const { data, error } = await supabase.auth.updateUser({ password });
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/activate-tutor`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ token, password }),
+        }
+      );
 
-    if (error) {
+      const data = await res.json();
+
+      if (!data.success) {
+        toast({
+          title: "Error",
+          description: data.error || "Activation failed.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      setPageState("success");
+      setTimeout(() => navigate("/tutor-dashboard", { replace: true }), 2000);
+    } catch {
       toast({
         title: "Error",
-        description: error.message,
+        description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
       setLoading(false);
-      return;
     }
-
-    setPageState("success");
-
-    if (data?.user) {
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", data.user.id);
-
-      const userRoles = (roles ?? []).map((r: { role: string }) => r.role);
-
-      setTimeout(() => {
-        if (userRoles.includes("admin")) {
-          navigate("/admin", { replace: true });
-        } else if (userRoles.includes("tutor")) {
-          navigate("/tutor-dashboard", { replace: true });
-        } else {
-          navigate("/dashboard", { replace: true });
-        }
-      }, 2000);
-    }
-
-    setLoading(false);
   };
 
   return (
@@ -142,21 +110,14 @@ export default function ResetPassword() {
           {pageState === "expired" && (
             <CardContent className="text-center space-y-4 py-8">
               <p className="text-sm text-muted-foreground">
-                This link has expired or is no longer valid. Please request a new one.
+                This link has expired or is no longer valid. Please contact info@learneazy.org for a new one.
               </p>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => navigate("/forgot-password")}
-              >
-                Request New Link
-              </Button>
             </CardContent>
           )}
 
           {pageState === "success" && (
             <CardContent className="text-center space-y-3 py-8">
-              <p className="text-lg font-semibold text-green-600">✅ Password set successfully!</p>
+              <p className="text-lg font-semibold text-green-600">✅ Account activated!</p>
               <p className="text-sm text-muted-foreground">Redirecting you to your dashboard…</p>
             </CardContent>
           )}
