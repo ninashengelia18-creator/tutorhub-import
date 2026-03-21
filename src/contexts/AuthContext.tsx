@@ -19,6 +19,7 @@ interface AuthContextType {
   roles: AppRole[];
   isAdmin: boolean;
   isTutor: boolean;
+  isConvoPartner: boolean;
   isStudent: boolean;
   defaultRoute: string;
   signOut: () => Promise<void>;
