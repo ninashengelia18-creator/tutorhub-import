@@ -591,7 +591,7 @@ export function Header() {
                         </Button>
                         <Button variant="ghost" size="sm" className="flex-1" asChild>
                           <Link to={profilePath} onClick={() => setMobileOpen(false)}>
-                            {t("nav.profile")}
+                            Account Settings
                           </Link>
                         </Button>
                       </>
