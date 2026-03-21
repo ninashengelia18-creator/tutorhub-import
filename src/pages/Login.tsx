@@ -121,7 +121,6 @@ export default function Login() {
           return;
         }
       }
-    }
 
       // Determine redirect based on freshly fetched roles
       const targetRoute = userRoles.includes("admin")
