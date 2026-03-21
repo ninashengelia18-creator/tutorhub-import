@@ -159,9 +159,23 @@ export default function TutorSchedule() {
     return acc;
   }, {});
 
+  // Merge booking dates + availability slot dates for calendar
+  const availabilityDateKeys = useMemo(
+    () => upcomingAvailability.map((slot) => getDateKeyInTimeZone(slot.slot_start_at, timezone)).filter(Boolean) as string[],
+    [upcomingAvailability, timezone],
+  );
+
   const calendarDates = useMemo(
-    () => Object.keys(grouped).map((date) => getDateFromKey(date)),
-    [grouped],
+    () => {
+      const allKeys = new Set([...Object.keys(grouped), ...availabilityDateKeys]);
+      return Array.from(allKeys).map((date) => getDateFromKey(date));
+    },
+    [grouped, availabilityDateKeys],
+  );
+
+  const availabilityCalendarDates = useMemo(
+    () => availabilityDateKeys.map((k) => getDateFromKey(k)),
+    [availabilityDateKeys],
   );
 
   const selectedDayLessons = grouped[selectedDateKey] ?? [];
