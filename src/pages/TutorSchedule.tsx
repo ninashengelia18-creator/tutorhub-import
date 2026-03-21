@@ -222,8 +222,16 @@ export default function TutorSchedule() {
 
   const handleAddAvailabilitySlot = async () => {
     const dateKey = availabilityDate ? getDateKeyInTimeZone(availabilityDate, timezone) : "";
-    const slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
-    const slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + slotDuration * 60 * 1000) : null;
+    let slotStartAt: Date | null;
+    let slotEndAt: Date | null;
+
+    if (isAllDay) {
+      slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, "08:00", timezone) : null;
+      slotEndAt = dateKey ? convertLocalDateTimeToUtc(dateKey, "20:00", timezone) : null;
+    } else {
+      slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
+      slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + slotDuration * 60 * 1000) : null;
+    }
 
     if (!dateKey || !slotStartAt || !slotEndAt) {
       toast({ title: "Unable to save slot", description: "Choose a valid date and time.", variant: "destructive" });
