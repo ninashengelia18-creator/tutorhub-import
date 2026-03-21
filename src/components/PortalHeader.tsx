@@ -280,6 +280,11 @@ export function PortalHeader() {
                   </div>
                 </div>
                 <DropdownMenuSeparator />
+                {isAdmin && (
+                  <DropdownMenuItem className="rounded-xl px-3 py-3 font-semibold text-primary" onClick={() => navigate("/admin")}>
+                    Admin Dashboard
+                  </DropdownMenuItem>
+                )}
                 {primaryNav.map((item) => (
                   <DropdownMenuItem key={item.to} className="rounded-xl px-3 py-3" onClick={() => navigate(item.to)}>
                     {item.label}
