@@ -440,6 +440,10 @@ export default function TutorSchedule() {
                     day: "h-10 w-10 p-0 font-normal",
                   }}
                 />
+                <div className="mt-3 flex items-center gap-4 px-1 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded bg-accent" /> Booked lessons</span>
+                  <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded ring-2 ring-primary/40" /> Open availability</span>
+                </div>
               </div>
 
               <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
