@@ -159,6 +159,12 @@ export default function TutorSchedule() {
     return acc;
   }, {});
 
+  const selectedDayLessons = grouped[selectedDateKey] ?? [];
+  const upcomingAvailability = useMemo(
+    () => availabilitySlots.filter((slot) => new Date(slot.slot_end_at) > now),
+    [availabilitySlots, now],
+  );
+
   // Merge booking dates + availability slot dates for calendar
   const availabilityDateKeys = useMemo(
     () => upcomingAvailability.map((slot) => getDateKeyInTimeZone(slot.slot_start_at, timezone)).filter(Boolean) as string[],
@@ -176,12 +182,6 @@ export default function TutorSchedule() {
   const availabilityCalendarDates = useMemo(
     () => availabilityDateKeys.map((k) => getDateFromKey(k)),
     [availabilityDateKeys],
-  );
-
-  const selectedDayLessons = grouped[selectedDateKey] ?? [];
-  const upcomingAvailability = useMemo(
-    () => availabilitySlots.filter((slot) => new Date(slot.slot_end_at) > now),
-    [availabilitySlots, now],
   );
 
   const stats = useMemo(() => {
