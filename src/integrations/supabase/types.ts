@@ -514,6 +514,89 @@ export type Database = {
         }
         Relationships: []
       }
+      public_partner_profiles: {
+        Row: {
+          application_id: string | null
+          availability: string | null
+          avatar_url: string | null
+          bio: string
+          country: string | null
+          created_at: string
+          email: string | null
+          first_name: string
+          id: string
+          is_published: boolean
+          languages_spoken: string[]
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          price_per_session: number
+          rating: number
+          review_count: number
+          source: string
+          timezone: string | null
+          topics: string[]
+          updated_at: string
+          video_intro_url: string | null
+        }
+        Insert: {
+          application_id?: string | null
+          availability?: string | null
+          avatar_url?: string | null
+          bio?: string
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          first_name: string
+          id?: string
+          is_published?: boolean
+          languages_spoken?: string[]
+          last_name: string
+          native_language?: string | null
+          other_languages?: string | null
+          price_per_session?: number
+          rating?: number
+          review_count?: number
+          source?: string
+          timezone?: string | null
+          topics?: string[]
+          updated_at?: string
+          video_intro_url?: string | null
+        }
+        Update: {
+          application_id?: string | null
+          availability?: string | null
+          avatar_url?: string | null
+          bio?: string
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          first_name?: string
+          id?: string
+          is_published?: boolean
+          languages_spoken?: string[]
+          last_name?: string
+          native_language?: string | null
+          other_languages?: string | null
+          price_per_session?: number
+          rating?: number
+          review_count?: number
+          source?: string
+          timezone?: string | null
+          topics?: string[]
+          updated_at?: string
+          video_intro_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_partner_profiles_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: true
+            referencedRelation: "conversation_partner_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       public_tutor_profiles: {
         Row: {
           application_id: string | null
@@ -1257,7 +1340,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user" | "tutor"
+      app_role: "admin" | "moderator" | "user" | "tutor" | "convo_partner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1385,7 +1468,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user", "tutor"],
+      app_role: ["admin", "moderator", "user", "tutor", "convo_partner"],
     },
   },
 } as const
