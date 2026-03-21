@@ -557,6 +557,34 @@ export default function TutorSchedule() {
                     )}
                   </div>
 
+                  {selectedDaySlots.length > 0 && (
+                    <div className="space-y-3">
+                      <p className="text-sm font-semibold text-muted-foreground">Open availability on this day</p>
+                      {selectedDaySlots.map((slot) => (
+                        <div key={slot.id} className="flex items-center justify-between rounded-xl border border-primary/20 bg-primary/5 p-4">
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">
+                              {formatLessonTimeRange(slot.slot_start_at, slot.slot_end_at, lang, timezone)}
+                            </p>
+                            <p className="text-xs text-muted-foreground">{getTimeZoneSettingLabel(slot.tutor_timezone, slot.slot_start_at)}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs">Open</Badge>
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                              onClick={() => void handleDeleteSlot(slot.id)}
+                              aria-label="Delete slot"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className="pt-2">
                     <p className="mb-3 text-sm font-semibold text-muted-foreground">{t("tutorSchedule.allUpcomingTitle")}</p>
                     <div className="space-y-6">
