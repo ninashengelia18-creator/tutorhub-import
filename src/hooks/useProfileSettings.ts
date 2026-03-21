@@ -20,6 +20,7 @@ export function useProfileSettings(redirectPath: string) {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [meetLink, setMeetLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
