@@ -316,6 +316,20 @@ export default function TutorSchedule() {
                   </div>
 
                   <div className="space-y-2">
+                    <p className="text-sm font-medium text-foreground">Duration</p>
+                    <select
+                      value={slotDuration}
+                      onChange={(event) => setSlotDuration(Number(event.target.value) as 25 | 50 | 720)}
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value={25}>25 min</option>
+                      <option value={50}>50 min</option>
+                      <option value={720}>All day (8 AM – 8 PM)</option>
+                    </select>
+                  </div>
+
+                  {!isAllDay && (
+                  <div className="space-y-2">
                     <p className="text-sm font-medium text-foreground">Start</p>
                     <select
                       value={slotStartTime}
@@ -327,17 +341,7 @@ export default function TutorSchedule() {
                       ))}
                     </select>
                   </div>
-
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-foreground">Duration</p>
-                    <select
-                      value={slotDuration}
-                      onChange={(event) => setSlotDuration(Number(event.target.value) as 25 | 50)}
-                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                    >
-                      <option value={25}>25 min</option>
-                      <option value={50}>50 min</option>
-                    </select>
+                  )
                   </div>
 
                   <div className="space-y-2">
