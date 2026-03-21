@@ -34,17 +34,31 @@ serve(async (req) => {
         },
       });
 
-      if (createError && !createError.message.toLowerCase().includes("already registered")) {
+      const alreadyRegistered = createError && (
+        createError.message.toLowerCase().includes("already") ||
+        createError.status === 422
+      );
+
+      if (createError && !alreadyRegistered) {
         console.error("Failed to create tutor account:", createError.message);
         throw new Error(`Account creation failed: ${createError.message}`);
       }
 
       // Step 2: Assign tutor role in user_roles table
-      const userId = newUser?.user?.id;
+      // For existing users, look up their ID
+      let userId = newUser?.user?.id;
+      if (!userId && alreadyRegistered) {
+        const { data: existingUsers } = await supabase.auth.admin.listUsers();
+        const existing = existingUsers?.users?.find(
+          (u) => u.email?.toLowerCase() === email.toLowerCase()
+        );
+        userId = existing?.id;
+      }
+
       if (userId) {
         const { error: roleError } = await supabase
           .from("user_roles")
-          .insert({ user_id: userId, role: "tutor" });
+          .upsert({ user_id: userId, role: "tutor" }, { onConflict: "user_id,role" });
         if (roleError) {
           console.error("Failed to assign tutor role:", roleError.message);
         }
