@@ -122,7 +122,7 @@ export function useProfileSettings(redirectPath: string) {
 
     setLoading(true);
     const cleanName = displayName.trim();
-    const { error } = await supabase.from("profiles").update({ display_name: cleanName, updated_at: new Date().toISOString() }).eq("id", user.id);
+    const { error } = await supabase.from("profiles").update({ display_name: cleanName, meet_link: meetLink.trim() || null, updated_at: new Date().toISOString() } as any).eq("id", user.id);
     setLoading(false);
 
     if (error) {
