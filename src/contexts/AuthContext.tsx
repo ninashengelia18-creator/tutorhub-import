@@ -195,6 +195,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       roles,
       isAdmin,
       isTutor,
+      isConvoPartner,
       isStudent,
       defaultRoute,
       signOut,
@@ -202,7 +203,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       refreshRoles,
       updateProfileState,
     }),
-    [user, session, loading, profile, roles, isAdmin, isTutor, isStudent, defaultRoute, signOut, refreshProfile, refreshRoles, updateProfileState],
+    [user, session, loading, profile, roles, isAdmin, isTutor, isConvoPartner, isStudent, defaultRoute, signOut, refreshProfile, refreshRoles, updateProfileState],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
