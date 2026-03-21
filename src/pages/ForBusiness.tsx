@@ -75,6 +75,7 @@ export default function ForBusiness() {
         contact_name: parsed.data.contact_name,
         phone: parsed.data.phone || "Not provided",
         team_size: parsed.data.team_size || "Not provided",
+        timezone: formData.timezone || "Not provided",
         message: parsed.data.message || "No message",
         _subject: `Business enquiry from ${parsed.data.company_name}`,
       }).catch(() => {/* DB insert succeeded, email is best-effort */});
