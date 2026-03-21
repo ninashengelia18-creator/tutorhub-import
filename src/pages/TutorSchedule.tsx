@@ -494,7 +494,7 @@ export default function TutorSchedule() {
                 </div>
               </div>
 
-              {upcomingBookings.length === 0 ? (
+              {upcomingBookings.length === 0 && selectedDaySlots.length === 0 ? (
                 <div className="py-16 text-center">
                   <BookOpen className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                   <p className="mb-1 text-lg font-bold">{t("tutorSchedule.noLessons")}</p>
