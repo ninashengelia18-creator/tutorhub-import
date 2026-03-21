@@ -38,7 +38,7 @@ export default function TutorProfileEdit() {
     if (!user) return;
     setLoading(true);
 
-    const { data, error } = await supabase.rpc("ensure_my_tutor_profile");
+    const { data, error } = await supabase.rpc("ensure_my_tutor_profile" as never);
 
     if (error) {
       toast({ title: "Unable to load profile", description: error.message, variant: "destructive" });
