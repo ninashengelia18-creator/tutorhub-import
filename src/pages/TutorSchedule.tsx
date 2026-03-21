@@ -236,15 +236,16 @@ export default function TutorSchedule() {
 
   const handleAddAvailabilitySlot = async () => {
     const dateKey = availabilityDate ? getDateKeyInTimeZone(availabilityDate, timezone) : "";
+    const preset = SLOT_PRESETS[slotPreset];
     let slotStartAt: Date | null;
     let slotEndAt: Date | null;
 
-    if (isAllDay) {
-      slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, "08:00", timezone) : null;
-      slotEndAt = dateKey ? convertLocalDateTimeToUtc(dateKey, "20:00", timezone) : null;
+    if (preset.start && preset.end) {
+      slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, preset.start, timezone) : null;
+      slotEndAt = dateKey ? convertLocalDateTimeToUtc(dateKey, preset.end, timezone) : null;
     } else {
       slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
-      slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + slotDuration * 60 * 1000) : null;
+      slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + preset.duration * 60 * 1000) : null;
     }
 
     if (!dateKey || !slotStartAt || !slotEndAt) {
