@@ -506,6 +506,15 @@ export function Header() {
                         {t("nav.lessonPlanner")}
                       </DropdownMenuItem>
                     </>
+                  ) : isConvoPartner ? (
+                    <>
+                      <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/partner-messages")}>
+                        {t("msg.messages")}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/partner-schedule")}>
+                        {t("nav.schedule")}
+                      </DropdownMenuItem>
+                    </>
                   ) : (
                     <>
                       <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/messages")}>
@@ -516,8 +525,8 @@ export function Header() {
                       </DropdownMenuItem>
                     </>
                   )}
-                  {isTutor && (
-                    <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/tutor-profile-edit")}>
+                  {(isTutor || isConvoPartner) && (
+                    <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(isTutor ? "/tutor-profile-edit" : "/partner-profile-edit")}>
                       <UserCircle className="mr-2 h-4 w-4" />
                       Profile
                     </DropdownMenuItem>
