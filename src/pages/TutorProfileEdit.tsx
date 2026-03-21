@@ -378,6 +378,9 @@ export default function TutorProfileEdit() {
           </div>
         </motion.div>
       </div>
+      {tutorProfile && (
+        <TutorProfilePreviewDialog open={previewOpen} onOpenChange={setPreviewOpen} tutorId={tutorProfile.id} />
+      )}
     </Layout>
   );
 }
