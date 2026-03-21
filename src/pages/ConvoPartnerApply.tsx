@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle, User, MessageCircle, Upload, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { TIMEZONE_OPTIONS } from "@/contexts/AppLocaleContext";
 
 import { supabase } from "@/integrations/supabase/client";
 
