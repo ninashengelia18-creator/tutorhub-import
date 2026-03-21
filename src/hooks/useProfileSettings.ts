@@ -255,6 +255,8 @@ export function useProfileSettings(redirectPath: string) {
     email,
     setEmail,
     avatarUrl,
+    meetLink,
+    setMeetLink,
     loading,
     uploading,
     initialLoading,
