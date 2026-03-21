@@ -366,11 +366,9 @@ export default function TutorProfileEdit() {
             <Button variant="outline" asChild>
               <Link to="/tutor-dashboard">Cancel</Link>
             </Button>
-            <Button variant="outline" asChild>
-              <Link to={`/tutor/${tutorProfile.id}`}>
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Preview Profile
-              </Link>
+            <Button variant="outline" onClick={() => setPreviewOpen(true)}>
+              <Eye className="mr-2 h-4 w-4" />
+              Preview Profile
             </Button>
             <Button onClick={handleSave} disabled={saving}>
               {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
