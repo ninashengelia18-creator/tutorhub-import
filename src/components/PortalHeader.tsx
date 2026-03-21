@@ -298,13 +298,13 @@ export function PortalHeader() {
                     {item.label}
                   </DropdownMenuItem>
                 ))}
-                {!isTutor ? (
+                {!isTutor && !isConvoPartner ? (
                   <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/saved-tutors")}>
                     Saved tutors
                   </DropdownMenuItem>
                 ) : null}
-                {isTutor && (
-                  <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/tutor-profile-edit")}>
+                {(isTutor || isConvoPartner) && (
+                  <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(isTutor ? "/tutor-profile-edit" : "/partner-profile-edit")}>
                     <UserCircle className="mr-2 h-4 w-4" />
                     Profile
                   </DropdownMenuItem>
