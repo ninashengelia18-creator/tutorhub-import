@@ -89,7 +89,7 @@ export default function TutorProfileEdit() {
     const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(filePath);
     const avatarUrl = urlData.publicUrl;
 
-    const { error } = await supabase.rpc("save_my_tutor_profile", {
+    const { error } = await supabase.rpc("save_my_tutor_profile" as never, {
       _bio: bio,
       _experience: experience,
       _hourly_rate: Number(hourlyRate) || 0,
@@ -99,7 +99,7 @@ export default function TutorProfileEdit() {
       _education: education || null,
       _certifications: certifications || null,
       _avatar_url: avatarUrl,
-    });
+    } as never);
 
     if (error) {
       toast({ title: "Failed to update avatar", description: error.message, variant: "destructive" });
