@@ -401,16 +401,6 @@ export default function TutorSchedule() {
                             </p>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              className="rounded-full"
-                              onClick={() => setSelectedDate(new Date(slot.slot_start_at))}
-                            >
-                              <Eye className="mr-1 h-3.5 w-3.5" />
-                              Open
-                            </Button>
                             {slot.availability_status === "open" && (
                               <Button
                                 type="button"
