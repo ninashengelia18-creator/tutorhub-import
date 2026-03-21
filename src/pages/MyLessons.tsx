@@ -511,6 +511,16 @@ export default function MyLessons() {
           )}
         </DialogContent>
       </Dialog>
+
+      {reviewBooking && user && (
+        <ReviewDialog
+          open={!!reviewBooking}
+          onOpenChange={(open) => !open && setReviewBooking(null)}
+          bookingId={reviewBooking.id}
+          tutorName={reviewBooking.tutor_name}
+          studentId={user.id}
+        />
+      )}
     </Layout>
   );
 }

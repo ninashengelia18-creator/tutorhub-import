@@ -93,6 +93,7 @@ const App = () => (
                 <Route path="/tutor-dashboard" element={<ProtectedRoute requiredRole="tutor"><TutorDashboard /></ProtectedRoute>} />
                 <Route path="/tutor-messages" element={<ProtectedRoute requiredRole="tutor"><TutorMessages /></ProtectedRoute>} />
                 <Route path="/tutor-schedule" element={<ProtectedRoute requiredRole="tutor"><TutorSchedule /></ProtectedRoute>} />
+                <Route path="/tutor-profile-edit" element={<ProtectedRoute requiredRole="tutor"><TutorProfileEdit /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
