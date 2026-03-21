@@ -1123,50 +1123,100 @@ export type Database = {
           isSetofReturn: false
         }
       }
-      save_my_tutor_profile: {
-        Args: {
-          _avatar_url?: string
-          _bio: string
-          _certifications?: string
-          _country?: string
-          _education?: string
-          _experience: string
-          _hourly_rate: number
-          _native_language?: string
-          _other_languages?: string
-        }
-        Returns: {
-          application_id: string | null
-          avatar_url: string | null
-          bio: string
-          certifications: string | null
-          country: string | null
-          created_at: string
-          education: string | null
-          email: string | null
-          experience: string
-          first_name: string
-          hourly_rate: number
-          id: string
-          is_published: boolean
-          languages_spoken: string[]
-          last_name: string
-          native_language: string | null
-          other_languages: string | null
-          primary_subject: string
-          rating: number
-          review_count: number
-          source: string
-          subjects: string[]
-          updated_at: string
-        }
-        SetofOptions: {
-          from: "*"
-          to: "public_tutor_profiles"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+      save_my_tutor_profile:
+        | {
+            Args: {
+              _avatar_url?: string
+              _bio: string
+              _certifications?: string
+              _country?: string
+              _education?: string
+              _experience: string
+              _hourly_rate: number
+              _native_language?: string
+              _other_languages?: string
+            }
+            Returns: {
+              application_id: string | null
+              avatar_url: string | null
+              bio: string
+              certifications: string | null
+              country: string | null
+              created_at: string
+              education: string | null
+              email: string | null
+              experience: string
+              first_name: string
+              hourly_rate: number
+              id: string
+              is_published: boolean
+              languages_spoken: string[]
+              last_name: string
+              native_language: string | null
+              other_languages: string | null
+              primary_subject: string
+              rating: number
+              review_count: number
+              source: string
+              subjects: string[]
+              updated_at: string
+            }
+            SetofOptions: {
+              from: "*"
+              to: "public_tutor_profiles"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+        | {
+            Args: {
+              _about_teaching?: string
+              _availability?: string
+              _avatar_url?: string
+              _bio: string
+              _certifications?: string
+              _country?: string
+              _education?: string
+              _experience: string
+              _hourly_rate: number
+              _native_language?: string
+              _other_languages?: string
+              _phone?: string
+              _subjects?: string[]
+              _timezone?: string
+            }
+            Returns: {
+              application_id: string | null
+              avatar_url: string | null
+              bio: string
+              certifications: string | null
+              country: string | null
+              created_at: string
+              education: string | null
+              email: string | null
+              experience: string
+              first_name: string
+              hourly_rate: number
+              id: string
+              is_published: boolean
+              languages_spoken: string[]
+              last_name: string
+              native_language: string | null
+              other_languages: string | null
+              primary_subject: string
+              rating: number
+              review_count: number
+              source: string
+              subjects: string[]
+              updated_at: string
+            }[]
+            SetofOptions: {
+              from: "*"
+              to: "public_tutor_profiles"
+              isOneToOne: false
+              isSetofReturn: true
+            }
+          }
       sync_public_tutor_profile_from_application: {
         Args: { _application_id: string }
         Returns: {
