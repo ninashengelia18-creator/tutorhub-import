@@ -269,7 +269,7 @@ export default function TutorSchedule() {
                   </div>
                 </div>
 
-                <div className="grid gap-4 lg:grid-cols-[240px_repeat(2,minmax(0,180px))_auto] lg:items-end">
+                <div className="grid gap-4 lg:grid-cols-[240px_repeat(3,minmax(0,160px))_auto] lg:items-end">
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-foreground">Date</p>
                     <Popover>
