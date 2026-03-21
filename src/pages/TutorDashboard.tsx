@@ -111,6 +111,12 @@ export default function TutorDashboard() {
                   <Link to="/tutor-schedule">{t("tutorDashboard.openSchedule")}</Link>
                 </Button>
                 <Button variant="outline" className="rounded-full px-6" asChild>
+                  <Link to="/tutor-profile-edit">
+                    <Edit className="mr-2 h-4 w-4" />
+                    Edit Profile
+                  </Link>
+                </Button>
+                <Button variant="outline" className="rounded-full px-6" asChild>
                   <Link to="/lesson-planner">{t("tutorDashboard.lessonPlanner")}</Link>
                 </Button>
               </div>
