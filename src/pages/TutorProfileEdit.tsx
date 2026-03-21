@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { PublicTutorProfile } from "@/lib/publicTutors";
 
 export default function TutorProfileEdit() {
-  const { user, profile: authProfile, refreshProfile } = useAuth();
+  const { user, profile: authProfile, refreshProfile, updateProfileState } = useAuth();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -25,7 +25,6 @@ export default function TutorProfileEdit() {
   const [uploading, setUploading] = useState(false);
   const [tutorProfile, setTutorProfile] = useState<PublicTutorProfile | null>(null);
 
-  // Editable fields
   const [bio, setBio] = useState("");
   const [education, setEducation] = useState("");
   const [certifications, setCertifications] = useState("");
@@ -35,19 +34,17 @@ export default function TutorProfileEdit() {
   const [otherLanguages, setOtherLanguages] = useState("");
   const [hourlyRate, setHourlyRate] = useState("");
 
-  const tutorName = authProfile?.display_name?.trim() || "";
-
   const loadProfile = useCallback(async () => {
-    if (!user || !tutorName) return;
+    if (!user) return;
     setLoading(true);
 
-    // Find public tutor profile by email
-    const email = user.email?.toLowerCase();
-    const { data } = await supabase
-      .from("public_tutor_profiles" as never)
-      .select("*")
-      .eq("email", email)
-      .maybeSingle();
+    const { data, error } = await supabase.rpc("ensure_my_tutor_profile");
+
+    if (error) {
+      toast({ title: "Unable to load profile", description: error.message, variant: "destructive" });
+      setLoading(false);
+      return;
+    }
 
     const profile = data as PublicTutorProfile | null;
     setTutorProfile(profile);
@@ -64,7 +61,7 @@ export default function TutorProfileEdit() {
     }
 
     setLoading(false);
-  }, [user, tutorName]);
+  }, [toast, user]);
 
   useEffect(() => {
     void loadProfile();
@@ -72,7 +69,7 @@ export default function TutorProfileEdit() {
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !user || !tutorProfile) return;
+    if (!file || !user) return;
 
     setUploading(true);
 
@@ -92,16 +89,23 @@ export default function TutorProfileEdit() {
     const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(filePath);
     const avatarUrl = urlData.publicUrl;
 
-    // Update both profiles table and public_tutor_profiles
-    const [profileRes, tutorRes] = await Promise.all([
-      supabase.from("profiles").update({ avatar_url: avatarUrl }).eq("id", user.id),
-      supabase.from("public_tutor_profiles" as never).update({ avatar_url: avatarUrl } as never).eq("id", tutorProfile.id),
-    ]);
+    const { error } = await supabase.rpc("save_my_tutor_profile", {
+      _bio: bio,
+      _experience: experience,
+      _hourly_rate: Number(hourlyRate) || 0,
+      _country: country || null,
+      _native_language: nativeLanguage || null,
+      _other_languages: otherLanguages || null,
+      _education: education || null,
+      _certifications: certifications || null,
+      _avatar_url: avatarUrl,
+    });
 
-    if (profileRes.error || tutorRes.error) {
-      toast({ title: "Failed to update avatar", variant: "destructive" });
+    if (error) {
+      toast({ title: "Failed to update avatar", description: error.message, variant: "destructive" });
     } else {
       setTutorProfile((prev) => prev ? { ...prev, avatar_url: avatarUrl } : prev);
+      updateProfileState({ avatar_url: avatarUrl, display_name: authProfile?.display_name ?? null });
       await refreshProfile();
       toast({ title: "Photo updated" });
     }
@@ -110,25 +114,19 @@ export default function TutorProfileEdit() {
   };
 
   const handleSave = async () => {
-    if (!tutorProfile) return;
     setSaving(true);
 
-    const languages = [nativeLanguage, otherLanguages].filter(Boolean);
-
-    const { error } = await supabase
-      .from("public_tutor_profiles" as never)
-      .update({
-        bio,
-        education: education || null,
-        certifications: certifications || null,
-        experience,
-        country: country || null,
-        native_language: nativeLanguage || null,
-        other_languages: otherLanguages || null,
-        languages_spoken: languages,
-        hourly_rate: Number(hourlyRate) || tutorProfile.hourly_rate,
-      } as never)
-      .eq("id", tutorProfile.id);
+    const { data, error } = await supabase.rpc("save_my_tutor_profile", {
+      _bio: bio,
+      _experience: experience,
+      _hourly_rate: Number(hourlyRate) || 0,
+      _country: country || null,
+      _native_language: nativeLanguage || null,
+      _other_languages: otherLanguages || null,
+      _education: education || null,
+      _certifications: certifications || null,
+      _avatar_url: tutorProfile?.avatar_url || null,
+    });
 
     setSaving(false);
 
@@ -137,8 +135,8 @@ export default function TutorProfileEdit() {
       return;
     }
 
+    setTutorProfile(data as PublicTutorProfile);
     toast({ title: "Profile updated successfully" });
-    void loadProfile();
   };
 
   if (loading) {
@@ -156,10 +154,8 @@ export default function TutorProfileEdit() {
       <Layout hideFooter>
         <div className="container py-16 text-center">
           <h1 className="text-2xl font-bold">Profile not found</h1>
-          <p className="mt-2 text-muted-foreground">Your tutor profile hasn't been created yet. It will be set up once your application is approved.</p>
-          <Button className="mt-6" asChild>
-            <Link to="/tutor-dashboard">Back to Dashboard</Link>
-          </Button>
+          <p className="mt-2 text-muted-foreground">We couldn’t create your tutor profile automatically yet.</p>
+          <Button className="mt-6" onClick={() => void loadProfile()}>Try again</Button>
         </div>
       </Layout>
     );
@@ -171,10 +167,10 @@ export default function TutorProfileEdit() {
     <Layout hideFooter>
       <div className="container max-w-3xl py-8">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <div>
               <h1 className="text-2xl font-bold">Edit Your Profile</h1>
-              <p className="text-sm text-muted-foreground">Update the information students see on your public profile.</p>
+              <p className="text-sm text-muted-foreground">Your tutor application details are prefilled here and can now be updated anytime.</p>
             </div>
             <Button variant="outline" size="sm" asChild>
               <Link to={`/tutor/${tutorProfile.id}`}>
@@ -184,7 +180,6 @@ export default function TutorProfileEdit() {
             </Button>
           </div>
 
-          {/* Avatar */}
           <section className="rounded-2xl border bg-card p-6">
             <h2 className="mb-4 text-lg font-semibold">Photo</h2>
             <div className="flex items-center gap-5">
@@ -194,14 +189,7 @@ export default function TutorProfileEdit() {
                   <AvatarFallback className="text-xl">{initials}</AvatarFallback>
                 </Avatar>
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="secondary"
-                  className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                >
+                <Button type="button" size="icon" variant="secondary" className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
                   {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                 </Button>
               </div>
@@ -212,7 +200,6 @@ export default function TutorProfileEdit() {
             </div>
           </section>
 
-          {/* Subjects */}
           <section className="rounded-2xl border bg-card p-6">
             <h2 className="mb-3 text-lg font-semibold">Subjects</h2>
             <div className="flex flex-wrap gap-2">
@@ -220,10 +207,8 @@ export default function TutorProfileEdit() {
                 <Badge key={subject} variant="secondary">{subject}</Badge>
               ))}
             </div>
-            <p className="mt-2 text-xs text-muted-foreground">To update subjects, please contact support.</p>
           </section>
 
-          {/* Bio & Details */}
           <section className="rounded-2xl border bg-card p-6 space-y-5">
             <h2 className="text-lg font-semibold">About You</h2>
 
