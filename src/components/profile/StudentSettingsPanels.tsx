@@ -47,6 +47,9 @@ interface StudentSettingsPanelsProps {
     email_tips_discount: boolean;
     email_surveys: boolean;
   };
+  meetLink?: string;
+  showMeetLink?: boolean;
+  onMeetLinkChange?: (value: string) => void;
   onAvatarUpload: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
