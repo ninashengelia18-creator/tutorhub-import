@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet, Plus, Calendar as CalendarIcon, CheckCircle2 } from "lucide-react";
+import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet, Plus, Calendar as CalendarIcon, CheckCircle2, Trash2, Repeat } from "lucide-react";
 import {
   convertLocalDateTimeToUtc,
   formatDateInTimeZone,
