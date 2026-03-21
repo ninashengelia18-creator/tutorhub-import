@@ -75,6 +75,7 @@ export default function ConvoPartnerApply() {
         email: email.trim(),
         phone: phone.trim() || null,
         country: country.trim() || null,
+        timezone: timezone || null,
         motivation: whyPartner.trim(),
         conversation_style: convoStyle.trim() || null,
         video_intro_url: videoLink.trim() || null,

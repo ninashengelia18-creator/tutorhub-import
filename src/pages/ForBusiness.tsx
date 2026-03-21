@@ -40,6 +40,7 @@ export default function ForBusiness() {
     phone: "",
     team_size: "",
     message: "",
+    timezone: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
