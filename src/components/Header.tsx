@@ -400,7 +400,7 @@ export function Header() {
                       location.pathname === profilePath ? "text-primary" : "text-white"
                     }`}
                   >
-                    {t("nav.profile")}
+                    Account Settings
                   </Link>
                 )}
               </>
