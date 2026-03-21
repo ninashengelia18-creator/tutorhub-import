@@ -200,9 +200,7 @@ export function Header() {
     setMobileOpen(false);
   }, [location.pathname]);
 
-  const isPortalHeaderRoute =
-    user &&
-    [
+  const portalPaths = [
       "/dashboard",
       "/messages",
       "/my-lessons",
@@ -213,12 +211,17 @@ export function Header() {
       "/tutor-messages",
       "/tutor-schedule",
       "/lesson-planner",
+      "/tutor-profile-edit",
       "/partner-dashboard",
       "/partner-messages",
       "/partner-schedule",
       "/partner-settings",
       "/partner-profile-edit",
-    ].includes(location.pathname);
+      "/faq",
+    ];
+
+  const isPortalHeaderRoute = user && (isTutor || isConvoPartner) && portalPaths.includes(location.pathname);
+  const isStudentPortalRoute = user && !isTutor && !isConvoPartner && portalPaths.includes(location.pathname);
 
   const profilePath = isConvoPartner ? "/partner-settings" : isTutor ? "/tutor-settings" : "/profile";
   const dashboardPath = isConvoPartner ? "/partner-dashboard" : isTutor ? "/tutor-dashboard" : "/dashboard";
@@ -229,7 +232,7 @@ export function Header() {
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
 
-  if (isPortalHeaderRoute) {
+  if (isPortalHeaderRoute || isStudentPortalRoute) {
     return <PortalHeader />;
   }
 
@@ -269,34 +272,36 @@ export function Header() {
               {t("nav.home")}
             </Link>
 
-            {/* For Students mega-menu trigger */}
-            <div
-              className="relative"
-              onMouseEnter={() => setMegaOpen(true)}
-              onMouseLeave={() => setMegaOpen(false)}
-            >
-              <button
-                type="button"
-                className="flex items-center gap-1 text-sm font-bold text-white transition-colors hover:text-primary"
-                onClick={() => setMegaOpen((v) => !v)}
+            {/* For Students mega-menu trigger — hide for tutors/partners */}
+            {!isTutor && !isConvoPartner && (
+              <div
+                className="relative"
+                onMouseEnter={() => setMegaOpen(true)}
+                onMouseLeave={() => setMegaOpen(false)}
               >
-                Find a Tutor <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
-              </button>
+                <button
+                  type="button"
+                  className="flex items-center gap-1 text-sm font-bold text-white transition-colors hover:text-primary"
+                  onClick={() => setMegaOpen((v) => !v)}
+                >
+                  Find a Tutor <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
+                </button>
 
-              <AnimatePresence>
-                {megaOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute left-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border/70 bg-popover p-5 shadow-xl"
-                  >
-                    <MegaMenuColumn title="" items={forStudentsMenu} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                <AnimatePresence>
+                  {megaOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute left-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border/70 bg-popover p-5 shadow-xl"
+                    >
+                      <MegaMenuColumn title="" items={forStudentsMenu} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
 
             {!user && (
               <>
@@ -370,7 +375,7 @@ export function Header() {
               </>
             )}
 
-            {user && (
+            {user && !isTutor && !isConvoPartner && (
               <>
                 <Link
                   to="/search"
@@ -388,26 +393,60 @@ export function Header() {
                 >
                   {t("auth.dashboard")}
                 </Link>
-                {!isTutor && (
-                  <Link
-                    to="/my-lessons"
-                    className={`text-sm font-bold transition-colors hover:text-primary ${
-                      location.pathname === "/my-lessons" ? "text-primary" : "text-white"
-                    }`}
-                  >
-                    {t("msg.myLessons")}
-                  </Link>
-                )}
+                <Link
+                  to="/my-lessons"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === "/my-lessons" ? "text-primary" : "text-white"
+                  }`}
+                >
+                  {t("msg.myLessons")}
+                </Link>
+              </>
+            )}
+            {user && (isTutor || isConvoPartner) && (
+              <>
+                <Link
+                  to={dashboardPath}
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === dashboardPath ? "text-primary" : "text-white"
+                  }`}
+                >
+                  {t("auth.dashboard")}
+                </Link>
+                <Link
+                  to={isTutor ? "/tutor-messages" : "/partner-messages"}
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    ["/tutor-messages", "/partner-messages"].includes(location.pathname) ? "text-primary" : "text-white"
+                  }`}
+                >
+                  {t("msg.messages")}
+                </Link>
+                <Link
+                  to={isTutor ? "/tutor-schedule" : "/partner-schedule"}
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    ["/tutor-schedule", "/partner-schedule"].includes(location.pathname) ? "text-primary" : "text-white"
+                  }`}
+                >
+                  {t("nav.schedule")}
+                </Link>
                 {isTutor && (
                   <Link
-                    to={profilePath}
+                    to="/lesson-planner"
                     className={`text-sm font-bold transition-colors hover:text-primary ${
-                      location.pathname === profilePath ? "text-primary" : "text-white"
+                      location.pathname === "/lesson-planner" ? "text-primary" : "text-white"
                     }`}
                   >
-                    Account Settings
+                    {t("nav.lessonPlanner")}
                   </Link>
                 )}
+                <Link
+                  to={profilePath}
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === profilePath ? "text-primary" : "text-white"
+                  }`}
+                >
+                  Account Settings
+                </Link>
               </>
             )}
           </nav>
