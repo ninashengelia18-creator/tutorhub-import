@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle, User, MessageCircle, Upload, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { TIMEZONE_OPTIONS } from "@/contexts/AppLocaleContext";
 
 import { supabase } from "@/integrations/supabase/client";
 
@@ -25,6 +27,7 @@ export default function ConvoPartnerApply() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
+  const [timezone, setTimezone] = useState("");
 
   // Step 2 — About You + Verification
   const [whyPartner, setWhyPartner] = useState("");
@@ -72,6 +75,7 @@ export default function ConvoPartnerApply() {
         email: email.trim(),
         phone: phone.trim() || null,
         country: country.trim() || null,
+        timezone: timezone || null,
         motivation: whyPartner.trim(),
         conversation_style: convoStyle.trim() || null,
         video_intro_url: videoLink.trim() || null,
@@ -98,6 +102,7 @@ export default function ConvoPartnerApply() {
               application_type: "conversation_partner",
               phone: phone.trim() || null,
               country: country.trim() || null,
+              timezone: timezone || null,
               motivation: whyPartner.trim(),
               conversation_style: convoStyle.trim() || null,
               video_intro_url: videoLink.trim() || null,
@@ -207,6 +212,19 @@ export default function ConvoPartnerApply() {
                     <Label>Country</Label>
                     <Input value={country} onChange={(e) => setCountry(e.target.value)} />
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Timezone</Label>
+                  <Select value={timezone} onValueChange={setTimezone}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select timezone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TIMEZONE_OPTIONS.map((tz) => (
+                        <SelectItem key={tz.value} value={tz.value}>{tz.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             )}

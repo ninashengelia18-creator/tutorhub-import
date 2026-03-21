@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -12,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { submitFormspree } from "@/lib/formspree";
 import { toast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { TIMEZONE_OPTIONS } from "@/contexts/AppLocaleContext";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -38,6 +40,7 @@ export default function ForBusiness() {
     phone: "",
     team_size: "",
     message: "",
+    timezone: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -60,6 +63,7 @@ export default function ForBusiness() {
         phone: parsed.data.phone || null,
         team_size: parsed.data.team_size || null,
         message: parsed.data.message || null,
+        timezone: formData.timezone || null,
       };
       const { error } = await supabase.from("business_inquiries").insert([row]);
       if (error) throw error;
@@ -71,12 +75,13 @@ export default function ForBusiness() {
         contact_name: parsed.data.contact_name,
         phone: parsed.data.phone || "Not provided",
         team_size: parsed.data.team_size || "Not provided",
+        timezone: formData.timezone || "Not provided",
         message: parsed.data.message || "No message",
         _subject: `Business enquiry from ${parsed.data.company_name}`,
       }).catch(() => {/* DB insert succeeded, email is best-effort */});
 
       toast({ title: t("biz.form.success") });
-      setFormData({ company_name: "", contact_name: "", email: "", phone: "", team_size: "", message: "" });
+      setFormData({ company_name: "", contact_name: "", email: "", phone: "", team_size: "", message: "", timezone: "" });
     } catch {
       toast({ title: t("biz.form.error"), variant: "destructive" });
     } finally {
@@ -239,9 +244,24 @@ export default function ForBusiness() {
                 <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} maxLength={30} />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="team_size">{t("biz.form.teamSize")}</Label>
-              <Input id="team_size" name="team_size" value={formData.team_size} onChange={handleChange} placeholder={t("biz.form.teamSizePlaceholder")} maxLength={50} />
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="team_size">{t("biz.form.teamSize")}</Label>
+                <Input id="team_size" name="team_size" value={formData.team_size} onChange={handleChange} placeholder={t("biz.form.teamSizePlaceholder")} maxLength={50} />
+              </div>
+              <div className="space-y-2">
+                <Label>Timezone</Label>
+                <Select value={formData.timezone} onValueChange={(val) => setFormData(prev => ({ ...prev, timezone: val }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select timezone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIMEZONE_OPTIONS.map((tz) => (
+                      <SelectItem key={tz.value} value={tz.value}>{tz.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="message">{t("biz.form.message")}</Label>
