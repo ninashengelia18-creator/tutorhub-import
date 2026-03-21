@@ -20,6 +20,8 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    let passwordSetupButton = "";
+
     if (decision === "approved") {
       // Step 1: Create the Supabase auth account for the tutor
       const tempPassword = crypto.randomUUID();
@@ -47,16 +49,26 @@ serve(async (req) => {
           console.error("Failed to assign tutor role:", roleError.message);
         }
       }
-    }
 
-    const subject =
-      decision === "approved"
-        ? `Congratulations! You've been accepted as a tutor on LearnEazy`
-        : `Your LearnEazy tutor application update`;
+      // Step 3: Generate a proper password reset link
+      const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+        type: "recovery",
+        email,
+        options: {
+          redirectTo: "https://www.learneazy.org/reset-password",
+        },
+      });
 
-    const passwordSetupButton = `
+      let resetUrl = "https://www.learneazy.org/reset-password";
+      if (linkError) {
+        console.error("Failed to generate reset link:", linkError.message);
+      } else if (linkData?.properties?.action_link) {
+        resetUrl = linkData.properties.action_link;
+      }
+
+      passwordSetupButton = `
         <div style="margin: 24px 0;">
-          <a href="https://www.learneazy.org/reset-password"
+          <a href="${resetUrl}"
              style="display: inline-block; background: #2563eb; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
             Set Up Your Password
           </a>
@@ -68,6 +80,7 @@ serve(async (req) => {
             Go to Tutor Dashboard
           </a>
         </div>`;
+    }
 
     const html =
       decision === "approved"
