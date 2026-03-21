@@ -1,5 +1,5 @@
-import { useMemo, type RefObject } from "react";
-import { Bell, CalendarDays, Camera, Loader2, Mail, Trash2 } from "lucide-react";
+import { useState, useMemo, type RefObject } from "react";
+import { Bell, Camera, ChevronDown, ChevronUp, Info, Loader2, Mail, Trash2 } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -50,7 +50,7 @@ interface StudentSettingsPanelsProps {
   meetLink?: string;
   showMeetLink?: boolean;
   onMeetLinkChange?: (value: string) => void;
-  onAvatarUpload: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  onAvatarUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
   onEmailChange: (value: string) => void;
@@ -82,6 +82,9 @@ function SectionShell({ title, description, children }: { title: string; descrip
 
 export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
   const { t } = useLanguage();
+  const [showEmailChange, setShowEmailChange] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+
   const {
     activeSection,
     email,
@@ -121,7 +124,6 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
     if (TIMEZONE_OPTIONS.some((option) => option.value === timezone)) {
       return TIMEZONE_OPTIONS;
     }
-
     return [{ value: timezone, label: getTimeZoneSettingLabel(timezone) }, ...TIMEZONE_OPTIONS];
   }, [timezone]);
 
@@ -143,34 +145,6 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
           </div>
           <Button type="submit" className="h-16 w-full rounded-2xl text-lg font-semibold" disabled={loading}>{loading ? t("profile.settings.saving") : t("profile.settings.save")}</Button>
         </form>
-      </SectionShell>
-    );
-  }
-
-  if (activeSection === "email") {
-    return (
-      <SectionShell title={t("profile.settings.emailTitle")} description={t("profile.settings.emailDesc")}>
-        <form className="space-y-6" onSubmit={(event) => void onSaveEmail(event)}>
-          <div className="space-y-3">
-            <Label htmlFor="accountEmail">{t("profile.settings.accountEmail")}</Label>
-            <Input id="accountEmail" type="email" value={email} onChange={(e) => onEmailChange(e.target.value)} className="h-16 rounded-2xl border-border bg-background px-6 text-lg" />
-          </div>
-          <Button type="submit" className="h-16 w-full rounded-2xl text-lg font-semibold" disabled={loading}>{loading ? t("profile.settings.saving") : t("profile.settings.save")}</Button>
-        </form>
-      </SectionShell>
-    );
-  }
-
-  if (activeSection === "calendar") {
-    return (
-      <SectionShell title={t("profile.settings.calendarTitle")} description={t("profile.settings.calendarDesc")}>
-        <div className="rounded-[2rem] border border-border bg-card p-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted text-foreground"><CalendarDays className="h-8 w-8" /></div>
-            <p className="max-w-xl text-xl text-foreground">{t("profile.settings.calendarDesc")}</p>
-          </div>
-          <Button type="button" disabled variant="outline" className="mt-8 h-16 w-full rounded-2xl text-lg font-semibold opacity-100">{t("profile.settings.connectCalendar")}</Button>
-        </div>
       </SectionShell>
     );
   }
@@ -229,8 +203,10 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
     );
   }
 
+  // Account section (default)
   return (
-    <SectionShell title={t("profile.settings.accountTitle")}>
+    <SectionShell title={t("profile.settings.accountTitle")} description="Manage your profile, login email, and preferences.">
+      {/* Profile Image & Name */}
       <div className="space-y-10 rounded-[2rem] border border-border bg-card p-6 md:p-10">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
           <div className="space-y-4">
@@ -263,7 +239,6 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
             <div className="space-y-3"><Label htmlFor="firstName">{t("profile.settings.firstName")}</Label><Input id="firstName" value={firstName} onChange={(e) => onFirstNameChange(e.target.value)} className="h-16 rounded-2xl border-border bg-background px-6 text-lg" /></div>
             <div className="space-y-3"><Label htmlFor="lastName">{t("profile.settings.lastName")}</Label><Input id="lastName" value={lastName} onChange={(e) => onLastNameChange(e.target.value)} className="h-16 rounded-2xl border-border bg-background px-6 text-lg" /></div>
           </div>
-          <div className="space-y-3"><Label htmlFor="accountEmail">{t("profile.settings.accountEmail")}</Label><Input id="accountEmail" value={email} disabled className="h-16 rounded-2xl border-border bg-background px-6 text-lg" /></div>
           <div className="space-y-3">
             <Label htmlFor="accountTimezone">{t("profile.settings.timezone")}</Label>
             <Select value={timezone} onValueChange={onTimezoneChange}>
@@ -289,6 +264,63 @@ export function StudentSettingsPanels(props: StudentSettingsPanelsProps) {
           )}
           <Button type="submit" className="h-16 w-full rounded-2xl text-lg font-semibold" disabled={loading || uploading}>{loading ? t("profile.settings.saving") : t("profile.settings.save")}</Button>
         </form>
+      </div>
+
+      {/* Login Email — clear info card */}
+      <div className="rounded-[2rem] border border-border bg-card p-6 md:p-10">
+        <div className="flex items-center gap-3 mb-6">
+          <Mail className="h-6 w-6 text-primary" />
+          <h2 className="text-2xl font-bold text-foreground">Login Email</h2>
+        </div>
+
+        <div className="rounded-xl bg-muted/50 border border-border p-5 mb-6">
+          <p className="text-sm font-medium text-muted-foreground mb-1">Current email</p>
+          <p className="text-lg font-semibold text-foreground break-all">{email}</p>
+          <p className="text-sm text-muted-foreground mt-2">This is the email you use to sign in and receive notifications from LearnEazy.</p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setShowEmailChange(!showEmailChange)}
+          className="flex items-center gap-2 text-base font-medium text-primary hover:underline"
+        >
+          {showEmailChange ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          {showEmailChange ? "Cancel email change" : "Change my email address"}
+        </button>
+
+        {showEmailChange && (
+          <form
+            className="mt-6 space-y-4"
+            onSubmit={(event) => {
+              // Update the email state and trigger save
+              onEmailChange(newEmail);
+              void onSaveEmail(event);
+            }}
+          >
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex gap-3">
+              <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <p className="text-sm text-foreground">
+                After you submit, we'll send a confirmation link to your <strong>new email address</strong>. 
+                You'll need to click that link to complete the change. Your current email will remain active until then.
+              </p>
+            </div>
+            <div className="space-y-3">
+              <Label htmlFor="newEmail">New email address</Label>
+              <Input
+                id="newEmail"
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="your-new-email@example.com"
+                required
+                className="h-16 rounded-2xl border-border bg-background px-6 text-lg"
+              />
+            </div>
+            <Button type="submit" className="h-14 w-full rounded-2xl text-lg font-semibold" disabled={loading || !newEmail.trim()}>
+              {loading ? t("profile.settings.saving") : "Send confirmation email"}
+            </Button>
+          </form>
+        )}
       </div>
     </SectionShell>
   );
