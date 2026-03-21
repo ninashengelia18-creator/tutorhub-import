@@ -193,6 +193,18 @@ export default function TutorSchedule() {
   const formatTimeRange = (booking: TutorBooking) =>
     formatLessonTimeRange(booking.lesson_start_at, booking.lesson_end_at, lang, timezone);
 
+  const [recurringWeeks, setRecurringWeeks] = useState(1);
+
+  const handleDeleteSlot = async (slotId: string) => {
+    const { error } = await supabase.from("tutor_availability_slots" as never).delete().eq("id", slotId).eq("availability_status", "open");
+    if (error) {
+      toast({ title: "Unable to delete slot", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Slot removed" });
+    void loadScheduleData();
+  };
+
   const handleAddAvailabilitySlot = async () => {
     const dateKey = availabilityDate ? getDateKeyInTimeZone(availabilityDate, timezone) : "";
     const slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
@@ -205,13 +217,20 @@ export default function TutorSchedule() {
 
     setSavingSlot(true);
 
-    const { error } = await supabase.from("tutor_availability_slots" as never).insert({
-      tutor_name: tutorName,
-      slot_start_at: slotStartAt.toISOString(),
-      slot_end_at: slotEndAt.toISOString(),
-      tutor_timezone: timezone,
-      availability_status: "open",
-    } as never);
+    // Build recurring slots
+    const slots = [];
+    for (let week = 0; week < recurringWeeks; week++) {
+      const offset = week * 7 * 24 * 60 * 60 * 1000;
+      slots.push({
+        tutor_name: tutorName,
+        slot_start_at: new Date(slotStartAt.getTime() + offset).toISOString(),
+        slot_end_at: new Date(slotEndAt.getTime() + offset).toISOString(),
+        tutor_timezone: timezone,
+        availability_status: "open",
+      });
+    }
+
+    const { error } = await supabase.from("tutor_availability_slots" as never).insert(slots as never);
 
     setSavingSlot(false);
 
@@ -220,7 +239,7 @@ export default function TutorSchedule() {
       return;
     }
 
-    toast({ title: "Availability saved", description: `Shown in ${getTimeZoneSettingLabel(timezone, slotStartAt)} and stored in UTC.` });
+    toast({ title: "Availability saved", description: `${slots.length} slot${slots.length > 1 ? "s" : ""} added (${getTimeZoneSettingLabel(timezone, slotStartAt)}).` });
     void loadScheduleData();
   };
 
