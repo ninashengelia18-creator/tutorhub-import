@@ -65,7 +65,7 @@ export function PortalHeader() {
   }, [profile?.display_name, user]);
 
   const initials = useMemo(() => initialsFromName(displayName), [displayName]);
-  const profilePath = isTutor ? "/tutor-settings" : "/profile";
+  const profilePath = isConvoPartner ? "/partner-settings" : isTutor ? "/tutor-settings" : "/profile";
 
   useEffect(() => {
     const syncSaved = () => setSavedCount(getSavedTutors().length);
