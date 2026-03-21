@@ -40,7 +40,7 @@ export function useProfileSettings(redirectPath: string) {
     }
 
     const [{ data: profileData }, { data: preferenceData }] = await Promise.all([
-      supabase.from("profiles").select("display_name, avatar_url").eq("id", user.id).single(),
+      supabase.from("profiles").select("display_name, avatar_url, meet_link").eq("id", user.id).single(),
       supabase.from("notification_preferences").select("email_transactional, email_tips_discount, email_surveys").eq("user_id", user.id).maybeSingle(),
     ]);
 
@@ -49,6 +49,7 @@ export function useProfileSettings(redirectPath: string) {
     if (profileData) {
       setDisplayName(profileData.display_name || "");
       setAvatarUrl(profileData.avatar_url);
+      setMeetLink((profileData as any).meet_link || "");
     }
 
     if (preferenceData) {
