@@ -200,9 +200,7 @@ export function Header() {
     setMobileOpen(false);
   }, [location.pathname]);
 
-  const isPortalHeaderRoute =
-    user &&
-    [
+  const portalPaths = [
       "/dashboard",
       "/messages",
       "/my-lessons",
@@ -213,12 +211,17 @@ export function Header() {
       "/tutor-messages",
       "/tutor-schedule",
       "/lesson-planner",
+      "/tutor-profile-edit",
       "/partner-dashboard",
       "/partner-messages",
       "/partner-schedule",
       "/partner-settings",
       "/partner-profile-edit",
-    ].includes(location.pathname);
+      "/faq",
+    ];
+
+  const isPortalHeaderRoute = user && (isTutor || isConvoPartner) && portalPaths.includes(location.pathname);
+  const isStudentPortalRoute = user && !isTutor && !isConvoPartner && portalPaths.includes(location.pathname);
 
   const profilePath = isConvoPartner ? "/partner-settings" : isTutor ? "/tutor-settings" : "/profile";
   const dashboardPath = isConvoPartner ? "/partner-dashboard" : isTutor ? "/tutor-dashboard" : "/dashboard";
