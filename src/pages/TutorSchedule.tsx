@@ -426,8 +426,8 @@ export default function TutorSchedule() {
                   onSelect={(date) => date && setSelectedDate(date)}
                   month={selectedDate}
                   onMonthChange={setSelectedDate}
-                  modifiers={{ booked: calendarDates }}
-                  modifiersClassNames={{ booked: "bg-accent text-accent-foreground rounded-md font-semibold" }}
+                  modifiers={{ booked: calendarDates, available: availabilityCalendarDates }}
+                  modifiersClassNames={{ booked: "bg-accent text-accent-foreground rounded-md font-semibold", available: "ring-2 ring-primary/40 rounded-md" }}
                   className="w-full rounded-2xl border border-border bg-background"
                   classNames={{
                     months: "w-full",
