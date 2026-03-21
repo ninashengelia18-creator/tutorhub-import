@@ -109,7 +109,7 @@ export default function PartnerProfileEdit() {
       return;
     }
 
-    const result = Array.isArray(data) ? data[0] : data;
+    const result = Array.isArray(data) ? (data as PublicPartnerProfile[])[0] : data;
     setPartnerProfile(result as PublicPartnerProfile);
     if (avatarOverride) {
       updateProfileState({ avatar_url: avatarOverride, display_name: authProfile?.display_name ?? null });
