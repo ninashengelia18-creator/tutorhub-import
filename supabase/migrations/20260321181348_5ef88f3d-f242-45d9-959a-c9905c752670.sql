@@ -1,0 +1,1 @@
+UPDATE public.profiles SET display_name = 'Test Tutor', updated_at = now() WHERE id = '6414053e-6999-4c54-9d8b-d17dd616a3fb' AND display_name IS NULL;
