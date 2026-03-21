@@ -175,7 +175,7 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { user, signOut, isTutor } = useAuth();
+  const { user, signOut, isTutor, isConvoPartner } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
