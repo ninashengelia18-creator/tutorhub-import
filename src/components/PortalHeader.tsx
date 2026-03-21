@@ -148,6 +148,8 @@ export function PortalHeader() {
 
   const primaryNav = isTutor
     ? tutorPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }))
+    : isConvoPartner
+    ? partnerPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }))
     : studentPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }));
 
   return (
