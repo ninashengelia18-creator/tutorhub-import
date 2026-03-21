@@ -1034,6 +1034,40 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      ensure_my_tutor_profile: {
+        Args: never
+        Returns: {
+          application_id: string | null
+          avatar_url: string | null
+          bio: string
+          certifications: string | null
+          country: string | null
+          created_at: string
+          education: string | null
+          email: string | null
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id: string
+          is_published: boolean
+          languages_spoken: string[]
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          primary_subject: string
+          rating: number
+          review_count: number
+          source: string
+          subjects: string[]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "public_tutor_profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1085,6 +1119,50 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "tutor_applications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      save_my_tutor_profile: {
+        Args: {
+          _avatar_url?: string
+          _bio: string
+          _certifications?: string
+          _country?: string
+          _education?: string
+          _experience: string
+          _hourly_rate: number
+          _native_language?: string
+          _other_languages?: string
+        }
+        Returns: {
+          application_id: string | null
+          avatar_url: string | null
+          bio: string
+          certifications: string | null
+          country: string | null
+          created_at: string
+          education: string | null
+          email: string | null
+          experience: string
+          first_name: string
+          hourly_rate: number
+          id: string
+          is_published: boolean
+          languages_spoken: string[]
+          last_name: string
+          native_language: string | null
+          other_languages: string | null
+          primary_subject: string
+          rating: number
+          review_count: number
+          source: string
+          subjects: string[]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "public_tutor_profiles"
           isOneToOne: true
           isSetofReturn: false
         }
