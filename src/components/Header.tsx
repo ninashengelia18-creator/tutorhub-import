@@ -375,7 +375,7 @@ export function Header() {
               </>
             )}
 
-            {user && (
+            {user && !isTutor && !isConvoPartner && (
               <>
                 <Link
                   to="/search"
@@ -393,26 +393,60 @@ export function Header() {
                 >
                   {t("auth.dashboard")}
                 </Link>
-                {!isTutor && (
-                  <Link
-                    to="/my-lessons"
-                    className={`text-sm font-bold transition-colors hover:text-primary ${
-                      location.pathname === "/my-lessons" ? "text-primary" : "text-white"
-                    }`}
-                  >
-                    {t("msg.myLessons")}
-                  </Link>
-                )}
+                <Link
+                  to="/my-lessons"
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === "/my-lessons" ? "text-primary" : "text-white"
+                  }`}
+                >
+                  {t("msg.myLessons")}
+                </Link>
+              </>
+            )}
+            {user && (isTutor || isConvoPartner) && (
+              <>
+                <Link
+                  to={dashboardPath}
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === dashboardPath ? "text-primary" : "text-white"
+                  }`}
+                >
+                  {t("auth.dashboard")}
+                </Link>
+                <Link
+                  to={isTutor ? "/tutor-messages" : "/partner-messages"}
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    ["/tutor-messages", "/partner-messages"].includes(location.pathname) ? "text-primary" : "text-white"
+                  }`}
+                >
+                  {t("msg.messages")}
+                </Link>
+                <Link
+                  to={isTutor ? "/tutor-schedule" : "/partner-schedule"}
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    ["/tutor-schedule", "/partner-schedule"].includes(location.pathname) ? "text-primary" : "text-white"
+                  }`}
+                >
+                  {t("nav.schedule")}
+                </Link>
                 {isTutor && (
                   <Link
-                    to={profilePath}
+                    to="/lesson-planner"
                     className={`text-sm font-bold transition-colors hover:text-primary ${
-                      location.pathname === profilePath ? "text-primary" : "text-white"
+                      location.pathname === "/lesson-planner" ? "text-primary" : "text-white"
                     }`}
                   >
-                    Account Settings
+                    {t("nav.lessonPlanner")}
                   </Link>
                 )}
+                <Link
+                  to={profilePath}
+                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                    location.pathname === profilePath ? "text-primary" : "text-white"
+                  }`}
+                >
+                  Account Settings
+                </Link>
               </>
             )}
           </nav>
