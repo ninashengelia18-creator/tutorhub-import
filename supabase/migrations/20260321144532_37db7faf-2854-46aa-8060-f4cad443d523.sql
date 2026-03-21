@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN meet_link text;
