@@ -31,6 +31,12 @@ const tutorPrimaryNav = [
   { to: "/lesson-planner", labelKey: "nav.lessonPlanner" },
 ] as const;
 
+const partnerPrimaryNav = [
+  { to: "/partner-dashboard", labelKey: "nav.dashboard" },
+  { to: "/partner-messages", labelKey: "msg.messages" },
+  { to: "/partner-schedule", labelKey: "nav.schedule" },
+] as const;
+
 function initialsFromName(name: string) {
   return (
     name
