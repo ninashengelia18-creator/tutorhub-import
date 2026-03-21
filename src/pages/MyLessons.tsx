@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Clock, Calendar as CalendarIcon, GraduationCap, Plus, ChevronDown, ChevronLeft, ChevronRight, MoreHorizontal, RefreshCw, MessageSquare, User, Ban, AlertCircle, Check, Repeat, CalendarDays, Video, ExternalLink, CheckCircle, XCircle } from "lucide-react";
+import { Clock, Calendar as CalendarIcon, GraduationCap, Plus, ChevronDown, ChevronLeft, ChevronRight, MoreHorizontal, RefreshCw, MessageSquare, User, Ban, AlertCircle, Check, Repeat, CalendarDays, Video, ExternalLink, CheckCircle, XCircle, Star } from "lucide-react";
+import { ReviewDialog } from "@/components/ReviewDialog";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
