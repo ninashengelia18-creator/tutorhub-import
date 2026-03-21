@@ -295,6 +295,12 @@ export function PortalHeader() {
                     Saved tutors
                   </DropdownMenuItem>
                 ) : null}
+                {isTutor && (
+                  <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate("/tutor-profile-edit")}>
+                    <UserCircle className="mr-2 h-4 w-4" />
+                    Profile
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem className="rounded-xl px-3 py-3" onClick={() => navigate(profilePath)}>
                   <UserCircle className="mr-2 h-4 w-4" />
                   Account Settings
