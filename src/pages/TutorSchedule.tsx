@@ -292,8 +292,8 @@ export default function TutorSchedule() {
                   </div>
                 </div>
 
-                <div className="grid gap-4 lg:grid-cols-[240px_repeat(3,minmax(0,160px))_auto] lg:items-end">
-                  <div className="space-y-2">
+                <div className="flex flex-wrap gap-4 items-end">
+                  <div className="space-y-2 w-56">
                     <p className="text-sm font-medium text-foreground">Date</p>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -315,7 +315,7 @@ export default function TutorSchedule() {
                     </Popover>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 w-44">
                     <p className="text-sm font-medium text-foreground">Duration</p>
                     <select
                       value={slotDuration}
@@ -329,22 +329,21 @@ export default function TutorSchedule() {
                   </div>
 
                   {!isAllDay && (
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-foreground">Start</p>
-                    <select
-                      value={slotStartTime}
-                      onChange={(event) => setSlotStartTime(event.target.value)}
-                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                    >
-                      {TIME_OPTIONS.map((time) => (
-                        <option key={time} value={time}>{formatWallClockTime(time, lang)}</option>
-                      ))}
-                    </select>
-                  </div>
-                  )
-                  </div>
+                    <div className="space-y-2 w-36">
+                      <p className="text-sm font-medium text-foreground">Start</p>
+                      <select
+                        value={slotStartTime}
+                        onChange={(event) => setSlotStartTime(event.target.value)}
+                        className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                      >
+                        {TIME_OPTIONS.map((time) => (
+                          <option key={time} value={time}>{formatWallClockTime(time, lang)}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 w-36">
                     <p className="text-sm font-medium text-foreground flex items-center gap-1.5"><Repeat className="h-3.5 w-3.5" />Repeat weekly</p>
                     <select
                       value={recurringWeeks}
