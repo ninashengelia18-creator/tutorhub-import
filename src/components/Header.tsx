@@ -272,34 +272,36 @@ export function Header() {
               {t("nav.home")}
             </Link>
 
-            {/* For Students mega-menu trigger */}
-            <div
-              className="relative"
-              onMouseEnter={() => setMegaOpen(true)}
-              onMouseLeave={() => setMegaOpen(false)}
-            >
-              <button
-                type="button"
-                className="flex items-center gap-1 text-sm font-bold text-white transition-colors hover:text-primary"
-                onClick={() => setMegaOpen((v) => !v)}
+            {/* For Students mega-menu trigger — hide for tutors/partners */}
+            {!isTutor && !isConvoPartner && (
+              <div
+                className="relative"
+                onMouseEnter={() => setMegaOpen(true)}
+                onMouseLeave={() => setMegaOpen(false)}
               >
-                Find a Tutor <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
-              </button>
+                <button
+                  type="button"
+                  className="flex items-center gap-1 text-sm font-bold text-white transition-colors hover:text-primary"
+                  onClick={() => setMegaOpen((v) => !v)}
+                >
+                  Find a Tutor <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
+                </button>
 
-              <AnimatePresence>
-                {megaOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute left-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border/70 bg-popover p-5 shadow-xl"
-                  >
-                    <MegaMenuColumn title="" items={forStudentsMenu} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                <AnimatePresence>
+                  {megaOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute left-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border/70 bg-popover p-5 shadow-xl"
+                    >
+                      <MegaMenuColumn title="" items={forStudentsMenu} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
 
             {!user && (
               <>
