@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Camera, ExternalLink, Loader2, Save } from "lucide-react";
+import { Camera, Eye, Loader2, Save } from "lucide-react";
+import { TutorProfilePreviewDialog } from "@/components/tutor/TutorProfilePreviewDialog";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
@@ -28,6 +29,7 @@ export default function TutorProfileEdit() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [tutorProfile, setTutorProfile] = useState<PublicTutorProfile | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   // Core fields
   const [bio, setBio] = useState("");
@@ -218,11 +220,9 @@ export default function TutorProfileEdit() {
               <h1 className="text-2xl font-bold">Edit Your Profile</h1>
               <p className="text-sm text-muted-foreground">Your tutor application details are prefilled here and can now be updated anytime.</p>
             </div>
-            <Button variant="outline" size="sm" asChild>
-              <Link to={`/tutor/${tutorProfile.id}`}>
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Preview Profile
-              </Link>
+            <Button variant="outline" size="sm" onClick={() => setPreviewOpen(true)}>
+              <Eye className="mr-2 h-4 w-4" />
+              Preview Profile
             </Button>
           </div>
 
@@ -367,11 +367,9 @@ export default function TutorProfileEdit() {
             <Button variant="outline" asChild>
               <Link to="/tutor-dashboard">Cancel</Link>
             </Button>
-            <Button variant="outline" asChild>
-              <Link to={`/tutor/${tutorProfile.id}`}>
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Preview Profile
-              </Link>
+            <Button variant="outline" onClick={() => setPreviewOpen(true)}>
+              <Eye className="mr-2 h-4 w-4" />
+              Preview Profile
             </Button>
             <Button onClick={handleSave} disabled={saving}>
               {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
@@ -380,6 +378,9 @@ export default function TutorProfileEdit() {
           </div>
         </motion.div>
       </div>
+      {tutorProfile && (
+        <TutorProfilePreviewDialog open={previewOpen} onOpenChange={setPreviewOpen} tutorId={tutorProfile.id} />
+      )}
     </Layout>
   );
 }
