@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppLocaleProvider } from "@/contexts/AppLocaleContext";
+import { useHideHubspot } from "@/hooks/useHideHubspot";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import TutorSearch from "./pages/TutorSearch.tsx";
@@ -56,6 +57,7 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
+              <HubspotHider />
               <ScrollToTop />
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -103,5 +105,9 @@ const App = () => (
     </LanguageProvider>
   </QueryClientProvider>
 );
+function HubspotHider() {
+  useHideHubspot();
+  return null;
+}
 
 export default App;
