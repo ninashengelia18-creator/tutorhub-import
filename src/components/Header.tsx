@@ -213,10 +213,15 @@ export function Header() {
       "/tutor-messages",
       "/tutor-schedule",
       "/lesson-planner",
+      "/partner-dashboard",
+      "/partner-messages",
+      "/partner-schedule",
+      "/partner-settings",
+      "/partner-profile-edit",
     ].includes(location.pathname);
 
-  const profilePath = isTutor ? "/tutor-settings" : "/profile";
-  const dashboardPath = isTutor ? "/tutor-dashboard" : "/dashboard";
+  const profilePath = isConvoPartner ? "/partner-settings" : isTutor ? "/tutor-settings" : "/profile";
+  const dashboardPath = isConvoPartner ? "/partner-dashboard" : isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks =
     user && !isTutor
       ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
