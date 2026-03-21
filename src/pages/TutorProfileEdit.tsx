@@ -29,6 +29,7 @@ export default function TutorProfileEdit() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [tutorProfile, setTutorProfile] = useState<PublicTutorProfile | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   // Core fields
   const [bio, setBio] = useState("");
