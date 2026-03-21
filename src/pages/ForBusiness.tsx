@@ -63,6 +63,7 @@ export default function ForBusiness() {
         phone: parsed.data.phone || null,
         team_size: parsed.data.team_size || null,
         message: parsed.data.message || null,
+        timezone: formData.timezone || null,
       };
       const { error } = await supabase.from("business_inquiries").insert([row]);
       if (error) throw error;
