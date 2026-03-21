@@ -46,7 +46,7 @@ function initialsFromName(name: string) {
 export function PortalHeader() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut, profile, isTutor } = useAuth();
+  const { user, signOut, profile, isTutor, isAdmin } = useAuth();
   const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -280,6 +280,11 @@ export function PortalHeader() {
                   </div>
                 </div>
                 <DropdownMenuSeparator />
+                {isAdmin && (
+                  <DropdownMenuItem className="rounded-xl px-3 py-3 font-semibold text-primary" onClick={() => navigate("/admin")}>
+                    Admin Dashboard
+                  </DropdownMenuItem>
+                )}
                 {primaryNav.map((item) => (
                   <DropdownMenuItem key={item.to} className="rounded-xl px-3 py-3" onClick={() => navigate(item.to)}>
                     {item.label}

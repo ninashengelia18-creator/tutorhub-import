@@ -121,10 +121,17 @@ export default function Login() {
           return;
         }
       }
-    }
 
-    toast({ title: t("auth.welcomeBack") });
-    navigate(redirect || defaultRoute, { replace: true });
+      // Determine redirect based on freshly fetched roles
+      const targetRoute = userRoles.includes("admin")
+        ? "/admin"
+        : userRoles.includes("tutor")
+          ? "/tutor-dashboard"
+          : "/dashboard";
+
+      toast({ title: t("auth.welcomeBack") });
+      navigate(redirect || targetRoute, { replace: true });
+    }
   };
 
   const ActiveIcon = activePortalConfig.icon;
