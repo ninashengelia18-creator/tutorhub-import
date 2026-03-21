@@ -51,19 +51,27 @@ serve(async (req) => {
       }
 
       // Step 3: Generate a proper password reset link
+      const siteUrl = "https://www.learneazy.org";
       const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
         type: "recovery",
         email,
         options: {
-          redirectTo: "https://www.learneazy.org/reset-password",
+          redirectTo: `${siteUrl}/reset-password`,
         },
       });
 
-      let resetUrl = "https://www.learneazy.org/reset-password";
+      let resetUrl = `${siteUrl}/reset-password`;
       if (linkError) {
         console.error("Failed to generate reset link:", linkError.message);
       } else if (linkData?.properties?.action_link) {
-        resetUrl = linkData.properties.action_link;
+        // The action_link points to the Supabase auth verify endpoint.
+        // We need to rewrite it so the token verification happens via our site URL.
+        // Extract the token_hash and type from the generated link.
+        const actionUrl = new URL(linkData.properties.action_link);
+        const tokenHash = actionUrl.searchParams.get("token_hash") || actionUrl.searchParams.get("token");
+        const type = actionUrl.searchParams.get("type") || "recovery";
+        // Build a link that goes through Supabase's /auth/v1/verify but redirects to our site
+        resetUrl = `${supabaseUrl}/auth/v1/verify?token_hash=${tokenHash}&type=${type}&redirect_to=${encodeURIComponent(`${siteUrl}/reset-password`)}`;
       }
 
       passwordSetupButton = `

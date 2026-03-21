@@ -5,32 +5,43 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Lock, Loader2 } from "lucide-react";
+import { PasswordInput } from "@/components/auth/PasswordInput";
+import { supabase } from "@/integrations/supabase/client";
 
 type PageState = "loading" | "ready" | "expired" | "success";
 
 export default function ResetPassword() {
   const [pageState, setPageState] = useState<PageState>("loading");
-  const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    // Read ?token= from URL
-    const params = new URLSearchParams(window.location.search);
-    const t = params.get("token");
-    if (t) {
-      setToken(t);
-      setPageState("ready");
-    } else {
-      setPageState("expired");
-    }
+    // Supabase recovery links set a session automatically via the hash fragment.
+    // We listen for the SIGNED_IN or PASSWORD_RECOVERY event to know the user is ready.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+        setPageState("ready");
+      }
+    });
+
+    // Also check if there's already a session (e.g. page was refreshed after recovery link)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setPageState("ready");
+      } else {
+        // Give a short delay for the hash to be processed
+        setTimeout(() => {
+          setPageState((prev) => (prev === "loading" ? "expired" : prev));
+        }, 3000);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,24 +61,12 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/activate-tutor`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({ token, password }),
-        }
-      );
+      const { error } = await supabase.auth.updateUser({ password });
 
-      const data = await res.json();
-
-      if (!data.success) {
+      if (error) {
         toast({
           title: "Error",
-          description: data.error || "Activation failed.",
+          description: error.message || "Failed to set password.",
           variant: "destructive",
         });
         setLoading(false);
@@ -75,7 +74,19 @@ export default function ResetPassword() {
       }
 
       setPageState("success");
-      setTimeout(() => navigate("/tutor-dashboard", { replace: true }), 2000);
+      // Fetch roles to redirect correctly
+      const { data: { session } } = await supabase.auth.getSession();
+      const userId = session?.user?.id;
+      let redirectTo = "/dashboard";
+      if (userId) {
+        const { data: roles } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userId);
+        if (roles?.some((r) => r.role === "admin")) redirectTo = "/admin";
+        else if (roles?.some((r) => r.role === "tutor")) redirectTo = "/tutor-dashboard";
+      }
+      setTimeout(() => navigate(redirectTo, { replace: true }), 2000);
     } catch {
       toast({
         title: "Error",
@@ -117,7 +128,7 @@ export default function ResetPassword() {
 
           {pageState === "success" && (
             <CardContent className="text-center space-y-3 py-8">
-              <p className="text-lg font-semibold text-green-600">✅ Account activated!</p>
+              <p className="text-lg font-semibold text-green-600">✅ Password set successfully!</p>
               <p className="text-sm text-muted-foreground">Redirecting you to your dashboard…</p>
             </CardContent>
           )}
@@ -127,55 +138,33 @@ export default function ResetPassword() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="password">New Password</Label>
-                  <div className="relative">
-                    <input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        setPasswordError("");
-                      }}
-                      required
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((v) => !v)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                      tabIndex={-1}
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
+                  <PasswordInput
+                    id="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setPasswordError("");
+                    }}
+                    required
+                    toggleLabel="Toggle password visibility"
+                  />
                   <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <div className="relative">
-                    <input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                        setPasswordError("");
-                      }}
-                      required
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword((v) => !v)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                      tabIndex={-1}
-                    >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
+                  <PasswordInput
+                    id="confirmPassword"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      setPasswordError("");
+                    }}
+                    required
+                    toggleLabel="Toggle confirm password visibility"
+                  />
                 </div>
 
                 {passwordError && (
