@@ -105,5 +105,9 @@ const App = () => (
     </LanguageProvider>
   </QueryClientProvider>
 );
+function HubspotHider() {
+  useHideHubspot();
+  return null;
+}
 
 export default App;
