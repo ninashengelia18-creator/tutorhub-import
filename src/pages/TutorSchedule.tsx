@@ -84,7 +84,8 @@ export default function TutorSchedule() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [availabilityDate, setAvailabilityDate] = useState<Date | undefined>(new Date());
   const [slotStartTime, setSlotStartTime] = useState("09:00");
-  const [slotDuration, setSlotDuration] = useState<25 | 50>(50);
+  const [slotDuration, setSlotDuration] = useState<25 | 50 | 720>(50);
+  const isAllDay = slotDuration === 720;
   const [completingBooking, setCompletingBooking] = useState<TutorBooking | null>(null);
   const [isCompleting, setIsCompleting] = useState(false);
   const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
@@ -158,17 +159,35 @@ export default function TutorSchedule() {
     return acc;
   }, {});
 
-  const calendarDates = useMemo(
-    () => Object.keys(grouped).map((date) => getDateFromKey(date)),
-    [grouped],
-  );
-
   const selectedDayLessons = grouped[selectedDateKey] ?? [];
   const upcomingAvailability = useMemo(
     () => availabilitySlots.filter((slot) => new Date(slot.slot_end_at) > now),
     [availabilitySlots, now],
   );
 
+  // Merge booking dates + availability slot dates for calendar
+  const availabilityDateKeys = useMemo(
+    () => upcomingAvailability.map((slot) => getDateKeyInTimeZone(slot.slot_start_at, timezone)).filter(Boolean) as string[],
+    [upcomingAvailability, timezone],
+  );
+
+  const calendarDates = useMemo(
+    () => {
+      const allKeys = new Set([...Object.keys(grouped), ...availabilityDateKeys]);
+      return Array.from(allKeys).map((date) => getDateFromKey(date));
+    },
+    [grouped, availabilityDateKeys],
+  );
+
+  const availabilityCalendarDates = useMemo(
+    () => availabilityDateKeys.map((k) => getDateFromKey(k)),
+    [availabilityDateKeys],
+  );
+
+  const selectedDaySlots = useMemo(
+    () => upcomingAvailability.filter((slot) => getDateKeyInTimeZone(slot.slot_start_at, timezone) === selectedDateKey),
+    [upcomingAvailability, timezone, selectedDateKey],
+  );
   const stats = useMemo(() => {
     const todaysLessons = upcomingBookings.filter((booking) => getDateKeyInTimeZone(booking.lesson_start_at, timezone) === todayKey);
     const completedRevenue = allBookings
@@ -207,8 +226,16 @@ export default function TutorSchedule() {
 
   const handleAddAvailabilitySlot = async () => {
     const dateKey = availabilityDate ? getDateKeyInTimeZone(availabilityDate, timezone) : "";
-    const slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
-    const slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + slotDuration * 60 * 1000) : null;
+    let slotStartAt: Date | null;
+    let slotEndAt: Date | null;
+
+    if (isAllDay) {
+      slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, "08:00", timezone) : null;
+      slotEndAt = dateKey ? convertLocalDateTimeToUtc(dateKey, "20:00", timezone) : null;
+    } else {
+      slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
+      slotEndAt = slotStartAt ? new Date(slotStartAt.getTime() + slotDuration * 60 * 1000) : null;
+    }
 
     if (!dateKey || !slotStartAt || !slotEndAt) {
       toast({ title: "Unable to save slot", description: "Choose a valid date and time.", variant: "destructive" });
@@ -269,8 +296,8 @@ export default function TutorSchedule() {
                   </div>
                 </div>
 
-                <div className="grid gap-4 lg:grid-cols-[240px_repeat(3,minmax(0,160px))_auto] lg:items-end">
-                  <div className="space-y-2">
+                <div className="flex flex-wrap gap-4 items-end">
+                  <div className="space-y-2 w-56">
                     <p className="text-sm font-medium text-foreground">Date</p>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -292,32 +319,35 @@ export default function TutorSchedule() {
                     </Popover>
                   </div>
 
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-foreground">Start</p>
-                    <select
-                      value={slotStartTime}
-                      onChange={(event) => setSlotStartTime(event.target.value)}
-                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                    >
-                      {TIME_OPTIONS.map((time) => (
-                        <option key={time} value={time}>{formatWallClockTime(time, lang)}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
+                  <div className="space-y-2 w-44">
                     <p className="text-sm font-medium text-foreground">Duration</p>
                     <select
                       value={slotDuration}
-                      onChange={(event) => setSlotDuration(Number(event.target.value) as 25 | 50)}
+                      onChange={(event) => setSlotDuration(Number(event.target.value) as 25 | 50 | 720)}
                       className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                     >
                       <option value={25}>25 min</option>
                       <option value={50}>50 min</option>
+                      <option value={720}>All day (8 AM – 8 PM)</option>
                     </select>
                   </div>
 
-                  <div className="space-y-2">
+                  {!isAllDay && (
+                    <div className="space-y-2 w-36">
+                      <p className="text-sm font-medium text-foreground">Start</p>
+                      <select
+                        value={slotStartTime}
+                        onChange={(event) => setSlotStartTime(event.target.value)}
+                        className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                      >
+                        {TIME_OPTIONS.map((time) => (
+                          <option key={time} value={time}>{formatWallClockTime(time, lang)}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  <div className="space-y-2 w-36">
                     <p className="text-sm font-medium text-foreground flex items-center gap-1.5"><Repeat className="h-3.5 w-3.5" />Repeat weekly</p>
                     <select
                       value={recurringWeeks}
@@ -400,8 +430,8 @@ export default function TutorSchedule() {
                   onSelect={(date) => date && setSelectedDate(date)}
                   month={selectedDate}
                   onMonthChange={setSelectedDate}
-                  modifiers={{ booked: calendarDates }}
-                  modifiersClassNames={{ booked: "bg-accent text-accent-foreground rounded-md font-semibold" }}
+                  modifiers={{ booked: calendarDates, available: availabilityCalendarDates }}
+                  modifiersClassNames={{ booked: "bg-accent text-accent-foreground rounded-md font-semibold", available: "ring-2 ring-primary/40 rounded-md" }}
                   className="w-full rounded-2xl border border-border bg-background"
                   classNames={{
                     months: "w-full",
@@ -414,6 +444,10 @@ export default function TutorSchedule() {
                     day: "h-10 w-10 p-0 font-normal",
                   }}
                 />
+                <div className="mt-3 flex items-center gap-4 px-1 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded bg-accent" /> Booked lessons</span>
+                  <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded ring-2 ring-primary/40" /> Open availability</span>
+                </div>
               </div>
 
               <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -523,6 +557,34 @@ export default function TutorSchedule() {
                     )}
                   </div>
 
+                  {selectedDaySlots.length > 0 && (
+                    <div className="space-y-3">
+                      <p className="text-sm font-semibold text-muted-foreground">Open availability on this day</p>
+                      {selectedDaySlots.map((slot) => (
+                        <div key={slot.id} className="flex items-center justify-between rounded-xl border border-primary/20 bg-primary/5 p-4">
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">
+                              {formatLessonTimeRange(slot.slot_start_at, slot.slot_end_at, lang, timezone)}
+                            </p>
+                            <p className="text-xs text-muted-foreground">{getTimeZoneSettingLabel(slot.tutor_timezone, slot.slot_start_at)}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs">Open</Badge>
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                              onClick={() => void handleDeleteSlot(slot.id)}
+                              aria-label="Delete slot"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className="pt-2">
                     <p className="mb-3 text-sm font-semibold text-muted-foreground">{t("tutorSchedule.allUpcomingTitle")}</p>
                     <div className="space-y-6">
