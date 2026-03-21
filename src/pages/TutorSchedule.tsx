@@ -317,6 +317,21 @@ export default function TutorSchedule() {
                     </select>
                   </div>
 
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-foreground flex items-center gap-1.5"><Repeat className="h-3.5 w-3.5" />Repeat weekly</p>
+                    <select
+                      value={recurringWeeks}
+                      onChange={(event) => setRecurringWeeks(Number(event.target.value))}
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value={1}>No repeat</option>
+                      <option value={2}>2 weeks</option>
+                      <option value={4}>4 weeks</option>
+                      <option value={8}>8 weeks</option>
+                      <option value={12}>12 weeks</option>
+                    </select>
+                  </div>
+
                   <Button type="button" onClick={handleAddAvailabilitySlot} disabled={savingSlot} className="h-10 rounded-md px-5">
                     {savingSlot ? "Saving..." : "Save slot"}
                   </Button>
