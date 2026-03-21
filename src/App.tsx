@@ -57,6 +57,7 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
+              <HubspotHider />
               <ScrollToTop />
               <Routes>
                 <Route path="/" element={<Index />} />
