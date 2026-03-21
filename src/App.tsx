@@ -41,6 +41,7 @@ import AdminApplications from "./pages/AdminApplications.tsx";
 import TutorDashboard from "./pages/TutorDashboard.tsx";
 import ConvoPartnerApply from "./pages/ConvoPartnerApply.tsx";
 import TutorSchedule from "./pages/TutorSchedule.tsx";
+import TutorProfileEdit from "./pages/TutorProfileEdit.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
@@ -92,6 +93,7 @@ const App = () => (
                 <Route path="/tutor-dashboard" element={<ProtectedRoute requiredRole="tutor"><TutorDashboard /></ProtectedRoute>} />
                 <Route path="/tutor-messages" element={<ProtectedRoute requiredRole="tutor"><TutorMessages /></ProtectedRoute>} />
                 <Route path="/tutor-schedule" element={<ProtectedRoute requiredRole="tutor"><TutorSchedule /></ProtectedRoute>} />
+                <Route path="/tutor-profile-edit" element={<ProtectedRoute requiredRole="tutor"><TutorProfileEdit /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Clock, Calendar as CalendarIcon, GraduationCap, Plus, ChevronDown, ChevronLeft, ChevronRight, MoreHorizontal, RefreshCw, MessageSquare, User, Ban, AlertCircle, Check, Repeat, CalendarDays, Video, ExternalLink, CheckCircle, XCircle } from "lucide-react";
+import { Clock, Calendar as CalendarIcon, GraduationCap, Plus, ChevronDown, ChevronLeft, ChevronRight, MoreHorizontal, RefreshCw, MessageSquare, User, Ban, AlertCircle, Check, Repeat, CalendarDays, Video, ExternalLink, CheckCircle, XCircle, Star } from "lucide-react";
+import { ReviewDialog } from "@/components/ReviewDialog";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -223,6 +224,7 @@ export default function MyLessons() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"lessons" | "calendar" | "tutors">("lessons");
   const [cancelBooking, setCancelBooking] = useState<Booking | null>(null);
+  const [reviewBooking, setReviewBooking] = useState<Booking | null>(null);
   const [cancelReason, setCancelReason] = useState(CANCEL_REASON_KEYS[0]);
   const [cancelMessage, setCancelMessage] = useState("");
   const [cancelling, setCancelling] = useState(false);
@@ -344,6 +346,17 @@ export default function MyLessons() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        )}
+        {booking.status === "completed" && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5"
+            onClick={() => setReviewBooking(booking)}
+          >
+            <Star className="h-3.5 w-3.5" />
+            Review
+          </Button>
         )}
       </div>
     );
@@ -498,6 +511,16 @@ export default function MyLessons() {
           )}
         </DialogContent>
       </Dialog>
+
+      {reviewBooking && user && (
+        <ReviewDialog
+          open={!!reviewBooking}
+          onOpenChange={(open) => !open && setReviewBooking(null)}
+          bookingId={reviewBooking.id}
+          tutorName={reviewBooking.tutor_name}
+          studentId={user.id}
+        />
+      )}
     </Layout>
   );
 }

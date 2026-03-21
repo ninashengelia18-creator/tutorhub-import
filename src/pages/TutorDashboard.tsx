@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, CalendarDays, Clock3, Video, Wallet } from "lucide-react";
+import { BookOpen, CalendarDays, Clock3, Edit, Users, Video, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDateInTimeZone, formatLessonTimeRange, getDateKeyInTimeZone } from "@/lib/datetime";
 import { localizeSubjectLabel } from "@/lib/localization";
 import { TutorEarnings } from "@/components/tutor/TutorEarnings";
+import { TutorStudentList } from "@/components/tutor/TutorStudentList";
 
 interface TutorBooking {
   id: string;
@@ -110,6 +111,12 @@ export default function TutorDashboard() {
                   <Link to="/tutor-schedule">{t("tutorDashboard.openSchedule")}</Link>
                 </Button>
                 <Button variant="outline" className="rounded-full px-6" asChild>
+                  <Link to="/tutor-profile-edit">
+                    <Edit className="mr-2 h-4 w-4" />
+                    Edit Profile
+                  </Link>
+                </Button>
+                <Button variant="outline" className="rounded-full px-6" asChild>
                   <Link to="/lesson-planner">{t("tutorDashboard.lessonPlanner")}</Link>
                 </Button>
               </div>
@@ -119,6 +126,7 @@ export default function TutorDashboard() {
           <Tabs defaultValue="overview">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="students">My Students</TabsTrigger>
               <TabsTrigger value="earnings">Earnings</TabsTrigger>
             </TabsList>
 
@@ -215,6 +223,10 @@ export default function TutorDashboard() {
                   </CardContent>
                 </Card>
               </section>
+            </TabsContent>
+
+            <TabsContent value="students" className="mt-4">
+              <TutorStudentList tutorName={tutorName} />
             </TabsContent>
 
             <TabsContent value="earnings" className="mt-4">

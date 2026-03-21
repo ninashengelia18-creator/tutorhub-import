@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet, Plus, Calendar as CalendarIcon, CheckCircle2 } from "lucide-react";
+import { CalendarDays, Video, ExternalLink, User, BookOpen, Clock, Wallet, Plus, Calendar as CalendarIcon, CheckCircle2, Trash2, Repeat } from "lucide-react";
 import {
   convertLocalDateTimeToUtc,
   formatDateInTimeZone,
@@ -193,6 +193,18 @@ export default function TutorSchedule() {
   const formatTimeRange = (booking: TutorBooking) =>
     formatLessonTimeRange(booking.lesson_start_at, booking.lesson_end_at, lang, timezone);
 
+  const [recurringWeeks, setRecurringWeeks] = useState(1);
+
+  const handleDeleteSlot = async (slotId: string) => {
+    const { error } = await supabase.from("tutor_availability_slots" as never).delete().eq("id", slotId).eq("availability_status", "open");
+    if (error) {
+      toast({ title: "Unable to delete slot", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Slot removed" });
+    void loadScheduleData();
+  };
+
   const handleAddAvailabilitySlot = async () => {
     const dateKey = availabilityDate ? getDateKeyInTimeZone(availabilityDate, timezone) : "";
     const slotStartAt = dateKey ? convertLocalDateTimeToUtc(dateKey, slotStartTime, timezone) : null;
@@ -205,13 +217,20 @@ export default function TutorSchedule() {
 
     setSavingSlot(true);
 
-    const { error } = await supabase.from("tutor_availability_slots" as never).insert({
-      tutor_name: tutorName,
-      slot_start_at: slotStartAt.toISOString(),
-      slot_end_at: slotEndAt.toISOString(),
-      tutor_timezone: timezone,
-      availability_status: "open",
-    } as never);
+    // Build recurring slots
+    const slots = [];
+    for (let week = 0; week < recurringWeeks; week++) {
+      const offset = week * 7 * 24 * 60 * 60 * 1000;
+      slots.push({
+        tutor_name: tutorName,
+        slot_start_at: new Date(slotStartAt.getTime() + offset).toISOString(),
+        slot_end_at: new Date(slotEndAt.getTime() + offset).toISOString(),
+        tutor_timezone: timezone,
+        availability_status: "open",
+      });
+    }
+
+    const { error } = await supabase.from("tutor_availability_slots" as never).insert(slots as never);
 
     setSavingSlot(false);
 
@@ -220,7 +239,7 @@ export default function TutorSchedule() {
       return;
     }
 
-    toast({ title: "Availability saved", description: `Shown in ${getTimeZoneSettingLabel(timezone, slotStartAt)} and stored in UTC.` });
+    toast({ title: "Availability saved", description: `${slots.length} slot${slots.length > 1 ? "s" : ""} added (${getTimeZoneSettingLabel(timezone, slotStartAt)}).` });
     void loadScheduleData();
   };
 
@@ -250,7 +269,7 @@ export default function TutorSchedule() {
                   </div>
                 </div>
 
-                <div className="grid gap-4 lg:grid-cols-[240px_repeat(2,minmax(0,180px))_auto] lg:items-end">
+                <div className="grid gap-4 lg:grid-cols-[240px_repeat(3,minmax(0,160px))_auto] lg:items-end">
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-foreground">Date</p>
                     <Popover>
@@ -298,6 +317,21 @@ export default function TutorSchedule() {
                     </select>
                   </div>
 
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-foreground flex items-center gap-1.5"><Repeat className="h-3.5 w-3.5" />Repeat weekly</p>
+                    <select
+                      value={recurringWeeks}
+                      onChange={(event) => setRecurringWeeks(Number(event.target.value))}
+                      className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value={1}>No repeat</option>
+                      <option value={2}>2 weeks</option>
+                      <option value={4}>4 weeks</option>
+                      <option value={8}>8 weeks</option>
+                      <option value={12}>12 weeks</option>
+                    </select>
+                  </div>
+
                   <Button type="button" onClick={handleAddAvailabilitySlot} disabled={savingSlot} className="h-10 rounded-md px-5">
                     {savingSlot ? "Saving..." : "Save slot"}
                   </Button>
@@ -325,9 +359,23 @@ export default function TutorSchedule() {
                               {formatLessonTimeRange(slot.slot_start_at, slot.slot_end_at, lang, timezone)} · {getTimeZoneSettingLabel(slot.tutor_timezone, slot.slot_start_at)}
                             </p>
                           </div>
-                          <Badge variant={slot.availability_status === "booked" ? "secondary" : "outline"}>
-                            {slot.availability_status === "booked" ? "Booked" : "Open"}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <Badge variant={slot.availability_status === "booked" ? "secondary" : "outline"}>
+                              {slot.availability_status === "booked" ? "Booked" : "Open"}
+                            </Badge>
+                            {slot.availability_status === "open" && (
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="ghost"
+                                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                onClick={() => void handleDeleteSlot(slot.id)}
+                                aria-label="Delete slot"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
