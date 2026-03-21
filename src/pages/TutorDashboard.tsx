@@ -225,6 +225,10 @@ export default function TutorDashboard() {
               </section>
             </TabsContent>
 
+            <TabsContent value="students" className="mt-4">
+              <TutorStudentList tutorName={tutorName} />
+            </TabsContent>
+
             <TabsContent value="earnings" className="mt-4">
               <TutorEarnings tutorName={tutorName} />
             </TabsContent>
