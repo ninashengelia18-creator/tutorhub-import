@@ -37,6 +37,23 @@ export default function StudentSignup() {
       return;
     }
     toast({ title: t("auth.checkEmail"), description: t("auth.verifyEmail") });
+
+    // Send branded welcome email (fire-and-forget)
+    try {
+      await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-student-welcome-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ email, display_name: displayName }),
+        }
+      );
+    } catch (e) {
+      console.error("Welcome email failed:", e);
+    }
   };
 
   return (
