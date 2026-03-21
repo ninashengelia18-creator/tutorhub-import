@@ -346,6 +346,17 @@ export default function MyLessons() {
             </DropdownMenuContent>
           </DropdownMenu>
         )}
+        {booking.status === "completed" && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5"
+            onClick={() => setReviewBooking(booking)}
+          >
+            <Star className="h-3.5 w-3.5" />
+            Review
+          </Button>
+        )}
       </div>
     );
   };
