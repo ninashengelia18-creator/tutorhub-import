@@ -32,50 +32,72 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [rolesLoading, setRolesLoading] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
 
   const applySession = useCallback((nextSession: Session | null) => {
     setSession(nextSession);
     setUser(nextSession?.user ?? null);
-    setLoading(false);
+    setAuthLoading(false);
 
-    if (!nextSession) {
+    if (!nextSession?.user) {
       setProfile(null);
       setRoles([]);
+      setProfileLoading(false);
+      setRolesLoading(false);
+      return;
     }
+
+    setProfileLoading(true);
+    setRolesLoading(true);
   }, []);
 
   const refreshProfile = useCallback(async () => {
     const userId = session?.user?.id;
     if (!userId) {
       setProfile(null);
+      setProfileLoading(false);
       return;
     }
 
-    const { data } = await supabase
-      .from("profiles")
-      .select("display_name, avatar_url")
-      .eq("id", userId)
-      .maybeSingle();
+    setProfileLoading(true);
 
-    setProfile(data ?? { display_name: null, avatar_url: null });
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url")
+        .eq("id", userId)
+        .maybeSingle();
+
+      setProfile(data ?? { display_name: null, avatar_url: null });
+    } finally {
+      setProfileLoading(false);
+    }
   }, [session?.user?.id]);
 
   const refreshRoles = useCallback(async () => {
     const userId = session?.user?.id;
     if (!userId) {
       setRoles([]);
+      setRolesLoading(false);
       return;
     }
 
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
+    setRolesLoading(true);
 
-    setRoles((data ?? []).map((entry) => entry.role));
+    try {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId);
+
+      setRoles((data ?? []).map((entry) => entry.role));
+    } finally {
+      setRolesLoading(false);
+    }
   }, [session?.user?.id]);
 
   useEffect(() => {
@@ -93,8 +115,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [applySession]);
 
   useEffect(() => {
+    if (!session?.user?.id) return;
     void Promise.all([refreshProfile(), refreshRoles()]);
-  }, [refreshProfile, refreshRoles]);
+  }, [refreshProfile, refreshRoles, session?.user?.id]);
 
   useEffect(() => {
     const userId = session?.user?.id;
@@ -141,6 +164,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => {
     setProfile(null);
     setRoles([]);
+    setProfileLoading(false);
+    setRolesLoading(false);
     applySession(null);
     await supabase.auth.signOut();
   }, [applySession]);
@@ -157,6 +182,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isTutor = roles.includes("tutor");
   const isStudent = user !== null && !isTutor && !isAdmin;
   const defaultRoute = isAdmin ? "/admin" : isTutor ? "/tutor-dashboard" : "/dashboard";
+  const loading = authLoading || (user !== null && (profileLoading || rolesLoading));
 
   const value = useMemo<AuthContextType>(
     () => ({
