@@ -348,7 +348,7 @@ export function PortalHeader() {
               className="rounded-2xl px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t("nav.profile")}
+              Account Settings
             </Link>
             <button
               type="button"
