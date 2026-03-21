@@ -69,24 +69,24 @@ serve(async (req) => {
       const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
         type: "recovery",
         email,
-        options: {
-          redirectTo: `${siteUrl}/reset-password`,
-        },
       });
 
       let resetUrl = `${siteUrl}/reset-password`;
       if (linkError) {
         console.error("Failed to generate reset link:", linkError.message);
+      } else if (linkData?.properties?.hashed_token) {
+        // Use the hashed_token to build a link directly to our app
+        const tokenHash = linkData.properties.hashed_token;
+        resetUrl = `${siteUrl}/reset-password?token_hash=${tokenHash}&type=recovery`;
       } else if (linkData?.properties?.action_link) {
-        // The action_link points to the Supabase auth verify endpoint.
-        // We need to rewrite it so the token verification happens via our site URL.
-        // Extract the token_hash and type from the generated link.
+        // Fallback: extract token from action_link
         const actionUrl = new URL(linkData.properties.action_link);
-        const tokenHash = actionUrl.searchParams.get("token_hash") || actionUrl.searchParams.get("token");
-        const type = actionUrl.searchParams.get("type") || "recovery";
-        // Build a link that goes through Supabase's /auth/v1/verify but redirects to our site
-        resetUrl = `${supabaseUrl}/auth/v1/verify?token_hash=${tokenHash}&type=${type}&redirect_to=${encodeURIComponent(`${siteUrl}/reset-password`)}`;
+        const token = actionUrl.searchParams.get("token") || actionUrl.searchParams.get("token_hash");
+        if (token) {
+          resetUrl = `${siteUrl}/reset-password?token_hash=${token}&type=recovery`;
+        }
       }
+      console.log("Reset URL:", resetUrl);
 
       passwordSetupButton = `
         <div style="margin: 24px 0;">

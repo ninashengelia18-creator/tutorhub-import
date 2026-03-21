@@ -21,27 +21,50 @@ export default function ResetPassword() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Supabase recovery links set a session automatically via the hash fragment.
-    // We listen for the SIGNED_IN or PASSWORD_RECOVERY event to know the user is ready.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
-        setPageState("ready");
-      }
-    });
+    const verifyToken = async () => {
+      // Check for token_hash in query params (from our custom email link)
+      const params = new URLSearchParams(window.location.search);
+      const tokenHash = params.get("token_hash");
+      const type = params.get("type") || "recovery";
 
-    // Also check if there's already a session (e.g. page was refreshed after recovery link)
-    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (tokenHash) {
+        // Verify the OTP token to establish a session
+        const { error } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: type as "recovery",
+        });
+
+        if (error) {
+          console.error("Token verification failed:", error.message);
+          setPageState("expired");
+        } else {
+          setPageState("ready");
+        }
+        return;
+      }
+
+      // Also listen for PASSWORD_RECOVERY event (from standard Supabase reset flow)
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+        if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+          setPageState("ready");
+        }
+      });
+
+      // Check if there's already a session
+      const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         setPageState("ready");
       } else {
-        // Give a short delay for the hash to be processed
+        // Give time for hash fragment processing
         setTimeout(() => {
           setPageState((prev) => (prev === "loading" ? "expired" : prev));
         }, 3000);
       }
-    });
 
-    return () => subscription.unsubscribe();
+      return () => subscription.unsubscribe();
+    };
+
+    verifyToken();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,6 +97,7 @@ export default function ResetPassword() {
       }
 
       setPageState("success");
+
       // Fetch roles to redirect correctly
       const { data: { session } } = await supabase.auth.getSession();
       const userId = session?.user?.id;
