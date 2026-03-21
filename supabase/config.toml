@@ -12,5 +12,8 @@ verify_jwt = false
 [functions.notify-tutor-application]
 verify_jwt = false
 
+[functions.create-student-account]
+verify_jwt = false
+
 [functions.process-email-queue]
 verify_jwt = true
