@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, CalendarDays, Clock3, Video, Wallet } from "lucide-react";
+import { BookOpen, CalendarDays, Clock3, Edit, Users, Video, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
@@ -14,6 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDateInTimeZone, formatLessonTimeRange, getDateKeyInTimeZone } from "@/lib/datetime";
 import { localizeSubjectLabel } from "@/lib/localization";
 import { TutorEarnings } from "@/components/tutor/TutorEarnings";
+import { TutorStudentList } from "@/components/tutor/TutorStudentList";
 
 interface TutorBooking {
   id: string;
