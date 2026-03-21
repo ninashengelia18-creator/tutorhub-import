@@ -116,7 +116,7 @@ export default function TutorProfileEdit() {
   const handleSave = async () => {
     setSaving(true);
 
-    const { data, error } = await supabase.rpc("save_my_tutor_profile", {
+    const { data, error } = await supabase.rpc("save_my_tutor_profile" as never, {
       _bio: bio,
       _experience: experience,
       _hourly_rate: Number(hourlyRate) || 0,
@@ -126,7 +126,7 @@ export default function TutorProfileEdit() {
       _education: education || null,
       _certifications: certifications || null,
       _avatar_url: tutorProfile?.avatar_url || null,
-    });
+    } as never);
 
     setSaving(false);
 
