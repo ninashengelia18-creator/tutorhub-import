@@ -170,7 +170,7 @@ function ForProfessionalsNavItem({ isActive }: { isActive: boolean }) {
   );
 }
 
-
+function initialsFromName(name: string) {
   return (
     name
       .split(" ")
