@@ -64,7 +64,7 @@ function FindTutorsNavItem({ isActive }: { isActive: boolean }) {
             <div className="flex min-w-[420px]">
               {/* Categories column */}
               <div className="w-40 border-r border-border/40 pr-1">
-                {SUBJECT_TAXONOMY.map((cat) => (
+                {SUBJECT_TAXONOMY.filter((cat) => cat.key !== "professionals").map((cat) => (
                   <Link
                     key={cat.key}
                     to="/search"
