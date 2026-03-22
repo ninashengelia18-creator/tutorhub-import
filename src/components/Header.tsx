@@ -40,75 +40,71 @@ const navLinks = [
 ] as const;
 
 const k12Subjects = [
-  { label: "Mathematics", href: "/search?subject=Mathematics" },
-  { label: "English Language", href: "/search?subject=English" },
-  { label: "English Literature", href: "/search?subject=EnglishLit" },
-  { label: "Science", href: "/search?subject=Science" },
-  { label: "Physics", href: "/search?subject=Physics" },
-  { label: "Chemistry", href: "/search?subject=Chemistry" },
+  { label: "US School Math", href: "/search?subject=US+School+Math" },
+  { label: "Algebra", href: "/search?subject=Algebra" },
+  { label: "Geometry", href: "/search?subject=Geometry" },
+  { label: "Trigonometry", href: "/search?subject=Trigonometry" },
+  { label: "Calculus", href: "/search?subject=Calculus" },
   { label: "Biology", href: "/search?subject=Biology" },
-  { label: "History", href: "/search?subject=History" },
-  { label: "Geography", href: "/search?subject=Geography" },
-  { label: "Computer Science", href: "/search?subject=ComputerScience" },
-  { label: "Modern Foreign Languages", href: "/search?subject=Languages" },
+  { label: "Chemistry", href: "/search?subject=Chemistry" },
+  { label: "Physics", href: "/search?subject=Physics" },
+  { label: "Reading & Writing Support", href: "/search?subject=Reading+%26+Writing+Support" },
+  { label: "US English / ELA", href: "/search?subject=US+English%2FELA" },
+  { label: "Coding for Kids", href: "/search?subject=Coding+for+Kids" },
+  { label: "Coding for Teens", href: "/search?subject=Coding+for+Teens" },
+  { label: "AP Computer Science", href: "/search?subject=AP+Computer+Science" },
 ];
 
 const gcseSubjects = [
-  { label: "GCSE Mathematics", href: "/search?subject=Mathematics" },
-  { label: "GCSE English Language", href: "/search?subject=English" },
-  { label: "GCSE English Literature", href: "/search?subject=EnglishLit" },
-  { label: "GCSE Physics", href: "/search?subject=Physics" },
-  { label: "GCSE Chemistry", href: "/search?subject=Chemistry" },
-  { label: "GCSE Biology", href: "/search?subject=Biology" },
-  { label: "GCSE Combined Science", href: "/search?subject=Science" },
-  { label: "GCSE History", href: "/search?subject=History" },
-  { label: "GCSE Geography", href: "/search?subject=Geography" },
-  { label: "GCSE Computer Science", href: "/search?subject=ComputerScience" },
-  { label: "GCSE French", href: "/search?subject=French" },
-  { label: "GCSE Spanish", href: "/search?subject=Spanish" },
-  { label: "GCSE German", href: "/search?subject=German" },
-  { label: "GCSE Business Studies", href: "/search?subject=Business" },
-  { label: "GCSE Economics", href: "/search?subject=Economics" },
+  { label: "GCSE Maths", href: "/search?subject=GCSE+Maths" },
+  { label: "GCSE Maths (Higher Tier)", href: "/search?subject=GCSE+Maths+Higher+Tier" },
+  { label: "IGCSE Maths", href: "/search?subject=IGCSE+Maths" },
+  { label: "GCSE Combined Science", href: "/search?subject=GCSE+Combined+Science" },
+  { label: "GCSE Biology", href: "/search?subject=GCSE+Biology" },
+  { label: "GCSE Chemistry", href: "/search?subject=GCSE+Chemistry" },
+  { label: "GCSE Physics", href: "/search?subject=GCSE+Physics" },
+  { label: "GCSE English Language", href: "/search?subject=GCSE+English+Language" },
+  { label: "GCSE English Literature", href: "/search?subject=GCSE+English+Literature" },
 ];
 
 const aLevelSubjects = [
-  { label: "A-Level Mathematics", href: "/search?subject=Mathematics" },
-  { label: "A-Level Further Maths", href: "/search?subject=FurtherMaths" },
-  { label: "A-Level Physics", href: "/search?subject=Physics" },
-  { label: "A-Level Chemistry", href: "/search?subject=Chemistry" },
-  { label: "A-Level Biology", href: "/search?subject=Biology" },
-  { label: "A-Level English Literature", href: "/search?subject=EnglishLit" },
-  { label: "A-Level History", href: "/search?subject=History" },
-  { label: "A-Level Geography", href: "/search?subject=Geography" },
-  { label: "A-Level Economics", href: "/search?subject=Economics" },
-  { label: "A-Level Business Studies", href: "/search?subject=Business" },
-  { label: "A-Level Psychology", href: "/search?subject=Psychology" },
-  { label: "A-Level Computer Science", href: "/search?subject=ComputerScience" },
-  { label: "A-Level Law", href: "/search?subject=Law" },
+  { label: "A‑Level Maths", href: "/search?subject=A-Level+Maths" },
+  { label: "Further Maths", href: "/search?subject=Further+Maths" },
+  { label: "A‑Level Physics", href: "/search?subject=A-Level+Physics" },
+  { label: "A‑Level Chemistry", href: "/search?subject=A-Level+Chemistry" },
+  { label: "A‑Level Biology", href: "/search?subject=A-Level+Biology" },
+  { label: "A‑Level English Language", href: "/search?subject=A-Level+English+Language" },
+  { label: "A‑Level English Literature", href: "/search?subject=A-Level+English+Literature" },
+];
+
+const universitySubjects = [
+  { label: "Calculus", href: "/search?subject=University+Calculus" },
+  { label: "Statistics & Data Analysis", href: "/search?subject=Statistics+%26+Data+Analysis" },
+  { label: "Linear Algebra", href: "/search?subject=Linear+Algebra" },
+  { label: "University Maths", href: "/search?subject=University+Maths" },
+  { label: "English Language", href: "/search?subject=University+English+Language" },
+  { label: "English Literature", href: "/search?subject=University+English+Literature" },
 ];
 
 const professionalSubjects = [
-  { label: "Business & Finance", href: "/search?subject=BusinessFinance" },
-  { label: "Programming & Software Dev", href: "/search?subject=ComputerScience" },
-  { label: "Data Science & Analytics", href: "/search?subject=DataScience" },
-  { label: "Marketing & Communications", href: "/search?subject=Marketing" },
-  { label: "Law & Legal Studies", href: "/search?subject=Law" },
-  { label: "English for Professionals", href: "/search?subject=BusinessEnglish" },
-];
-
-const examPrepSubjects = [
-  { label: "GCSE Exam Prep", href: "/search?subject=GCSE" },
-  { label: "A-Level Exam Prep", href: "/search?subject=ALevel" },
-  { label: "SAT / ACT Prep", href: "/search?subject=SAT" },
-  { label: "IELTS / TOEFL Prep", href: "/search?subject=IELTS" },
+  { label: "General English", href: "/search?subject=General+English" },
+  { label: "Business English", href: "/search?subject=Business+English" },
+  { label: "Conversation Practice", href: "/search?subject=Conversation+Practice" },
+  { label: "Interview Prep", href: "/search?subject=Interview+Prep" },
+  { label: "IELTS Academic", href: "/search?subject=IELTS+Academic" },
+  { label: "IELTS General", href: "/search?subject=IELTS+General" },
+  { label: "TOEFL", href: "/search?subject=TOEFL" },
+  { label: "Python for Beginners", href: "/search?subject=Python+for+Beginners" },
+  { label: "Web Development Basics", href: "/search?subject=Web+Development+Basics" },
+  { label: "Data Skills for Professionals", href: "/search?subject=Data+Skills+for+Professionals" },
 ];
 
 const forStudentsMenu = [
-  { label: "K-12 Subjects", href: "/search?subject=K12", children: k12Subjects },
-  { label: "GCSE", href: "/search?subject=GCSE", children: gcseSubjects },
-  { label: "A-Level", href: "/search?subject=ALevel", children: aLevelSubjects },
-  { label: "Professional Courses", href: "/search?subject=Professional", children: professionalSubjects },
-  { label: "Exam Preparation", href: "/search?subject=ExamPrep", children: examPrepSubjects },
+  { label: "K‑12", href: "/search?filter=Maths", children: k12Subjects },
+  { label: "GCSE", href: "/search?filter=Maths", children: gcseSubjects },
+  { label: "A‑Level", href: "/search?filter=Maths", children: aLevelSubjects },
+  { label: "University", href: "/search?filter=Maths", children: universitySubjects },
+  { label: "Professionals", href: "/search?filter=Business+English", children: professionalSubjects },
 ];
 
 function initialsFromValue(value: string) {
