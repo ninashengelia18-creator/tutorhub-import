@@ -59,10 +59,13 @@ async function createJWT(sa: { client_email: string; private_key: string }): Pro
 
 async function getAccessToken(sa: { client_email: string; private_key: string }): Promise<string> {
   const jwt = await createJWT(sa);
-  const res = await fetch("https://oauth2.googleapis.com/token", {
+  const res = await fetch("https://www.googleapis.com/oauth2/v4/token", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `grant_type=${encodeURIComponent("urn:ietf:params:oauth:grant_type:jwt-bearer")}&assertion=${encodeURIComponent(jwt)}`,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      assertion: jwt,
+    }),
   });
   if (!res.ok) throw new Error(`Google token exchange failed: ${await res.text()}`);
   return (await res.json()).access_token;

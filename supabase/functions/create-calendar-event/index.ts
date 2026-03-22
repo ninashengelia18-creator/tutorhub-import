@@ -74,10 +74,13 @@ async function getAccessToken(serviceAccount: {
 }): Promise<string> {
   const jwt = await createJWT(serviceAccount);
 
-  const res = await fetch("https://oauth2.googleapis.com/token", {
+  const res = await fetch("https://www.googleapis.com/oauth2/v4/token", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `grant_type=${encodeURIComponent("urn:ietf:params:oauth:grant_type:jwt-bearer")}&assertion=${encodeURIComponent(jwt)}`,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      assertion: jwt,
+    }),
   });
 
   if (!res.ok) {
