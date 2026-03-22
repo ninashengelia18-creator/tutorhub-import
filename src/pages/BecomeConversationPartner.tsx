@@ -160,10 +160,10 @@ export default function BecomeConversationPartner() {
           <Users className="mx-auto h-12 w-12 text-primary" />
           <h2 className="text-3xl font-bold text-foreground">Ready to get started?</h2>
           <p className="text-muted-foreground text-lg">
-            Join our growing community of conversation partners and start earning today.
+           Join our growing community of language buddies and start earning today.
           </p>
           <Button size="lg" asChild>
-            <Link to="/convo-partner-apply">Apply as a Conversation Partner</Link>
+            <Link to="/convo-partner-apply">Apply as a Language Buddy</Link>
           </Button>
         </motion.div>
       </section>
