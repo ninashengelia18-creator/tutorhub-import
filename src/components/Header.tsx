@@ -402,14 +402,6 @@ export function Header() {
                   </AnimatePresence>
                 </div>
                 <Link
-                  to="/become-tutor"
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
-                    location.pathname === "/become-tutor" ? "text-primary" : "text-white"
-                  }`}
-                >
-                  {t("nav.becomeTutor")}
-                </Link>
-                <Link
                   to="/faq"
                   className="flex items-center justify-center transition-all hover:scale-110"
                   aria-label="FAQ"

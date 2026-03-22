@@ -37,7 +37,7 @@ export default function Signup() {
             </Link>
 
             {/* Tutor Card */}
-            <Link to="/tutor-apply" className="group">
+            <Link to="/become-tutor" className="group">
               <div className="rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02]">
                 <div className="mx-auto mb-5 h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <GraduationCap className="h-8 w-8 text-primary" />
