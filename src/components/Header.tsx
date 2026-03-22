@@ -401,15 +401,6 @@ export function Header() {
                     )}
                   </AnimatePresence>
                 </div>
-                <Link
-                  to="/faq"
-                  className="flex items-center justify-center transition-all hover:scale-110"
-                  aria-label="FAQ"
-                >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full border-[2.5px] border-white">
-                    <span className="text-sm font-bold leading-none text-white">?</span>
-                  </div>
-                </Link>
               </>
             )}
 
