@@ -15,6 +15,7 @@ import {
   getTutorSearchText,
   type PublicTutorProfile,
 } from "@/lib/publicTutors";
+import { SEARCH_FILTER_SUBJECTS, getSubjectValuesForFilter } from "@/lib/subjects";
 
 export default function TutorSearch() {
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
