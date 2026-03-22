@@ -482,7 +482,7 @@ export function Header() {
                 asChild
               >
                 <Link to="/faq" aria-label="FAQ">
-                  <HelpCircle className="h-5 w-5" />
+                  <HelpCircle className="h-8 w-8" />
                 </Link>
               </Button>
 
