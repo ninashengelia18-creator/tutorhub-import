@@ -21,15 +21,15 @@ export default function Signup() {
             <p className="text-muted-foreground">{t("signup.chooseRoleDesc")}</p>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-3 gap-6 items-stretch">
             {/* Student Card */}
-            <Link to="/signup/student" className="group">
-              <div className="rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02]">
+            <Link to="/signup/student" className="group flex">
+              <div className="flex flex-col rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02] w-full">
                 <div className="mx-auto mb-5 h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <BookOpen className="h-8 w-8 text-primary" />
                 </div>
                 <h2 className="text-xl font-bold mb-2">{t("signup.iAmStudent")}</h2>
-                <p className="text-sm text-muted-foreground mb-6">{t("signup.studentDesc")}</p>
+                <p className="text-sm text-muted-foreground mb-6 flex-1">{t("signup.studentDesc")}</p>
                 <Button className="w-full hero-gradient text-primary-foreground border-0">
                   {t("signup.signupAsStudent")}
                 </Button>
@@ -37,13 +37,13 @@ export default function Signup() {
             </Link>
 
             {/* Tutor Card */}
-            <Link to="/become-tutor" className="group">
-              <div className="rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02]">
+            <Link to="/become-tutor" className="group flex">
+              <div className="flex flex-col rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02] w-full">
                 <div className="mx-auto mb-5 h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <GraduationCap className="h-8 w-8 text-primary" />
                 </div>
                 <h2 className="text-xl font-bold mb-2">{t("signup.iAmTutor")}</h2>
-                <p className="text-sm text-muted-foreground mb-6">{t("signup.tutorDesc")}</p>
+                <p className="text-sm text-muted-foreground mb-6 flex-1">{t("signup.tutorDesc")}</p>
                 <Button variant="outline" className="w-full">
                   {t("signup.applyAsTutor")}
                 </Button>
@@ -51,13 +51,13 @@ export default function Signup() {
             </Link>
 
             {/* Buddy Card */}
-            <Link to="/become-language-buddy" className="group">
-              <div className="rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02]">
+            <Link to="/become-language-buddy" className="group flex">
+              <div className="flex flex-col rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02] w-full">
                 <div className="mx-auto mb-5 h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <MessageCircle className="h-8 w-8 text-primary" />
                 </div>
                 <h2 className="text-xl font-bold mb-2">I am a Buddy</h2>
-                <p className="text-sm text-muted-foreground mb-6">Earn money having conversations in your native language</p>
+                <p className="text-sm text-muted-foreground mb-6 flex-1">Earn money having conversations in your native language</p>
                 <Button variant="outline" className="w-full">
                   Apply as a Buddy
                 </Button>
