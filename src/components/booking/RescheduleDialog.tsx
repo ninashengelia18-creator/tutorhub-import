@@ -52,7 +52,7 @@ export function RescheduleDialog({
   const { toast } = useToast();
   const { timezone } = useAppLocale();
   const { lang } = useLanguage();
-  const [reason, setReason] = useState(RESCHEDULE_REASONS[0].key);
+  const [reason, setReason] = useState<string>(RESCHEDULE_REASONS[0].key);
   const [message, setMessage] = useState("");
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<string>("");
