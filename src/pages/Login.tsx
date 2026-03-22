@@ -170,7 +170,7 @@ export default function Login() {
                     }`}
                   >
                     <Icon className="h-4 w-4" />
-                    {option.key === "student" ? "Student" : "Tutor"}
+                    {option.tabLabel}
                   </button>
                 );
               })}
