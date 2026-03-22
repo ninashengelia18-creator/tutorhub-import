@@ -247,30 +247,7 @@ export default function MyLessons() {
     return hoursUntil < 12;
   };
 
-  const handleCancel = async () => {
-    if (!cancelBooking) return;
-
-    if (isWithin12Hours(cancelBooking)) {
-      toast({ title: "Cannot cancel", description: "Cancellations are not allowed within 12 hours of the lesson.", variant: "destructive" });
-      setCancelBooking(null);
-      return;
-    }
-
-    setCancelling(true);
-    const { error } = await supabase
-      .from("bookings")
-      .update({ status: "cancelled", notes: `Cancel reason: ${t(cancelReason)}. ${cancelMessage}` })
-      .eq("id", cancelBooking.id);
-    setCancelling(false);
-    if (error) {
-      toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: t("myLessons.lessonCancelled") });
-      setCancelBooking(null);
-      setCancelMessage("");
-      fetchBookings();
-    }
-  };
+  const within12h = (booking: Booking) => isWithin12Hours(booking);
 
   const tutors = Array.from(new Map(bookings.map((booking) => [booking.tutor_name, booking])).values());
 
