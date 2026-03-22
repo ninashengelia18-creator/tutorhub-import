@@ -135,6 +135,11 @@ Deno.serve(async (req: Request) => {
         if (!cleanJson.startsWith('{')) cleanJson = '{' + cleanJson;
         if (!cleanJson.endsWith('}')) cleanJson = cleanJson + '}';
         const sa = JSON.parse(cleanJson);
+        // Debug: log private_key info
+        const pk = sa.private_key || "";
+        console.log("private_key length:", pk.length);
+        console.log("private_key first 80:", pk.substring(0, 80));
+        console.log("private_key non-ASCII chars:", Array.from(pk).filter((c: string) => c.charCodeAt(0) > 127).map((c: string) => `U+${c.charCodeAt(0).toString(16).toUpperCase()}`));
         const accessToken = await getAccessToken(sa);
 
         const startTime = booking.lesson_start_at || `${booking.lesson_date}T${booking.start_time}Z`;
