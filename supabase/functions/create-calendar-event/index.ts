@@ -72,12 +72,22 @@ async function getAccessToken(serviceAccount: {
   client_email: string;
   private_key: string;
 }): Promise<string> {
+  console.log("DEBUG: client_email =", serviceAccount.client_email);
+  console.log("DEBUG: private_key length =", serviceAccount.private_key?.length);
+  console.log("DEBUG: private_key starts with =", serviceAccount.private_key?.substring(0, 40));
+
   const jwt = await createJWT(serviceAccount);
+  console.log("DEBUG: JWT created, length =", jwt.length);
+
+  const body = new URLSearchParams({
+    grant_type: "urn:ietf:params:oauth:grant_type:jwt-bearer",
+    assertion: jwt,
+  });
 
   const res = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `grant_type=${encodeURIComponent("urn:ietf:params:oauth:grant_type:jwt-bearer")}&assertion=${encodeURIComponent(jwt)}`,
+    body: body.toString(),
   });
 
   if (!res.ok) {
