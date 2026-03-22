@@ -32,10 +32,6 @@ export const SUBJECT_TAXONOMY: SubjectCategory[] = [
           { value: "Geometry", label: "Geometry" },
           { value: "Trigonometry", label: "Trigonometry" },
           { value: "Calculus", label: "Calculus" },
-          { value: "GCSE Maths", label: "GCSE Maths" },
-          { value: "IGCSE Maths", label: "IGCSE Maths" },
-          { value: "A-Level Maths", label: "A‑Level Maths" },
-          { value: "Further Maths", label: "Further Maths" },
         ],
       },
       {
@@ -45,10 +41,6 @@ export const SUBJECT_TAXONOMY: SubjectCategory[] = [
           { value: "Biology", label: "Biology" },
           { value: "Chemistry", label: "Chemistry" },
           { value: "Physics", label: "Physics" },
-          { value: "GCSE Sciences", label: "GCSE Sciences" },
-          { value: "A-Level Biology", label: "A‑Level Biology" },
-          { value: "A-Level Chemistry", label: "A‑Level Chemistry" },
-          { value: "A-Level Physics", label: "A‑Level Physics" },
         ],
       },
       {
@@ -56,10 +48,6 @@ export const SUBJECT_TAXONOMY: SubjectCategory[] = [
         subjects: [
           { value: "Reading & Writing Support", label: "Reading & Writing Support" },
           { value: "US English/ELA", label: "US English / ELA" },
-          { value: "GCSE English Language", label: "GCSE English Language" },
-          { value: "GCSE English Literature", label: "GCSE English Literature" },
-          { value: "A-Level English Language", label: "A‑Level English Language" },
-          { value: "A-Level English Literature", label: "A‑Level English Literature" },
         ],
       },
       {
@@ -67,9 +55,43 @@ export const SUBJECT_TAXONOMY: SubjectCategory[] = [
         subjects: [
           { value: "Coding for Kids", label: "Coding for Kids" },
           { value: "Coding for Teens", label: "Coding for Teens" },
-          { value: "GCSE Computer Science", label: "GCSE Computer Science" },
-          { value: "A-Level Computer Science", label: "A‑Level Computer Science" },
           { value: "AP Computer Science", label: "AP Computer Science" },
+        ],
+      },
+    ],
+  },
+  {
+    key: "gcse",
+    label: "GCSE",
+    groups: [
+      {
+        label: "GCSE Subjects",
+        subjects: [
+          { value: "GCSE Maths", label: "GCSE Maths" },
+          { value: "IGCSE Maths", label: "IGCSE Maths" },
+          { value: "GCSE Sciences", label: "GCSE Sciences" },
+          { value: "GCSE English Language", label: "GCSE English Language" },
+          { value: "GCSE English Literature", label: "GCSE English Literature" },
+          { value: "GCSE Computer Science", label: "GCSE Computer Science" },
+        ],
+      },
+    ],
+  },
+  {
+    key: "alevel",
+    label: "A‑Level",
+    groups: [
+      {
+        label: "A‑Level Subjects",
+        subjects: [
+          { value: "A-Level Maths", label: "A‑Level Maths" },
+          { value: "Further Maths", label: "Further Maths" },
+          { value: "A-Level Biology", label: "A‑Level Biology" },
+          { value: "A-Level Chemistry", label: "A‑Level Chemistry" },
+          { value: "A-Level Physics", label: "A‑Level Physics" },
+          { value: "A-Level English Language", label: "A‑Level English Language" },
+          { value: "A-Level English Literature", label: "A‑Level English Literature" },
+          { value: "A-Level Computer Science", label: "A‑Level Computer Science" },
         ],
       },
     ],
