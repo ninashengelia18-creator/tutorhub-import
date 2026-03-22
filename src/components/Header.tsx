@@ -263,7 +263,7 @@ export function Header() {
           <nav className="flex items-center gap-10" style={{ fontFamily: "'Playfair Display', serif" }}>
             <Link
               to="/"
-              className={`text-base font-bold transition-colors hover:text-primary ${
+              className={`text-lg font-bold transition-colors hover:text-primary ${
                  location.pathname === "/" ? "text-primary" : "text-white"
               }`}
             >
