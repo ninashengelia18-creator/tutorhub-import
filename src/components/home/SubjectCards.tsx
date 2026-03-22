@@ -24,10 +24,28 @@ const homepageSubjects = [
   {
     category: "K‑12",
     items: [
-      { label: "Maths", icon: Calculator, href: "/search?filter=Maths", desc: "Algebra, Geometry, Calculus, GCSE & A‑Level" },
-      { label: "Science", icon: Atom, href: "/search?filter=Science", desc: "Biology, Chemistry, Physics, GCSE & A‑Level" },
-      { label: "English", icon: BookOpen, href: "/search?filter=English", desc: "ELA, Reading & Writing, GCSE & A‑Level" },
-      { label: "Coding & CS", icon: Cpu, href: "/search?filter=Computer+Science", desc: "Coding for Kids/Teens, GCSE & AP CS" },
+      { label: "Maths", icon: Calculator, href: "/search?filter=Maths", desc: "Algebra, Geometry, Trigonometry, Calculus" },
+      { label: "Science", icon: Atom, href: "/search?filter=Science", desc: "Biology, Chemistry, Physics" },
+      { label: "English", icon: BookOpen, href: "/search?filter=English", desc: "ELA, Reading & Writing" },
+      { label: "Coding & CS", icon: Cpu, href: "/search?filter=Computer+Science", desc: "Coding for Kids/Teens, AP CS" },
+    ],
+  },
+  {
+    category: "GCSE",
+    items: [
+      { label: "GCSE Maths", icon: Calculator, href: "/search?filter=Maths", desc: "Maths & IGCSE Maths" },
+      { label: "GCSE Sciences", icon: Atom, href: "/search?filter=Science", desc: "Combined Science, Biology, Chemistry, Physics" },
+      { label: "GCSE English", icon: BookOpen, href: "/search?filter=English", desc: "English Language & Literature" },
+      { label: "GCSE Computer Science", icon: Cpu, href: "/search?filter=Computer+Science", desc: "Computer Science" },
+    ],
+  },
+  {
+    category: "A‑Level",
+    items: [
+      { label: "A‑Level Maths", icon: Calculator, href: "/search?filter=Maths", desc: "Maths & Further Maths" },
+      { label: "A‑Level Sciences", icon: Atom, href: "/search?filter=Science", desc: "Biology, Chemistry, Physics" },
+      { label: "A‑Level English", icon: BookOpen, href: "/search?filter=English", desc: "English Language & Literature" },
+      { label: "A‑Level CS", icon: Cpu, href: "/search?filter=Computer+Science", desc: "Computer Science" },
     ],
   },
   {
