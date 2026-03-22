@@ -13,7 +13,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-type LoginPortal = "student" | "tutor";
+type LoginPortal = "student" | "tutor" | "buddy";
 
 const portalOptions: {
   key: LoginPortal;
@@ -22,6 +22,7 @@ const portalOptions: {
   icon: typeof GraduationCap;
   signupHref: string;
   signupLabel: string;
+  tabLabel: string;
 }[] = [
   {
     key: "student",
@@ -30,6 +31,7 @@ const portalOptions: {
     icon: GraduationCap,
     signupHref: "/signup/student",
     signupLabel: "Create student account",
+    tabLabel: "Student",
   },
   {
     key: "tutor",
@@ -38,6 +40,16 @@ const portalOptions: {
     icon: Presentation,
     signupHref: "/become-tutor",
     signupLabel: "Apply as tutor",
+    tabLabel: "Tutor",
+  },
+  {
+    key: "buddy",
+    title: "Language Buddy portal",
+    description: "Log in to manage your conversation sessions and availability.",
+    icon: MessageCircle,
+    signupHref: "/become-language-buddy",
+    signupLabel: "Apply as a buddy",
+    tabLabel: "Language Buddy",
   },
 ];
 
