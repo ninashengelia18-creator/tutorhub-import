@@ -430,8 +430,8 @@ export function Header() {
                 {isTutor && (
                   <Link
                     to="/lesson-planner"
-                    className={`text-base font-bold transition-colors hover:text-primary ${
-                      location.pathname === "/lesson-planner" ? "text-primary" : "text-white"
+                     className={`text-lg font-bold transition-colors hover:text-primary ${
+                       location.pathname === "/lesson-planner" ? "text-primary" : "text-white"
                     }`}
                   >
                     {t("nav.lessonPlanner")}
