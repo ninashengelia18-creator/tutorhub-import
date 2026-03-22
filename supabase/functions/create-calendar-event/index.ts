@@ -77,10 +77,7 @@ async function getAccessToken(serviceAccount: {
   const res = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant_type:jwt-bearer",
-      assertion: jwt,
-    }),
+    body: `grant_type=${encodeURIComponent("urn:ietf:params:oauth:grant_type:jwt-bearer")}&assertion=${encodeURIComponent(jwt)}`,
   });
 
   if (!res.ok) {
