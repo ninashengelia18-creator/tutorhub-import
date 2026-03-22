@@ -117,16 +117,21 @@ Deno.serve(async (req: Request) => {
     let eventId: string | null = null;
 
     const saJson = Deno.env.get("GOOGLE_CALENDAR_SERVICE_ACCOUNT_JSON");
-    console.log("SA JSON first 50 chars:", saJson?.substring(0, 50));
-    console.log("SA JSON char codes:", saJson ? Array.from(saJson.substring(0, 10)).map(c => c.charCodeAt(0)) : "null");
     if (saJson) {
       try {
-        // Try stripping surrounding quotes if present
-        let cleanJson = saJson.trim();
+        // Fix smart/curly quotes and clean up the JSON string
+        let cleanJson = saJson.trim()
+          .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
+          .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
         if ((cleanJson.startsWith('"') && cleanJson.endsWith('"')) || (cleanJson.startsWith("'") && cleanJson.endsWith("'"))) {
           cleanJson = cleanJson.slice(1, -1);
         }
-        // Unescape if double-escaped
+        if (!cleanJson.startsWith('{')) {
+          cleanJson = '{' + cleanJson;
+        }
+        if (!cleanJson.endsWith('}')) {
+          cleanJson = cleanJson + '}';
+        }
         cleanJson = cleanJson.replace(/\\n/g, '\n').replace(/\\"/g, '"');
         const sa = JSON.parse(cleanJson);
         const accessToken = await getAccessToken(sa);
