@@ -90,6 +90,26 @@ export default function TutorSearch() {
     });
   }, [search, selectedSubject, tutors]);
 
+  if (user) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <PortalHeader />
+        <main className="flex-1">
+          <SearchContent
+            loading={loading}
+            search={search}
+            setSearch={setSearch}
+            selectedSubject={selectedSubject}
+            setSelectedSubject={setSelectedSubject}
+            filtered={filtered}
+            savedIds={savedIds}
+          />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <Layout>
       <div className="container py-8">
