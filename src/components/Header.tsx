@@ -325,14 +325,14 @@ export function Header() {
                         className="absolute left-0 top-full z-50 mt-2 w-60 rounded-xl border border-border/70 bg-popover p-2 shadow-xl"
                       >
                         <Link
-                          to="/conversation-partners"
+                          to="/language-buddy"
                           className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
                         >
                           Find a Buddy
                           <span className="block text-xs font-normal text-muted-foreground">Browse & book conversation sessions</span>
                         </Link>
                         <Link
-                          to="/become-conversation-partner"
+                          to="/become-language-buddy"
                           className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
                         >
                           Become a Buddy
