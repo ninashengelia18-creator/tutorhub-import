@@ -458,7 +458,7 @@ export function PortalHeader() {
       </div>
 
       <div className="border-b border-border/60 bg-card/60">
-        <div className="container overflow-x-auto">
+        <div className="container overflow-visible">
           <nav className="flex min-w-max items-center gap-6 sm:gap-10">
             {primaryNav.map((item) => {
               const active = isActive(item.to);
