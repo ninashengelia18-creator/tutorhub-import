@@ -6,6 +6,15 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+/* ── Smart-quote sanitiser ────────────────────────────────────────── */
+
+function sanitiseSmartQuotes(raw: string): string {
+  return raw
+    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036\uFF02]/g, '"')
+    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035\uFF07]/g, "'")
+    .replace(/[\u2013\u2014]/g, '-');
+}
+
 /* ── Google auth helpers ─────────────────────────────────────────── */
 
 function base64url(input: Uint8Array): string {
