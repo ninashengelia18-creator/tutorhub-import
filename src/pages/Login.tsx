@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Clock, GraduationCap, LogIn, Lock, Mail, Presentation, Shield } from "lucide-react";
+import { Clock, GraduationCap, LogIn, Lock, Mail, MessageCircle, Presentation, Shield } from "lucide-react";
 
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { Layout } from "@/components/Layout";
@@ -13,7 +13,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-type LoginPortal = "student" | "tutor";
+type LoginPortal = "student" | "tutor" | "buddy";
 
 const portalOptions: {
   key: LoginPortal;
@@ -22,6 +22,7 @@ const portalOptions: {
   icon: typeof GraduationCap;
   signupHref: string;
   signupLabel: string;
+  tabLabel: string;
 }[] = [
   {
     key: "student",
@@ -30,6 +31,7 @@ const portalOptions: {
     icon: GraduationCap,
     signupHref: "/signup/student",
     signupLabel: "Create student account",
+    tabLabel: "Student",
   },
   {
     key: "tutor",
@@ -38,6 +40,16 @@ const portalOptions: {
     icon: Presentation,
     signupHref: "/become-tutor",
     signupLabel: "Apply as tutor",
+    tabLabel: "Tutor",
+  },
+  {
+    key: "buddy",
+    title: "Language Buddy portal",
+    description: "Log in to manage your conversation sessions and availability.",
+    icon: MessageCircle,
+    signupHref: "/become-language-buddy",
+    signupLabel: "Apply as a buddy",
+    tabLabel: "Language Buddy",
   },
 ];
 
@@ -49,7 +61,7 @@ export default function Login() {
   const [searchParams, setSearchParams] = useSearchParams();
   const redirect = searchParams.get("redirect");
   const portalParam = searchParams.get("portal");
-  const activePortal: LoginPortal = portalParam === "tutor" ? "tutor" : "student";
+  const activePortal: LoginPortal = portalParam === "tutor" ? "tutor" : portalParam === "buddy" ? "buddy" : "student";
   const activePortalConfig = useMemo(
     () => portalOptions.find((option) => option.key === activePortal) ?? portalOptions[0],
     [activePortal],
@@ -127,7 +139,9 @@ export default function Login() {
         ? "/admin"
         : userRoles.includes("tutor")
           ? "/tutor-dashboard"
-          : "/dashboard";
+          : userRoles.includes("convo_partner")
+            ? "/partner-dashboard"
+            : "/dashboard";
 
       toast({ title: t("auth.welcomeBack") });
       navigate(redirect || targetRoute, { replace: true });
@@ -158,7 +172,7 @@ export default function Login() {
                     }`}
                   >
                     <Icon className="h-4 w-4" />
-                    {option.key === "student" ? "Student" : "Tutor"}
+                    {option.tabLabel}
                   </button>
                 );
               })}
@@ -239,7 +253,7 @@ export default function Login() {
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
               <Button type="submit" className="w-full" disabled={loading || authLoading}>
-                {loading ? t("auth.signingIn") : `Log in to ${activePortalConfig.key === "student" ? "student" : "tutor"} portal`}
+                {loading ? t("auth.signingIn") : `Log in to ${activePortalConfig.tabLabel.toLowerCase()} portal`}
               </Button>
               <p className="text-center text-sm text-muted-foreground">
                 {t("auth.noAccount")}{" "}
