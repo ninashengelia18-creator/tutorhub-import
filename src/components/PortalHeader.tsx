@@ -370,16 +370,30 @@ export function PortalHeader() {
                   aria-label="Notifications"
                 >
                   <Bell className="h-5 w-5" />
-                  {notifications.length > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
+                  {notifications.filter((n) => !n.read_at).length > 0 ? (
+                    <span className="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                      {Math.min(notifications.filter((n) => !n.read_at).length, 9)}
+                    </span>
+                  ) : null}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-80 rounded-2xl border-border/70 bg-popover p-2">
-                <DropdownMenuLabel>{isTutor ? "Tutor updates" : t("nav.home")}</DropdownMenuLabel>
+                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {notifications.length > 0 ? (
                   notifications.map((item) => (
-                    <DropdownMenuItem key={item} className="whitespace-normal rounded-xl px-3 py-3 text-sm">
-                      {item}
+                    <DropdownMenuItem
+                      key={item.id}
+                      className={`whitespace-normal rounded-xl px-3 py-3 text-sm flex flex-col items-start gap-1 ${!item.read_at ? "bg-primary/5 font-medium" : ""}`}
+                      onClick={async () => {
+                        if (!item.read_at) {
+                          await supabase.from("notifications" as never).update({ read_at: new Date().toISOString() } as never).eq("id", item.id);
+                          setNotifications((prev) => prev.map((n) => n.id === item.id ? { ...n, read_at: new Date().toISOString() } : n));
+                        }
+                      }}
+                    >
+                      <span className="font-semibold text-foreground">{item.title}</span>
+                      <span className="text-xs text-muted-foreground">{item.message}</span>
                     </DropdownMenuItem>
                   ))
                 ) : (
