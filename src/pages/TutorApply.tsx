@@ -431,13 +431,10 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.subjects")} *</Label>
-                  <Input
-                    value={subjectText}
-                    onChange={(e) => handleSubjectChange(e.target.value)}
-                    placeholder="e.g. Mathematics, Physics, SAT Prep"
-                    aria-invalid={Boolean(errors.selectedSubjects)}
+                  <SubjectPicker
+                    selected={selectedSubjects}
+                    onChange={handleSubjectChange}
                   />
-                  <p className="text-xs text-muted-foreground">Separate multiple subjects with commas</p>
                   {errors.selectedSubjects && <p className="text-sm text-destructive">{errors.selectedSubjects}</p>}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
