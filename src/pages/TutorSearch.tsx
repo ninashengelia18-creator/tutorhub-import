@@ -22,6 +22,7 @@ import { SEARCH_FILTER_SUBJECTS, getSubjectValuesForFilter } from "@/lib/subject
 
 export default function TutorSearch() {
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
