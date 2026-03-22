@@ -203,28 +203,29 @@ export const SEARCH_FILTER_SUBJECTS = [
 
 /** Map a quick-filter label to matching subject values for filtering */
 export function getSubjectValuesForFilter(filter: string): string[] | null {
-  if (filter === "All") return null; // no filter
+  if (filter === "All") return null;
 
   const map: Record<string, string[]> = {
     Maths: [
       "US School Math", "Algebra", "Geometry", "Trigonometry", "Calculus",
-      "GCSE Maths", "IGCSE Maths", "A-Level Maths", "Further Maths",
-      "University Calculus", "Linear Algebra", "Statistics & Data Analysis",
+      "GCSE Maths", "GCSE Maths Higher Tier", "IGCSE Maths",
+      "A-Level Maths", "Further Maths",
+      "University Calculus", "Linear Algebra", "Statistics & Data Analysis", "University Maths",
     ],
     Science: [
-      "General Science", "Biology", "Chemistry", "Physics",
-      "GCSE Sciences", "A-Level Biology", "A-Level Chemistry", "A-Level Physics",
-      "Intro Physics", "Intro Chemistry",
+      "Biology", "Chemistry", "Physics",
+      "GCSE Combined Science", "GCSE Biology", "GCSE Chemistry", "GCSE Physics",
+      "A-Level Physics", "A-Level Chemistry", "A-Level Biology",
     ],
     English: [
       "Reading & Writing Support", "US English/ELA",
       "GCSE English Language", "GCSE English Literature",
       "A-Level English Language", "A-Level English Literature",
-      "General English", "Academic Writing",
+      "University English Language", "University English Literature",
+      "General English",
     ],
     "Computer Science": [
-      "Coding for Kids", "Coding for Teens",
-      "GCSE Computer Science", "A-Level Computer Science", "AP Computer Science",
+      "Coding for Kids", "Coding for Teens", "AP Computer Science",
     ],
     "Business English": [
       "Business English", "Conversation Practice", "Interview Prep",
@@ -233,9 +234,7 @@ export function getSubjectValuesForFilter(filter: string): string[] | null {
       "IELTS Academic", "IELTS General", "TOEFL",
     ],
     Programming: [
-      "Python for Data Analysis", "Intro Programming",
-      "R or Excel Statistics", "Python for Beginners",
-      "Web Development Basics", "Data Skills for Professionals",
+      "Python for Beginners", "Web Development Basics", "Data Skills for Professionals",
     ],
   };
 
