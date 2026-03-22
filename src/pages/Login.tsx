@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Clock, GraduationCap, LogIn, Lock, Mail, Presentation, Shield } from "lucide-react";
+import { Clock, GraduationCap, LogIn, Lock, Mail, MessageCircle, Presentation, Shield } from "lucide-react";
 
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { Layout } from "@/components/Layout";
