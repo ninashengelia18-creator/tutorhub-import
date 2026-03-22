@@ -139,7 +139,9 @@ export default function Login() {
         ? "/admin"
         : userRoles.includes("tutor")
           ? "/tutor-dashboard"
-          : "/dashboard";
+          : userRoles.includes("convo_partner")
+            ? "/partner-dashboard"
+            : "/dashboard";
 
       toast({ title: t("auth.welcomeBack") });
       navigate(redirect || targetRoute, { replace: true });
