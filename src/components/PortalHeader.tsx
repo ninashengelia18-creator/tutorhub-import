@@ -80,7 +80,7 @@ function FindTutorsNavItem({ isActive }: { isActive: boolean }) {
               </div>
               {/* Subjects column */}
               <div className="flex-1 pl-1">
-                {SUBJECT_TAXONOMY.map((cat) =>
+                {SUBJECT_TAXONOMY.filter((cat) => cat.key !== "professionals").map((cat) =>
                   hoveredCategory === cat.key ? (
                     <div key={cat.key} className="space-y-1">
                       {cat.groups.flatMap((g) => g.subjects).map((subject) => (
