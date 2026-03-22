@@ -76,7 +76,7 @@ export default function TutorProfileEdit() {
       setNativeLanguage(profile.native_language || "");
       setOtherLanguages(profile.other_languages || "");
       setHourlyRate(String(profile.hourly_rate || ""));
-      setSubjectText(profile.subjects?.join(", ") || "");
+      setSelectedSubjects(profile.subjects?.filter(Boolean) || []);
 
       // Load extra fields from application
       if (profile.email) {
