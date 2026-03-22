@@ -264,7 +264,7 @@ export function Header() {
             <Link
               to="/"
               className={`text-base font-bold transition-colors hover:text-primary ${
-                location.pathname === "/" ? "text-primary" : "text-white"
+                 location.pathname === "/" ? "text-primary" : "text-white"
               }`}
             >
               {t("nav.home")}
