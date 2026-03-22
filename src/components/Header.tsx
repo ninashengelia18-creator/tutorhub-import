@@ -408,7 +408,7 @@ export function Header() {
               <>
                 <Link
                   to="/search"
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === "/search" ? "text-primary" : "text-white"
                   }`}
                 >

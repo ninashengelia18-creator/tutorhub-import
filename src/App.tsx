@@ -78,6 +78,9 @@ const App = () => (
                 <Route path="/for-professionals" element={<ForProfessionals />} />
                 <Route path="/become-tutor" element={<BecomeTutor />} />
                 <Route path="/tutor-apply" element={<TutorApply />} />
+                <Route path="/language-buddy" element={<FindConversationPartner />} />
+                <Route path="/become-language-buddy" element={<BecomeConversationPartner />} />
+                {/* Legacy redirects */}
                 <Route path="/conversation-partners" element={<FindConversationPartner />} />
                 <Route path="/become-conversation-partner" element={<BecomeConversationPartner />} />
                 <Route path="/convo-partner-apply" element={<ConvoPartnerApply />} />
