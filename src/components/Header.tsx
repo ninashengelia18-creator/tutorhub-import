@@ -32,11 +32,9 @@ import {
 const navLinks = [
   { labelKey: "nav.home", href: "/" },
   { labelKey: "nav.findTutors", href: "/search" },
-  { labelKey: "nav.findConversationPartner", href: "/conversation-partners" },
-  { labelKey: "nav.becomeConversationPartner", href: "/become-conversation-partner" },
+  { labelKey: "nav.findLanguageBuddy", href: "/conversation-partners" },
+  { labelKey: "nav.becomeLanguageBuddy", href: "/become-conversation-partner" },
   { labelKey: "nav.forProfessionals", href: "/for-professionals" },
-  { labelKey: "nav.becomeTutor", href: "/become-tutor" },
-  
 ] as const;
 
 const k12Subjects = [
@@ -224,7 +222,7 @@ export function Header() {
   const dashboardPath = isConvoPartner ? "/partner-dashboard" : isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks =
     user && !isTutor
-      ? navLinks.filter((link) => !["/for-professionals", "/become-tutor", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
+      ? navLinks.filter((link) => !["/for-professionals", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
       : navLinks;
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
@@ -314,7 +312,7 @@ export function Header() {
                     }`}
                     onClick={() => setConvDropdownOpen((v) => !v)}
                   >
-                    Conversation Partners <ChevronDown className={`h-3.5 w-3.5 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
+                    Find a Language Buddy <ChevronDown className={`h-3.5 w-3.5 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   <AnimatePresence>
@@ -330,14 +328,14 @@ export function Header() {
                           to="/conversation-partners"
                           className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
                         >
-                          Find a Partner
+                          Find a Buddy
                           <span className="block text-xs font-normal text-muted-foreground">Browse & book conversation sessions</span>
                         </Link>
                         <Link
                           to="/become-conversation-partner"
                           className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
                         >
-                          Become a Partner
+                          Become a Buddy
                           <span className="block text-xs font-normal text-muted-foreground">Earn money having conversations</span>
                         </Link>
                       </motion.div>
@@ -403,23 +401,6 @@ export function Header() {
                     )}
                   </AnimatePresence>
                 </div>
-                <Link
-                  to="/become-tutor"
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
-                    location.pathname === "/become-tutor" ? "text-primary" : "text-white"
-                  }`}
-                >
-                  {t("nav.becomeTutor")}
-                </Link>
-                <Link
-                  to="/faq"
-                  className="flex items-center justify-center transition-all hover:scale-110"
-                  aria-label="FAQ"
-                >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full border-[2.5px] border-white">
-                    <span className="text-sm font-bold leading-none text-white">?</span>
-                  </div>
-                </Link>
               </>
             )}
 

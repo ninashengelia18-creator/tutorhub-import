@@ -51,8 +51,8 @@ export function Footer() {
   ];
 
   const tutorLinks = [
-    { label: t("footer.becomeTutor"), href: "/become-tutor" },
-    { label: t("footer.applyNow"), href: "/tutor-apply" },
+    { label: t("footer.becomeTutor"), href: "/signup" },
+    { label: t("footer.applyNow"), href: "/signup" },
   ];
 
   const subjectLinks = [
