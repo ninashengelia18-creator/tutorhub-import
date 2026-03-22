@@ -30,6 +30,8 @@ async function createJWT(sa: { client_email: string; private_key: string }): Pro
   );
   const signingInput = `${header}.${payload}`;
   const pemBody = sa.private_key
+    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
+    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'")
     .replace(/-----BEGIN PRIVATE KEY-----/, "")
     .replace(/-----END PRIVATE KEY-----/, "")
     .replace(/\s/g, "");
@@ -119,7 +121,17 @@ Deno.serve(async (req: Request) => {
     const saJson = Deno.env.get("GOOGLE_CALENDAR_SERVICE_ACCOUNT_JSON");
     if (saJson) {
       try {
-        const sa = JSON.parse(saJson);
+        // Fix smart/curly quotes and clean up the JSON string
+        let cleanJson = saJson.trim()
+          .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
+          .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
+        if (!cleanJson.startsWith('{')) {
+          cleanJson = '{' + cleanJson;
+        }
+        if (!cleanJson.endsWith('}')) {
+          cleanJson = cleanJson + '}';
+        }
+        const sa = JSON.parse(cleanJson);
         const accessToken = await getAccessToken(sa);
 
         const startTime = booking.lesson_start_at || `${booking.lesson_date}T${booking.start_time}Z`;

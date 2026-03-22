@@ -37,6 +37,8 @@ async function createJWT(serviceAccount: {
   const signingInput = `${header}.${payload}`;
 
   const pemBody = serviceAccount.private_key
+    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
+    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'")
     .replace(/-----BEGIN PRIVATE KEY-----/, "")
     .replace(/-----END PRIVATE KEY-----/, "")
     .replace(/\s/g, "");
@@ -120,7 +122,13 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const serviceAccount = JSON.parse(saJson);
+    // Fix smart/curly quotes and clean up the JSON string
+    let cleanJson = saJson.trim()
+      .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
+      .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
+    if (!cleanJson.startsWith('{')) cleanJson = '{' + cleanJson;
+    if (!cleanJson.endsWith('}')) cleanJson = cleanJson + '}';
+    const serviceAccount = JSON.parse(cleanJson);
     const accessToken = await getAccessToken(serviceAccount);
 
     // Build attendees list
