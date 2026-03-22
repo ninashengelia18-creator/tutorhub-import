@@ -22,7 +22,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-4xl text-left space-y-8"
+          className="max-w-3xl mx-auto text-center space-y-8"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -34,18 +34,15 @@ export function HeroSection() {
             {t("hero.badge")}
           </motion.div>
 
-          <h1
-            className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.05] tracking-tight text-foreground"
-            style={{ fontFamily: "'Kaushan Script', cursive" }}
-          >
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight text-foreground">
             {t("home.heroTitle")}
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
             {t("hero.subtitle")}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button
               size="lg"
               className="bg-primary text-primary-foreground hover:bg-primary-hover font-semibold text-base px-8 rounded-full shadow-lg shadow-primary/25"
