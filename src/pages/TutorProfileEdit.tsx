@@ -170,7 +170,7 @@ export default function TutorProfileEdit() {
       _education: education || null,
       _certifications: certifications || null,
       _avatar_url: tutorProfile?.avatar_url || null,
-      _subjects: subjectText ? subjectText.split(",").map((s: string) => s.trim()).filter(Boolean) : null,
+      _subjects: selectedSubjects.length > 0 ? selectedSubjects : null,
       _phone: phone || null,
       _timezone: timezone || null,
       _availability: availability || null,
