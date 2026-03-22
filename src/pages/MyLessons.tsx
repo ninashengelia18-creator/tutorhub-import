@@ -291,6 +291,14 @@ export default function MyLessons() {
               <Video className="h-3 w-3" /> {t("myLessons.joinMeet")} <ExternalLink className="h-3 w-3" />
             </a>
           )}
+          {booking.reschedule_status === "pending" && booking.reschedule_requested_by === "tutor" && (
+            <button
+              onClick={() => setApprovalBooking(booking)}
+              className="inline-flex items-center gap-1 text-xs text-amber-600 hover:underline mt-1 font-medium"
+            >
+              <AlertCircle className="h-3 w-3" /> Reschedule request — Review
+            </button>
+          )}
         </div>
         {showActions && (booking.status === "pending" || booking.status === "confirmed") && (
           <DropdownMenu>
