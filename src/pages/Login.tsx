@@ -61,7 +61,7 @@ export default function Login() {
   const [searchParams, setSearchParams] = useSearchParams();
   const redirect = searchParams.get("redirect");
   const portalParam = searchParams.get("portal");
-  const activePortal: LoginPortal = portalParam === "tutor" ? "tutor" : "student";
+  const activePortal: LoginPortal = portalParam === "tutor" ? "tutor" : portalParam === "buddy" ? "buddy" : "student";
   const activePortalConfig = useMemo(
     () => portalOptions.find((option) => option.key === activePortal) ?? portalOptions[0],
     [activePortal],
