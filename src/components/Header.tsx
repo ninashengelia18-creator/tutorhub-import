@@ -233,7 +233,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-header text-white">
-      <div className="container flex h-18 items-center justify-between py-2">
+      <div className="container flex h-18 items-center justify-between py-2 gap-6">
         <div className="flex items-center gap-4">
           <Link to="/" className="flex flex-col items-center gap-1">
             <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
