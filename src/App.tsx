@@ -75,7 +75,7 @@ const App = () => (
                 <Route path="/my-lessons" element={<ProtectedRoute requiredRole="student"><MyLessons /></ProtectedRoute>} />
                 <Route path="/saved-tutors" element={<ProtectedRoute requiredRole="student"><SavedTutors /></ProtectedRoute>} />
                 <Route path="/faq" element={<FAQ />} />
-                <Route path="/for-business" element={<ForBusiness />} />
+                <Route path="/for-professionals" element={<ForProfessionals />} />
                 <Route path="/become-tutor" element={<BecomeTutor />} />
                 <Route path="/tutor-apply" element={<TutorApply />} />
                 <Route path="/conversation-partners" element={<FindConversationPartner />} />
