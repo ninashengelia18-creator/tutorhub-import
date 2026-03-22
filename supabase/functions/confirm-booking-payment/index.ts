@@ -117,9 +117,18 @@ Deno.serve(async (req: Request) => {
     let eventId: string | null = null;
 
     const saJson = Deno.env.get("GOOGLE_CALENDAR_SERVICE_ACCOUNT_JSON");
+    console.log("SA JSON first 50 chars:", saJson?.substring(0, 50));
+    console.log("SA JSON char codes:", saJson ? Array.from(saJson.substring(0, 10)).map(c => c.charCodeAt(0)) : "null");
     if (saJson) {
       try {
-        const sa = JSON.parse(saJson);
+        // Try stripping surrounding quotes if present
+        let cleanJson = saJson.trim();
+        if ((cleanJson.startsWith('"') && cleanJson.endsWith('"')) || (cleanJson.startsWith("'") && cleanJson.endsWith("'"))) {
+          cleanJson = cleanJson.slice(1, -1);
+        }
+        // Unescape if double-escaped
+        cleanJson = cleanJson.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+        const sa = JSON.parse(cleanJson);
         const accessToken = await getAccessToken(sa);
 
         const startTime = booking.lesson_start_at || `${booking.lesson_date}T${booking.start_time}Z`;
