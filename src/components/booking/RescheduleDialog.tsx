@@ -251,8 +251,8 @@ export function RescheduleDialog({
                       onClick={() => setSelectedSlot(slot.id)}
                       className={`w-full text-left rounded-lg p-3 text-sm transition-colors flex items-center gap-2 ${
                         selectedSlot === slot.id
-                          ? "bg-primary/10 border border-primary/30 text-foreground"
-                          : "hover:bg-muted border border-transparent"
+                          ? "bg-primary/10 border-primary/30 text-foreground border"
+                          : "hover:bg-muted border-transparent border"
                       }`}
                     >
                       <CalendarIcon className="h-4 w-4 text-muted-foreground shrink-0" />

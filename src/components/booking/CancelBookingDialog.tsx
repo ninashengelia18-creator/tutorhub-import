@@ -41,7 +41,7 @@ export function CancelBookingDialog({
   onCancelled,
 }: CancelBookingDialogProps) {
   const { toast } = useToast();
-  const [reason, setReason] = useState(CANCEL_REASONS[0].key);
+  const [reason, setReason] = useState<string>(CANCEL_REASONS[0].key);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
