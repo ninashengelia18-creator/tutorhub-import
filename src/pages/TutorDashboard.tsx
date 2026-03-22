@@ -15,6 +15,9 @@ import { formatDateInTimeZone, formatLessonTimeRange, getDateKeyInTimeZone } fro
 import { localizeSubjectLabel } from "@/lib/localization";
 import { TutorEarnings } from "@/components/tutor/TutorEarnings";
 import { TutorStudentList } from "@/components/tutor/TutorStudentList";
+import { CancelBookingDialog } from "@/components/booking/CancelBookingDialog";
+import { RescheduleDialog } from "@/components/booking/RescheduleDialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface TutorBooking {
   id: string;
