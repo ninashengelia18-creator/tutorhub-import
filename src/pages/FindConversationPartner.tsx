@@ -34,13 +34,13 @@ export default function FindConversationPartner() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Search className="mx-auto mb-6 h-16 w-16 text-primary" />
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Find a Conversation Partner
+              Find a Language Buddy
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               Browse native speakers and book affordable, relaxed conversation sessions — no grammar drills, just real talk.
             </p>
             <Button size="lg" asChild>
-              <a href="#browse">Browse Partners</a>
+              <a href="#browse">Browse Language Buddies</a>
             </Button>
           </motion.div>
         </div>
