@@ -74,27 +74,21 @@ async function getAccessToken(serviceAccount: {
 }): Promise<string> {
   const jwt = await createJWT(serviceAccount);
 
-  const params = new URLSearchParams();
-  params.set("grant_type", "urn:ietf:params:oauth:grant_type:jwt-bearer");
-  params.set("assertion", jwt);
-
-  console.log("DEBUG: token request body length =", params.toString().length);
-  console.log("DEBUG: grant_type param =", params.get("grant_type"));
-
-  const res = await fetch("https://oauth2.googleapis.com/token", {
+  const res = await fetch("https://www.googleapis.com/oauth2/v4/token", {
     method: "POST",
-    body: params,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      assertion: jwt,
+    }),
   });
 
-  const text = await res.text();
-  console.log("DEBUG: Google token response status =", res.status);
-  console.log("DEBUG: Google token response =", text.substring(0, 200));
-
   if (!res.ok) {
+    const text = await res.text();
     throw new Error(`Google token exchange failed: ${text}`);
   }
 
-  const data = JSON.parse(text);
+  const data = await res.json();
   return data.access_token;
 }
 
