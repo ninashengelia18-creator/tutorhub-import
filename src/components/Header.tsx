@@ -439,8 +439,8 @@ export function Header() {
                 )}
                 <Link
                   to={profilePath}
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    location.pathname === profilePath ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     location.pathname === profilePath ? "text-primary" : "text-white"
                   }`}
                 >
                   Account Settings
