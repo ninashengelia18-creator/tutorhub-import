@@ -22,7 +22,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-3xl mx-auto text-center space-y-8"
+          className="max-w-4xl text-left space-y-8"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -34,7 +34,10 @@ export function HeroSection() {
             {t("hero.badge")}
           </motion.div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight text-foreground">
+          <h1
+            className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.05] tracking-tight text-foreground"
+            style={{ fontFamily: "'Kaushan Script', cursive" }}
+          >
             {t("home.heroTitle")}
           </h1>
 
