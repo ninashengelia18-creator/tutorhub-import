@@ -313,16 +313,29 @@ export default function MyLessons() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className={`gap-2 ${isWithin12Hours(booking) ? "opacity-50 cursor-not-allowed" : "text-destructive focus:text-destructive"}`}
+                className={`gap-2 ${within12h(booking) ? "opacity-50 cursor-not-allowed" : ""}`}
                 onClick={() => {
-                  if (isWithin12Hours(booking)) {
+                  if (within12h(booking)) {
+                    toast({ title: "Cannot reschedule", description: "Not allowed within 12 hours of the lesson.", variant: "destructive" });
+                  } else {
+                    setRescheduleBooking(booking);
+                  }
+                }}
+              >
+                <RefreshCw className="h-4 w-4" /> {within12h(booking) ? "Cannot reschedule (<12h)" : "Reschedule"}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={`gap-2 ${within12h(booking) ? "opacity-50 cursor-not-allowed" : "text-destructive focus:text-destructive"}`}
+                onClick={() => {
+                  if (within12h(booking)) {
                     toast({ title: "Cannot cancel", description: "Cancellations are not allowed within 12 hours of the lesson.", variant: "destructive" });
                   } else {
                     setCancelBooking(booking);
                   }
                 }}
               >
-                <Ban className="h-4 w-4" /> {isWithin12Hours(booking) ? "Cannot cancel (<12h)" : t("myLessons.cancel")}
+                <Ban className="h-4 w-4" /> {within12h(booking) ? "Cannot cancel (<12h)" : t("myLessons.cancel")}
+              </DropdownMenuItem>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
