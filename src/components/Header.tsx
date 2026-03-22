@@ -619,11 +619,11 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 rounded-full text-white transition-colors hover:bg-white/10 hover:text-primary"
+                className="h-12 w-12 rounded-full text-white transition-colors hover:bg-white/10 hover:text-primary"
                 asChild
               >
                 <Link to="/faq" aria-label="FAQ">
-                  <HelpCircle className="h-5 w-5" />
+                  <HelpCircle className="h-8 w-8" />
                 </Link>
               </Button>
               <Button
