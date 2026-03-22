@@ -34,7 +34,7 @@ const navLinks = [
   { labelKey: "nav.findTutors", href: "/search" },
   { labelKey: "nav.findConversationPartner", href: "/conversation-partners" },
   { labelKey: "nav.becomeConversationPartner", href: "/become-conversation-partner" },
-  { labelKey: "nav.forBusiness", href: "/for-business" },
+  { labelKey: "nav.forProfessionals", href: "/for-professionals" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
   
 ] as const;
