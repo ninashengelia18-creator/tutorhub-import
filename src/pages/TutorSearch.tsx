@@ -18,10 +18,11 @@ import {
 import { SEARCH_FILTER_SUBJECTS, getSubjectValuesForFilter } from "@/lib/subjects";
 
 export default function TutorSearch() {
+  const [searchParams] = useSearchParams();
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("All");
+  const [selectedSubject, setSelectedSubject] = useState(searchParams.get("filter") || "All");
   const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
