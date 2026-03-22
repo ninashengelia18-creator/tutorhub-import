@@ -14,20 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -40,6 +26,9 @@ import {
   getTimeZoneOffsetLabel,
 } from "@/lib/datetime";
 import { localizeSubjectLabel } from "@/lib/localization";
+import { CancelBookingDialog } from "@/components/booking/CancelBookingDialog";
+import { RescheduleDialog } from "@/components/booking/RescheduleDialog";
+import { RescheduleApprovalDialog } from "@/components/booking/RescheduleApprovalDialog";
 
 interface Booking {
   id: string;
@@ -57,6 +46,11 @@ interface Booking {
   status: string;
   is_trial: boolean;
   google_meet_link: string | null;
+  reschedule_status?: string | null;
+  reschedule_requested_by?: string | null;
+  reschedule_reason?: string | null;
+  reschedule_message?: string | null;
+  reschedule_new_slot_id?: string | null;
 }
 
 const getStatusBadge = (t: (key: string) => string) => ({
@@ -65,16 +59,6 @@ const getStatusBadge = (t: (key: string) => string) => ({
   completed: { class: "bg-blue-500/10 text-blue-600 border-blue-500/30", labelKey: "myLessons.statusCompleted", icon: Check },
   cancelled: { class: "bg-red-500/10 text-red-600 border-red-500/30", labelKey: "myLessons.statusCancelled", icon: XCircle },
 });
-
-const CANCEL_REASON_KEYS = [
-  "myLessons.cancelReason1",
-  "myLessons.cancelReason2",
-  "myLessons.cancelReason3",
-  "myLessons.cancelReason4",
-  "myLessons.cancelReason5",
-  "myLessons.cancelReason6",
-  "myLessons.cancelReason7",
-];
 
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
 
