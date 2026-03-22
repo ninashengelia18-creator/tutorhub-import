@@ -47,7 +47,7 @@ export default function TutorProfileEdit() {
   const [timezone, setTimezone] = useState("");
   const [availability, setAvailability] = useState("");
   const [aboutTeaching, setAboutTeaching] = useState("");
-  const [subjectText, setSubjectText] = useState("");
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
 
   // Load application data for extra fields
   const [appData, setAppData] = useState<Record<string, string | null>>({});
