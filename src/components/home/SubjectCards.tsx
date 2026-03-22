@@ -33,28 +33,24 @@ const homepageSubjects = [
   {
     category: "GCSE",
     items: [
-      { label: "GCSE Maths", icon: Calculator, href: "/search?filter=Maths", desc: "Maths & IGCSE Maths" },
-      { label: "GCSE Sciences", icon: Atom, href: "/search?filter=Science", desc: "Combined Science, Biology, Chemistry, Physics" },
+      { label: "GCSE Maths", icon: Calculator, href: "/search?filter=Maths", desc: "Maths & Higher Tier" },
+      { label: "GCSE Science", icon: Atom, href: "/search?filter=Science", desc: "Combined & Triple Science" },
       { label: "GCSE English", icon: BookOpen, href: "/search?filter=English", desc: "English Language & Literature" },
-      { label: "GCSE Computer Science", icon: Cpu, href: "/search?filter=Computer+Science", desc: "Computer Science" },
     ],
   },
   {
     category: "A‑Level",
     items: [
       { label: "A‑Level Maths", icon: Calculator, href: "/search?filter=Maths", desc: "Maths & Further Maths" },
-      { label: "A‑Level Sciences", icon: Atom, href: "/search?filter=Science", desc: "Biology, Chemistry, Physics" },
+      { label: "A‑Level Sciences", icon: Atom, href: "/search?filter=Science", desc: "Physics, Chemistry, Biology" },
       { label: "A‑Level English", icon: BookOpen, href: "/search?filter=English", desc: "English Language & Literature" },
-      { label: "A‑Level CS", icon: Cpu, href: "/search?filter=Computer+Science", desc: "Computer Science" },
     ],
   },
   {
     category: "University",
     items: [
-      { label: "Maths & Stats", icon: BarChart3, href: "/search?filter=Maths", desc: "Calculus, Linear Algebra, Statistics" },
-      { label: "Sciences", icon: FlaskConical, href: "/search?filter=Science", desc: "Intro Physics & Chemistry" },
-      { label: "Academic Skills", icon: PenLine, href: "/search?filter=English", desc: "Academic Writing, Essay Support" },
-      { label: "Programming & Data", icon: Code, href: "/search?filter=Programming", desc: "Python, Java, JS, R, Excel" },
+      { label: "Maths & Stats", icon: BarChart3, href: "/search?filter=Maths", desc: "Calculus, Statistics, Linear Algebra" },
+      { label: "English", icon: BookOpen, href: "/search?filter=English", desc: "English Language & Literature" },
     ],
   },
   {
@@ -66,7 +62,6 @@ const homepageSubjects = [
     ],
   },
 ];
-
 export function SubjectCards() {
   return (
     <section className="container py-16 space-y-10">

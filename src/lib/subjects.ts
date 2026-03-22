@@ -37,7 +37,6 @@ export const SUBJECT_TAXONOMY: SubjectCategory[] = [
       {
         label: "Science",
         subjects: [
-          { value: "General Science", label: "General Science" },
           { value: "Biology", label: "Biology" },
           { value: "Chemistry", label: "Chemistry" },
           { value: "Physics", label: "Physics" },
@@ -65,14 +64,27 @@ export const SUBJECT_TAXONOMY: SubjectCategory[] = [
     label: "GCSE",
     groups: [
       {
-        label: "GCSE Subjects",
+        label: "Maths",
         subjects: [
           { value: "GCSE Maths", label: "GCSE Maths" },
+          { value: "GCSE Maths Higher Tier", label: "GCSE Maths (Higher Tier)" },
           { value: "IGCSE Maths", label: "IGCSE Maths" },
-          { value: "GCSE Sciences", label: "GCSE Sciences" },
+        ],
+      },
+      {
+        label: "Science",
+        subjects: [
+          { value: "GCSE Combined Science", label: "GCSE Combined Science" },
+          { value: "GCSE Biology", label: "GCSE Biology" },
+          { value: "GCSE Chemistry", label: "GCSE Chemistry" },
+          { value: "GCSE Physics", label: "GCSE Physics" },
+        ],
+      },
+      {
+        label: "English",
+        subjects: [
           { value: "GCSE English Language", label: "GCSE English Language" },
           { value: "GCSE English Literature", label: "GCSE English Literature" },
-          { value: "GCSE Computer Science", label: "GCSE Computer Science" },
         ],
       },
     ],
@@ -82,16 +94,25 @@ export const SUBJECT_TAXONOMY: SubjectCategory[] = [
     label: "A‑Level",
     groups: [
       {
-        label: "A‑Level Subjects",
+        label: "Maths",
         subjects: [
           { value: "A-Level Maths", label: "A‑Level Maths" },
           { value: "Further Maths", label: "Further Maths" },
-          { value: "A-Level Biology", label: "A‑Level Biology" },
-          { value: "A-Level Chemistry", label: "A‑Level Chemistry" },
+        ],
+      },
+      {
+        label: "Science",
+        subjects: [
           { value: "A-Level Physics", label: "A‑Level Physics" },
+          { value: "A-Level Chemistry", label: "A‑Level Chemistry" },
+          { value: "A-Level Biology", label: "A‑Level Biology" },
+        ],
+      },
+      {
+        label: "English",
+        subjects: [
           { value: "A-Level English Language", label: "A‑Level English Language" },
           { value: "A-Level English Literature", label: "A‑Level English Literature" },
-          { value: "A-Level Computer Science", label: "A‑Level Computer Science" },
         ],
       },
     ],
@@ -104,30 +125,16 @@ export const SUBJECT_TAXONOMY: SubjectCategory[] = [
         label: "Maths & Stats",
         subjects: [
           { value: "University Calculus", label: "Calculus" },
-          { value: "Linear Algebra", label: "Linear Algebra" },
           { value: "Statistics & Data Analysis", label: "Statistics & Data Analysis" },
+          { value: "Linear Algebra", label: "Linear Algebra" },
+          { value: "University Maths", label: "University Maths" },
         ],
       },
       {
-        label: "Sciences",
+        label: "English",
         subjects: [
-          { value: "Intro Physics", label: "Intro Physics" },
-          { value: "Intro Chemistry", label: "Intro Chemistry" },
-        ],
-      },
-      {
-        label: "Academic Skills",
-        subjects: [
-          { value: "Academic Writing", label: "Academic Writing" },
-          { value: "Essay & Dissertation Support", label: "Essay & Dissertation Support" },
-        ],
-      },
-      {
-        label: "Programming & Data",
-        subjects: [
-          { value: "Python for Data Analysis", label: "Python for Data Analysis" },
-          { value: "Intro Programming", label: "Intro Programming (Python / Java / JS)" },
-          { value: "R or Excel Statistics", label: "R or Excel Statistics" },
+          { value: "University English Language", label: "English Language" },
+          { value: "University English Literature", label: "English Literature" },
         ],
       },
     ],
@@ -159,7 +166,6 @@ export const SUBJECT_TAXONOMY: SubjectCategory[] = [
     ],
   },
 ];
-
 /** Flat list of all subjects for dropdowns and validation */
 export function getAllSubjects(): SubjectItem[] {
   return SUBJECT_TAXONOMY.flatMap((cat) =>
@@ -197,28 +203,29 @@ export const SEARCH_FILTER_SUBJECTS = [
 
 /** Map a quick-filter label to matching subject values for filtering */
 export function getSubjectValuesForFilter(filter: string): string[] | null {
-  if (filter === "All") return null; // no filter
+  if (filter === "All") return null;
 
   const map: Record<string, string[]> = {
     Maths: [
       "US School Math", "Algebra", "Geometry", "Trigonometry", "Calculus",
-      "GCSE Maths", "IGCSE Maths", "A-Level Maths", "Further Maths",
-      "University Calculus", "Linear Algebra", "Statistics & Data Analysis",
+      "GCSE Maths", "GCSE Maths Higher Tier", "IGCSE Maths",
+      "A-Level Maths", "Further Maths",
+      "University Calculus", "Linear Algebra", "Statistics & Data Analysis", "University Maths",
     ],
     Science: [
-      "General Science", "Biology", "Chemistry", "Physics",
-      "GCSE Sciences", "A-Level Biology", "A-Level Chemistry", "A-Level Physics",
-      "Intro Physics", "Intro Chemistry",
+      "Biology", "Chemistry", "Physics",
+      "GCSE Combined Science", "GCSE Biology", "GCSE Chemistry", "GCSE Physics",
+      "A-Level Physics", "A-Level Chemistry", "A-Level Biology",
     ],
     English: [
       "Reading & Writing Support", "US English/ELA",
       "GCSE English Language", "GCSE English Literature",
       "A-Level English Language", "A-Level English Literature",
-      "General English", "Academic Writing",
+      "University English Language", "University English Literature",
+      "General English",
     ],
     "Computer Science": [
-      "Coding for Kids", "Coding for Teens",
-      "GCSE Computer Science", "A-Level Computer Science", "AP Computer Science",
+      "Coding for Kids", "Coding for Teens", "AP Computer Science",
     ],
     "Business English": [
       "Business English", "Conversation Practice", "Interview Prep",
@@ -227,9 +234,7 @@ export function getSubjectValuesForFilter(filter: string): string[] | null {
       "IELTS Academic", "IELTS General", "TOEFL",
     ],
     Programming: [
-      "Python for Data Analysis", "Intro Programming",
-      "R or Excel Statistics", "Python for Beginners",
-      "Web Development Basics", "Data Skills for Professionals",
+      "Python for Beginners", "Web Development Basics", "Data Skills for Professionals",
     ],
   };
 
