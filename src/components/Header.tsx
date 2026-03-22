@@ -193,6 +193,7 @@ export function Header() {
   useEffect(() => {
     setMegaOpen(false);
     setConvDropdownOpen(false);
+    setProDropdownOpen(false);
     setMobileOpen(false);
   }, [location.pathname]);
 
