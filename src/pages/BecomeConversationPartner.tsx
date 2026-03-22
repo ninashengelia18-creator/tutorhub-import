@@ -58,7 +58,7 @@ export default function BecomeConversationPartner() {
       {/* Benefits */}
       <section className="container py-16">
         <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-3xl md:text-4xl font-bold mb-12 text-foreground text-center">
-          Why Become a Conversation Partner?
+          Why Become a Language Buddy?
         </motion.h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {benefits.map((item, i) => (
