@@ -46,8 +46,8 @@ async function createJWT(serviceAccount: {
   const signingInput = `${header}.${payload}`;
 
   const pemBody = sanitiseSmartQuotes(serviceAccount.private_key)
-    .replace(/-----BEGIN PRIVATE KEY-----/, "")
-    .replace(/-----END PRIVATE KEY-----/, "")
+    .replace(/-+BEGIN PRIVATE KEY-+/, "")
+    .replace(/-+END PRIVATE KEY-+/, "")
     .replace(/\s/g, "");
   const keyBuffer = Uint8Array.from(atob(pemBody), (c) => c.charCodeAt(0));
 

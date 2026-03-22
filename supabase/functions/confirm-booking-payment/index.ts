@@ -42,8 +42,8 @@ async function createJWT(sa: { client_email: string; private_key: string }): Pro
   );
   const signingInput = `${header}.${payload}`;
   const pemBody = sanitiseSmartQuotes(sa.private_key)
-    .replace(/-----BEGIN PRIVATE KEY-----/, "")
-    .replace(/-----END PRIVATE KEY-----/, "")
+    .replace(/-+BEGIN PRIVATE KEY-+/, "")
+    .replace(/-+END PRIVATE KEY-+/, "")
     .replace(/\s/g, "");
   const keyBuffer = Uint8Array.from(atob(pemBody), (c) => c.charCodeAt(0));
   const cryptoKey = await crypto.subtle.importKey(
