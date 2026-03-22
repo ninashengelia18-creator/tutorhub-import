@@ -119,8 +119,58 @@ function FindTutorsNavItem({ isActive }: { isActive: boolean }) {
     </NavigationMenu>
   );
 }
+function ForProfessionalsNavItem({ isActive }: { isActive: boolean }) {
+  const proCategory = SUBJECT_TAXONOMY.find((c) => c.key === "professionals");
 
-function initialsFromName(name: string) {
+  return (
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger
+            className={`border-b-2 rounded-none bg-transparent px-1 py-4 text-sm font-semibold transition-colors hover:bg-transparent data-[state=open]:bg-transparent ${
+              isActive ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            For Professionals
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="rounded-2xl border border-border/70 bg-popover p-4 shadow-xl">
+            <div className="min-w-[260px] space-y-3">
+              {proCategory?.groups.map((group) => (
+                <div key={group.label}>
+                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{group.label}</p>
+                  <div className="space-y-0.5">
+                    {group.subjects.map((subject) => (
+                      <NavigationMenuLink key={subject.value} asChild>
+                        <Link
+                          to={`/search?subject=${encodeURIComponent(subject.value)}`}
+                          className="block rounded-lg px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
+                        >
+                          {subject.label}
+                        </Link>
+                      </NavigationMenuLink>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div className="border-t border-border/40 pt-1.5">
+                <NavigationMenuLink asChild>
+                  <Link
+                    to="/for-professionals"
+                    className="block rounded-lg px-3 py-2 text-sm font-semibold text-primary hover:bg-accent"
+                  >
+                    View All Professional Subjects →
+                  </Link>
+                </NavigationMenuLink>
+              </div>
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
+}
+
+
   return (
     name
       .split(" ")
