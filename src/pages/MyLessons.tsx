@@ -336,7 +336,6 @@ export default function MyLessons() {
               >
                 <Ban className="h-4 w-4" /> {within12h(booking) ? "Cannot cancel (<12h)" : t("myLessons.cancel")}
               </DropdownMenuItem>
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
