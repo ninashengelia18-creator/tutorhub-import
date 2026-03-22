@@ -251,15 +251,10 @@ export default function TutorProfileEdit() {
           {/* Subjects */}
           <section className="rounded-2xl border bg-card p-6">
             <h2 className="mb-3 text-lg font-semibold">Subjects</h2>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {tutorProfile.subjects.map((subject) => (
-                <Badge key={subject} variant="secondary">{subject}</Badge>
-              ))}
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Update subjects (comma-separated)</Label>
-              <Input value={subjectText} onChange={(e) => setSubjectText(e.target.value)} placeholder="English, Mathematics, Science" />
-            </div>
+            <SubjectPicker
+              selected={selectedSubjects}
+              onChange={setSelectedSubjects}
+            />
           </section>
 
           {/* Personal Info */}
