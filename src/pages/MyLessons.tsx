@@ -257,8 +257,22 @@ export default function MyLessons() {
 
   const formatTime = (booking: Booking) => formatLessonTimeRange(booking.lesson_start_at, booking.lesson_end_at, lang, timezone);
 
+  const isWithin12Hours = (booking: Booking) => {
+    if (!booking.lesson_start_at) return false;
+    const lessonStart = new Date(booking.lesson_start_at);
+    const hoursUntil = (lessonStart.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return hoursUntil < 12;
+  };
+
   const handleCancel = async () => {
     if (!cancelBooking) return;
+
+    if (isWithin12Hours(cancelBooking)) {
+      toast({ title: "Cannot cancel", description: "Cancellations are not allowed within 12 hours of the lesson.", variant: "destructive" });
+      setCancelBooking(null);
+      return;
+    }
+
     setCancelling(true);
     const { error } = await supabase
       .from("bookings")
