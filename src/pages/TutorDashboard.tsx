@@ -203,6 +203,24 @@ export default function TutorDashboard() {
                           <Button variant="outline" className="rounded-full" asChild>
                             <Link to="/tutor-schedule">{t("tutorDashboard.viewFullSchedule")}</Link>
                           </Button>
+                          {!isWithin12Hours(nextLesson) && (
+                            <>
+                              <Button
+                                variant="outline"
+                                className="rounded-full gap-1.5"
+                                onClick={() => setRescheduleBooking(nextLesson)}
+                              >
+                                <RefreshCw className="h-4 w-4" /> Reschedule
+                              </Button>
+                              <Button
+                                variant="outline"
+                                className="rounded-full gap-1.5 text-destructive hover:text-destructive"
+                                onClick={() => setCancelBooking(nextLesson)}
+                              >
+                                <Ban className="h-4 w-4" /> Cancel
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </div>
                     ) : (
