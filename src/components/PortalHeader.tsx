@@ -20,7 +20,6 @@ import { getSavedTutors, subscribeToSavedTutors } from "@/lib/savedTutors";
 
 const studentPrimaryNav = [
   { to: "/dashboard", labelKey: "msg.home" },
-  { to: "/search", label: "Find Tutors" },
   { to: "/messages", labelKey: "msg.messages" },
   { to: "/my-lessons", labelKey: "msg.myLessons" },
 ] as const;
