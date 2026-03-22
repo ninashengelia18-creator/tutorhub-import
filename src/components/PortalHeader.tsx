@@ -222,31 +222,27 @@ export function PortalHeader() {
     };
 
     const loadNotifications = async () => {
-      const today = new Date().toISOString().split("T")[0];
-      const bookingsQuery = supabase
-        .from("bookings")
-        .select("tutor_name, student_name, subject, lesson_date, start_time")
-        .gte("lesson_date", today)
-        .in("status", ["pending", "confirmed"])
-        .order("lesson_date", { ascending: true })
-        .order("start_time", { ascending: true })
-        .limit(3);
+      const { data } = await supabase
+        .from("notifications" as never)
+        .select("id, title, message, read_at, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
 
-      const { data } = await (isTutor
-        ? bookingsQuery.eq("tutor_name", displayName)
-        : bookingsQuery.eq("student_id", user.id));
-
-      setNotifications(
-        (data ?? []).map((booking) =>
-          isTutor
-            ? `${booking.subject} · ${booking.student_name || "Student"} · ${booking.lesson_date} ${booking.start_time.slice(0, 5)}`
-            : `${booking.subject} · ${booking.tutor_name} · ${booking.lesson_date} ${booking.start_time.slice(0, 5)}`,
-        ),
-      );
+      setNotifications((data as any[]) ?? []);
     };
 
     void loadUnread();
     void loadNotifications();
+
+    const notifChannel = supabase
+      .channel(`notifications-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` },
+        () => { void loadNotifications(); }
+      )
+      .subscribe();
 
     const channel = supabase
       .channel(`portal-header-${user.id}`)
