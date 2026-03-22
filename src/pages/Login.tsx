@@ -251,7 +251,7 @@ export default function Login() {
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
               <Button type="submit" className="w-full" disabled={loading || authLoading}>
-                {loading ? t("auth.signingIn") : `Log in to ${activePortalConfig.key === "student" ? "student" : "tutor"} portal`}
+                {loading ? t("auth.signingIn") : `Log in to ${activePortalConfig.tabLabel.toLowerCase()} portal`}
               </Button>
               <p className="text-center text-sm text-muted-foreground">
                 {t("auth.noAccount")}{" "}
