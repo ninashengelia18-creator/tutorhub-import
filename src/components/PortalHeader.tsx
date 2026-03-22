@@ -151,7 +151,7 @@ export function PortalHeader() {
     ? tutorPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }))
     : isConvoPartner
     ? partnerPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }))
-    : studentPrimaryNav.map((item) => ({ to: item.to, label: t(item.labelKey) }));
+    : studentPrimaryNav.map((item) => ({ to: item.to, label: "label" in item ? item.label : t(item.labelKey) }));
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90">
