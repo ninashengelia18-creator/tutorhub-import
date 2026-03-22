@@ -14,20 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -40,6 +26,9 @@ import {
   getTimeZoneOffsetLabel,
 } from "@/lib/datetime";
 import { localizeSubjectLabel } from "@/lib/localization";
+import { CancelBookingDialog } from "@/components/booking/CancelBookingDialog";
+import { RescheduleDialog } from "@/components/booking/RescheduleDialog";
+import { RescheduleApprovalDialog } from "@/components/booking/RescheduleApprovalDialog";
 
 interface Booking {
   id: string;
@@ -57,6 +46,11 @@ interface Booking {
   status: string;
   is_trial: boolean;
   google_meet_link: string | null;
+  reschedule_status?: string | null;
+  reschedule_requested_by?: string | null;
+  reschedule_reason?: string | null;
+  reschedule_message?: string | null;
+  reschedule_new_slot_id?: string | null;
 }
 
 const getStatusBadge = (t: (key: string) => string) => ({
@@ -65,16 +59,6 @@ const getStatusBadge = (t: (key: string) => string) => ({
   completed: { class: "bg-blue-500/10 text-blue-600 border-blue-500/30", labelKey: "myLessons.statusCompleted", icon: Check },
   cancelled: { class: "bg-red-500/10 text-red-600 border-red-500/30", labelKey: "myLessons.statusCancelled", icon: XCircle },
 });
-
-const CANCEL_REASON_KEYS = [
-  "myLessons.cancelReason1",
-  "myLessons.cancelReason2",
-  "myLessons.cancelReason3",
-  "myLessons.cancelReason4",
-  "myLessons.cancelReason5",
-  "myLessons.cancelReason6",
-  "myLessons.cancelReason7",
-];
 
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
 
@@ -224,10 +208,9 @@ export default function MyLessons() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"lessons" | "calendar" | "tutors">("lessons");
   const [cancelBooking, setCancelBooking] = useState<Booking | null>(null);
+  const [rescheduleBooking, setRescheduleBooking] = useState<Booking | null>(null);
+  const [approvalBooking, setApprovalBooking] = useState<Booking | null>(null);
   const [reviewBooking, setReviewBooking] = useState<Booking | null>(null);
-  const [cancelReason, setCancelReason] = useState(CANCEL_REASON_KEYS[0]);
-  const [cancelMessage, setCancelMessage] = useState("");
-  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => { void fetchBookings(); }, []);
 
@@ -264,30 +247,7 @@ export default function MyLessons() {
     return hoursUntil < 12;
   };
 
-  const handleCancel = async () => {
-    if (!cancelBooking) return;
-
-    if (isWithin12Hours(cancelBooking)) {
-      toast({ title: "Cannot cancel", description: "Cancellations are not allowed within 12 hours of the lesson.", variant: "destructive" });
-      setCancelBooking(null);
-      return;
-    }
-
-    setCancelling(true);
-    const { error } = await supabase
-      .from("bookings")
-      .update({ status: "cancelled", notes: `Cancel reason: ${t(cancelReason)}. ${cancelMessage}` })
-      .eq("id", cancelBooking.id);
-    setCancelling(false);
-    if (error) {
-      toast({ title: t("auth.error"), description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: t("myLessons.lessonCancelled") });
-      setCancelBooking(null);
-      setCancelMessage("");
-      fetchBookings();
-    }
-  };
+  const within12h = (booking: Booking) => isWithin12Hours(booking);
 
   const tutors = Array.from(new Map(bookings.map((booking) => [booking.tutor_name, booking])).values());
 
@@ -331,6 +291,14 @@ export default function MyLessons() {
               <Video className="h-3 w-3" /> {t("myLessons.joinMeet")} <ExternalLink className="h-3 w-3" />
             </a>
           )}
+          {booking.reschedule_status === "pending" && booking.reschedule_requested_by === "tutor" && (
+            <button
+              onClick={() => setApprovalBooking(booking)}
+              className="inline-flex items-center gap-1 text-xs text-amber-600 hover:underline mt-1 font-medium"
+            >
+              <AlertCircle className="h-3 w-3" /> Reschedule request — Review
+            </button>
+          )}
         </div>
         {showActions && (booking.status === "pending" || booking.status === "confirmed") && (
           <DropdownMenu>
@@ -353,16 +321,28 @@ export default function MyLessons() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className={`gap-2 ${isWithin12Hours(booking) ? "opacity-50 cursor-not-allowed" : "text-destructive focus:text-destructive"}`}
+                className={`gap-2 ${within12h(booking) ? "opacity-50 cursor-not-allowed" : ""}`}
                 onClick={() => {
-                  if (isWithin12Hours(booking)) {
+                  if (within12h(booking)) {
+                    toast({ title: "Cannot reschedule", description: "Not allowed within 12 hours of the lesson.", variant: "destructive" });
+                  } else {
+                    setRescheduleBooking(booking);
+                  }
+                }}
+              >
+                <RefreshCw className="h-4 w-4" /> {within12h(booking) ? "Cannot reschedule (<12h)" : "Reschedule"}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={`gap-2 ${within12h(booking) ? "opacity-50 cursor-not-allowed" : "text-destructive focus:text-destructive"}`}
+                onClick={() => {
+                  if (within12h(booking)) {
                     toast({ title: "Cannot cancel", description: "Cancellations are not allowed within 12 hours of the lesson.", variant: "destructive" });
                   } else {
                     setCancelBooking(booking);
                   }
                 }}
               >
-                <Ban className="h-4 w-4" /> {isWithin12Hours(booking) ? "Cannot cancel (<12h)" : t("myLessons.cancel")}
+                <Ban className="h-4 w-4" /> {within12h(booking) ? "Cannot cancel (<12h)" : t("myLessons.cancel")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -493,44 +473,29 @@ export default function MyLessons() {
         </motion.div>
       </div>
 
-      <Dialog open={!!cancelBooking} onOpenChange={(open) => !open && setCancelBooking(null)}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-lg">{t("myLessons.cancelTitle")}</DialogTitle>
-          </DialogHeader>
-          {cancelBooking && (
-            <div>
-              <p className="text-sm text-muted-foreground mb-4">
-                {formatDateInTimeZone(cancelBooking.lesson_start_at, lang, timezone, { weekday: "long", month: "long", day: "numeric" })} · {formatTime(cancelBooking)}
-              </p>
-              <div className="bg-destructive/10 rounded-lg p-3 flex items-start gap-3 mb-6">
-                <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                <p className="text-sm">{t("myLessons.cancelWarning")}</p>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm font-medium mb-2">{t("myLessons.cancelReason")}</p>
-                  <Select value={cancelReason} onValueChange={setCancelReason}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {CANCEL_REASON_KEYS.map((reasonKey) => (
-                        <SelectItem key={reasonKey} value={reasonKey}>{t(reasonKey)}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-2">{t("myLessons.cancelMessage")}</p>
-                  <Textarea value={cancelMessage} onChange={(e) => setCancelMessage(e.target.value)} placeholder={t("myLessons.cancelMessagePlaceholder")} className="resize-none" rows={3} />
-                </div>
-                <Button onClick={handleCancel} disabled={cancelling} variant="destructive" className="w-full">
-                  {cancelling ? t("myLessons.cancelling") : t("myLessons.confirmCancel")}
-                </Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <CancelBookingDialog
+        open={!!cancelBooking}
+        onOpenChange={(open) => !open && setCancelBooking(null)}
+        booking={cancelBooking}
+        cancelledBy="student"
+        dateLabel={cancelBooking ? `${formatDateInTimeZone(cancelBooking.lesson_start_at, lang, timezone, { weekday: "long", month: "long", day: "numeric" })} · ${formatTime(cancelBooking)}` : ""}
+        onCancelled={fetchBookings}
+      />
+
+      <RescheduleDialog
+        open={!!rescheduleBooking}
+        onOpenChange={(open) => !open && setRescheduleBooking(null)}
+        booking={rescheduleBooking}
+        requestedBy="student"
+        onRescheduled={fetchBookings}
+      />
+
+      <RescheduleApprovalDialog
+        open={!!approvalBooking}
+        onOpenChange={(open) => !open && setApprovalBooking(null)}
+        booking={approvalBooking}
+        onResolved={fetchBookings}
+      />
 
       {reviewBooking && user && (
         <ReviewDialog

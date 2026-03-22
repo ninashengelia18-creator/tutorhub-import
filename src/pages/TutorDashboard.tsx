@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, CalendarDays, Clock3, Edit, Users, Video, Wallet } from "lucide-react";
+import { BookOpen, CalendarDays, Clock3, Edit, RefreshCw, Ban, Users, Video, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
@@ -15,9 +15,13 @@ import { formatDateInTimeZone, formatLessonTimeRange, getDateKeyInTimeZone } fro
 import { localizeSubjectLabel } from "@/lib/localization";
 import { TutorEarnings } from "@/components/tutor/TutorEarnings";
 import { TutorStudentList } from "@/components/tutor/TutorStudentList";
+import { CancelBookingDialog } from "@/components/booking/CancelBookingDialog";
+import { RescheduleDialog } from "@/components/booking/RescheduleDialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface TutorBooking {
   id: string;
+  tutor_name: string;
   student_name: string | null;
   subject: string;
   lesson_date: string;
@@ -37,25 +41,33 @@ export default function TutorDashboard() {
   const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cancelBooking, setCancelBooking] = useState<TutorBooking | null>(null);
+  const [rescheduleBooking, setRescheduleBooking] = useState<TutorBooking | null>(null);
+  const { toast } = useToast();
   const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
 
-  useEffect(() => {
+  const fetchBookings = async () => {
     if (!tutorName) return;
+    const { data } = await supabase
+      .from("bookings")
+      .select("id, tutor_name, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, status, price_amount, currency, google_meet_link")
+      .eq("tutor_name", tutorName)
+      .in("status", ["confirmed", "completed"])
+      .order("lesson_start_at", { ascending: true });
 
-    const loadBookings = async () => {
-      const { data } = await supabase
-        .from("bookings")
-        .select("id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, status, price_amount, currency, google_meet_link")
-        .eq("tutor_name", tutorName)
-        .in("status", ["confirmed", "completed"])
-        .order("lesson_start_at", { ascending: true });
+    setBookings((data as TutorBooking[]) ?? []);
+    setLoading(false);
+  };
 
-      setBookings((data as TutorBooking[]) ?? []);
-      setLoading(false);
-    };
-
-    void loadBookings();
+  useEffect(() => {
+    void fetchBookings();
   }, [tutorName]);
+
+  const isWithin12Hours = (booking: TutorBooking) => {
+    if (!booking.lesson_start_at) return false;
+    const hoursUntil = (new Date(booking.lesson_start_at).getTime() - Date.now()) / (1000 * 60 * 60);
+    return hoursUntil < 12;
+  };
 
   const now = new Date();
   const todayKey = getDateKeyInTimeZone(now, timezone);
@@ -192,6 +204,24 @@ export default function TutorDashboard() {
                           <Button variant="outline" className="rounded-full" asChild>
                             <Link to="/tutor-schedule">{t("tutorDashboard.viewFullSchedule")}</Link>
                           </Button>
+                          {!isWithin12Hours(nextLesson) && (
+                            <>
+                              <Button
+                                variant="outline"
+                                className="rounded-full gap-1.5"
+                                onClick={() => setRescheduleBooking(nextLesson)}
+                              >
+                                <RefreshCw className="h-4 w-4" /> Reschedule
+                              </Button>
+                              <Button
+                                variant="outline"
+                                className="rounded-full gap-1.5 text-destructive hover:text-destructive"
+                                onClick={() => setCancelBooking(nextLesson)}
+                              >
+                                <Ban className="h-4 w-4" /> Cancel
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </div>
                     ) : (
@@ -235,6 +265,23 @@ export default function TutorDashboard() {
           </Tabs>
         </motion.div>
       </div>
+
+      <CancelBookingDialog
+        open={!!cancelBooking}
+        onOpenChange={(open) => !open && setCancelBooking(null)}
+        booking={cancelBooking}
+        cancelledBy="tutor"
+        dateLabel={cancelBooking ? `${formatDate(cancelBooking.lesson_start_at)} · ${formatTimeRange(cancelBooking)}` : ""}
+        onCancelled={fetchBookings}
+      />
+
+      <RescheduleDialog
+        open={!!rescheduleBooking}
+        onOpenChange={(open) => !open && setRescheduleBooking(null)}
+        booking={rescheduleBooking}
+        requestedBy="tutor"
+        onRescheduled={fetchBookings}
+      />
     </Layout>
   );
 }
