@@ -56,17 +56,15 @@ export function Footer() {
   ];
 
   const subjectLinks = [
-    { label: "Mathematics", href: "/search?subject=Mathematics" },
-    { label: "English Language & Literature", href: "/search?subject=English" },
-    { label: "Physics", href: "/search?subject=Physics" },
-    { label: "Chemistry", href: "/search?subject=Chemistry" },
-    { label: "Biology", href: "/search?subject=Biology" },
-    { label: "History & Geography", href: "/search?subject=History" },
-    { label: "Computer Science & Programming", href: "/search?subject=ComputerScience" },
-    { label: "Business & Finance", href: "/search?subject=BusinessFinance" },
-    { label: "Data Science", href: "/search?subject=DataScience" },
-    { label: "Law", href: "/search?subject=Law" },
-    { label: "English for Professionals", href: "/search?subject=BusinessEnglish" },
+    { label: "Mathematics", href: "/search?filter=Maths" },
+    { label: "English Language & Literature", href: "/search?filter=English" },
+    { label: "Physics", href: "/search?filter=Science" },
+    { label: "Chemistry", href: "/search?filter=Science" },
+    { label: "Biology", href: "/search?filter=Science" },
+    { label: "Computer Science", href: "/search?filter=Computer+Science" },
+    { label: "Business English", href: "/search?filter=Business+English" },
+    { label: "IELTS / TOEFL", href: "/search?filter=IELTS+%2F+TOEFL" },
+    { label: "Programming", href: "/search?filter=Programming" },
   ];
 
   const learnLinks = [
