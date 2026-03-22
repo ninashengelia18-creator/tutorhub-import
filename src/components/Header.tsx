@@ -421,8 +421,8 @@ export function Header() {
                 </Link>
                 <Link
                   to={isTutor ? "/tutor-schedule" : "/partner-schedule"}
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    ["/tutor-schedule", "/partner-schedule"].includes(location.pathname) ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     ["/tutor-schedule", "/partner-schedule"].includes(location.pathname) ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("nav.schedule")}
