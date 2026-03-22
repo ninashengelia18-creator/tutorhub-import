@@ -466,44 +466,29 @@ export default function MyLessons() {
         </motion.div>
       </div>
 
-      <Dialog open={!!cancelBooking} onOpenChange={(open) => !open && setCancelBooking(null)}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-lg">{t("myLessons.cancelTitle")}</DialogTitle>
-          </DialogHeader>
-          {cancelBooking && (
-            <div>
-              <p className="text-sm text-muted-foreground mb-4">
-                {formatDateInTimeZone(cancelBooking.lesson_start_at, lang, timezone, { weekday: "long", month: "long", day: "numeric" })} · {formatTime(cancelBooking)}
-              </p>
-              <div className="bg-destructive/10 rounded-lg p-3 flex items-start gap-3 mb-6">
-                <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                <p className="text-sm">{t("myLessons.cancelWarning")}</p>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm font-medium mb-2">{t("myLessons.cancelReason")}</p>
-                  <Select value={cancelReason} onValueChange={setCancelReason}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {CANCEL_REASON_KEYS.map((reasonKey) => (
-                        <SelectItem key={reasonKey} value={reasonKey}>{t(reasonKey)}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-2">{t("myLessons.cancelMessage")}</p>
-                  <Textarea value={cancelMessage} onChange={(e) => setCancelMessage(e.target.value)} placeholder={t("myLessons.cancelMessagePlaceholder")} className="resize-none" rows={3} />
-                </div>
-                <Button onClick={handleCancel} disabled={cancelling} variant="destructive" className="w-full">
-                  {cancelling ? t("myLessons.cancelling") : t("myLessons.confirmCancel")}
-                </Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <CancelBookingDialog
+        open={!!cancelBooking}
+        onOpenChange={(open) => !open && setCancelBooking(null)}
+        booking={cancelBooking}
+        cancelledBy="student"
+        dateLabel={cancelBooking ? `${formatDateInTimeZone(cancelBooking.lesson_start_at, lang, timezone, { weekday: "long", month: "long", day: "numeric" })} · ${formatTime(cancelBooking)}` : ""}
+        onCancelled={fetchBookings}
+      />
+
+      <RescheduleDialog
+        open={!!rescheduleBooking}
+        onOpenChange={(open) => !open && setRescheduleBooking(null)}
+        booking={rescheduleBooking}
+        requestedBy="student"
+        onRescheduled={fetchBookings}
+      />
+
+      <RescheduleApprovalDialog
+        open={!!approvalBooking}
+        onOpenChange={(open) => !open && setApprovalBooking(null)}
+        booking={approvalBooking}
+        onResolved={fetchBookings}
+      />
 
       {reviewBooking && user && (
         <ReviewDialog
