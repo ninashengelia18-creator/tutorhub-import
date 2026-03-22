@@ -34,13 +34,13 @@ export default function FindConversationPartner() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Search className="mx-auto mb-6 h-16 w-16 text-primary" />
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Find a Conversation Partner
+              Find a Language Buddy
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               Browse native speakers and book affordable, relaxed conversation sessions — no grammar drills, just real talk.
             </p>
             <Button size="lg" asChild>
-              <a href="#browse">Browse Partners</a>
+              <a href="#browse">Browse Language Buddies</a>
             </Button>
           </motion.div>
         </div>
@@ -100,16 +100,16 @@ export default function FindConversationPartner() {
             Affordable rates from $10/hour
           </h2>
           <p className="text-muted-foreground text-lg leading-relaxed">
-            Conversation Partners are not teachers — they are friendly native speakers who love helping others practice. No lesson plans, just conversation.
+            Language Buddies are not teachers — they are friendly native speakers who love helping others practice. No lesson plans, just conversation.
           </p>
         </motion.div>
       </section>
 
       {/* Browse */}
       <section id="browse" className="container py-16">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Browse Conversation Partners</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Browse Language Buddies</h2>
         <p className="text-muted-foreground mb-10 text-lg">
-          Our tutors are being verified — be the first to join!
+          Our language buddies are being verified — be the first to join!
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">

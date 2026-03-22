@@ -32,8 +32,8 @@ import {
 const navLinks = [
   { labelKey: "nav.home", href: "/" },
   { labelKey: "nav.findTutors", href: "/search" },
-  { labelKey: "nav.findLanguageBuddy", href: "/conversation-partners" },
-  { labelKey: "nav.becomeLanguageBuddy", href: "/become-conversation-partner" },
+  { labelKey: "nav.findLanguageBuddy", href: "/language-buddy" },
+  { labelKey: "nav.becomeLanguageBuddy", href: "/become-language-buddy" },
   { labelKey: "nav.forProfessionals", href: "/for-professionals" },
 ] as const;
 
@@ -222,7 +222,7 @@ export function Header() {
   const dashboardPath = isConvoPartner ? "/partner-dashboard" : isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks =
     user && !isTutor
-      ? navLinks.filter((link) => !["/for-professionals", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
+      ? navLinks.filter((link) => !["/for-professionals", "/language-buddy", "/become-language-buddy"].includes(link.href))
       : navLinks;
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
@@ -233,7 +233,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-header text-white">
-      <div className="container flex h-18 items-center justify-between py-2">
+      <div className="container flex h-18 items-center justify-between py-2 gap-6">
         <div className="flex items-center gap-4">
           <Link to="/" className="flex flex-col items-center gap-1">
             <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
@@ -256,11 +256,11 @@ export function Header() {
           </span>
         </div>
 
-        <div className="hidden items-center gap-10 md:flex">
-          <nav className="flex items-center gap-6" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <div className="hidden items-center md:flex">
+          <nav className="flex items-center gap-8" style={{ fontFamily: "'Playfair Display', serif" }}>
             <Link
               to="/"
-              className={`text-sm font-bold transition-colors hover:text-primary ${
+              className={`text-base font-bold transition-colors hover:text-primary ${
                 location.pathname === "/" ? "text-primary" : "text-white"
               }`}
             >
@@ -276,10 +276,10 @@ export function Header() {
               >
                 <button
                   type="button"
-                  className="flex items-center gap-1 text-sm font-bold text-white transition-colors hover:text-primary"
+                  className="flex items-center gap-1 text-base font-bold text-white transition-colors hover:text-primary"
                   onClick={() => setMegaOpen((v) => !v)}
                 >
-                  Find a Tutor <ChevronDown className={`h-3.5 w-3.5 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
+                  Find a Tutor <ChevronDown className={`h-4 w-4 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
                 </button>
 
                 <AnimatePresence>
@@ -307,12 +307,12 @@ export function Header() {
                 >
                   <button
                     type="button"
-                    className={`flex items-center gap-1 text-sm font-bold transition-colors hover:text-primary ${
-                      ["/conversation-partners", "/become-conversation-partner"].includes(location.pathname) ? "text-primary" : "text-white"
+                    className={`flex items-center gap-1 text-base font-bold transition-colors hover:text-primary ${
+                      ["/language-buddy", "/become-language-buddy"].includes(location.pathname) ? "text-primary" : "text-white"
                     }`}
                     onClick={() => setConvDropdownOpen((v) => !v)}
                   >
-                    Find a Language Buddy <ChevronDown className={`h-3.5 w-3.5 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
+                    Find a Language Buddy <ChevronDown className={`h-4 w-4 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   <AnimatePresence>
@@ -325,14 +325,14 @@ export function Header() {
                         className="absolute left-0 top-full z-50 mt-2 w-60 rounded-xl border border-border/70 bg-popover p-2 shadow-xl"
                       >
                         <Link
-                          to="/conversation-partners"
+                          to="/language-buddy"
                           className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
                         >
                           Find a Buddy
                           <span className="block text-xs font-normal text-muted-foreground">Browse & book conversation sessions</span>
                         </Link>
                         <Link
-                          to="/become-conversation-partner"
+                          to="/become-language-buddy"
                           className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
                         >
                           Become a Buddy
@@ -349,11 +349,11 @@ export function Header() {
                 >
                   <Link
                     to="/for-professionals"
-                    className={`flex items-center gap-1 text-sm font-bold transition-colors hover:text-primary ${
+                    className={`flex items-center gap-1 text-base font-bold transition-colors hover:text-primary ${
                       location.pathname === "/for-professionals" ? "text-primary" : "text-white"
                     }`}
                   >
-                    For Professionals <ChevronDown className={`h-3.5 w-3.5 transition-transform ${proDropdownOpen ? "rotate-180" : ""}`} />
+                    For Professionals <ChevronDown className={`h-4 w-4 transition-transform ${proDropdownOpen ? "rotate-180" : ""}`} />
                   </Link>
 
                   <AnimatePresence>
@@ -408,7 +408,7 @@ export function Header() {
               <>
                 <Link
                   to="/search"
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === "/search" ? "text-primary" : "text-white"
                   }`}
                 >
@@ -416,7 +416,7 @@ export function Header() {
                 </Link>
                 <Link
                   to={dashboardPath}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === dashboardPath ? "text-primary" : "text-white"
                   }`}
                 >
@@ -424,7 +424,7 @@ export function Header() {
                 </Link>
                 <Link
                   to="/my-lessons"
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === "/my-lessons" ? "text-primary" : "text-white"
                   }`}
                 >
@@ -436,7 +436,7 @@ export function Header() {
               <>
                 <Link
                   to={dashboardPath}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === dashboardPath ? "text-primary" : "text-white"
                   }`}
                 >
@@ -444,7 +444,7 @@ export function Header() {
                 </Link>
                 <Link
                   to={isTutor ? "/tutor-messages" : "/partner-messages"}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     ["/tutor-messages", "/partner-messages"].includes(location.pathname) ? "text-primary" : "text-white"
                   }`}
                 >
@@ -452,7 +452,7 @@ export function Header() {
                 </Link>
                 <Link
                   to={isTutor ? "/tutor-schedule" : "/partner-schedule"}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     ["/tutor-schedule", "/partner-schedule"].includes(location.pathname) ? "text-primary" : "text-white"
                   }`}
                 >
@@ -461,7 +461,7 @@ export function Header() {
                 {isTutor && (
                   <Link
                     to="/lesson-planner"
-                    className={`text-sm font-bold transition-colors hover:text-primary ${
+                    className={`text-base font-bold transition-colors hover:text-primary ${
                       location.pathname === "/lesson-planner" ? "text-primary" : "text-white"
                     }`}
                   >
@@ -470,7 +470,7 @@ export function Header() {
                 )}
                 <Link
                   to={profilePath}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === profilePath ? "text-primary" : "text-white"
                   }`}
                 >
@@ -613,6 +613,16 @@ export function Header() {
             </div>
           ) : (
             <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10 rounded-full text-white transition-colors hover:bg-white/10 hover:text-primary"
+                asChild
+              >
+                <Link to="/faq" aria-label="FAQ">
+                  <HelpCircle className="h-5 w-5" />
+                </Link>
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
