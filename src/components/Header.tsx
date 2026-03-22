@@ -312,7 +312,7 @@ export function Header() {
                     }`}
                     onClick={() => setConvDropdownOpen((v) => !v)}
                   >
-                    Conversation Partners <ChevronDown className={`h-3.5 w-3.5 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
+                    Find a Language Buddy <ChevronDown className={`h-3.5 w-3.5 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   <AnimatePresence>
