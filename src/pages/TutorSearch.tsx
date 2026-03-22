@@ -106,7 +106,7 @@ export default function TutorSearch() {
               />
             </div>
             <div className="flex flex-wrap gap-2">
-              {subjectOptions.map((subject) => (
+              {SEARCH_FILTER_SUBJECTS.map((subject) => (
                 <Button
                   key={subject}
                   variant={selectedSubject === subject ? "default" : "outline"}
