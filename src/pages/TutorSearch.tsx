@@ -4,6 +4,9 @@ import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
+import { PortalHeader } from "@/components/PortalHeader";
+import { Footer } from "@/components/Footer";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
