@@ -233,7 +233,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-header text-white">
-      <div className="container flex h-18 items-center justify-between py-2 gap-6">
+      <div className="container flex h-18 items-center py-2 gap-4">
         <div className="flex items-center gap-4">
           <Link to="/" className="flex flex-col items-center gap-1">
             <img src={logo} alt="LearnEazy owl" className="h-[80px] w-auto" loading="eager" decoding="async" />
@@ -259,12 +259,12 @@ export function Header() {
           </span>
         </div>
 
-        <div className="hidden items-center md:flex">
-          <nav className="flex items-center gap-8" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <div className="hidden items-center md:flex ml-6">
+          <nav className="flex items-center gap-10" style={{ fontFamily: "'Playfair Display', serif" }}>
             <Link
               to="/"
-              className={`text-base font-bold transition-colors hover:text-primary ${
-                location.pathname === "/" ? "text-primary" : "text-white"
+              className={`text-lg font-bold transition-colors hover:text-primary ${
+                 location.pathname === "/" ? "text-primary" : "text-white"
               }`}
             >
               {t("nav.home")}
@@ -279,7 +279,7 @@ export function Header() {
               >
                 <button
                   type="button"
-                  className="flex items-center gap-1 text-base font-bold text-white transition-colors hover:text-primary"
+                  className="flex items-center gap-1 text-lg font-bold text-white transition-colors hover:text-primary"
                   onClick={() => setMegaOpen((v) => !v)}
                 >
                   Find a Tutor <ChevronDown className={`h-4 w-4 transition-transform ${megaOpen ? "rotate-180" : ""}`} />
@@ -305,8 +305,8 @@ export function Header() {
               <>
                 <Link
                   to="/language-buddy"
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    ["/language-buddy", "/become-language-buddy"].includes(location.pathname) ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     ["/language-buddy", "/become-language-buddy"].includes(location.pathname) ? "text-primary" : "text-white"
                   }`}
                 >
                   Find a Language Buddy
@@ -318,8 +318,8 @@ export function Header() {
                 >
                   <Link
                     to="/for-professionals"
-                    className={`flex items-center gap-1 text-base font-bold transition-colors hover:text-primary ${
-                      location.pathname === "/for-professionals" ? "text-primary" : "text-white"
+                     className={`flex items-center gap-1 text-lg font-bold transition-colors hover:text-primary ${
+                       location.pathname === "/for-professionals" ? "text-primary" : "text-white"
                     }`}
                   >
                     For Professionals <ChevronDown className={`h-4 w-4 transition-transform ${proDropdownOpen ? "rotate-180" : ""}`} />
@@ -377,24 +377,24 @@ export function Header() {
               <>
                 <Link
                   to="/search"
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    location.pathname === "/search" ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     location.pathname === "/search" ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("nav.findTutors")}
                 </Link>
                 <Link
                   to={dashboardPath}
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    location.pathname === dashboardPath ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     location.pathname === dashboardPath ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("auth.dashboard")}
                 </Link>
                 <Link
                   to="/my-lessons"
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    location.pathname === "/my-lessons" ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     location.pathname === "/my-lessons" ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("msg.myLessons")}
@@ -405,24 +405,24 @@ export function Header() {
               <>
                 <Link
                   to={dashboardPath}
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    location.pathname === dashboardPath ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     location.pathname === dashboardPath ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("auth.dashboard")}
                 </Link>
                 <Link
                   to={isTutor ? "/tutor-messages" : "/partner-messages"}
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    ["/tutor-messages", "/partner-messages"].includes(location.pathname) ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     ["/tutor-messages", "/partner-messages"].includes(location.pathname) ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("msg.messages")}
                 </Link>
                 <Link
                   to={isTutor ? "/tutor-schedule" : "/partner-schedule"}
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    ["/tutor-schedule", "/partner-schedule"].includes(location.pathname) ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     ["/tutor-schedule", "/partner-schedule"].includes(location.pathname) ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("nav.schedule")}
@@ -430,8 +430,8 @@ export function Header() {
                 {isTutor && (
                   <Link
                     to="/lesson-planner"
-                    className={`text-base font-bold transition-colors hover:text-primary ${
-                      location.pathname === "/lesson-planner" ? "text-primary" : "text-white"
+                     className={`text-lg font-bold transition-colors hover:text-primary ${
+                       location.pathname === "/lesson-planner" ? "text-primary" : "text-white"
                     }`}
                   >
                     {t("nav.lessonPlanner")}
@@ -439,8 +439,8 @@ export function Header() {
                 )}
                 <Link
                   to={profilePath}
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    location.pathname === profilePath ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     location.pathname === profilePath ? "text-primary" : "text-white"
                   }`}
                 >
                   Account Settings
@@ -482,7 +482,7 @@ export function Header() {
                 asChild
               >
                 <Link to="/faq" aria-label="FAQ">
-                  <HelpCircle className="h-8 w-8" />
+                   <HelpCircle className="h-10 w-10" />
                 </Link>
               </Button>
 
@@ -589,7 +589,7 @@ export function Header() {
                 asChild
               >
                 <Link to="/faq" aria-label="FAQ">
-                  <HelpCircle className="h-8 w-8" />
+                  <HelpCircle className="h-10 w-10" />
                 </Link>
               </Button>
               <Button
