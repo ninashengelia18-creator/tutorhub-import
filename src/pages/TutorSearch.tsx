@@ -69,16 +69,18 @@ export default function TutorSearch() {
     return subscribeToSavedTutors(syncSaved);
   }, [tutors]);
 
-  const subjectOptions = useMemo(
-    () => ["All", ...Array.from(new Set(tutors.map((tutor) => tutor.primary_subject).filter(Boolean))).sort()],
-    [tutors],
-  );
-
   const filteredTutors = useMemo(() => {
     const query = search.trim().toLowerCase();
+    const filterValues = getSubjectValuesForFilter(selectedSubject);
 
     return tutors.filter((tutor) => {
-      if (selectedSubject !== "All" && tutor.primary_subject !== selectedSubject) return false;
+      if (filterValues) {
+        const tutorSubjects = [...(tutor.subjects || []), tutor.primary_subject].map((s) => s?.toLowerCase());
+        const matches = filterValues.some((fv) =>
+          tutorSubjects.some((ts) => ts?.includes(fv.toLowerCase())),
+        );
+        if (!matches) return false;
+      }
       if (query && !getTutorSearchText(tutor).includes(query)) return false;
       return true;
     });
