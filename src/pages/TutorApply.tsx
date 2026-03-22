@@ -144,10 +144,9 @@ export default function TutorApply() {
     });
   };
 
-  const handleSubjectChange = (value: string) => {
-    setSubjectText(value);
-    const parsed = value.split(",").map(s => s.trim()).filter(Boolean);
-    setFieldError("selectedSubjects", parsed);
+  const handleSubjectChange = (subjects: string[]) => {
+    setSelectedSubjects(subjects);
+    setFieldError("selectedSubjects", subjects);
   };
 
   const canProceed = () => {
