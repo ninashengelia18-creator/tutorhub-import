@@ -72,30 +72,29 @@ async function getAccessToken(serviceAccount: {
   client_email: string;
   private_key: string;
 }): Promise<string> {
-  console.log("DEBUG: client_email =", serviceAccount.client_email);
-  console.log("DEBUG: private_key length =", serviceAccount.private_key?.length);
-  console.log("DEBUG: private_key starts with =", serviceAccount.private_key?.substring(0, 40));
-
   const jwt = await createJWT(serviceAccount);
-  console.log("DEBUG: JWT created, length =", jwt.length);
 
-  const body = new URLSearchParams({
-    grant_type: "urn:ietf:params:oauth:grant_type:jwt-bearer",
-    assertion: jwt,
-  });
+  const params = new URLSearchParams();
+  params.set("grant_type", "urn:ietf:params:oauth:grant_type:jwt-bearer");
+  params.set("assertion", jwt);
+
+  console.log("DEBUG: token request body length =", params.toString().length);
+  console.log("DEBUG: grant_type param =", params.get("grant_type"));
 
   const res = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: body.toString(),
+    body: params,
   });
 
+  const text = await res.text();
+  console.log("DEBUG: Google token response status =", res.status);
+  console.log("DEBUG: Google token response =", text.substring(0, 200));
+
   if (!res.ok) {
-    const text = await res.text();
     throw new Error(`Google token exchange failed: ${text}`);
   }
 
-  const data = await res.json();
+  const data = JSON.parse(text);
   return data.access_token;
 }
 
