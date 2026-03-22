@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Camera, Eye, Loader2, Save } from "lucide-react";
 import { TutorProfilePreviewDialog } from "@/components/tutor/TutorProfilePreviewDialog";
 import { motion } from "framer-motion";
+import { SubjectPicker } from "@/components/SubjectPicker";
 
 import { Layout } from "@/components/Layout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -46,7 +47,7 @@ export default function TutorProfileEdit() {
   const [timezone, setTimezone] = useState("");
   const [availability, setAvailability] = useState("");
   const [aboutTeaching, setAboutTeaching] = useState("");
-  const [subjectText, setSubjectText] = useState("");
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
 
   // Load application data for extra fields
   const [appData, setAppData] = useState<Record<string, string | null>>({});
@@ -75,7 +76,7 @@ export default function TutorProfileEdit() {
       setNativeLanguage(profile.native_language || "");
       setOtherLanguages(profile.other_languages || "");
       setHourlyRate(String(profile.hourly_rate || ""));
-      setSubjectText(profile.subjects?.join(", ") || "");
+      setSelectedSubjects(profile.subjects?.filter(Boolean) || []);
 
       // Load extra fields from application
       if (profile.email) {
@@ -137,7 +138,7 @@ export default function TutorProfileEdit() {
       _education: education || null,
       _certifications: certifications || null,
       _avatar_url: avatarUrl,
-      _subjects: subjectText ? subjectText.split(",").map((s: string) => s.trim()).filter(Boolean) : null,
+      _subjects: selectedSubjects.length > 0 ? selectedSubjects : null,
       _phone: phone || null,
       _timezone: timezone || null,
       _availability: availability || null,
@@ -169,7 +170,7 @@ export default function TutorProfileEdit() {
       _education: education || null,
       _certifications: certifications || null,
       _avatar_url: tutorProfile?.avatar_url || null,
-      _subjects: subjectText ? subjectText.split(",").map((s: string) => s.trim()).filter(Boolean) : null,
+      _subjects: selectedSubjects.length > 0 ? selectedSubjects : null,
       _phone: phone || null,
       _timezone: timezone || null,
       _availability: availability || null,
@@ -250,15 +251,10 @@ export default function TutorProfileEdit() {
           {/* Subjects */}
           <section className="rounded-2xl border bg-card p-6">
             <h2 className="mb-3 text-lg font-semibold">Subjects</h2>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {tutorProfile.subjects.map((subject) => (
-                <Badge key={subject} variant="secondary">{subject}</Badge>
-              ))}
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Update subjects (comma-separated)</Label>
-              <Input value={subjectText} onChange={(e) => setSubjectText(e.target.value)} placeholder="English, Mathematics, Science" />
-            </div>
+            <SubjectPicker
+              selected={selectedSubjects}
+              onChange={setSelectedSubjects}
+            />
           </section>
 
           {/* Personal Info */}

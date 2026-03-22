@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Heart, Search, Star } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
@@ -15,12 +15,14 @@ import {
   getTutorSearchText,
   type PublicTutorProfile,
 } from "@/lib/publicTutors";
+import { SEARCH_FILTER_SUBJECTS, getSubjectValuesForFilter } from "@/lib/subjects";
 
 export default function TutorSearch() {
+  const [searchParams] = useSearchParams();
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("All");
+  const [selectedSubject, setSelectedSubject] = useState(searchParams.get("filter") || "All");
   const [savedIds, setSavedIds] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -67,16 +69,18 @@ export default function TutorSearch() {
     return subscribeToSavedTutors(syncSaved);
   }, [tutors]);
 
-  const subjectOptions = useMemo(
-    () => ["All", ...Array.from(new Set(tutors.map((tutor) => tutor.primary_subject).filter(Boolean))).sort()],
-    [tutors],
-  );
-
   const filteredTutors = useMemo(() => {
     const query = search.trim().toLowerCase();
+    const filterValues = getSubjectValuesForFilter(selectedSubject);
 
     return tutors.filter((tutor) => {
-      if (selectedSubject !== "All" && tutor.primary_subject !== selectedSubject) return false;
+      if (filterValues) {
+        const tutorSubjects = [...(tutor.subjects || []), tutor.primary_subject].map((s) => s?.toLowerCase());
+        const matches = filterValues.some((fv) =>
+          tutorSubjects.some((ts) => ts?.includes(fv.toLowerCase())),
+        );
+        if (!matches) return false;
+      }
       if (query && !getTutorSearchText(tutor).includes(query)) return false;
       return true;
     });
@@ -102,7 +106,7 @@ export default function TutorSearch() {
               />
             </div>
             <div className="flex flex-wrap gap-2">
-              {subjectOptions.map((subject) => (
+              {SEARCH_FILTER_SUBJECTS.map((subject) => (
                 <Button
                   key={subject}
                   variant={selectedSubject === subject ? "default" : "outline"}

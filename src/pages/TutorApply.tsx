@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { SubjectPicker } from "@/components/SubjectPicker";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { TIMEZONE_OPTIONS } from "@/contexts/AppLocaleContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -58,8 +59,7 @@ export default function TutorApply() {
   const [bio, setBio] = useState("");
 
   // Step 3 — Subject & Rate
-  const [subjectText, setSubjectText] = useState("");
-  const selectedSubjects = useMemo(() => subjectText.split(",").map(s => s.trim()).filter(Boolean), [subjectText]);
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [hourlyRate, setHourlyRate] = useState("");
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [otherLanguages, setOtherLanguages] = useState("");
@@ -144,10 +144,9 @@ export default function TutorApply() {
     });
   };
 
-  const handleSubjectChange = (value: string) => {
-    setSubjectText(value);
-    const parsed = value.split(",").map(s => s.trim()).filter(Boolean);
-    setFieldError("selectedSubjects", parsed);
+  const handleSubjectChange = (subjects: string[]) => {
+    setSelectedSubjects(subjects);
+    setFieldError("selectedSubjects", subjects);
   };
 
   const canProceed = () => {
@@ -432,13 +431,10 @@ export default function TutorApply() {
                 </div>
                 <div className="space-y-2">
                   <Label>{t("tutor.apply.subjects")} *</Label>
-                  <Input
-                    value={subjectText}
-                    onChange={(e) => handleSubjectChange(e.target.value)}
-                    placeholder="e.g. Mathematics, Physics, SAT Prep"
-                    aria-invalid={Boolean(errors.selectedSubjects)}
+                  <SubjectPicker
+                    selected={selectedSubjects}
+                    onChange={handleSubjectChange}
                   />
-                  <p className="text-xs text-muted-foreground">Separate multiple subjects with commas</p>
                   {errors.selectedSubjects && <p className="text-sm text-destructive">{errors.selectedSubjects}</p>}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
