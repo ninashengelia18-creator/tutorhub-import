@@ -405,8 +405,8 @@ export function Header() {
               <>
                 <Link
                   to={dashboardPath}
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    location.pathname === dashboardPath ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     location.pathname === dashboardPath ? "text-primary" : "text-white"
                   }`}
                 >
                   {t("auth.dashboard")}
