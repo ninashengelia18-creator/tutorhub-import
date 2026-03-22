@@ -166,6 +166,7 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [convDropdownOpen, setConvDropdownOpen] = useState(false);
+  const [proDropdownOpen, setProDropdownOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
