@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Camera, Eye, Loader2, Save } from "lucide-react";
 import { TutorProfilePreviewDialog } from "@/components/tutor/TutorProfilePreviewDialog";
 import { motion } from "framer-motion";
+import { SubjectPicker } from "@/components/SubjectPicker";
 
 import { Layout } from "@/components/Layout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
