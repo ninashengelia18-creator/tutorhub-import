@@ -259,8 +259,8 @@ export function Header() {
           </span>
         </div>
 
-        <div className="hidden items-center md:flex">
-          <nav className="flex items-center gap-8" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <div className="hidden items-center md:flex ml-6">
+          <nav className="flex items-center gap-10" style={{ fontFamily: "'Playfair Display', serif" }}>
             <Link
               to="/"
               className={`text-base font-bold transition-colors hover:text-primary ${
