@@ -100,7 +100,7 @@ export default function FindConversationPartner() {
             Affordable rates from $10/hour
           </h2>
           <p className="text-muted-foreground text-lg leading-relaxed">
-            Conversation Partners are not teachers — they are friendly native speakers who love helping others practice. No lesson plans, just conversation.
+            Language Buddies are not teachers — they are friendly native speakers who love helping others practice. No lesson plans, just conversation.
           </p>
         </motion.div>
       </section>
