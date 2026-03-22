@@ -256,11 +256,11 @@ export function Header() {
           </span>
         </div>
 
-        <div className="hidden items-center gap-10 md:flex">
-          <nav className="flex items-center gap-6" style={{ fontFamily: "'Playfair Display', serif" }}>
+        <div className="hidden items-center md:flex">
+          <nav className="flex items-center gap-8" style={{ fontFamily: "'Playfair Display', serif" }}>
             <Link
               to="/"
-              className={`text-sm font-bold transition-colors hover:text-primary ${
+              className={`text-base font-bold transition-colors hover:text-primary ${
                 location.pathname === "/" ? "text-primary" : "text-white"
               }`}
             >
