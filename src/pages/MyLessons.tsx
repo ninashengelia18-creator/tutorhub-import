@@ -208,10 +208,9 @@ export default function MyLessons() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"lessons" | "calendar" | "tutors">("lessons");
   const [cancelBooking, setCancelBooking] = useState<Booking | null>(null);
+  const [rescheduleBooking, setRescheduleBooking] = useState<Booking | null>(null);
+  const [approvalBooking, setApprovalBooking] = useState<Booking | null>(null);
   const [reviewBooking, setReviewBooking] = useState<Booking | null>(null);
-  const [cancelReason, setCancelReason] = useState(CANCEL_REASON_KEYS[0]);
-  const [cancelMessage, setCancelMessage] = useState("");
-  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => { void fetchBookings(); }, []);
 
