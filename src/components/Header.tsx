@@ -318,8 +318,8 @@ export function Header() {
                 >
                   <Link
                     to="/for-professionals"
-                    className={`flex items-center gap-1 text-base font-bold transition-colors hover:text-primary ${
-                      location.pathname === "/for-professionals" ? "text-primary" : "text-white"
+                     className={`flex items-center gap-1 text-lg font-bold transition-colors hover:text-primary ${
+                       location.pathname === "/for-professionals" ? "text-primary" : "text-white"
                     }`}
                   >
                     For Professionals <ChevronDown className={`h-4 w-4 transition-transform ${proDropdownOpen ? "rotate-180" : ""}`} />
