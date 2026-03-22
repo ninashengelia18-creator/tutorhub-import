@@ -64,7 +64,7 @@ function FindTutorsNavItem({ isActive }: { isActive: boolean }) {
             <div className="flex min-w-[420px]">
               {/* Categories column */}
               <div className="w-40 border-r border-border/40 pr-1">
-                {SUBJECT_TAXONOMY.map((cat) => (
+                {SUBJECT_TAXONOMY.filter((cat) => cat.key !== "professionals").map((cat) => (
                   <Link
                     key={cat.key}
                     to="/search"
@@ -80,7 +80,7 @@ function FindTutorsNavItem({ isActive }: { isActive: boolean }) {
               </div>
               {/* Subjects column */}
               <div className="flex-1 pl-1">
-                {SUBJECT_TAXONOMY.map((cat) =>
+                {SUBJECT_TAXONOMY.filter((cat) => cat.key !== "professionals").map((cat) =>
                   hoveredCategory === cat.key ? (
                     <div key={cat.key} className="space-y-1">
                       {cat.groups.flatMap((g) => g.subjects).map((subject) => (
@@ -426,7 +426,17 @@ export function PortalHeader() {
             })}
             {/* Find Tutors with subject dropdown — students only */}
             {!isTutor && !isConvoPartner && (
-              <FindTutorsNavItem isActive={isActive("/search")} />
+              <>
+                <FindTutorsNavItem isActive={isActive("/search")} />
+                <Link
+                  to="/for-professionals"
+                  className={`border-b-2 px-1 py-4 text-sm font-semibold transition-colors ${
+                    isActive("/for-professionals") ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  For Professionals
+                </Link>
+              </>
             )}
           </nav>
         </div>

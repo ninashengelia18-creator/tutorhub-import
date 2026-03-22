@@ -34,7 +34,7 @@ const navLinks = [
   { labelKey: "nav.findTutors", href: "/search" },
   { labelKey: "nav.findConversationPartner", href: "/conversation-partners" },
   { labelKey: "nav.becomeConversationPartner", href: "/become-conversation-partner" },
-  { labelKey: "nav.forBusiness", href: "/for-business" },
+  { labelKey: "nav.forProfessionals", href: "/for-professionals" },
   { labelKey: "nav.becomeTutor", href: "/become-tutor" },
   
 ] as const;
@@ -104,7 +104,6 @@ const forStudentsMenu = [
   { label: "GCSE", href: "/search?filter=Maths", children: gcseSubjects },
   { label: "A‑Level", href: "/search?filter=Maths", children: aLevelSubjects },
   { label: "University", href: "/search?filter=Maths", children: universitySubjects },
-  { label: "Professionals", href: "/search?filter=Business+English", children: professionalSubjects },
 ];
 
 function initialsFromValue(value: string) {
@@ -223,7 +222,7 @@ export function Header() {
   const dashboardPath = isConvoPartner ? "/partner-dashboard" : isTutor ? "/tutor-dashboard" : "/dashboard";
   const visibleNavLinks =
     user && !isTutor
-      ? navLinks.filter((link) => !["/for-business", "/become-tutor", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
+      ? navLinks.filter((link) => !["/for-professionals", "/become-tutor", "/conversation-partners", "/become-conversation-partner"].includes(link.href))
       : navLinks;
 
   const authDisplayName = user?.email?.split("@")[0] || "User";
@@ -344,12 +343,12 @@ export function Header() {
                   </AnimatePresence>
                 </div>
                 <Link
-                  to="/for-business"
+                  to="/for-professionals"
                   className={`text-sm font-bold transition-colors hover:text-primary ${
-                    location.pathname === "/for-business" ? "text-primary" : "text-white"
+                    location.pathname === "/for-professionals" ? "text-primary" : "text-white"
                   }`}
                 >
-                  {t("nav.forBusiness")}
+                  For Professionals
                 </Link>
                 <Link
                   to="/become-tutor"

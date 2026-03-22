@@ -18,7 +18,7 @@ import AIPractice from "./pages/AIPractice.tsx";
 import Messages from "./pages/Messages.tsx";
 import TutorMessages from "./pages/TutorMessages.tsx";
 import FAQ from "./pages/FAQ.tsx";
-import ForBusiness from "./pages/ForBusiness.tsx";
+import ForProfessionals from "./pages/ForProfessionals.tsx";
 import BecomeTutor from "./pages/BecomeTutor.tsx";
 import TutorApply from "./pages/TutorApply.tsx";
 import FindConversationPartner from "./pages/FindConversationPartner.tsx";
@@ -75,7 +75,7 @@ const App = () => (
                 <Route path="/my-lessons" element={<ProtectedRoute requiredRole="student"><MyLessons /></ProtectedRoute>} />
                 <Route path="/saved-tutors" element={<ProtectedRoute requiredRole="student"><SavedTutors /></ProtectedRoute>} />
                 <Route path="/faq" element={<FAQ />} />
-                <Route path="/for-business" element={<ForBusiness />} />
+                <Route path="/for-professionals" element={<ForProfessionals />} />
                 <Route path="/become-tutor" element={<BecomeTutor />} />
                 <Route path="/tutor-apply" element={<TutorApply />} />
                 <Route path="/conversation-partners" element={<FindConversationPartner />} />
