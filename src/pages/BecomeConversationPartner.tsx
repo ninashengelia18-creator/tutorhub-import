@@ -43,7 +43,7 @@ export default function BecomeConversationPartner() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <MessageCircle className="mx-auto mb-6 h-16 w-16 text-primary" />
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Become a Conversation Partner
+              Become a Language Buddy
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               Earn money doing what you love — just having conversations. Help language learners practise speaking with a native speaker like you.
@@ -58,7 +58,7 @@ export default function BecomeConversationPartner() {
       {/* Benefits */}
       <section className="container py-16">
         <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-3xl md:text-4xl font-bold mb-12 text-foreground text-center">
-          Why Become a Conversation Partner?
+          Why Become a Language Buddy?
         </motion.h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {benefits.map((item, i) => (
@@ -160,10 +160,10 @@ export default function BecomeConversationPartner() {
           <Users className="mx-auto h-12 w-12 text-primary" />
           <h2 className="text-3xl font-bold text-foreground">Ready to get started?</h2>
           <p className="text-muted-foreground text-lg">
-            Join our growing community of conversation partners and start earning today.
+           Join our growing community of language buddies and start earning today.
           </p>
           <Button size="lg" asChild>
-            <Link to="/convo-partner-apply">Apply as a Conversation Partner</Link>
+            <Link to="/convo-partner-apply">Apply as a Language Buddy</Link>
           </Button>
         </motion.div>
       </section>

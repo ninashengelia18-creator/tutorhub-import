@@ -303,48 +303,14 @@ export function Header() {
 
             {!user && (
               <>
-                <div
-                  className="relative"
-                  onMouseEnter={() => setConvDropdownOpen(true)}
-                  onMouseLeave={() => setConvDropdownOpen(false)}
+                <Link
+                  to="/language-buddy"
+                  className={`text-base font-bold transition-colors hover:text-primary ${
+                    ["/language-buddy", "/become-language-buddy"].includes(location.pathname) ? "text-primary" : "text-white"
+                  }`}
                 >
-                  <button
-                    type="button"
-                    className={`flex items-center gap-1 text-base font-bold transition-colors hover:text-primary ${
-                      ["/language-buddy", "/become-language-buddy"].includes(location.pathname) ? "text-primary" : "text-white"
-                    }`}
-                    onClick={() => setConvDropdownOpen((v) => !v)}
-                  >
-                    Find a Language Buddy <ChevronDown className={`h-4 w-4 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
-                  </button>
-
-                  <AnimatePresence>
-                    {convDropdownOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute left-0 top-full z-50 mt-2 w-60 rounded-xl border border-border/70 bg-popover p-2 shadow-xl"
-                      >
-                        <Link
-                          to="/language-buddy"
-                          className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
-                        >
-                          Find a Buddy
-                          <span className="block text-xs font-normal text-muted-foreground">Browse & book conversation sessions</span>
-                        </Link>
-                        <Link
-                          to="/become-language-buddy"
-                          className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
-                        >
-                          Become a Buddy
-                          <span className="block text-xs font-normal text-muted-foreground">Earn money having conversations</span>
-                        </Link>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                  Find a Language Buddy
+                </Link>
                 <div
                   className="relative"
                   onMouseEnter={() => setProDropdownOpen(true)}

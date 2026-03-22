@@ -3,7 +3,7 @@ import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { GraduationCap, BookOpen } from "lucide-react";
+import { GraduationCap, BookOpen, MessageCircle } from "lucide-react";
 
 export default function Signup() {
   const { t } = useLanguage();
@@ -14,14 +14,14 @@ export default function Signup() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-2xl"
+          className="w-full max-w-3xl"
         >
           <div className="text-center mb-10">
             <h1 className="text-3xl font-bold mb-2">{t("signup.chooseRole")}</h1>
             <p className="text-muted-foreground">{t("signup.chooseRoleDesc")}</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-3 gap-6">
             {/* Student Card */}
             <Link to="/signup/student" className="group">
               <div className="rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02]">
@@ -46,6 +46,20 @@ export default function Signup() {
                 <p className="text-sm text-muted-foreground mb-6">{t("signup.tutorDesc")}</p>
                 <Button variant="outline" className="w-full">
                   {t("signup.applyAsTutor")}
+                </Button>
+              </div>
+            </Link>
+
+            {/* Buddy Card */}
+            <Link to="/become-language-buddy" className="group">
+              <div className="rounded-2xl border-2 border-border bg-card p-8 text-center transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10 group-hover:scale-[1.02]">
+                <div className="mx-auto mb-5 h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <MessageCircle className="h-8 w-8 text-primary" />
+                </div>
+                <h2 className="text-xl font-bold mb-2">I am a Buddy</h2>
+                <p className="text-sm text-muted-foreground mb-6">Earn money having conversations in your native language</p>
+                <Button variant="outline" className="w-full">
+                  Apply as a Buddy
                 </Button>
               </div>
             </Link>
