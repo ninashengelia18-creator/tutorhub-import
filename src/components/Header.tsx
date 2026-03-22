@@ -166,6 +166,7 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [convDropdownOpen, setConvDropdownOpen] = useState(false);
+  const [proDropdownOpen, setProDropdownOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -192,6 +193,7 @@ export function Header() {
   useEffect(() => {
     setMegaOpen(false);
     setConvDropdownOpen(false);
+    setProDropdownOpen(false);
     setMobileOpen(false);
   }, [location.pathname]);
 
@@ -342,14 +344,65 @@ export function Header() {
                     )}
                   </AnimatePresence>
                 </div>
-                <Link
-                  to="/for-professionals"
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
-                    location.pathname === "/for-professionals" ? "text-primary" : "text-white"
-                  }`}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setProDropdownOpen(true)}
+                  onMouseLeave={() => setProDropdownOpen(false)}
                 >
-                  For Professionals
-                </Link>
+                  <Link
+                    to="/for-professionals"
+                    className={`flex items-center gap-1 text-sm font-bold transition-colors hover:text-primary ${
+                      location.pathname === "/for-professionals" ? "text-primary" : "text-white"
+                    }`}
+                  >
+                    For Professionals <ChevronDown className={`h-3.5 w-3.5 transition-transform ${proDropdownOpen ? "rotate-180" : ""}`} />
+                  </Link>
+
+                  <AnimatePresence>
+                    {proDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute left-0 top-full z-50 mt-2 w-72 rounded-2xl border border-border/70 bg-popover p-4 shadow-xl"
+                      >
+                        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">ESL & Business English</p>
+                        <div className="space-y-0.5">
+                          {professionalSubjects.slice(0, 7).map((s) => (
+                            <Link
+                              key={s.label}
+                              to={s.href}
+                              className="block rounded-lg px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
+                            >
+                              {s.label}
+                            </Link>
+                          ))}
+                        </div>
+                        <div className="my-2 border-t border-border/50" />
+                        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Coding for Career Change</p>
+                        <div className="space-y-0.5">
+                          {professionalSubjects.slice(7).map((s) => (
+                            <Link
+                              key={s.label}
+                              to={s.href}
+                              className="block rounded-lg px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
+                            >
+                              {s.label}
+                            </Link>
+                          ))}
+                        </div>
+                        <div className="my-2 border-t border-border/50" />
+                        <Link
+                          to="/for-professionals"
+                          className="block rounded-lg px-3 py-2 text-sm font-semibold text-primary transition-colors hover:bg-accent"
+                        >
+                          View All Professional Subjects →
+                        </Link>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
                 <Link
                   to="/become-tutor"
                   className={`text-sm font-bold transition-colors hover:text-primary ${
