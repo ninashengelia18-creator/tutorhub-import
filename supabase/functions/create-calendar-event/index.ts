@@ -126,7 +126,6 @@ Deno.serve(async (req: Request) => {
       .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
     if (!cleanJson.startsWith('{')) cleanJson = '{' + cleanJson;
     if (!cleanJson.endsWith('}')) cleanJson = cleanJson + '}';
-    cleanJson = cleanJson.replace(/\\n/g, '\n').replace(/\\"/g, '"');
     const serviceAccount = JSON.parse(cleanJson);
     const accessToken = await getAccessToken(serviceAccount);
 
