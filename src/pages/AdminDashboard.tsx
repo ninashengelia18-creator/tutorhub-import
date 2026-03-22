@@ -270,13 +270,16 @@ export default function AdminDashboard() {
   };
 
   const handleMarkPaid = async (booking: AdminBooking) => {
-    const { error } = await supabase.from("bookings").update({ status: "confirmed" }).eq("id", booking.id);
-    if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
-      return;
+    toast({ title: "Confirming payment & generating meet link..." });
+    try {
+      const { data, error } = await supabase.functions.invoke("confirm-booking-payment", {
+        body: { booking_id: booking.id },
+      });
+      if (error) throw error;
+      toast({ title: t("admin.markedPaid"), description: data?.meet_link ? "Google Meet link generated!" : "Confirmed without meet link." });
+    } catch (err: any) {
+      toast({ title: "Error", description: err?.message || "Failed to confirm payment", variant: "destructive" });
     }
-
-    toast({ title: t("admin.markedPaid") });
     void refreshBookings();
   };
 

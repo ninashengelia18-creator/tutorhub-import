@@ -190,7 +190,7 @@ export function PortalHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [savedCount, setSavedCount] = useState(0);
-  const [notifications, setNotifications] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<{ id: string; title: string; message: string; read_at: string | null; created_at: string }[]>([]);
 
   const displayName = useMemo(() => {
     const source = profile?.display_name || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "";
@@ -222,31 +222,27 @@ export function PortalHeader() {
     };
 
     const loadNotifications = async () => {
-      const today = new Date().toISOString().split("T")[0];
-      const bookingsQuery = supabase
-        .from("bookings")
-        .select("tutor_name, student_name, subject, lesson_date, start_time")
-        .gte("lesson_date", today)
-        .in("status", ["pending", "confirmed"])
-        .order("lesson_date", { ascending: true })
-        .order("start_time", { ascending: true })
-        .limit(3);
+      const { data } = await supabase
+        .from("notifications" as never)
+        .select("id, title, message, read_at, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
 
-      const { data } = await (isTutor
-        ? bookingsQuery.eq("tutor_name", displayName)
-        : bookingsQuery.eq("student_id", user.id));
-
-      setNotifications(
-        (data ?? []).map((booking) =>
-          isTutor
-            ? `${booking.subject} · ${booking.student_name || "Student"} · ${booking.lesson_date} ${booking.start_time.slice(0, 5)}`
-            : `${booking.subject} · ${booking.tutor_name} · ${booking.lesson_date} ${booking.start_time.slice(0, 5)}`,
-        ),
-      );
+      setNotifications((data as any[]) ?? []);
     };
 
     void loadUnread();
     void loadNotifications();
+
+    const notifChannel = supabase
+      .channel(`notifications-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` },
+        () => { void loadNotifications(); }
+      )
+      .subscribe();
 
     const channel = supabase
       .channel(`portal-header-${user.id}`)
@@ -266,6 +262,7 @@ export function PortalHeader() {
 
     return () => {
       void supabase.removeChannel(channel);
+      void supabase.removeChannel(notifChannel);
     };
   }, [displayName, isTutor, user]);
 
@@ -373,16 +370,30 @@ export function PortalHeader() {
                   aria-label="Notifications"
                 >
                   <Bell className="h-5 w-5" />
-                  {notifications.length > 0 ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
+                  {notifications.filter((n) => !n.read_at).length > 0 ? (
+                    <span className="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                      {Math.min(notifications.filter((n) => !n.read_at).length, 9)}
+                    </span>
+                  ) : null}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-80 rounded-2xl border-border/70 bg-popover p-2">
-                <DropdownMenuLabel>{isTutor ? "Tutor updates" : t("nav.home")}</DropdownMenuLabel>
+                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {notifications.length > 0 ? (
                   notifications.map((item) => (
-                    <DropdownMenuItem key={item} className="whitespace-normal rounded-xl px-3 py-3 text-sm">
-                      {item}
+                    <DropdownMenuItem
+                      key={item.id}
+                      className={`whitespace-normal rounded-xl px-3 py-3 text-sm flex flex-col items-start gap-1 ${!item.read_at ? "bg-primary/5 font-medium" : ""}`}
+                      onClick={async () => {
+                        if (!item.read_at) {
+                          await supabase.from("notifications" as never).update({ read_at: new Date().toISOString() } as never).eq("id", item.id);
+                          setNotifications((prev) => prev.map((n) => n.id === item.id ? { ...n, read_at: new Date().toISOString() } : n));
+                        }
+                      }}
+                    >
+                      <span className="font-semibold text-foreground">{item.title}</span>
+                      <span className="text-xs text-muted-foreground">{item.message}</span>
                     </DropdownMenuItem>
                   ))
                 ) : (

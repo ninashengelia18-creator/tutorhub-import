@@ -212,49 +212,10 @@ export default function Booking() {
         }),
       }).catch(() => {});
 
-      // Create Google Calendar event with Meet link
+      // Meet link will be generated when admin confirms payment
       const lessonStart = booking.lesson_start_at ?? selectedSlot.slot_start_at;
       const lessonEnd = booking.lesson_end_at ?? selectedSlot.slot_end_at;
-
-      let meetLink: string | null = null;
-
-      // Try to fetch the tutor's saved meeting link from their profile
-      try {
-        const { data: profileRows } = await supabase
-          .from("profiles")
-          .select("meet_link")
-          .eq("display_name", tutorName)
-          .limit(1);
-        const tutorMeetLink = (profileRows as any)?.[0]?.meet_link;
-        if (tutorMeetLink) meetLink = tutorMeetLink;
-      } catch {
-        // Non-blocking
-      }
-
-      // If no saved meet link, try creating a Google Calendar event with Meet link
-      if (!meetLink) {
-        try {
-          const { data: calData, error: calError } = await supabase.functions.invoke(
-            "create-calendar-event",
-            {
-              body: {
-                booking_id: booking.id,
-                summary: `${subject.trim()} – LearnEazy Lesson`,
-                description: `Lesson with ${tutorName}\nStudent: ${studentName.trim()}`,
-                start_time: lessonStart,
-                end_time: lessonEnd,
-                tutor_email: tutor.email || undefined,
-                student_email: studentEmail.trim(),
-              },
-            }
-          );
-          if (!calError && calData?.meet_link) {
-            meetLink = calData.meet_link;
-          }
-        } catch {
-          // Calendar event creation is non-blocking
-        }
-      }
+      const meetLink: string | null = null;
 
       navigate("/booking-confirmation", {
         state: {
