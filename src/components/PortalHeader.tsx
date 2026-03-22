@@ -424,6 +424,10 @@ export function PortalHeader() {
                 </Link>
               );
             })}
+            {/* Find Tutors with subject dropdown — students only */}
+            {!isTutor && !isConvoPartner && (
+              <FindTutorsNavItem isActive={isActive("/search")} />
+            )}
           </nav>
         </div>
       </div>
