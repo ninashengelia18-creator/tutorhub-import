@@ -77,12 +77,12 @@ export function Footer() {
   ];
 
   const tutorTypeLinks = [
-    { label: "English Tutors", href: "/search?subject=English" },
-    { label: "Maths Tutors", href: "/search?subject=Mathematics" },
-    { label: "Science Tutors", href: "/search?subject=Science" },
-    { label: "GCSE Tutors", href: "/search?subject=GCSE" },
-    { label: "A-Level Tutors", href: "/search?subject=ALevel" },
-    { label: "Professional Skills Tutors", href: "/search?subject=Professional" },
+    { label: "English Tutors", href: "/search?filter=English" },
+    { label: "Maths Tutors", href: "/search?filter=Maths" },
+    { label: "Science Tutors", href: "/search?filter=Science" },
+    { label: "GCSE Tutors", href: "/search?filter=Maths" },
+    { label: "A-Level Tutors", href: "/search?filter=Maths" },
+    { label: "Professional Tutors", href: "/for-professionals" },
   ];
 
   const renderLinkColumn = (title: string, links: { label?: string; labelKey?: string; href: string }[]) => (

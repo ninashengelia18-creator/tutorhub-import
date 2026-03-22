@@ -426,7 +426,17 @@ export function PortalHeader() {
             })}
             {/* Find Tutors with subject dropdown — students only */}
             {!isTutor && !isConvoPartner && (
-              <FindTutorsNavItem isActive={isActive("/search")} />
+              <>
+                <FindTutorsNavItem isActive={isActive("/search")} />
+                <Link
+                  to="/for-professionals"
+                  className={`border-b-2 px-1 py-4 text-sm font-semibold transition-colors ${
+                    isActive("/for-professionals") ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  For Professionals
+                </Link>
+              </>
             )}
           </nav>
         </div>
