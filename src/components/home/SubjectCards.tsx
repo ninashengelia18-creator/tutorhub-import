@@ -56,9 +56,9 @@ const homepageSubjects = [
   {
     category: "Professionals",
     items: [
-      { label: "ESL & Business English", icon: Globe, href: "/search?filter=Business+English", desc: "General English, Interview Prep" },
-      { label: "IELTS / TOEFL", icon: Languages, href: "/search?filter=IELTS+%2F+TOEFL", desc: "Academic & General test prep" },
-      { label: "Career‑Change Coding", icon: Briefcase, href: "/search?filter=Programming", desc: "Python, Web Dev, Data Skills" },
+      { label: "ESL & Business English", icon: Globe, href: "/for-professionals", desc: "General English, Interview Prep" },
+      { label: "IELTS / TOEFL", icon: Languages, href: "/for-professionals", desc: "Academic & General test prep" },
+      { label: "Career‑Change Coding", icon: Briefcase, href: "/for-professionals", desc: "Python, Web Dev, Data Skills" },
     ],
   },
 ];
