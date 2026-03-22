@@ -343,12 +343,12 @@ export function Header() {
                   </AnimatePresence>
                 </div>
                 <Link
-                  to="/for-business"
+                  to="/for-professionals"
                   className={`text-sm font-bold transition-colors hover:text-primary ${
-                    location.pathname === "/for-business" ? "text-primary" : "text-white"
+                    location.pathname === "/for-professionals" ? "text-primary" : "text-white"
                   }`}
                 >
-                  {t("nav.forBusiness")}
+                  For Professionals
                 </Link>
                 <Link
                   to="/become-tutor"
