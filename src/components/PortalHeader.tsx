@@ -190,7 +190,7 @@ export function PortalHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [savedCount, setSavedCount] = useState(0);
-  const [notifications, setNotifications] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<{ id: string; title: string; message: string; read_at: string | null; created_at: string }[]>([]);
 
   const displayName = useMemo(() => {
     const source = profile?.display_name || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "";
