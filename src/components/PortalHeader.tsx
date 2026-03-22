@@ -262,6 +262,7 @@ export function PortalHeader() {
 
     return () => {
       void supabase.removeChannel(channel);
+      void supabase.removeChannel(notifChannel);
     };
   }, [displayName, isTutor, user]);
 
