@@ -264,6 +264,23 @@ export default function TutorDashboard() {
           </Tabs>
         </motion.div>
       </div>
+
+      <CancelBookingDialog
+        open={!!cancelBooking}
+        onOpenChange={(open) => !open && setCancelBooking(null)}
+        booking={cancelBooking}
+        cancelledBy="tutor"
+        dateLabel={cancelBooking ? `${formatDate(cancelBooking.lesson_start_at)} · ${formatTimeRange(cancelBooking)}` : ""}
+        onCancelled={fetchBookings}
+      />
+
+      <RescheduleDialog
+        open={!!rescheduleBooking}
+        onOpenChange={(open) => !open && setRescheduleBooking(null)}
+        booking={rescheduleBooking}
+        requestedBy="tutor"
+        onRescheduled={fetchBookings}
+      />
     </Layout>
   );
 }
