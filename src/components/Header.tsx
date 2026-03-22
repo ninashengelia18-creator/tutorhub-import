@@ -416,7 +416,7 @@ export function Header() {
                 </Link>
                 <Link
                   to={dashboardPath}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === dashboardPath ? "text-primary" : "text-white"
                   }`}
                 >
@@ -424,7 +424,7 @@ export function Header() {
                 </Link>
                 <Link
                   to="/my-lessons"
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === "/my-lessons" ? "text-primary" : "text-white"
                   }`}
                 >
@@ -436,7 +436,7 @@ export function Header() {
               <>
                 <Link
                   to={dashboardPath}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === dashboardPath ? "text-primary" : "text-white"
                   }`}
                 >
@@ -444,7 +444,7 @@ export function Header() {
                 </Link>
                 <Link
                   to={isTutor ? "/tutor-messages" : "/partner-messages"}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     ["/tutor-messages", "/partner-messages"].includes(location.pathname) ? "text-primary" : "text-white"
                   }`}
                 >
@@ -452,7 +452,7 @@ export function Header() {
                 </Link>
                 <Link
                   to={isTutor ? "/tutor-schedule" : "/partner-schedule"}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     ["/tutor-schedule", "/partner-schedule"].includes(location.pathname) ? "text-primary" : "text-white"
                   }`}
                 >
@@ -461,7 +461,7 @@ export function Header() {
                 {isTutor && (
                   <Link
                     to="/lesson-planner"
-                    className={`text-sm font-bold transition-colors hover:text-primary ${
+                    className={`text-base font-bold transition-colors hover:text-primary ${
                       location.pathname === "/lesson-planner" ? "text-primary" : "text-white"
                     }`}
                   >
@@ -470,7 +470,7 @@ export function Header() {
                 )}
                 <Link
                   to={profilePath}
-                  className={`text-sm font-bold transition-colors hover:text-primary ${
+                  className={`text-base font-bold transition-colors hover:text-primary ${
                     location.pathname === profilePath ? "text-primary" : "text-white"
                   }`}
                 >

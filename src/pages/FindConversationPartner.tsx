@@ -107,9 +107,9 @@ export default function FindConversationPartner() {
 
       {/* Browse */}
       <section id="browse" className="container py-16">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Browse Conversation Partners</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Browse Language Buddies</h2>
         <p className="text-muted-foreground mb-10 text-lg">
-          Our tutors are being verified — be the first to join!
+          Our language buddies are being verified — be the first to join!
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
