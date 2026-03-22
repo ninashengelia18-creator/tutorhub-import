@@ -307,12 +307,12 @@ export function Header() {
                 >
                   <button
                     type="button"
-                    className={`flex items-center gap-1 text-sm font-bold transition-colors hover:text-primary ${
-                      ["/conversation-partners", "/become-conversation-partner"].includes(location.pathname) ? "text-primary" : "text-white"
+                    className={`flex items-center gap-1 text-base font-bold transition-colors hover:text-primary ${
+                      ["/language-buddy", "/become-language-buddy"].includes(location.pathname) ? "text-primary" : "text-white"
                     }`}
                     onClick={() => setConvDropdownOpen((v) => !v)}
                   >
-                    Find a Language Buddy <ChevronDown className={`h-3.5 w-3.5 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
+                    Find a Language Buddy <ChevronDown className={`h-4 w-4 transition-transform ${convDropdownOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   <AnimatePresence>
