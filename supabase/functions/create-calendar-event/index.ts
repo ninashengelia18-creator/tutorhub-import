@@ -6,6 +6,15 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+/* ── Smart-quote sanitiser ────────────────────────────────────────── */
+
+function sanitiseSmartQuotes(raw: string): string {
+  return raw
+    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036\uFF02]/g, '"')
+    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035\uFF07]/g, "'")
+    .replace(/[\u2013\u2014]/g, '-');
+}
+
 /* ── Google auth helpers ─────────────────────────────────────────── */
 
 function base64url(input: Uint8Array): string {
@@ -36,11 +45,9 @@ async function createJWT(serviceAccount: {
 
   const signingInput = `${header}.${payload}`;
 
-  const pemBody = serviceAccount.private_key
-    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
-    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'")
-    .replace(/-----BEGIN PRIVATE KEY-----/, "")
-    .replace(/-----END PRIVATE KEY-----/, "")
+  const pemBody = sanitiseSmartQuotes(serviceAccount.private_key)
+    .replace(/-+BEGIN PRIVATE KEY-+/, "")
+    .replace(/-+END PRIVATE KEY-+/, "")
     .replace(/\s/g, "");
   const keyBuffer = Uint8Array.from(atob(pemBody), (c) => c.charCodeAt(0));
 
@@ -70,10 +77,7 @@ async function getAccessToken(serviceAccount: {
   const res = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant_type:jwt-bearer",
-      assertion: jwt,
-    }),
+    body: `grant_type=${encodeURIComponent("urn:ietf:params:oauth:grant_type:jwt-bearer")}&assertion=${encodeURIComponent(jwt)}`,
   });
 
   if (!res.ok) {
@@ -122,10 +126,7 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Fix smart/curly quotes and clean up the JSON string
-    let cleanJson = saJson.trim()
-      .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
-      .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
+    let cleanJson = sanitiseSmartQuotes(saJson).trim();
     if (!cleanJson.startsWith('{')) cleanJson = '{' + cleanJson;
     if (!cleanJson.endsWith('}')) cleanJson = cleanJson + '}';
     const serviceAccount = JSON.parse(cleanJson);
