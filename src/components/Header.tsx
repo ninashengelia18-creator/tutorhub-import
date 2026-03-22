@@ -104,7 +104,6 @@ const forStudentsMenu = [
   { label: "GCSE", href: "/search?filter=Maths", children: gcseSubjects },
   { label: "A‑Level", href: "/search?filter=Maths", children: aLevelSubjects },
   { label: "University", href: "/search?filter=Maths", children: universitySubjects },
-  { label: "Professionals", href: "/search?filter=Business+English", children: professionalSubjects },
 ];
 
 function initialsFromValue(value: string) {
