@@ -305,8 +305,8 @@ export function Header() {
               <>
                 <Link
                   to="/language-buddy"
-                  className={`text-base font-bold transition-colors hover:text-primary ${
-                    ["/language-buddy", "/become-language-buddy"].includes(location.pathname) ? "text-primary" : "text-white"
+                   className={`text-lg font-bold transition-colors hover:text-primary ${
+                     ["/language-buddy", "/become-language-buddy"].includes(location.pathname) ? "text-primary" : "text-white"
                   }`}
                 >
                   Find a Language Buddy
