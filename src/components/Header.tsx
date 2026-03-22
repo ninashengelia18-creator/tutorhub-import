@@ -32,11 +32,9 @@ import {
 const navLinks = [
   { labelKey: "nav.home", href: "/" },
   { labelKey: "nav.findTutors", href: "/search" },
-  { labelKey: "nav.findConversationPartner", href: "/conversation-partners" },
-  { labelKey: "nav.becomeConversationPartner", href: "/become-conversation-partner" },
+  { labelKey: "nav.findLanguageBuddy", href: "/conversation-partners" },
+  { labelKey: "nav.becomeLanguageBuddy", href: "/become-conversation-partner" },
   { labelKey: "nav.forProfessionals", href: "/for-professionals" },
-  { labelKey: "nav.becomeTutor", href: "/become-tutor" },
-  
 ] as const;
 
 const k12Subjects = [
