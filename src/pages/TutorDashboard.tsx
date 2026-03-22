@@ -45,23 +45,28 @@ export default function TutorDashboard() {
   const { toast } = useToast();
   const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
 
-  useEffect(() => {
+  const fetchBookings = async () => {
     if (!tutorName) return;
+    const { data } = await supabase
+      .from("bookings")
+      .select("id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, status, price_amount, currency, google_meet_link")
+      .eq("tutor_name", tutorName)
+      .in("status", ["confirmed", "completed"])
+      .order("lesson_start_at", { ascending: true });
 
-    const loadBookings = async () => {
-      const { data } = await supabase
-        .from("bookings")
-        .select("id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, status, price_amount, currency, google_meet_link")
-        .eq("tutor_name", tutorName)
-        .in("status", ["confirmed", "completed"])
-        .order("lesson_start_at", { ascending: true });
+    setBookings((data as TutorBooking[]) ?? []);
+    setLoading(false);
+  };
 
-      setBookings((data as TutorBooking[]) ?? []);
-      setLoading(false);
-    };
-
-    void loadBookings();
+  useEffect(() => {
+    void fetchBookings();
   }, [tutorName]);
+
+  const isWithin12Hours = (booking: TutorBooking) => {
+    if (!booking.lesson_start_at) return false;
+    const hoursUntil = (new Date(booking.lesson_start_at).getTime() - Date.now()) / (1000 * 60 * 60);
+    return hoursUntil < 12;
+  };
 
   const now = new Date();
   const todayKey = getDateKeyInTimeZone(now, timezone);
