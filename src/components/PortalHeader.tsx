@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Bell, Heart, HelpCircle, LogOut, Mail, Menu, UserCircle } from "lucide-react";
+import { Bell, ChevronDown, ChevronRight, Heart, HelpCircle, LogOut, Mail, Menu, UserCircle } from "lucide-react";
 
 import logo from "@/assets/owl-logo.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,10 +13,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { getSavedTutors, subscribeToSavedTutors } from "@/lib/savedTutors";
+import { SUBJECT_TAXONOMY } from "@/lib/subjects";
 
 const studentPrimaryNav = [
   { to: "/dashboard", labelKey: "msg.home" },
