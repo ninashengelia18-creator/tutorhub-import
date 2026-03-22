@@ -614,6 +614,16 @@ export function Header() {
           ) : (
             <div className="flex items-center gap-3">
               <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10 rounded-full text-white transition-colors hover:bg-white/10 hover:text-primary"
+                asChild
+              >
+                <Link to="/faq" aria-label="FAQ">
+                  <HelpCircle className="h-5 w-5" />
+                </Link>
+              </Button>
+              <Button
                 variant="outline"
                 size="sm"
                 className="rounded-full border-foreground/30 px-5 text-foreground hover:bg-foreground/10"
