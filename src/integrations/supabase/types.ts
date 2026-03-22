@@ -17,6 +17,9 @@ export type Database = {
       bookings: {
         Row: {
           availability_slot_id: string | null
+          cancel_message: string | null
+          cancel_reason: string | null
+          cancelled_by: string | null
           created_at: string
           currency: string
           duration_minutes: number
@@ -31,6 +34,11 @@ export type Database = {
           notes: string | null
           price_amount: number
           reminder_sent_at: string | null
+          reschedule_message: string | null
+          reschedule_new_slot_id: string | null
+          reschedule_reason: string | null
+          reschedule_requested_by: string | null
+          reschedule_status: string | null
           scheduled_timezone: string
           start_time: string
           status: string
@@ -46,6 +54,9 @@ export type Database = {
         }
         Insert: {
           availability_slot_id?: string | null
+          cancel_message?: string | null
+          cancel_reason?: string | null
+          cancelled_by?: string | null
           created_at?: string
           currency?: string
           duration_minutes?: number
@@ -60,6 +71,11 @@ export type Database = {
           notes?: string | null
           price_amount: number
           reminder_sent_at?: string | null
+          reschedule_message?: string | null
+          reschedule_new_slot_id?: string | null
+          reschedule_reason?: string | null
+          reschedule_requested_by?: string | null
+          reschedule_status?: string | null
           scheduled_timezone?: string
           start_time: string
           status?: string
@@ -75,6 +91,9 @@ export type Database = {
         }
         Update: {
           availability_slot_id?: string | null
+          cancel_message?: string | null
+          cancel_reason?: string | null
+          cancelled_by?: string | null
           created_at?: string
           currency?: string
           duration_minutes?: number
@@ -89,6 +108,11 @@ export type Database = {
           notes?: string | null
           price_amount?: number
           reminder_sent_at?: string | null
+          reschedule_message?: string | null
+          reschedule_new_slot_id?: string | null
+          reschedule_reason?: string | null
+          reschedule_requested_by?: string | null
+          reschedule_status?: string | null
           scheduled_timezone?: string
           start_time?: string
           status?: string
@@ -106,6 +130,13 @@ export type Database = {
           {
             foreignKeyName: "bookings_availability_slot_id_fkey"
             columns: ["availability_slot_id"]
+            isOneToOne: false
+            referencedRelation: "tutor_availability_slots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_reschedule_new_slot_id_fkey"
+            columns: ["reschedule_new_slot_id"]
             isOneToOne: false
             referencedRelation: "tutor_availability_slots"
             referencedColumns: ["id"]
@@ -1146,6 +1177,9 @@ export type Database = {
         }
         Returns: {
           availability_slot_id: string | null
+          cancel_message: string | null
+          cancel_reason: string | null
+          cancelled_by: string | null
           created_at: string
           currency: string
           duration_minutes: number
@@ -1160,6 +1194,11 @@ export type Database = {
           notes: string | null
           price_amount: number
           reminder_sent_at: string | null
+          reschedule_message: string | null
+          reschedule_new_slot_id: string | null
+          reschedule_reason: string | null
+          reschedule_requested_by: string | null
+          reschedule_status: string | null
           scheduled_timezone: string
           start_time: string
           status: string
