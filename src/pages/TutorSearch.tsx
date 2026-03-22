@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Heart, Search, Star } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import { Layout } from "@/components/Layout";
