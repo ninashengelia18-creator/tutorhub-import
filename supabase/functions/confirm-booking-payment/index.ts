@@ -41,9 +41,7 @@ async function createJWT(sa: { client_email: string; private_key: string }): Pro
     )
   );
   const signingInput = `${header}.${payload}`;
-  const pemBody = sa.private_key
-    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
-    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'")
+  const pemBody = sanitiseSmartQuotes(sa.private_key)
     .replace(/-----BEGIN PRIVATE KEY-----/, "")
     .replace(/-----END PRIVATE KEY-----/, "")
     .replace(/\s/g, "");
