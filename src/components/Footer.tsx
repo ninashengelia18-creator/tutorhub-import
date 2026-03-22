@@ -39,15 +39,15 @@ export function Footer() {
   const aboutLinks = [
     { label: "How it works", href: "/" },
     { label: "FAQ", href: "/faq" },
-    { label: "For Business", href: "/for-business" },
+    { label: "For Professionals", href: "/for-professionals" },
   ];
 
   const studentLinks = [
     { label: "Find a Tutor", href: "/search" },
-    { label: "K-12 Subjects", href: "/search?subject=K12" },
-    { label: "GCSE & A-Level", href: "/search?subject=GCSE" },
-    { label: "Professional Courses", href: "/search?subject=Professional" },
-    { label: "Exam Preparation", href: "/search?subject=ExamPrep" },
+    { label: "K-12 Subjects", href: "/search?filter=Maths" },
+    { label: "GCSE", href: "/search?filter=Maths" },
+    { label: "A-Level", href: "/search?filter=Maths" },
+    { label: "University", href: "/search?filter=Maths" },
   ];
 
   const tutorLinks = [
