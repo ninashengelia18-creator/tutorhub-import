@@ -50,7 +50,7 @@ export default function TutorDashboard() {
     if (!tutorName) return;
     const { data } = await supabase
       .from("bookings")
-      .select("id, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, status, price_amount, currency, google_meet_link")
+      .select("id, tutor_name, student_name, subject, lesson_date, start_time, end_time, lesson_start_at, lesson_end_at, status, price_amount, currency, google_meet_link")
       .eq("tutor_name", tutorName)
       .in("status", ["confirmed", "completed"])
       .order("lesson_start_at", { ascending: true });
