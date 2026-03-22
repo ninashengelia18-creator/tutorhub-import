@@ -18,7 +18,7 @@ import AIPractice from "./pages/AIPractice.tsx";
 import Messages from "./pages/Messages.tsx";
 import TutorMessages from "./pages/TutorMessages.tsx";
 import FAQ from "./pages/FAQ.tsx";
-import ForBusiness from "./pages/ForBusiness.tsx";
+import ForProfessionals from "./pages/ForProfessionals.tsx";
 import BecomeTutor from "./pages/BecomeTutor.tsx";
 import TutorApply from "./pages/TutorApply.tsx";
 import FindConversationPartner from "./pages/FindConversationPartner.tsx";
