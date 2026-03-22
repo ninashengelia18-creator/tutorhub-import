@@ -32,8 +32,8 @@ import {
 const navLinks = [
   { labelKey: "nav.home", href: "/" },
   { labelKey: "nav.findTutors", href: "/search" },
-  { labelKey: "nav.findLanguageBuddy", href: "/conversation-partners" },
-  { labelKey: "nav.becomeLanguageBuddy", href: "/become-conversation-partner" },
+  { labelKey: "nav.findLanguageBuddy", href: "/language-buddy" },
+  { labelKey: "nav.becomeLanguageBuddy", href: "/become-language-buddy" },
   { labelKey: "nav.forProfessionals", href: "/for-professionals" },
 ] as const;
 
