@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface TutorBooking {
   id: string;
+  tutor_name: string;
   student_name: string | null;
   subject: string;
   lesson_date: string;
