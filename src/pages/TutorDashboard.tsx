@@ -40,6 +40,9 @@ export default function TutorDashboard() {
   const { t, lang } = useLanguage();
   const [bookings, setBookings] = useState<TutorBooking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cancelBooking, setCancelBooking] = useState<TutorBooking | null>(null);
+  const [rescheduleBooking, setRescheduleBooking] = useState<TutorBooking | null>(null);
+  const { toast } = useToast();
   const tutorName = profile?.display_name?.trim() || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Tutor";
 
   useEffect(() => {
