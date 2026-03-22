@@ -328,14 +328,14 @@ export function Header() {
                           to="/conversation-partners"
                           className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
                         >
-                          Find a Partner
+                          Find a Buddy
                           <span className="block text-xs font-normal text-muted-foreground">Browse & book conversation sessions</span>
                         </Link>
                         <Link
                           to="/become-conversation-partner"
                           className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-primary"
                         >
-                          Become a Partner
+                          Become a Buddy
                           <span className="block text-xs font-normal text-muted-foreground">Earn money having conversations</span>
                         </Link>
                       </motion.div>
