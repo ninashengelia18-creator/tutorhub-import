@@ -41,11 +41,11 @@ export function HeroSection() {
             {t("home.heroTitle")}
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
             {t("hero.subtitle")}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <Button
               size="lg"
               className="bg-primary text-primary-foreground hover:bg-primary-hover font-semibold text-base px-8 rounded-full shadow-lg shadow-primary/25"
