@@ -178,7 +178,7 @@ export default function BecomeTutor() {
           >
             <div className="rounded-2xl overflow-hidden">
               <img
-                src={tutorHeroImg}
+                src={tutorTeachingImg}
                 alt="Tutor teaching online"
                 className="w-full h-full object-cover rounded-2xl"
               />
