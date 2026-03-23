@@ -34,7 +34,6 @@ export function HeroSection() {
             <img src={aiWhisperLogo} alt="AI Whisper" className="h-5 w-5 object-contain" />
             Powered by AI Whisper
           </motion.div>
-          </motion.div>
 
           <h1
             className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-wide text-foreground"
