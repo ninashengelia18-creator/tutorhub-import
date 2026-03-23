@@ -260,7 +260,7 @@ export function Header() {
         </div>
 
         <div className="hidden items-center md:flex ml-6">
-          <nav className="flex items-center gap-10" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <nav className="flex items-center gap-10" style={{ fontFamily: "'Kaushan Script', cursive" }}>
             <Link
               to="/"
               className={`text-lg font-bold transition-colors hover:text-primary ${
