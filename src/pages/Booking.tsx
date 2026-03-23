@@ -230,6 +230,8 @@ export default function Booking() {
           studentTimezone: timezone,
           tutorTimezone: selectedSlot.tutor_timezone,
           meetLink,
+          priceAmount: price,
+          currency: "USD",
         },
       });
     } catch (error: any) {
