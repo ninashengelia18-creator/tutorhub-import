@@ -122,23 +122,6 @@ export default function BecomeTutor() {
         </div>
       </section>
 
-      {/* AI Whisper Section */}
-      <section className="container py-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex flex-col md:flex-row items-center gap-6 rounded-2xl border border-primary/20 bg-primary/5 p-8 md:p-10"
-        >
-          <img src={aiWhisperLogo} alt="AI Whisper" className="h-36 w-36 object-contain flex-shrink-0" />
-          <div className="space-y-2 text-center md:text-left">
-            <h3 className="text-xl font-bold text-foreground">Powered by AI Whisper</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              LearnEazy tutors have access to AI Whisper — an AI-powered session assistant that joins your lessons and supports you in real time. Get live coaching nudges as you teach, and receive a full post-session report covering student engagement, attention levels, and key moments. No other tutoring platform gives you this level of support.
-            </p>
-          </div>
-        </motion.div>
-      </section>
 
       {/* Benefits — 3 columns */}
       <section className="container py-16">
