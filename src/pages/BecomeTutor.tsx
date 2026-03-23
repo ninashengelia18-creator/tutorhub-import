@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import tutorHeroImg from "@/assets/tutor-hero.jpg";
 import aiWhisperLogo from "@/assets/ai-whisper-logo.png";
+import tutorTeachingImg from "@/assets/tutor-teaching.jpg";
 
 export default function BecomeTutor() {
   const { t } = useLanguage();
@@ -177,7 +178,7 @@ export default function BecomeTutor() {
           >
             <div className="rounded-2xl overflow-hidden">
               <img
-                src={tutorHeroImg}
+                src={tutorTeachingImg}
                 alt="Tutor teaching online"
                 className="w-full h-full object-cover rounded-2xl"
               />
