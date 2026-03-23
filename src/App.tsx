@@ -36,6 +36,7 @@ import SavedTutors from "./pages/SavedTutors.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import CookiePolicy from "./pages/CookiePolicy.tsx";
 import TermsOfService from "./pages/TermsOfService.tsx";
+import RefundPolicy from "./pages/RefundPolicy.tsx";
 import LessonPlanner from "./pages/LessonPlanner.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import AdminApplications from "./pages/AdminApplications.tsx";
@@ -95,6 +96,7 @@ const App = () => (
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
                 <Route path="/terms-of-service" element={<TermsOfService />} />
+                <Route path="/refund-policy" element={<RefundPolicy />} />
                 <Route path="/lesson-planner" element={<ProtectedRoute requiredRole="tutor"><LessonPlanner /></ProtectedRoute>} />
                 <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/admin/applications" element={<ProtectedRoute requiredRole="admin"><AdminApplications /></ProtectedRoute>} />
