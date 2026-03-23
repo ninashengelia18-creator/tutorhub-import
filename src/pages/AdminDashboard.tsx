@@ -765,6 +765,7 @@ export default function AdminDashboard() {
     rejected: partnerApplications.filter((a) => a.status === "rejected").length,
   };
 
+  if (!isAdmin) {
     return (
       <Layout>
         <div className="container py-16 text-center">
