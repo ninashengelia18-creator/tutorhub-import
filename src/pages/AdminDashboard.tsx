@@ -768,7 +768,14 @@ export default function AdminDashboard() {
                           </div>
 
                           <div className="flex shrink-0 flex-wrap gap-2">
-                            {booking.status === "pending" ? <Button size="sm" onClick={() => handleMarkPaid(booking)}>{t("admin.markPaid")}</Button> : null}
+                            {booking.status === "pending" ? (
+                              <>
+                                <Button size="sm" variant="outline" onClick={() => { setPaymentLinkModal(booking); setPaymentAmount(String(booking.price_amount)); }}>
+                                  <CreditCard className="mr-1 h-3.5 w-3.5" />Send Payment Link
+                                </Button>
+                                <Button size="sm" onClick={() => handleMarkPaid(booking)}>{t("admin.markPaid")}</Button>
+                              </>
+                            ) : null}
                             {booking.status === "confirmed" ? <Button size="sm" variant="outline" onClick={() => handleMarkCompleted(booking)}>{t("admin.markCompleted")}</Button> : null}
                             <Button size="sm" variant="outline" onClick={() => { setMeetLinkModal(booking); setMeetLink(booking.google_meet_link || ""); }}>
                               <Video className="mr-1 h-3.5 w-3.5" />Meet Link
