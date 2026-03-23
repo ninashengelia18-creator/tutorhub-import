@@ -54,10 +54,14 @@ export default function BookingConfirmation() {
     );
   }
 
+  const WISE_PAYMENT_LINK = "https://wise.com/pay/YOUR_LINK_HERE"; // TODO: Replace with your actual Wise payment link
+
   const studentTimezone = state.studentTimezone || timezone;
   const tutorTimezone = state.tutorTimezone || "UTC";
   const lessonStartAt = state.lessonStartAt ?? null;
   const lessonEndAt = state.lessonEndAt ?? null;
+  const priceAmount = state.priceAmount ?? 0;
+  const currency = state.currency ?? "USD";
   const lessonDateLabel = lessonStartAt
     ? formatDateInTimeZone(lessonStartAt, lang, studentTimezone, {
         weekday: "long",
