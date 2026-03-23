@@ -34,7 +34,10 @@ export function HeroSection() {
             {t("hero.badge")}
           </motion.div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight text-foreground">
+          <h1
+            className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-wide text-foreground"
+            style={{ fontFamily: "'Kaushan Script', cursive" }}
+          >
             {t("home.heroTitle")}
           </h1>
 
