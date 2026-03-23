@@ -330,6 +330,29 @@ export default function AdminDashboard() {
     void refreshBookings();
   };
 
+  const handleSendPaymentLink = async () => {
+    if (!paymentLinkModal || !paymentLink.trim()) return;
+    setSendingPaymentLink(true);
+    try {
+      const { error } = await supabase.functions.invoke("send-payment-link", {
+        body: {
+          booking_id: paymentLinkModal.id,
+          payment_link: paymentLink.trim(),
+          amount: paymentAmount ? Number(paymentAmount) : paymentLinkModal.price_amount,
+        },
+      });
+      if (error) throw error;
+      toast({ title: "Payment link sent!", description: `Email sent to ${paymentLinkModal.student_email}` });
+      setPaymentLinkModal(null);
+      setPaymentLink("");
+      setPaymentAmount("");
+    } catch (err: any) {
+      toast({ title: "Error", description: err?.message || "Failed to send payment link", variant: "destructive" });
+    } finally {
+      setSendingPaymentLink(false);
+    }
+  };
+
   const handleApproveTutor = async (application: TutorApplicationListItem) => {
     setPendingTutorActionId(application.id);
 
