@@ -165,6 +165,7 @@ export function Footer() {
           </div>
           <div className="flex gap-4 text-sm text-muted-foreground">
             <Link to="/privacy-policy" className="hover:text-primary transition-colors">{t("footer.privacyPolicy")}</Link>
+            <Link to="/refund-policy" className="hover:text-primary transition-colors">Refund Policy</Link>
             <Link to="/terms-of-service" className="hover:text-primary transition-colors">{t("footer.termsOfService")}</Link>
             <Link to="/cookie-policy" className="hover:text-primary transition-colors">{t("footer.cookiePolicy")}</Link>
             <Link to="/faq" className="hover:text-primary transition-colors">{t("footer.faq")}</Link>
