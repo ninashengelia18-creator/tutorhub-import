@@ -87,6 +87,10 @@ export default function AdminDashboard() {
   const [savingTutorEdit, setSavingTutorEdit] = useState(false);
   const [deletingTutor, setDeletingTutor] = useState<TutorManagementListItem | null>(null);
   const [bookingsTutor, setBookingsTutor] = useState<TutorManagementListItem | null>(null);
+  const [paymentLinkModal, setPaymentLinkModal] = useState<AdminBooking | null>(null);
+  const [paymentLink, setPaymentLink] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [sendingPaymentLink, setSendingPaymentLink] = useState(false);
   const [hasAutoFocusedPendingApplications, setHasAutoFocusedPendingApplications] = useState(false);
 
   const refreshBookings = useCallback(async () => {
