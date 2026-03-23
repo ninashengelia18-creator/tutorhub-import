@@ -70,7 +70,7 @@ export default function BecomeTutor() {
       </section>
 
       {/* Hero — Preply-style split layout */}
-      <section className="container py-16 md:py-24">
+      <section className="container pt-4 pb-16 md:pt-6 md:pb-24">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
