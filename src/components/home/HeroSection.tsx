@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Radio, FileBarChart, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import aiWhisperLogo from "@/assets/ai-whisper-logo.png";
+
+const whisperFeatures = [
+  { icon: Radio, label: "Real-time coaching nudges" },
+  { icon: FileBarChart, label: "Post-session reports" },
+  { icon: Users, label: "Student engagement tracking" },
+];
 
 export function HeroSection() {
   const { t } = useLanguage();
@@ -25,18 +31,6 @@ export function HeroSection() {
           transition={{ duration: 0.6 }}
           className="max-w-3xl mx-auto text-center space-y-8"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-primary/30 bg-primary/10 text-sm text-foreground font-medium max-w-3xl text-center"
-          >
-            <img src={aiWhisperLogo} alt="AI Whisper" className="h-36 w-36 object-contain flex-shrink-0" />
-            <span>
-              <strong>Powered by AI Whisper</strong> — our proprietary AI tool that monitors student engagement in real time and delivers live coaching nudges to tutors, so every lesson stays on track.
-            </span>
-          </motion.div>
-
           <h1
             className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-wide text-foreground"
             style={{ fontFamily: "'Kaushan Script', cursive" }}
@@ -71,6 +65,52 @@ export function HeroSection() {
           </div>
         </motion.div>
       </div>
+
+      {/* AI Whisper full-width banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="relative border-t border-b border-primary/15 bg-primary/5"
+      >
+        <div className="container py-14 md:py-20">
+          <div className="flex flex-col items-center text-center space-y-6">
+            <img
+              src={aiWhisperLogo}
+              alt="AI Whisper"
+              className="h-44 w-44 md:h-52 md:w-52 object-contain"
+            />
+            <div className="max-w-2xl space-y-3">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                Powered by AI Whisper
+              </h2>
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+                Our proprietary AI tool that monitors student engagement in real time and delivers live coaching nudges to tutors, so every lesson stays on track.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-6 w-full max-w-xl">
+              {whisperFeatures.map((feat) => (
+                <div key={feat.label} className="flex flex-col items-center gap-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                    <feat.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium text-foreground">{feat.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <a
+              href="https://aiwhisper.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline pt-2"
+            >
+              Learn more <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 }
