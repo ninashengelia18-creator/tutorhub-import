@@ -29,7 +29,7 @@ export function HeroSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-sm text-foreground font-medium max-w-2xl text-center"
+            className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-primary/30 bg-primary/10 text-sm text-foreground font-medium max-w-3xl text-center"
           >
             <img src={aiWhisperLogo} alt="AI Whisper" className="h-36 w-36 object-contain flex-shrink-0" />
             <span>
