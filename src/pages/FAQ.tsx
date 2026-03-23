@@ -27,44 +27,48 @@ const faqSections = [
       },
       {
         q: "How do I pay for lessons?",
-        a: "Payments are made securely in USD by credit or debit card through the LearnEazy platform. You pay in advance when booking a session. All major cards are accepted.",
+        a: "After booking a session, students receive a secure payment link via email within one hour. Payment is made in USD via bank transfer. A Google Meet link and session confirmation are sent once payment is received.",
       },
       {
-        q: "Can I cancel or reschedule a lesson?",
-        a: "Yes. You can cancel or reschedule through your student dashboard. Please cancel at least 12 hours before the session to avoid cancellation fees.",
+        q: "What is the cancellation policy?",
+        a: "Students may cancel a booked session up to 12 hours before the scheduled start time for a full refund. Cancellations made less than 12 hours before the session are non-refundable. If a tutor or Language Buddy cancels, students receive a full refund or the option to reschedule at no additional cost.",
+      },
+      {
+        q: "What is the refund policy?",
+        a: "Refunds are issued for cancellations made at least 12 hours before the session. If a session cannot proceed due to a technical issue on the platform, students receive a full refund or a complimentary rescheduled session. Any issues should be reported to info@learneazy.org within 48 hours of the session. The team will review and respond within 3 business days. For full details see the Refund Policy at learneazy.org/refund-policy.",
       },
     ],
   },
   {
-    category: "For Tutors",
+    category: "For Tutors & Language Buddies",
     questions: [
       {
-        q: "How do I register as a tutor?",
-        a: "Apply at learneazy.org/tutor-apply. Fill in your application with your name, subjects, experience, and qualifications. Our team reviews all applications and responds within a few business days.",
+        q: "What kind of tutors does LearnEazy look for?",
+        a: "LearnEazy has two roles — Tutors and Language Buddies.\n\nTutors should have strong subject knowledge, excellent communication skills, and the ability to explain concepts clearly. A formal teaching certificate is not required but experience tutoring or teaching is a plus.\n\nLanguage Buddies are native or fluent speakers who want to help others practice conversation. No teaching experience or qualifications needed — just fluency, patience, and a friendly personality.",
       },
       {
-        q: "Is it free to join as a tutor?",
-        a: "Yes. It is completely free to sign up and create a tutor profile on LearnEazy. We only charge a commission when you earn from lessons.",
+        q: "What subjects can I teach?",
+        a: "Tutors can teach a wide range of subjects including K-12 Math, English/ELA, Biology, Chemistry, Physics, Coding, GCSE and A-Level subjects, University level Maths and English, ESL, Business English, IELTS and TOEFL prep, and Coding for Career Change.\n\nLanguage Buddies offer conversation practice in English, Spanish, French, German, Italian, Portuguese, Arabic, and Mandarin Chinese.\n\nIf a subject or language isn't listed, mention it in the application and the team will consider it.",
       },
       {
-        q: "What commission does LearnEazy charge?",
-        a: "The first lesson with any new student (trial lesson) is charged at 100% commission. For subsequent lessons, the rate depends on your total teaching hours: 0–20 hours = 22%, 20–50 hours = 19%, 50–100 hours = 17%, 100+ hours = 15%. The more you teach, the lower your commission.",
+        q: "How do I become a tutor or Language Buddy at LearnEazy?",
+        a: "Click \"Become a Tutor\" or \"Become a Language Buddy\" on the website and complete the short application form. The team reviews every application and applicants hear back within 2–3 business days. Once approved, set up a profile, add availability, and start receiving bookings.",
       },
       {
-        q: "What is a trial lesson?",
-        a: "A trial lesson is your first session with a new student. Spend the first 10 minutes understanding the student's level and goals, outline a basic study plan, and agree on a learning routine. Trial lessons have 100% commission, but students who enjoy their trial often become regular clients.",
+        q: "Why should I teach on LearnEazy?",
+        a: "LearnEazy offers full flexibility — tutors and Language Buddies set their own schedule, their own rate, and teach from anywhere in the world. Tutors also get exclusive access to AI Whisper, an AI-powered session coaching tool that provides real-time support during lessons and sends a detailed post-session report for continuous improvement. Language Buddies enjoy a relaxed, conversation-based experience with no lesson planning required. No other tutoring platform offers this level of support.",
       },
       {
-        q: "How and when do I get paid?",
-        a: "Earnings are paid out weekly in USD to your preferred payment method. You can track your earnings in your tutor dashboard.",
+        q: "What computer equipment do I need?",
+        a: "A reliable computer or laptop, a stable internet connection, a webcam, and a microphone are required. A headset is recommended for better audio quality. Sessions run via Google Meet so no additional software is needed — just a browser.",
       },
       {
-        q: "Can I set my own schedule and price?",
-        a: "Yes. You have full control over your availability and hourly rate. You can update these at any time from your tutor profile.",
+        q: "Is it free to create a profile on LearnEazy?",
+        a: "Yes, completely free. There are no signup fees or monthly charges. LearnEazy takes a small commission only when a session is completed — so tutors and Language Buddies only pay when they earn.",
       },
       {
-        q: "How do I improve my profile visibility?",
-        a: "Add a clear, professional profile photo. Write a detailed profile description highlighting your experience and teaching style. Add your qualifications and certificates. Keep your availability up to date. Encourage students to leave reviews after sessions.",
+        q: "How does payment work?",
+        a: "After booking a session, students receive a secure payment link via email within one hour. Payment is made in USD via bank transfer. A Google Meet link and session confirmation are sent once payment is received. LearnEazy takes a small commission and the remainder goes directly to the tutor or Language Buddy.",
       },
     ],
   },
