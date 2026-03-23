@@ -73,7 +73,7 @@ export function HeroSection() {
         transition={{ duration: 0.5, delay: 0.3 }}
         className="relative border-t border-b border-primary/15 bg-primary/5"
       >
-        <div className="container py-10 md:py-14">
+        <div className="container py-6 md:py-8">
           <div className="flex flex-col items-center text-center space-y-6">
             <img
               src={aiWhisperLogo}
