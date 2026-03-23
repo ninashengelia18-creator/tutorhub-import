@@ -1,5 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
-import { BookOpen, Clock, Monitor, CheckCircle, Video, DollarSign, CreditCard, Mail } from "lucide-react";
+import { BookOpen, Clock, Monitor, CheckCircle, Video, Mail } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
@@ -54,7 +55,7 @@ export default function BookingConfirmation() {
     );
   }
 
-  const WISE_PAYMENT_LINK = "https://wise.com/pay/YOUR_LINK_HERE"; // TODO: Replace with your actual Wise payment link
+  
 
   const studentTimezone = state.studentTimezone || timezone;
   const tutorTimezone = state.tutorTimezone || "UTC";
@@ -139,36 +140,31 @@ export default function BookingConfirmation() {
           {/* Payment Section */}
           {!state.meetLink && (
             <div className="mb-4 rounded-xl border-2 border-warning/30 bg-warning/5 p-5 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-warning/10">
-                  <DollarSign className="h-5 w-5 text-warning" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-warning/10">
+                    <Clock className="h-5 w-5 text-warning" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">Complete Your Payment</h3>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Payment Required</h3>
-                  <p className="text-sm text-muted-foreground">Complete payment to confirm your session</p>
-                </div>
+                <Badge className="border-warning/30 bg-warning/10 text-warning">Awaiting Payment</Badge>
               </div>
 
               <div className="rounded-lg bg-card border p-4 text-center">
-                <p className="text-sm text-muted-foreground mb-1">Total Amount Due</p>
+                <p className="text-sm text-muted-foreground mb-1">Lesson Amount</p>
                 <p className="text-3xl font-bold text-foreground">${priceAmount.toFixed(2)} <span className="text-base font-normal text-muted-foreground">{currency}</span></p>
               </div>
 
               <p className="text-sm text-muted-foreground text-center">
-                To complete your booking, please make payment via the link below
+                To confirm your session, our team will send you a secure payment link to your email within the next hour. Please complete payment to receive your Google Meet link and session confirmation.
               </p>
-
-              <Button className="w-full h-12 hero-gradient border-0 text-primary-foreground font-semibold text-base" asChild>
-                <a href={WISE_PAYMENT_LINK} target="_blank" rel="noopener noreferrer">
-                  <CreditCard className="mr-2 h-5 w-5" />
-                  Pay with Wise
-                </a>
-              </Button>
 
               <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-3">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                 <p className="text-xs text-muted-foreground">
-                  Once payment is received, your session will be confirmed and you will receive a Google Meet link via email.
+                  Check your inbox at <strong>{user?.email || "your registered email"}</strong> for the payment link.
                 </p>
               </div>
             </div>

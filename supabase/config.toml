@@ -20,3 +20,6 @@ verify_jwt = true
 
 [functions.confirm-booking-payment]
 verify_jwt = false
+
+[functions.send-payment-link]
+verify_jwt = false

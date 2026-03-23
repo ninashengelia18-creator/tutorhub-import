@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Building2, ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle, Clock, XCircle, Send, CreditCard } from "lucide-react";
 
 import { Layout } from "@/components/Layout";
 import { TutorApplicationList, type TutorApplicationListItem } from "@/components/admin/TutorApplicationList";
@@ -87,6 +87,10 @@ export default function AdminDashboard() {
   const [savingTutorEdit, setSavingTutorEdit] = useState(false);
   const [deletingTutor, setDeletingTutor] = useState<TutorManagementListItem | null>(null);
   const [bookingsTutor, setBookingsTutor] = useState<TutorManagementListItem | null>(null);
+  const [paymentLinkModal, setPaymentLinkModal] = useState<AdminBooking | null>(null);
+  const [paymentLink, setPaymentLink] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [sendingPaymentLink, setSendingPaymentLink] = useState(false);
   const [hasAutoFocusedPendingApplications, setHasAutoFocusedPendingApplications] = useState(false);
 
   const refreshBookings = useCallback(async () => {
@@ -324,6 +328,29 @@ export default function AdminDashboard() {
     setNotesModal(null);
     setAdminNotes("");
     void refreshBookings();
+  };
+
+  const handleSendPaymentLink = async () => {
+    if (!paymentLinkModal || !paymentLink.trim()) return;
+    setSendingPaymentLink(true);
+    try {
+      const { error } = await supabase.functions.invoke("send-payment-link", {
+        body: {
+          booking_id: paymentLinkModal.id,
+          payment_link: paymentLink.trim(),
+          amount: paymentAmount ? Number(paymentAmount) : paymentLinkModal.price_amount,
+        },
+      });
+      if (error) throw error;
+      toast({ title: "Payment link sent!", description: `Email sent to ${paymentLinkModal.student_email}` });
+      setPaymentLinkModal(null);
+      setPaymentLink("");
+      setPaymentAmount("");
+    } catch (err: any) {
+      toast({ title: "Error", description: err?.message || "Failed to send payment link", variant: "destructive" });
+    } finally {
+      setSendingPaymentLink(false);
+    }
   };
 
   const handleApproveTutor = async (application: TutorApplicationListItem) => {
@@ -741,7 +768,14 @@ export default function AdminDashboard() {
                           </div>
 
                           <div className="flex shrink-0 flex-wrap gap-2">
-                            {booking.status === "pending" ? <Button size="sm" onClick={() => handleMarkPaid(booking)}>{t("admin.markPaid")}</Button> : null}
+                            {booking.status === "pending" ? (
+                              <>
+                                <Button size="sm" variant="outline" onClick={() => { setPaymentLinkModal(booking); setPaymentAmount(String(booking.price_amount)); }}>
+                                  <CreditCard className="mr-1 h-3.5 w-3.5" />Send Payment Link
+                                </Button>
+                                <Button size="sm" onClick={() => handleMarkPaid(booking)}>{t("admin.markPaid")}</Button>
+                              </>
+                            ) : null}
                             {booking.status === "confirmed" ? <Button size="sm" variant="outline" onClick={() => handleMarkCompleted(booking)}>{t("admin.markCompleted")}</Button> : null}
                             <Button size="sm" variant="outline" onClick={() => { setMeetLinkModal(booking); setMeetLink(booking.google_meet_link || ""); }}>
                               <Video className="mr-1 h-3.5 w-3.5" />Meet Link
@@ -958,6 +992,42 @@ export default function AdminDashboard() {
             <Button variant="outline" onClick={() => setDeletingTutor(null)}>Cancel</Button>
             <Button variant="destructive" onClick={handleDeleteTutor} disabled={!deletingTutor || pendingTutorActionId === deletingTutor?.id}>Delete tutor</Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!paymentLinkModal} onOpenChange={(open) => { if (!open) { setPaymentLinkModal(null); setPaymentLink(""); setPaymentAmount(""); } }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Send Payment Link</DialogTitle>
+          </DialogHeader>
+          {paymentLinkModal && (
+            <div className="space-y-4">
+              <div className="rounded-lg border bg-muted/50 p-3 text-sm">
+                <p className="font-medium">{paymentLinkModal.student_name || "Student"} → {paymentLinkModal.tutor_name}</p>
+                <p className="text-muted-foreground">{paymentLinkModal.subject} · {paymentLinkModal.lesson_date} · {paymentLinkModal.start_time?.slice(0, 5)}</p>
+                <p className="text-muted-foreground">Email: {paymentLinkModal.student_email || "N/A"}</p>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium">Wise Payment Link</label>
+                <Input value={paymentLink} onChange={(e) => setPaymentLink(e.target.value)} placeholder="https://wise.com/pay/..." />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium">Amount (USD)</label>
+                <Input type="number" step="0.01" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} placeholder={String(paymentLinkModal.price_amount)} />
+              </div>
+              <Button
+                className="w-full"
+                onClick={handleSendPaymentLink}
+                disabled={!paymentLink.trim() || sendingPaymentLink || !paymentLinkModal.student_email}
+              >
+                <Send className="mr-2 h-4 w-4" />
+                {sendingPaymentLink ? "Sending..." : "Send to Student"}
+              </Button>
+              {!paymentLinkModal.student_email && (
+                <p className="text-xs text-destructive">No student email on this booking.</p>
+              )}
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 
