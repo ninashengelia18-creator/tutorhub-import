@@ -1,5 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
-import { BookOpen, Clock, Monitor, CheckCircle, Video, DollarSign, CreditCard, Mail } from "lucide-react";
+import { BookOpen, Clock, Monitor, CheckCircle, Video, Mail } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
