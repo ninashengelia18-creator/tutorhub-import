@@ -510,7 +510,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tutor.readySub": "Connect with thousands of learners around the world and teach from your living room.",
     "tutor.readyBtn": "Create a tutor profile now",
     "tutor.heroHeadline": "Make a living by teaching the largest community of learners worldwide",
-    "tutor.teachStudentsTitle": "Teach students from over 180 countries",
+    "tutor.teachStudentsTitle": "Teach international students",
     "tutor.teachStudentsDesc": "LearnEazy tutors teach 800,000+ students globally. Join us and you'll have everything you need to teach successfully.",
     "tutor.pf1": "Steady stream of new students",
     "tutor.pf2": "Smart calendar",
