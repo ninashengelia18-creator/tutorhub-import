@@ -36,6 +36,7 @@ import SavedTutors from "./pages/SavedTutors.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import CookiePolicy from "./pages/CookiePolicy.tsx";
 import TermsOfService from "./pages/TermsOfService.tsx";
+import RefundPolicy from "./pages/RefundPolicy.tsx";
 import LessonPlanner from "./pages/LessonPlanner.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import AdminApplications from "./pages/AdminApplications.tsx";
