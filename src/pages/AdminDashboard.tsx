@@ -758,7 +758,13 @@ export default function AdminDashboard() {
     pending: applications.filter((application) => application.status === "pending").length,
   };
 
-  if (!isAdmin && !loading) {
+  const partnerStats = {
+    total: partnerApplications.length,
+    pending: partnerApplications.filter((a) => a.status === "pending").length,
+    approved: partnerApplications.filter((a) => a.status === "approved").length,
+    rejected: partnerApplications.filter((a) => a.status === "rejected").length,
+  };
+
     return (
       <Layout>
         <div className="container py-16 text-center">
