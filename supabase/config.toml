@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.send-payment-link]
 verify_jwt = false
+
+[functions.notify-partner-decision]
+verify_jwt = false

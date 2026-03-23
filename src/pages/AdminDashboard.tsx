@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle, Clock, XCircle, Send, CreditCard } from "lucide-react";
+import { Building2, ExternalLink, GraduationCap, MessageCircle, Search, Shield, Users, Video, CheckCircle, Clock, XCircle, Send, CreditCard } from "lucide-react";
 
 import { Layout } from "@/components/Layout";
 import { TutorApplicationList, type TutorApplicationListItem } from "@/components/admin/TutorApplicationList";
+import { PartnerApplicationList, type PartnerApplicationListItem } from "@/components/admin/PartnerApplicationList";
 import { ManualTutorDialog, type ManualTutorFormValues } from "@/components/admin/ManualTutorDialog";
 import { TutorManagementList, type TutorManagementListItem } from "@/components/admin/TutorManagementList";
 import { TutorProfileEditorDialog, type TutorProfileEditorValues } from "@/components/admin/TutorProfileEditorDialog";
@@ -69,10 +70,11 @@ export default function AdminDashboard() {
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const [activeTab, setActiveTab] = useState<"bookings" | "tutors" | "enquiries">("bookings");
+  const [activeTab, setActiveTab] = useState<"bookings" | "tutors" | "partners" | "enquiries">("bookings");
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [applications, setApplications] = useState<TutorApplicationListItem[]>([]);
   const [enquiries, setEnquiries] = useState<BusinessInquiry[]>([]);
+  const [partnerApplications, setPartnerApplications] = useState<PartnerApplicationListItem[]>([]);
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -92,6 +94,7 @@ export default function AdminDashboard() {
   const [paymentAmount, setPaymentAmount] = useState("");
   const [sendingPaymentLink, setSendingPaymentLink] = useState(false);
   const [hasAutoFocusedPendingApplications, setHasAutoFocusedPendingApplications] = useState(false);
+  const [pendingPartnerActionId, setPendingPartnerActionId] = useState<string | null>(null);
 
   const refreshBookings = useCallback(async () => {
     const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
@@ -115,12 +118,25 @@ export default function AdminDashboard() {
     setTutors((data as PublicTutorProfile[] | null) ?? []);
   }, []);
 
+  const refreshPartnerApplications = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("conversation_partner_applications")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+      return;
+    }
+    setPartnerApplications((data as PartnerApplicationListItem[] | null) ?? []);
+  }, [toast]);
+
   const refreshAdminData = useCallback(async () => {
-    const [bookingResult, applicationResult, tutorResult, enquiryResult] = await Promise.all([
+    const [bookingResult, applicationResult, tutorResult, enquiryResult, partnerResult] = await Promise.all([
       supabase.from("bookings").select("*").order("created_at", { ascending: false }),
       supabase.from("tutor_applications").select("*").order("created_at", { ascending: false }),
       supabase.from("public_tutor_profiles" as never).select("*").order("created_at", { ascending: false }),
       supabase.from("business_inquiries").select("*").order("created_at", { ascending: false }),
+      supabase.from("conversation_partner_applications").select("*").order("created_at", { ascending: false }),
     ]);
 
     if (bookingResult.error) {
@@ -145,6 +161,12 @@ export default function AdminDashboard() {
       toast({ title: "Error", description: enquiryResult.error.message, variant: "destructive" });
     } else {
       setEnquiries((enquiryResult.data as BusinessInquiry[] | null) ?? []);
+    }
+
+    if (partnerResult.error) {
+      toast({ title: "Error", description: partnerResult.error.message, variant: "destructive" });
+    } else {
+      setPartnerApplications((partnerResult.data as PartnerApplicationListItem[] | null) ?? []);
     }
   }, [toast]);
 
@@ -411,6 +433,77 @@ export default function AdminDashboard() {
     }
   };
 
+  const sendPartnerDecisionNotification = async (application: PartnerApplicationListItem, decision: "approved" | "rejected") => {
+    try {
+      await supabase.functions.invoke("notify-partner-decision", {
+        body: {
+          email: application.email,
+          first_name: application.first_name,
+          last_name: application.last_name,
+          decision,
+        },
+      });
+    } catch (err) {
+      console.error("Partner decision email failed:", err);
+    }
+  };
+
+  const handleApprovePartner = async (application: PartnerApplicationListItem) => {
+    setPendingPartnerActionId(application.id);
+    try {
+      const { error } = await supabase.rpc("approve_partner_application", { _application_id: application.id });
+      if (error) throw error;
+
+      try {
+        await sendPartnerDecisionNotification(application, "approved");
+        toast({ title: "Language Buddy approved", description: `${application.first_name} ${application.last_name} has been approved and notified.` });
+      } catch (notificationError) {
+        toast({
+          title: "Language Buddy approved",
+          description: notificationError instanceof Error ? notificationError.message : "Approved, but the notification email could not be sent.",
+        });
+      }
+
+      await refreshPartnerApplications();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to approve.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleRejectPartner = async (application: PartnerApplicationListItem) => {
+    setPendingPartnerActionId(application.id);
+    try {
+      const { error } = await supabase.rpc("reject_partner_application", { _application_id: application.id });
+      if (error) throw error;
+
+      try {
+        await sendPartnerDecisionNotification(application, "rejected");
+        toast({ title: "Language Buddy rejected", description: `${application.first_name} ${application.last_name} has been rejected.` });
+      } catch (notificationError) {
+        toast({
+          title: "Language Buddy rejected",
+          description: notificationError instanceof Error ? notificationError.message : "Rejected, but the notification email could not be sent.",
+        });
+      }
+
+      await refreshPartnerApplications();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to reject.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
   const handleSetTutorLiveState = async (tutor: TutorManagementListItem, makeLive: boolean) => {
     setPendingTutorActionId(tutor.id);
 
@@ -621,6 +714,19 @@ export default function AdminDashboard() {
   }, [managedTutors, search]);
 
   const pendingApplications = filteredApplications.filter((application) => application.status === "pending");
+  const filteredPartnerApplications = useMemo(() => {
+    const query = search.toLowerCase();
+    return partnerApplications.filter((a) =>
+      [`${a.first_name} ${a.last_name}`, a.email, a.country ?? "", a.motivation]
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [partnerApplications, search]);
+
+  const pendingPartnerApps = filteredPartnerApplications.filter((a) => a.status === "pending");
+  const reviewedPartnerApps = filteredPartnerApplications.filter((a) => a.status !== "pending");
+
   const reviewedApplications = filteredApplications.filter((application) => application.status !== "pending");
 
   const selectedTutorBookings = useMemo(() => {
@@ -652,7 +758,13 @@ export default function AdminDashboard() {
     pending: applications.filter((application) => application.status === "pending").length,
   };
 
-  if (!isAdmin && !loading) {
+  const partnerStats = {
+    total: partnerApplications.length,
+    pending: partnerApplications.filter((a) => a.status === "pending").length,
+    approved: partnerApplications.filter((a) => a.status === "approved").length,
+    rejected: partnerApplications.filter((a) => a.status === "rejected").length,
+  };
+
     return (
       <Layout>
         <div className="container py-16 text-center">
@@ -699,6 +811,16 @@ export default function AdminDashboard() {
             >
               <GraduationCap className="h-4 w-4" />
               Tutor management ({tutorStats.total})
+            </button>
+            <button
+              onClick={() => setActiveTab("partners")}
+              className={`flex items-center gap-2 border-b-2 py-3 text-sm font-medium transition-colors ${activeTab === "partners" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            >
+              <MessageCircle className="h-4 w-4" />
+              Language Buddies ({partnerStats.total})
+              {partnerStats.pending > 0 && (
+                <Badge variant="secondary" className="ml-1 text-xs">{partnerStats.pending}</Badge>
+              )}
             </button>
             <button
               onClick={() => setActiveTab("enquiries")}
@@ -867,6 +989,58 @@ export default function AdminDashboard() {
                   onApprove={handleApproveTutor}
                   onReject={handleRejectTutor}
                   pendingActionId={pendingTutorActionId}
+                />
+              </section>
+            </>
+          )}
+
+          {activeTab === "partners" && (
+            <>
+              <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-3">
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-foreground">{partnerStats.total}</p>
+                  <p className="text-xs text-muted-foreground">Total applications</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-warning">{partnerStats.pending}</p>
+                  <p className="text-xs text-muted-foreground">Pending</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-success">{partnerStats.approved}</p>
+                  <p className="text-xs text-muted-foreground">Approved</p>
+                </div>
+              </div>
+
+              <div className="relative mb-6">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by name, email, country..." className="pl-9" />
+              </div>
+
+              <section className="mb-8 space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold">Pending Language Buddy applications</h2>
+                  <p className="text-sm text-muted-foreground">Review new Language Buddy submissions.</p>
+                </div>
+                <PartnerApplicationList
+                  applications={pendingPartnerApps}
+                  emptyLabel="No pending applications"
+                  onApprove={handleApprovePartner}
+                  onReject={handleRejectPartner}
+                  pendingActionId={pendingPartnerActionId}
+                />
+              </section>
+
+              <section className="space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold">Reviewed applications</h2>
+                  <p className="text-sm text-muted-foreground">Previously approved and rejected Language Buddy applications.</p>
+                </div>
+                <PartnerApplicationList
+                  applications={reviewedPartnerApps}
+                  emptyLabel="No reviewed applications yet"
+                  onApprove={handleApprovePartner}
+                  onReject={handleRejectPartner}
+                  pendingActionId={pendingPartnerActionId}
                 />
               </section>
             </>
