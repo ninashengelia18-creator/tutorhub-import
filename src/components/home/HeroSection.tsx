@@ -29,10 +29,12 @@ export function HeroSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-sm text-black font-bold"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-sm text-foreground font-medium max-w-2xl text-center"
           >
-            <img src={aiWhisperLogo} alt="AI Whisper" className="h-5 w-5 object-contain" />
-            Powered by AI Whisper
+            <img src={aiWhisperLogo} alt="AI Whisper" className="h-6 w-6 object-contain flex-shrink-0" />
+            <span>
+              <strong>Powered by AI Whisper</strong> — our proprietary AI tool that monitors student engagement in real time and delivers live coaching nudges to tutors, so every lesson stays on track.
+            </span>
           </motion.div>
 
           <h1
