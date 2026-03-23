@@ -1046,6 +1046,7 @@ export default function AdminDashboard() {
             </>
           )}
 
+          {activeTab === "enquiries" && (
             <>
               <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-2">
                 <div className="rounded-xl border bg-card p-4">
