@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import aiWhisperLogo from "@/assets/ai-whisper-logo.png";
 
 export function HeroSection() {
   const { t } = useLanguage();
