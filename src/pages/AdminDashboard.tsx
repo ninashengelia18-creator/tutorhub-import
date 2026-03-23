@@ -118,12 +118,25 @@ export default function AdminDashboard() {
     setTutors((data as PublicTutorProfile[] | null) ?? []);
   }, []);
 
+  const refreshPartnerApplications = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("conversation_partner_applications")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+      return;
+    }
+    setPartnerApplications((data as PartnerApplicationListItem[] | null) ?? []);
+  }, [toast]);
+
   const refreshAdminData = useCallback(async () => {
-    const [bookingResult, applicationResult, tutorResult, enquiryResult] = await Promise.all([
+    const [bookingResult, applicationResult, tutorResult, enquiryResult, partnerResult] = await Promise.all([
       supabase.from("bookings").select("*").order("created_at", { ascending: false }),
       supabase.from("tutor_applications").select("*").order("created_at", { ascending: false }),
       supabase.from("public_tutor_profiles" as never).select("*").order("created_at", { ascending: false }),
       supabase.from("business_inquiries").select("*").order("created_at", { ascending: false }),
+      supabase.from("conversation_partner_applications").select("*").order("created_at", { ascending: false }),
     ]);
 
     if (bookingResult.error) {
@@ -148,6 +161,12 @@ export default function AdminDashboard() {
       toast({ title: "Error", description: enquiryResult.error.message, variant: "destructive" });
     } else {
       setEnquiries((enquiryResult.data as BusinessInquiry[] | null) ?? []);
+    }
+
+    if (partnerResult.error) {
+      toast({ title: "Error", description: partnerResult.error.message, variant: "destructive" });
+    } else {
+      setPartnerApplications((partnerResult.data as PartnerApplicationListItem[] | null) ?? []);
     }
   }, [toast]);
 
