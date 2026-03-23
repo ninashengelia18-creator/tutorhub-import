@@ -1,0 +1,183 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { email, first_name, last_name, decision } = await req.json();
+
+    const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    let passwordSetupButton = "";
+
+    if (decision === "approved") {
+      // Step 1: Create the Supabase auth account for the partner
+      const tempPassword = crypto.randomUUID();
+      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+        email,
+        password: tempPassword,
+        email_confirm: true,
+        user_metadata: {
+          display_name: `${first_name} ${last_name}`,
+        },
+      });
+
+      const alreadyRegistered = createError && (
+        createError.message.toLowerCase().includes("already") ||
+        createError.status === 422
+      );
+
+      if (createError && !alreadyRegistered) {
+        console.error("Failed to create partner account:", createError.message);
+        throw new Error(`Account creation failed: ${createError.message}`);
+      }
+
+      // Step 2: Assign convo_partner role in user_roles table
+      let userId = newUser?.user?.id;
+      if (!userId && alreadyRegistered) {
+        const { data: existingUsers } = await supabase.auth.admin.listUsers();
+        const existing = existingUsers?.users?.find(
+          (u) => u.email?.toLowerCase() === email.toLowerCase()
+        );
+        userId = existing?.id;
+      }
+
+      if (userId) {
+        const { error: roleError } = await supabase
+          .from("user_roles")
+          .upsert({ user_id: userId, role: "convo_partner" }, { onConflict: "user_id,role" });
+        if (roleError) {
+          console.error("Failed to assign convo_partner role:", roleError.message);
+        }
+      }
+
+      // Step 3: Generate a proper password reset link
+      const siteUrl = "https://www.learneazy.org";
+      const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
+        type: "recovery",
+        email,
+      });
+
+      let resetUrl = `${siteUrl}/reset-password`;
+      if (linkError) {
+        console.error("Failed to generate reset link:", linkError.message);
+      } else if (linkData?.properties?.hashed_token) {
+        const tokenHash = linkData.properties.hashed_token;
+        resetUrl = `${siteUrl}/reset-password?token_hash=${tokenHash}&type=recovery`;
+      } else if (linkData?.properties?.action_link) {
+        const actionUrl = new URL(linkData.properties.action_link);
+        const token = actionUrl.searchParams.get("token") || actionUrl.searchParams.get("token_hash");
+        if (token) {
+          resetUrl = `${siteUrl}/reset-password?token_hash=${token}&type=recovery`;
+        }
+      }
+      console.log("Reset URL:", resetUrl);
+
+      passwordSetupButton = `
+        <div style="margin: 24px 0;">
+          <a href="${resetUrl}"
+             style="display: inline-block; background: #2563eb; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            Set Up Your Password
+          </a>
+        </div>
+        <p style="color: #555; font-size: 14px;">Once you've set your password, you can log in to your Language Buddy dashboard at:</p>
+        <div style="margin: 12px 0 24px 0;">
+          <a href="https://www.learneazy.org/login?portal=buddy"
+             style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            Go to Language Buddy Dashboard
+          </a>
+        </div>`;
+    }
+
+    const subject =
+      decision === "approved"
+        ? `Congratulations! You've been accepted as a Language Buddy on LearnEazy`
+        : `Your LearnEazy Language Buddy application update`;
+
+    const html =
+      decision === "approved"
+        ? `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #16a34a;">🎉 Welcome to LearnEazy, ${first_name}!</h2>
+        <p>We're thrilled to let you know that your Language Buddy application has been <strong>approved</strong>!</p>
+        <p>You are now an official LearnEazy Language Buddy and can start hosting conversation sessions right away.</p>
+        <p>Here's what to do next:</p>
+        <ol style="line-height: 1.8;">
+          <li><strong>Set up your password</strong> using the button below</li>
+          <li>Log in to your Language Buddy dashboard</li>
+          <li>Complete your profile and set your availability</li>
+          <li>Start accepting conversation session bookings!</li>
+        </ol>
+        ${passwordSetupButton}
+        <p style="color: #666; font-size: 14px;">If you have any questions, contact us at <a href="mailto:info@learneazy.org">info@learneazy.org</a>.</p>
+        <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
+      </div>`
+        : `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2>Hi ${first_name},</h2>
+        <p>Thank you for your interest in becoming a Language Buddy on LearnEazy and for taking the time to apply.</p>
+        <p>After careful review, we regret to inform you that we are unable to approve your application at this time.</p>
+        <p>This doesn't mean the door is closed — we encourage you to <strong>reapply in the future</strong> as our needs and criteria may change.</p>
+        <p>If you have any questions or would like feedback on your application, please don't hesitate to reach out to us at <a href="mailto:info@learneazy.org">info@learneazy.org</a>.</p>
+        <p style="margin-top: 24px; color: #666;">We wish you all the best!</p>
+        <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
+      </div>`;
+
+    if (BREVO_API_KEY) {
+      const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+          "api-key": BREVO_API_KEY,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          sender: { name: "LearnEazy", email: "info@learneazy.org" },
+          to: [{ email, name: `${first_name} ${last_name}` }],
+          subject,
+          htmlContent: html,
+        }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error("Brevo error:", errText);
+        throw new Error(`Email send failed [${res.status}]: ${errText}`);
+      }
+    } else {
+      console.log("BREVO_API_KEY not set. Decision logged but email not sent.");
+    }
+
+    // Log to sent_emails
+    await supabase.from("sent_emails").insert({
+      recipient_email: email,
+      subject,
+      body_preview: `Partner ${decision} notification sent to ${first_name} ${last_name}`,
+      application_type: "partner_decision",
+    });
+
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (error: unknown) {
+    console.error("Error in notify-partner-decision:", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return new Response(JSON.stringify({ success: false, error: message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+});
