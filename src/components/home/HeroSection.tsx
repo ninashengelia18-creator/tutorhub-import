@@ -31,8 +31,9 @@ export function HeroSection() {
             transition={{ duration: 0.4, delay: 0.1 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-sm text-black font-bold"
           >
-            <Sparkles className="h-4 w-4" />
-            {t("hero.badge")}
+            <img src={aiWhisperLogo} alt="AI Whisper" className="h-5 w-5 object-contain" />
+            Powered by AI Whisper
+          </motion.div>
           </motion.div>
 
           <h1
