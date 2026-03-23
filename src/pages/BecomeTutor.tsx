@@ -38,13 +38,14 @@ export default function BecomeTutor() {
   ];
 
   const faqs = [
-    { qKey: "tutor.faq1.q", aKey: "tutor.faq1.a" },
-    { qKey: "tutor.faq2.q", aKey: "tutor.faq2.a" },
-    { qKey: "tutor.faq3.q", aKey: "tutor.faq3.a" },
-    { qKey: "tutor.faq5.q", aKey: "tutor.faq5.a" },
-    { qKey: "tutor.faq6.q", aKey: "tutor.faq6.a" },
-    { qKey: "tutor.faq7.q", aKey: "tutor.faq7.a" },
-    
+    { q: "What kind of tutors does LearnEazy look for?", a: "LearnEazy has two roles — Tutors and Language Buddies.\n\nTutors should have strong subject knowledge, excellent communication skills, and the ability to explain concepts clearly. A formal teaching certificate is not required but experience tutoring or teaching is a plus.\n\nLanguage Buddies are native or fluent speakers who want to help others practice conversation. No teaching experience or qualifications needed — just fluency, patience, and a friendly personality." },
+    { q: "What subjects can I teach?", a: "Tutors can teach a wide range of subjects including K-12 Math, English/ELA, Biology, Chemistry, Physics, Coding, GCSE and A-Level subjects, University level Maths and English, ESL, Business English, IELTS and TOEFL prep, and Coding for Career Change.\n\nLanguage Buddies offer conversation practice in English, Spanish, French, German, Italian, Portuguese, Arabic, and Mandarin Chinese.\n\nIf a subject or language isn't listed, mention it in the application and the team will consider it." },
+    { q: "How do I become a tutor or Language Buddy at LearnEazy?", a: "Click \"Become a Tutor\" or \"Become a Language Buddy\" on the website and complete the short application form. The team reviews every application and applicants hear back within 2–3 business days. Once approved, set up a profile, add availability, and start receiving bookings." },
+    { q: "Why should I teach on LearnEazy?", a: "LearnEazy offers full flexibility — tutors and Language Buddies set their own schedule, their own rate, and teach from anywhere in the world. Tutors also get exclusive access to AI Whisper, an AI-powered session coaching tool that provides real-time support during lessons and sends a detailed post-session report for continuous improvement. Language Buddies enjoy a relaxed, conversation-based experience with no lesson planning required. No other tutoring platform offers this level of support." },
+    { q: "What computer equipment do I need?", a: "A reliable computer or laptop, a stable internet connection, a webcam, and a microphone are required. A headset is recommended for better audio quality. Sessions run via Google Meet so no additional software is needed — just a browser." },
+    { q: "Is it free to create a profile on LearnEazy?", a: "Yes, completely free. There are no signup fees or monthly charges. LearnEazy takes a small commission only when a session is completed — so tutors and Language Buddies only pay when they earn." },
+    { q: "How does payment work?", a: "After a session is completed, earnings are calculated based on the agreed lesson rate minus LearnEazy's commission. Payouts are processed via bank transfer. Full details on commission rates are available in the tutor dashboard after approval." },
+    { q: "What is the cancellation policy?", a: "If a tutor or Language Buddy needs to cancel a session, students must be notified as early as possible. Repeated cancellations may affect profile visibility and standing on the platform." },
   ];
 
   return (
@@ -198,10 +199,10 @@ export default function BecomeTutor() {
             {faqs.map((faq, i) => (
               <AccordionItem key={i} value={`faq-${i}`}>
                 <AccordionTrigger className="text-left font-semibold text-base">
-                  {t(faq.qKey)}
+                  {faq.q}
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {t(faq.aKey)}
+                  {faq.a}
                 </AccordionContent>
               </AccordionItem>
             ))}
