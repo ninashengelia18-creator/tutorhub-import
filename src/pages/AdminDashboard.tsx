@@ -714,6 +714,19 @@ export default function AdminDashboard() {
   }, [managedTutors, search]);
 
   const pendingApplications = filteredApplications.filter((application) => application.status === "pending");
+  const filteredPartnerApplications = useMemo(() => {
+    const query = search.toLowerCase();
+    return partnerApplications.filter((a) =>
+      [`${a.first_name} ${a.last_name}`, a.email, a.country ?? "", a.motivation]
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [partnerApplications, search]);
+
+  const pendingPartnerApps = filteredPartnerApplications.filter((a) => a.status === "pending");
+  const reviewedPartnerApps = filteredPartnerApplications.filter((a) => a.status !== "pending");
+
   const reviewedApplications = filteredApplications.filter((application) => application.status !== "pending");
 
   const selectedTutorBookings = useMemo(() => {
