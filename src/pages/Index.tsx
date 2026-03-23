@@ -1,6 +1,5 @@
 import { Layout } from "@/components/Layout";
 import { HeroSection } from "@/components/home/HeroSection";
-import { FeaturedTutors } from "@/components/home/FeaturedTutors";
 
 import { SubjectCards } from "@/components/home/SubjectCards";
 import { ProgressSection } from "@/components/home/ProgressSection";
@@ -14,7 +13,6 @@ const Index = () => {
   return (
     <Layout>
       <HeroSection />
-      <FeaturedTutors />
       
       <SubjectCards />
       <ProgressSection />
