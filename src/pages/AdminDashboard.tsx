@@ -1031,6 +1031,7 @@ export default function AdminDashboard() {
         </DialogContent>
       </Dialog>
 
+      <TutorProfileEditorDialog
         open={!!editingTutor}
         tutor={editingTutor}
         saving={savingTutorEdit}
