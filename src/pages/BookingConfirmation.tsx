@@ -35,6 +35,8 @@ export default function BookingConfirmation() {
     studentTimezone?: string;
     tutorTimezone?: string;
     meetLink?: string | null;
+    priceAmount?: number;
+    currency?: string;
   } | null;
 
   const displayName = user?.user_metadata?.display_name || user?.email?.split("@")[0] || "Student";
