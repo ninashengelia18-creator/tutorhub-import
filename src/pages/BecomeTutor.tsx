@@ -199,10 +199,10 @@ export default function BecomeTutor() {
             {faqs.map((faq, i) => (
               <AccordionItem key={i} value={`faq-${i}`}>
                 <AccordionTrigger className="text-left font-semibold text-base">
-                  {t(faq.qKey)}
+                  {faq.q}
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {t(faq.aKey)}
+                  {faq.a}
                 </AccordionContent>
               </AccordionItem>
             ))}
