@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import tutorHeroImg from "@/assets/tutor-hero.jpg";
+import aiWhisperLogo from "@/assets/ai-whisper-logo.png";
 
 export default function BecomeTutor() {
   const { t } = useLanguage();
