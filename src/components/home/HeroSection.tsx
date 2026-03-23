@@ -24,7 +24,7 @@ export function HeroSection() {
         <div className="absolute top-10 left-1/3 w-[300px] h-[300px] rounded-full bg-primary/5 blur-[80px]" />
       </div>
 
-      <div className="container relative py-24 md:py-32">
+      <div className="container relative py-16 md:py-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
