@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, ExternalLink, GraduationCap, Search, Shield, Users, Video, CheckCircle, Clock, XCircle, Send, CreditCard } from "lucide-react";
+import { Building2, ExternalLink, GraduationCap, MessageCircle, Search, Shield, Users, Video, CheckCircle, Clock, XCircle, Send, CreditCard } from "lucide-react";
 
 import { Layout } from "@/components/Layout";
 import { TutorApplicationList, type TutorApplicationListItem } from "@/components/admin/TutorApplicationList";
+import { PartnerApplicationList, type PartnerApplicationListItem } from "@/components/admin/PartnerApplicationList";
 import { ManualTutorDialog, type ManualTutorFormValues } from "@/components/admin/ManualTutorDialog";
 import { TutorManagementList, type TutorManagementListItem } from "@/components/admin/TutorManagementList";
 import { TutorProfileEditorDialog, type TutorProfileEditorValues } from "@/components/admin/TutorProfileEditorDialog";
