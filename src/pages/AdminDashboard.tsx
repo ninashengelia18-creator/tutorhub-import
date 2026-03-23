@@ -994,7 +994,58 @@ export default function AdminDashboard() {
             </>
           )}
 
-          {activeTab === "enquiries" && (
+          {activeTab === "partners" && (
+            <>
+              <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-3">
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-foreground">{partnerStats.total}</p>
+                  <p className="text-xs text-muted-foreground">Total applications</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-warning">{partnerStats.pending}</p>
+                  <p className="text-xs text-muted-foreground">Pending</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-success">{partnerStats.approved}</p>
+                  <p className="text-xs text-muted-foreground">Approved</p>
+                </div>
+              </div>
+
+              <div className="relative mb-6">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by name, email, country..." className="pl-9" />
+              </div>
+
+              <section className="mb-8 space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold">Pending Language Buddy applications</h2>
+                  <p className="text-sm text-muted-foreground">Review new Language Buddy submissions.</p>
+                </div>
+                <PartnerApplicationList
+                  applications={pendingPartnerApps}
+                  emptyLabel="No pending applications"
+                  onApprove={handleApprovePartner}
+                  onReject={handleRejectPartner}
+                  pendingActionId={pendingPartnerActionId}
+                />
+              </section>
+
+              <section className="space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold">Reviewed applications</h2>
+                  <p className="text-sm text-muted-foreground">Previously approved and rejected Language Buddy applications.</p>
+                </div>
+                <PartnerApplicationList
+                  applications={reviewedPartnerApps}
+                  emptyLabel="No reviewed applications yet"
+                  onApprove={handleApprovePartner}
+                  onReject={handleRejectPartner}
+                  pendingActionId={pendingPartnerActionId}
+                />
+              </section>
+            </>
+          )}
+
             <>
               <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-2">
                 <div className="rounded-xl border bg-card p-4">
