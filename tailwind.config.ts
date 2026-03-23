@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["'Kaushan Script'", 'cursive'],
+        sans: ['Arial', 'Helvetica', 'sans-serif'],
         display: ['Quicksand', 'system-ui', 'sans-serif'],
       },
       colors: {
