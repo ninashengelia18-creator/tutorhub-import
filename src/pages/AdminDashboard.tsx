@@ -995,7 +995,42 @@ export default function AdminDashboard() {
         </DialogContent>
       </Dialog>
 
-      <TutorProfileEditorDialog
+      <Dialog open={!!paymentLinkModal} onOpenChange={(open) => { if (!open) { setPaymentLinkModal(null); setPaymentLink(""); setPaymentAmount(""); } }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Send Payment Link</DialogTitle>
+          </DialogHeader>
+          {paymentLinkModal && (
+            <div className="space-y-4">
+              <div className="rounded-lg border bg-muted/50 p-3 text-sm">
+                <p className="font-medium">{paymentLinkModal.student_name || "Student"} → {paymentLinkModal.tutor_name}</p>
+                <p className="text-muted-foreground">{paymentLinkModal.subject} · {paymentLinkModal.lesson_date} · {paymentLinkModal.start_time?.slice(0, 5)}</p>
+                <p className="text-muted-foreground">Email: {paymentLinkModal.student_email || "N/A"}</p>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium">Wise Payment Link</label>
+                <Input value={paymentLink} onChange={(e) => setPaymentLink(e.target.value)} placeholder="https://wise.com/pay/..." />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium">Amount (USD)</label>
+                <Input type="number" step="0.01" value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} placeholder={String(paymentLinkModal.price_amount)} />
+              </div>
+              <Button
+                className="w-full"
+                onClick={handleSendPaymentLink}
+                disabled={!paymentLink.trim() || sendingPaymentLink || !paymentLinkModal.student_email}
+              >
+                <Send className="mr-2 h-4 w-4" />
+                {sendingPaymentLink ? "Sending..." : "Send to Student"}
+              </Button>
+              {!paymentLinkModal.student_email && (
+                <p className="text-xs text-destructive">No student email on this booking.</p>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
         open={!!editingTutor}
         tutor={editingTutor}
         saving={savingTutorEdit}
