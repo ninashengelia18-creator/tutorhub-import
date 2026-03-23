@@ -52,7 +52,7 @@ export default function BecomeTutor() {
   return (
     <Layout>
       {/* AI Whisper Section — top of page */}
-      <section className="container py-16">
+      <section className="container pt-16 pb-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
