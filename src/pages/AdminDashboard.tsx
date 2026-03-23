@@ -433,6 +433,77 @@ export default function AdminDashboard() {
     }
   };
 
+  const sendPartnerDecisionNotification = async (application: PartnerApplicationListItem, decision: "approved" | "rejected") => {
+    try {
+      await supabase.functions.invoke("notify-partner-decision", {
+        body: {
+          email: application.email,
+          first_name: application.first_name,
+          last_name: application.last_name,
+          decision,
+        },
+      });
+    } catch (err) {
+      console.error("Partner decision email failed:", err);
+    }
+  };
+
+  const handleApprovePartner = async (application: PartnerApplicationListItem) => {
+    setPendingPartnerActionId(application.id);
+    try {
+      const { error } = await supabase.rpc("approve_partner_application", { _application_id: application.id });
+      if (error) throw error;
+
+      try {
+        await sendPartnerDecisionNotification(application, "approved");
+        toast({ title: "Language Buddy approved", description: `${application.first_name} ${application.last_name} has been approved and notified.` });
+      } catch (notificationError) {
+        toast({
+          title: "Language Buddy approved",
+          description: notificationError instanceof Error ? notificationError.message : "Approved, but the notification email could not be sent.",
+        });
+      }
+
+      await refreshPartnerApplications();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to approve.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleRejectPartner = async (application: PartnerApplicationListItem) => {
+    setPendingPartnerActionId(application.id);
+    try {
+      const { error } = await supabase.rpc("reject_partner_application", { _application_id: application.id });
+      if (error) throw error;
+
+      try {
+        await sendPartnerDecisionNotification(application, "rejected");
+        toast({ title: "Language Buddy rejected", description: `${application.first_name} ${application.last_name} has been rejected.` });
+      } catch (notificationError) {
+        toast({
+          title: "Language Buddy rejected",
+          description: notificationError instanceof Error ? notificationError.message : "Rejected, but the notification email could not be sent.",
+        });
+      }
+
+      await refreshPartnerApplications();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to reject.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
   const handleSetTutorLiveState = async (tutor: TutorManagementListItem, makeLive: boolean) => {
     setPendingTutorActionId(tutor.id);
 
