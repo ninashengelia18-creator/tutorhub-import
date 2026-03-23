@@ -813,6 +813,16 @@ export default function AdminDashboard() {
               Tutor management ({tutorStats.total})
             </button>
             <button
+              onClick={() => setActiveTab("partners")}
+              className={`flex items-center gap-2 border-b-2 py-3 text-sm font-medium transition-colors ${activeTab === "partners" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            >
+              <MessageCircle className="h-4 w-4" />
+              Language Buddies ({partnerStats.total})
+              {partnerStats.pending > 0 && (
+                <Badge variant="secondary" className="ml-1 text-xs">{partnerStats.pending}</Badge>
+              )}
+            </button>
+            <button
               onClick={() => setActiveTab("enquiries")}
               className={`flex items-center gap-2 border-b-2 py-3 text-sm font-medium transition-colors ${activeTab === "enquiries" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
             >
