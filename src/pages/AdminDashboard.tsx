@@ -1098,26 +1098,22 @@ export default function AdminDashboard() {
           {activeTab === "tutors" && (
             <>
               <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-                <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-foreground">{tutorStats.total}</p>
-                  <p className="text-xs text-muted-foreground">Tutors</p>
-                </div>
-                <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-success">{tutorStats.live}</p>
-                  <p className="text-xs text-muted-foreground">Live</p>
-                </div>
-                <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-warning">{tutorStats.suspended}</p>
-                  <p className="text-xs text-muted-foreground">Suspended</p>
-                </div>
-                <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-info">{tutorStats.pending}</p>
-                  <p className="text-xs text-muted-foreground">Pending applications</p>
-                </div>
-                <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-muted-foreground">{tutorStats.archived}</p>
-                  <p className="text-xs text-muted-foreground">Archived</p>
-                </div>
+                {[
+                  { label: "Tutors", value: tutorStats.total, color: "text-foreground", target: "tutor-live-section" },
+                  { label: "Live", value: tutorStats.live, color: "text-success", target: "tutor-live-section" },
+                  { label: "Suspended", value: tutorStats.suspended, color: "text-warning", target: "tutor-live-section" },
+                  { label: "Pending applications", value: tutorStats.pending, color: "text-info", target: "tutor-pending-section" },
+                  { label: "Archived", value: tutorStats.archived, color: "text-muted-foreground", target: "tutor-archived-section" },
+                ].map((stat) => (
+                  <button
+                    key={stat.label}
+                    onClick={() => document.getElementById(stat.target)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                    className="rounded-xl border bg-card p-4 text-left transition-colors hover:bg-accent/50"
+                  >
+                    <p className={cn("text-2xl font-bold", stat.color)}>{stat.value}</p>
+                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  </button>
+                ))}
               </div>
 
               <div className="relative mb-6">
