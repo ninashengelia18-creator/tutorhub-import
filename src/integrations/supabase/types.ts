@@ -600,6 +600,7 @@ export type Database = {
           email: string | null
           first_name: string
           id: string
+          is_archived: boolean
           is_published: boolean
           languages_spoken: string[]
           last_name: string
@@ -624,6 +625,7 @@ export type Database = {
           email?: string | null
           first_name: string
           id?: string
+          is_archived?: boolean
           is_published?: boolean
           languages_spoken?: string[]
           last_name: string
@@ -648,6 +650,7 @@ export type Database = {
           email?: string | null
           first_name?: string
           id?: string
+          is_archived?: boolean
           is_published?: boolean
           languages_spoken?: string[]
           last_name?: string
@@ -1243,6 +1246,7 @@ export type Database = {
           email: string | null
           first_name: string
           id: string
+          is_archived: boolean
           is_published: boolean
           languages_spoken: string[]
           last_name: string
@@ -1403,6 +1407,7 @@ export type Database = {
           email: string | null
           first_name: string
           id: string
+          is_archived: boolean
           is_published: boolean
           languages_spoken: string[]
           last_name: string
