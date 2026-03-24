@@ -686,6 +686,7 @@ export type Database = {
           first_name: string
           hourly_rate: number
           id: string
+          is_archived: boolean
           is_published: boolean
           languages_spoken: string[]
           last_name: string
@@ -711,6 +712,7 @@ export type Database = {
           first_name: string
           hourly_rate: number
           id?: string
+          is_archived?: boolean
           is_published?: boolean
           languages_spoken?: string[]
           last_name: string
@@ -736,6 +738,7 @@ export type Database = {
           first_name?: string
           hourly_rate?: number
           id?: string
+          is_archived?: boolean
           is_published?: boolean
           languages_spoken?: string[]
           last_name?: string
@@ -1088,6 +1091,7 @@ export type Database = {
           first_name: string
           hourly_rate: number
           id: string
+          is_archived: boolean
           is_published: boolean
           languages_spoken: string[]
           last_name: string
@@ -1275,6 +1279,7 @@ export type Database = {
           first_name: string
           hourly_rate: number
           id: string
+          is_archived: boolean
           is_published: boolean
           languages_spoken: string[]
           last_name: string
@@ -1445,6 +1450,7 @@ export type Database = {
               first_name: string
               hourly_rate: number
               id: string
+              is_archived: boolean
               is_published: boolean
               languages_spoken: string[]
               last_name: string
@@ -1494,6 +1500,7 @@ export type Database = {
               first_name: string
               hourly_rate: number
               id: string
+              is_archived: boolean
               is_published: boolean
               languages_spoken: string[]
               last_name: string
@@ -1528,6 +1535,7 @@ export type Database = {
           first_name: string
           hourly_rate: number
           id: string
+          is_archived: boolean
           is_published: boolean
           languages_spoken: string[]
           last_name: string
