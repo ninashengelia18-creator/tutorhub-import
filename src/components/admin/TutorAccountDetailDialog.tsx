@@ -178,7 +178,7 @@ export function TutorAccountDetailDialog({ tutor, open, onOpenChange }: TutorAcc
                 className="w-full"
               >
                 <ExternalLink className="mr-2 h-4 w-4" />
-                {impersonating ? "Generating login link..." : "Login as this tutor (new tab)"}
+                {impersonating ? "Generating link..." : "Copy login link (use in incognito)"}
               </Button>
             )}
 
