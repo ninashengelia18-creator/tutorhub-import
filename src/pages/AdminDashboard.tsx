@@ -822,6 +822,7 @@ export default function AdminDashboard() {
     live: managedTutors.filter((tutor) => tutor.is_published).length,
     suspended: managedTutors.filter((tutor) => !tutor.is_published).length,
     pending: applications.filter((application) => application.status === "pending").length,
+    archived: archivedTutors.length,
   };
 
   const partnerStats = {
