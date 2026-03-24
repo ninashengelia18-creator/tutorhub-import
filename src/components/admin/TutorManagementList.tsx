@@ -1,4 +1,4 @@
-import { Archive, ArchiveRestore, Eye, Pencil, Trash2 } from "lucide-react";
+import { Archive, ArchiveRestore, Eye, Pencil, Trash2, User } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ interface TutorManagementListProps {
   onDelete: (tutor: TutorManagementListItem) => void;
   onEdit: (tutor: TutorManagementListItem) => void;
   onViewBookings: (tutor: TutorManagementListItem) => void;
+  onViewAccount?: (tutor: TutorManagementListItem) => void;
   onArchive?: (tutor: TutorManagementListItem) => void;
   onUnarchive?: (tutor: TutorManagementListItem) => void;
 }
@@ -35,6 +36,7 @@ export function TutorManagementList({
   onDelete,
   onEdit,
   onViewBookings,
+  onViewAccount,
   onArchive,
   onUnarchive,
 }: TutorManagementListProps) {
@@ -169,9 +171,14 @@ export function TutorManagementList({
                   <Button size="sm" variant="outline" onClick={() => onEdit(tutor)}>
                     <Pencil className="mr-1 h-3.5 w-3.5" /> Edit
                   </Button>
-                  <Button size="sm" variant="ghost" onClick={() => onViewBookings(tutor)}>
-                    <Eye className="mr-1 h-3.5 w-3.5" /> View bookings
-                  </Button>
+                   <Button size="sm" variant="ghost" onClick={() => onViewBookings(tutor)}>
+                     <Eye className="mr-1 h-3.5 w-3.5" /> View bookings
+                   </Button>
+                   {onViewAccount && (
+                     <Button size="sm" variant="ghost" onClick={() => onViewAccount(tutor)}>
+                       <User className="mr-1 h-3.5 w-3.5" /> View Account
+                     </Button>
+                   )}
                 </>
               )}
             </div>

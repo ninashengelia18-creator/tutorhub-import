@@ -9,6 +9,7 @@ import { ManualTutorDialog, type ManualTutorFormValues } from "@/components/admi
 import { TutorManagementList, type TutorManagementListItem } from "@/components/admin/TutorManagementList";
 import { PartnerManagementList, type PartnerManagementListItem } from "@/components/admin/PartnerManagementList";
 import { TutorProfileEditorDialog, type TutorProfileEditorValues } from "@/components/admin/TutorProfileEditorDialog";
+import { TutorAccountDetailDialog } from "@/components/admin/TutorAccountDetailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -99,6 +100,7 @@ export default function AdminDashboard() {
   const [hasAutoFocusedPendingApplications, setHasAutoFocusedPendingApplications] = useState(false);
   const [pendingPartnerActionId, setPendingPartnerActionId] = useState<string | null>(null);
   const [deletingPartner, setDeletingPartner] = useState<PartnerManagementListItem | null>(null);
+  const [viewingTutorAccount, setViewingTutorAccount] = useState<TutorManagementListItem | null>(null);
 
   const refreshBookings = useCallback(async () => {
     const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
@@ -1137,6 +1139,7 @@ export default function AdminDashboard() {
                   onDelete={setDeletingTutor}
                   onEdit={setEditingTutor}
                   onViewBookings={setBookingsTutor}
+                  onViewAccount={setViewingTutorAccount}
                   onArchive={handleArchiveTutor}
                 />
               </section>
@@ -1157,6 +1160,7 @@ export default function AdminDashboard() {
                     onDelete={setDeletingTutor}
                     onEdit={setEditingTutor}
                     onViewBookings={setBookingsTutor}
+                    onViewAccount={setViewingTutorAccount}
                     onUnarchive={handleUnarchiveTutor}
                   />
                 </section>
@@ -1467,6 +1471,12 @@ export default function AdminDashboard() {
         saving={savingTutorEdit}
         onOpenChange={(open) => !open && setEditingTutor(null)}
         onSubmit={handleSaveTutorProfile}
+      />
+
+      <TutorAccountDetailDialog
+        tutor={viewingTutorAccount}
+        open={!!viewingTutorAccount}
+        onOpenChange={(open) => !open && setViewingTutorAccount(null)}
       />
     </Layout>
   );
