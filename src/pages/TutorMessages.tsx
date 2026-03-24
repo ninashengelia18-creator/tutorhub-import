@@ -47,6 +47,7 @@ export default function TutorMessages() {
   const [contacts, setContacts] = useState<BookingContactRecord[]>([]);
   const [conversations, setConversations] = useState<ConversationRecord[]>([]);
   const [messages, setMessages] = useState<MessageRecord[]>([]);
+  const [adminMessages, setAdminMessages] = useState<any[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
@@ -56,6 +57,8 @@ export default function TutorMessages() {
   const [showTip, setShowTip] = useState(true);
   const [sending, setSending] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<ConversationListItem | null>(null);
+
+  const ADMIN_CONVERSATION_ID = "__admin__";
 
   useEffect(() => {
     if (!user || !tutorName) return;
