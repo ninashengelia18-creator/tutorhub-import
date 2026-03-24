@@ -42,6 +42,7 @@ interface TutorApplicationListProps {
   rejectLabel: string;
   onApprove: (application: TutorApplicationListItem) => void;
   onReject: (application: TutorApplicationListItem) => void;
+  onDelete?: (application: TutorApplicationListItem) => void;
   pendingActionId?: string | null;
 }
 
