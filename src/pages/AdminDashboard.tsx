@@ -78,6 +78,7 @@ export default function AdminDashboard() {
   const [enquiries, setEnquiries] = useState<BusinessInquiry[]>([]);
   const [partnerApplications, setPartnerApplications] = useState<PartnerApplicationListItem[]>([]);
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
+  const [partners, setPartners] = useState<PublicPartnerProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [search, setSearch] = useState("");
