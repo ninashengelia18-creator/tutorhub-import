@@ -315,6 +315,13 @@ export default function AdminDashboard() {
     if (error) throw error;
   };
 
+  const invokeManagePartner = async (partnerId: string, action: "suspend" | "unsuspend" | "delete" | "archive" | "unarchive") => {
+    const { error } = await supabase.functions.invoke("admin-manage-partner", {
+      body: { partnerProfileId: partnerId, action },
+    });
+    if (error) throw error;
+  };
+
   const handleMarkPaid = async (booking: AdminBooking) => {
     toast({ title: "Confirming payment & generating meet link..." });
     try {
