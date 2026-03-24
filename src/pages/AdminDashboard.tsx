@@ -821,6 +821,44 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleSendAdminMessage = async (content: string) => {
+    if (!messageTarget) return;
+    setSendingMessage(true);
+    try {
+      const { error } = await supabase.from("admin_messages" as any).insert({
+        recipient_type: messageTarget.type,
+        recipient_name: messageTarget.name,
+        recipient_email: messageTarget.email,
+        sender_type: "admin",
+        sender_name: "LearnEazy Admin",
+        content,
+      } as any);
+
+      if (error) throw error;
+
+      // Send email notification
+      try {
+        await supabase.functions.invoke("notify-admin-message", {
+          body: {
+            recipientEmail: messageTarget.email,
+            recipientName: messageTarget.name,
+            senderName: "LearnEazy Admin",
+            messageContent: content,
+          },
+        });
+      } catch (emailErr) {
+        console.error("Email notification failed:", emailErr);
+      }
+
+      toast({ title: "Message sent", description: `Message sent to ${messageTarget.name}` });
+      setMessageTarget(null);
+    } catch (err: any) {
+      toast({ title: "Error", description: err?.message || "Failed to send message", variant: "destructive" });
+    } finally {
+      setSendingMessage(false);
+    }
+  };
+
   const filteredBookings = useMemo(() => {
     const query = search.toLowerCase();
     return bookings.filter((booking) =>
