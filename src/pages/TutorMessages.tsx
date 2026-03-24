@@ -64,7 +64,7 @@ export default function TutorMessages() {
     if (!user || !tutorName) return;
 
     const loadData = async () => {
-      const [{ data: bookingsData }, { data: conversationsData }, { data: messagesData }] = await Promise.all([
+      const [{ data: bookingsData }, { data: conversationsData }, { data: messagesData }, { data: adminMsgsData }] = await Promise.all([
         supabase
           .from("bookings")
           .select("student_id, student_name, subject, created_at")
@@ -80,11 +80,16 @@ export default function TutorMessages() {
           .select("id, student_id, tutor_name, content, created_at, sender_type, sender_display_name, read_at, attachment_url, attachment_name, attachment_type, attachment_size")
           .eq("tutor_name", tutorName)
           .order("created_at", { ascending: true }),
+        supabase
+          .from("admin_messages" as any)
+          .select("*")
+          .order("created_at", { ascending: true }),
       ]);
 
       setContacts((bookingsData as BookingContactRecord[] | null) ?? []);
       setConversations((conversationsData as ConversationRecord[] | null) ?? []);
       setMessages((messagesData as MessageRecord[] | null) ?? []);
+      setAdminMessages((adminMsgsData as any[]) ?? []);
     };
 
     void loadData();
