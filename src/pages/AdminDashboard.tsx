@@ -1160,6 +1160,7 @@ export default function AdminDashboard() {
                     onDelete={setDeletingTutor}
                     onEdit={setEditingTutor}
                     onViewBookings={setBookingsTutor}
+                    onViewAccount={setViewingTutorAccount}
                     onUnarchive={handleUnarchiveTutor}
                   />
                 </section>
