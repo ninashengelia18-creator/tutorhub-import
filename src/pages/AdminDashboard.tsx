@@ -144,12 +144,13 @@ export default function AdminDashboard() {
   }, []);
 
   const refreshAdminData = useCallback(async () => {
-    const [bookingResult, applicationResult, tutorResult, enquiryResult, partnerResult] = await Promise.all([
+    const [bookingResult, applicationResult, tutorResult, enquiryResult, partnerResult, partnerProfileResult] = await Promise.all([
       supabase.from("bookings").select("*").order("created_at", { ascending: false }),
       supabase.from("tutor_applications").select("*").order("created_at", { ascending: false }),
       supabase.from("public_tutor_profiles" as never).select("*").order("created_at", { ascending: false }),
       supabase.from("business_inquiries").select("*").order("created_at", { ascending: false }),
       supabase.from("conversation_partner_applications").select("*").order("created_at", { ascending: false }),
+      supabase.from("public_partner_profiles" as never).select("*").order("created_at", { ascending: false }),
     ]);
 
     if (bookingResult.error) {
