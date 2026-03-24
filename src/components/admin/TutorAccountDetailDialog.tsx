@@ -158,7 +158,7 @@ export function TutorAccountDetailDialog({ tutor, open, onOpenChange }: TutorAcc
                   >
                     {tutor.is_published ? "Live" : "Not published"}
                   </Badge>
-                  <Badge variant="secondary">{tutor.source === "application" ? "From Application" : "Manual"}</Badge>
+                  <Badge variant="secondary">{tutor.application_id ? "From Application" : "Manual"}</Badge>
                   <Badge variant="outline" className="gap-1">
                     <Star className="h-3 w-3" /> {Number(tutor.rating).toFixed(1)} ({tutor.review_count} reviews)
                   </Badge>
