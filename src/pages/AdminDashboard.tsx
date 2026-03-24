@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { submitFormspree } from "@/lib/formspree";
 import { getTutorFullName, type PublicTutorProfile } from "@/lib/publicTutors";
+import { type PublicPartnerProfile } from "@/lib/publicPartners";
 import { cn } from "@/lib/utils";
 
 interface AdminBooking {
