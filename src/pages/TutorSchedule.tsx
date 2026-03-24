@@ -297,14 +297,9 @@ export default function TutorSchedule() {
           ) : (
             <>
               <div className="mb-8 rounded-[1.75rem] border border-border bg-card p-6 shadow-sm">
-                <div className="mb-6 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
-                    <Plus className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Add availability</p>
-                    <p className="text-xs text-muted-foreground">Students will see these slots in their own timezone.</p>
-                  </div>
+                <div className="mb-6">
+                  <p className="text-sm font-semibold text-foreground">Add availability</p>
+                  <p className="text-xs text-muted-foreground">Students will see these slots in their own timezone.</p>
                 </div>
 
                 <div className="flex flex-wrap gap-4 items-end">
