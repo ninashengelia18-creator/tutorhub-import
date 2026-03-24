@@ -102,12 +102,15 @@ export function TutorAccountDetailDialog({ tutor, open, onOpenChange }: TutorAcc
     setImpersonating(true);
     try {
       const { data, error } = await supabase.functions.invoke("admin-impersonate", {
-        body: { email: tutor.email },
+        body: { email: tutor.email, redirectTo: `${window.location.origin}/tutor-dashboard` },
       });
       if (error) throw error;
       if (data?.url) {
         window.open(data.url, "_blank");
-        toast({ title: "Login link opened", description: "A new tab has been opened with the tutor's session. You remain logged in as admin here." });
+        toast({
+          title: "Login link opened",
+          description: "A new tab will open as the tutor. Note: this will sign you out of your admin session in that tab.",
+        });
       }
     } catch (err) {
       toast({ title: "Error", description: err instanceof Error ? err.message : "Failed to generate login link", variant: "destructive" });
