@@ -75,7 +75,7 @@ serve(async (req) => {
 
     const { action, tutorProfileId } = await req.json();
 
-    if (!tutorProfileId || !["suspend", "unsuspend", "delete"].includes(action)) {
+    if (!tutorProfileId || !["suspend", "unsuspend", "delete", "archive", "unarchive"].includes(action)) {
       return new Response(JSON.stringify({ error: "Invalid action or missing tutor profile id." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
