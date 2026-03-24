@@ -24,6 +24,7 @@ interface TutorManagementListProps {
   onViewAccount?: (tutor: TutorManagementListItem) => void;
   onArchive?: (tutor: TutorManagementListItem) => void;
   onUnarchive?: (tutor: TutorManagementListItem) => void;
+  onSendMessage?: (tutor: TutorManagementListItem) => void;
 }
 
 export function TutorManagementList({
