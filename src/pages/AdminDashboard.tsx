@@ -872,6 +872,32 @@ export default function AdminDashboard() {
   }, [partnerApplications, search]);
 
   const pendingPartnerApps = filteredPartnerApplications.filter((a) => a.status === "pending");
+  const managedPartners = useMemo<PartnerManagementListItem[]>(() => {
+    return partners
+      .filter((p) => !(p as any).is_archived)
+      .map((p) => ({ ...p, is_archived: false }));
+  }, [partners]);
+
+  const archivedPartners = useMemo<PartnerManagementListItem[]>(() => {
+    return partners
+      .filter((p) => (p as any).is_archived)
+      .map((p) => ({ ...p, is_archived: true }));
+  }, [partners]);
+
+  const filteredManagedPartners = useMemo(() => {
+    const query = search.toLowerCase();
+    return managedPartners.filter((p) =>
+      [`${p.first_name} ${p.last_name}`, p.email ?? "", p.country ?? "", p.bio].join(" ").toLowerCase().includes(query),
+    );
+  }, [managedPartners, search]);
+
+  const filteredArchivedPartners = useMemo(() => {
+    const query = search.toLowerCase();
+    return archivedPartners.filter((p) =>
+      [`${p.first_name} ${p.last_name}`, p.email ?? "", p.country ?? "", p.bio].join(" ").toLowerCase().includes(query),
+    );
+  }, [archivedPartners, search]);
+
   const reviewedPartnerApps = filteredPartnerApplications.filter((a) => a.status !== "pending");
 
   const reviewedApplications = filteredApplications.filter((application) => application.status !== "pending");
