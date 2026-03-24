@@ -1312,6 +1312,7 @@ export default function AdminDashboard() {
                   emptyLabel="No reviewed applications yet"
                   onApprove={handleApprovePartner}
                   onReject={handleRejectPartner}
+                  onDelete={handleDeletePartnerApplication}
                   pendingActionId={pendingPartnerActionId}
                 />
               </section>
