@@ -1141,7 +1141,7 @@ export default function AdminDashboard() {
               </section>
 
               {filteredArchivedTutors.length > 0 && (
-                <section className="mb-8 space-y-4">
+                <section id="tutor-archived-section" className="mb-8 space-y-4">
                   <div>
                     <h2 className="text-lg font-semibold">📦 Archived tutors</h2>
                     <p className="text-sm text-muted-foreground">Tutors that are no longer live. Restore them or delete permanently.</p>
