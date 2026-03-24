@@ -143,9 +143,19 @@ export default function TutorMessages() {
       )
       .subscribe();
 
+    const adminChannel = supabase
+      .channel(`admin-messages-tutor-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "admin_messages" },
+        () => void loadData()
+      )
+      .subscribe();
+
     return () => {
       void supabase.removeChannel(messagesChannel);
       void supabase.removeChannel(conversationsChannel);
+      void supabase.removeChannel(adminChannel);
     };
   }, [tutorName, user]);
 
