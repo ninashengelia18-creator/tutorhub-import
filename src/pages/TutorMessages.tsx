@@ -279,6 +279,17 @@ export default function TutorMessages() {
   useEffect(() => {
     if (!user || !selectedStudentId) return;
 
+    if (isAdminConversation) {
+      const unreadAdminIds = adminMessages.filter((m: any) => m.sender_type === "admin" && !m.read_at).map((m: any) => m.id);
+      if (unreadAdminIds.length > 0) {
+        void (async () => {
+          await supabase.from("admin_messages" as any).update({ read_at: new Date().toISOString() } as any).in("id", unreadAdminIds);
+          setAdminMessages((cur) => cur.map((m: any) => unreadAdminIds.includes(m.id) ? { ...m, read_at: new Date().toISOString() } : m));
+        })();
+      }
+      return;
+    }
+
     const unreadStudentMessages = selectedMessages.filter((item) => item.sender_type === "student" && !item.read_at);
     if (unreadStudentMessages.length === 0) return;
 
@@ -292,7 +303,7 @@ export default function TutorMessages() {
     };
 
     void markAsRead();
-  }, [selectedMessages, selectedStudentId, user]);
+  }, [selectedMessages, selectedStudentId, user, isAdminConversation, adminMessages]);
 
   const ensureConversation = async (studentId: string, archived = false) => {
     if (!user || !tutorName) return false;
