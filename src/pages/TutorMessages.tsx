@@ -47,6 +47,7 @@ export default function TutorMessages() {
   const [contacts, setContacts] = useState<BookingContactRecord[]>([]);
   const [conversations, setConversations] = useState<ConversationRecord[]>([]);
   const [messages, setMessages] = useState<MessageRecord[]>([]);
+  const [adminMessages, setAdminMessages] = useState<any[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
@@ -57,11 +58,13 @@ export default function TutorMessages() {
   const [sending, setSending] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<ConversationListItem | null>(null);
 
+  const ADMIN_CONVERSATION_ID = "__admin__";
+
   useEffect(() => {
     if (!user || !tutorName) return;
 
     const loadData = async () => {
-      const [{ data: bookingsData }, { data: conversationsData }, { data: messagesData }] = await Promise.all([
+      const [{ data: bookingsData }, { data: conversationsData }, { data: messagesData }, { data: adminMsgsData }] = await Promise.all([
         supabase
           .from("bookings")
           .select("student_id, student_name, subject, created_at")
@@ -77,11 +80,16 @@ export default function TutorMessages() {
           .select("id, student_id, tutor_name, content, created_at, sender_type, sender_display_name, read_at, attachment_url, attachment_name, attachment_type, attachment_size")
           .eq("tutor_name", tutorName)
           .order("created_at", { ascending: true }),
+        supabase
+          .from("admin_messages" as any)
+          .select("*")
+          .order("created_at", { ascending: true }),
       ]);
 
       setContacts((bookingsData as BookingContactRecord[] | null) ?? []);
       setConversations((conversationsData as ConversationRecord[] | null) ?? []);
       setMessages((messagesData as MessageRecord[] | null) ?? []);
+      setAdminMessages((adminMsgsData as any[]) ?? []);
     };
 
     void loadData();
@@ -135,9 +143,19 @@ export default function TutorMessages() {
       )
       .subscribe();
 
+    const adminChannel = supabase
+      .channel(`admin-messages-tutor-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "admin_messages" },
+        () => void loadData()
+      )
+      .subscribe();
+
     return () => {
       void supabase.removeChannel(messagesChannel);
       void supabase.removeChannel(conversationsChannel);
+      void supabase.removeChannel(adminChannel);
     };
   }, [tutorName, user]);
 
@@ -151,6 +169,22 @@ export default function TutorMessages() {
     });
 
     const conversationMap = new Map<string, ConversationListItem>();
+
+    // Add admin conversation if there are admin messages
+    if (adminMessages.length > 0) {
+      const lastAdminMsg = adminMessages[adminMessages.length - 1];
+      const unreadAdmin = adminMessages.filter((m: any) => m.sender_type === "admin" && !m.read_at).length;
+      conversationMap.set(ADMIN_CONVERSATION_ID, {
+        id: ADMIN_CONVERSATION_ID,
+        name: "LearnEazy Admin",
+        avatar_url: null,
+        subject: "Admin",
+        lastMessage: lastAdminMsg?.content || "No messages yet",
+        unread: unreadAdmin,
+        archived: false,
+        updatedAt: lastAdminMsg?.created_at || new Date().toISOString(),
+      });
+    }
 
     contactMap.forEach((contact, studentId) => {
       const conversation = conversations.find((item) => item.student_id === studentId);
@@ -202,7 +236,7 @@ export default function TutorMessages() {
         return true;
       })
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-  }, [contacts, conversations, messages, msgFilter, searchQuery, subjectFilter]);
+  }, [contacts, conversations, messages, adminMessages, msgFilter, searchQuery, subjectFilter]);
 
   useEffect(() => {
     if (!selectedStudentId && conversationItems.length > 0) {
@@ -220,13 +254,41 @@ export default function TutorMessages() {
     [conversationItems, selectedStudentId],
   );
 
-  const selectedMessages = useMemo(
-    () => messages.filter((item) => item.student_id === selectedStudentId),
-    [messages, selectedStudentId],
-  );
+  const isAdminConversation = selectedStudentId === ADMIN_CONVERSATION_ID;
+
+  const selectedMessages = useMemo(() => {
+    if (isAdminConversation) {
+      return adminMessages.map((m: any) => ({
+        id: m.id,
+        student_id: ADMIN_CONVERSATION_ID,
+        tutor_name: m.recipient_name,
+        content: m.content,
+        created_at: m.created_at,
+        sender_type: m.sender_type === "admin" ? "student" : "tutor",
+        sender_display_name: m.sender_name,
+        read_at: m.read_at,
+        attachment_url: null,
+        attachment_name: null,
+        attachment_type: null,
+        attachment_size: null,
+      } as MessageRecord));
+    }
+    return messages.filter((item) => item.student_id === selectedStudentId);
+  }, [messages, adminMessages, selectedStudentId, isAdminConversation]);
 
   useEffect(() => {
     if (!user || !selectedStudentId) return;
+
+    if (isAdminConversation) {
+      const unreadAdminIds = adminMessages.filter((m: any) => m.sender_type === "admin" && !m.read_at).map((m: any) => m.id);
+      if (unreadAdminIds.length > 0) {
+        void (async () => {
+          await supabase.from("admin_messages" as any).update({ read_at: new Date().toISOString() } as any).in("id", unreadAdminIds);
+          setAdminMessages((cur) => cur.map((m: any) => unreadAdminIds.includes(m.id) ? { ...m, read_at: new Date().toISOString() } : m));
+        })();
+      }
+      return;
+    }
 
     const unreadStudentMessages = selectedMessages.filter((item) => item.sender_type === "student" && !item.read_at);
     if (unreadStudentMessages.length === 0) return;
@@ -241,7 +303,7 @@ export default function TutorMessages() {
     };
 
     void markAsRead();
-  }, [selectedMessages, selectedStudentId, user]);
+  }, [selectedMessages, selectedStudentId, user, isAdminConversation, adminMessages]);
 
   const ensureConversation = async (studentId: string, archived = false) => {
     if (!user || !tutorName) return false;
@@ -299,6 +361,45 @@ export default function TutorMessages() {
     setSending(true);
 
     try {
+      // Handle admin conversation reply
+      if (isAdminConversation) {
+        const userEmail = user.email ?? "";
+        const { error } = await supabase.from("admin_messages" as any).insert({
+          recipient_type: "tutor",
+          recipient_name: tutorName,
+          recipient_email: userEmail,
+          sender_type: "tutor",
+          sender_name: tutorName,
+          content: message.trim(),
+        } as any);
+
+        if (error) {
+          toast({ title: t("msg.messageFailed"), variant: "destructive" });
+          setSending(false);
+          return;
+        }
+
+        // Notify admin via email
+        try {
+          await supabase.functions.invoke("notify-admin-message", {
+            body: {
+              recipientEmail: "info@learneazy.org",
+              recipientName: "LearnEazy Admin",
+              senderName: tutorName,
+              messageContent: message.trim(),
+              notifyAdmin: true,
+            },
+          });
+        } catch (emailErr) {
+          console.error("Admin email notification failed:", emailErr);
+        }
+
+        setMessage("");
+        setAttachedFile(null);
+        setSending(false);
+        return;
+      }
+
       const attachment = await uploadAttachment();
       if (attachedFile && !attachment) {
         setSending(false);

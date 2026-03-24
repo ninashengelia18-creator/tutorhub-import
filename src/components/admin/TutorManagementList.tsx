@@ -1,4 +1,4 @@
-import { Archive, ArchiveRestore, Eye, Pencil, Trash2, User } from "lucide-react";
+import { Archive, ArchiveRestore, Eye, MessageSquare, Pencil, Trash2, User } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ interface TutorManagementListProps {
   onViewAccount?: (tutor: TutorManagementListItem) => void;
   onArchive?: (tutor: TutorManagementListItem) => void;
   onUnarchive?: (tutor: TutorManagementListItem) => void;
+  onSendMessage?: (tutor: TutorManagementListItem) => void;
 }
 
 export function TutorManagementList({
@@ -39,6 +40,7 @@ export function TutorManagementList({
   onViewAccount,
   onArchive,
   onUnarchive,
+  onSendMessage,
 }: TutorManagementListProps) {
   if (tutors.length === 0) {
     return <div className="py-12 text-center text-muted-foreground">{emptyLabel}</div>;
@@ -179,11 +181,16 @@ export function TutorManagementList({
                    <Button size="sm" variant="ghost" onClick={() => onViewBookings(tutor)}>
                      <Eye className="mr-1 h-3.5 w-3.5" /> View bookings
                    </Button>
-                   {onViewAccount && (
-                     <Button size="sm" variant="ghost" onClick={() => onViewAccount(tutor)}>
-                       <User className="mr-1 h-3.5 w-3.5" /> View Account
-                     </Button>
-                   )}
+                    {onViewAccount && (
+                      <Button size="sm" variant="ghost" onClick={() => onViewAccount(tutor)}>
+                        <User className="mr-1 h-3.5 w-3.5" /> View Account
+                      </Button>
+                    )}
+                    {onSendMessage && (
+                      <Button size="sm" variant="ghost" onClick={() => onSendMessage(tutor)}>
+                        <MessageSquare className="mr-1 h-3.5 w-3.5" /> Send Message
+                      </Button>
+                    )}
                 </>
               )}
             </div>

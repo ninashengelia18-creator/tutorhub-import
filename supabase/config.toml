@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.notify-partner-decision]
 verify_jwt = false
+
+[functions.notify-admin-message]
+verify_jwt = false

@@ -1,4 +1,4 @@
-import { Archive, ArchiveRestore, Eye, Trash2 } from "lucide-react";
+import { Archive, ArchiveRestore, Eye, MessageSquare, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ interface PartnerManagementListProps {
   onDelete: (partner: PartnerManagementListItem) => void;
   onArchive?: (partner: PartnerManagementListItem) => void;
   onUnarchive?: (partner: PartnerManagementListItem) => void;
+  onSendMessage?: (partner: PartnerManagementListItem) => void;
 }
 
 export function PartnerManagementList({
@@ -28,6 +29,7 @@ export function PartnerManagementList({
   onDelete,
   onArchive,
   onUnarchive,
+  onSendMessage,
 }: PartnerManagementListProps) {
   if (partners.length === 0) {
     return <div className="py-12 text-center text-muted-foreground">{emptyLabel}</div>;
@@ -132,6 +134,11 @@ export function PartnerManagementList({
                   <Button size="sm" variant="destructive" onClick={() => onDelete(partner)} disabled={isPendingAction}>
                     <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete
                   </Button>
+                  {onSendMessage && (
+                    <Button size="sm" variant="ghost" onClick={() => onSendMessage(partner)}>
+                      <MessageSquare className="mr-1 h-3.5 w-3.5" /> Send Message
+                    </Button>
+                  )}
                 </>
               )}
             </div>

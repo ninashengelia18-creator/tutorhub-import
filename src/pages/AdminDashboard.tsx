@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, ExternalLink, GraduationCap, MessageCircle, Search, Shield, Users, Video, CheckCircle, Clock, XCircle, Send, CreditCard } from "lucide-react";
+import { Building2, ExternalLink, GraduationCap, Inbox, MessageCircle, Search, Shield, Users, Video, CheckCircle, Clock, XCircle, Send, CreditCard } from "lucide-react";
 
 import { Layout } from "@/components/Layout";
 import { TutorApplicationList, type TutorApplicationListItem } from "@/components/admin/TutorApplicationList";
@@ -10,6 +10,8 @@ import { TutorManagementList, type TutorManagementListItem } from "@/components/
 import { PartnerManagementList, type PartnerManagementListItem } from "@/components/admin/PartnerManagementList";
 import { TutorProfileEditorDialog, type TutorProfileEditorValues } from "@/components/admin/TutorProfileEditorDialog";
 import { TutorAccountDetailDialog } from "@/components/admin/TutorAccountDetailDialog";
+import { AdminSendMessageDialog } from "@/components/admin/AdminSendMessageDialog";
+import { AdminInbox } from "@/components/admin/AdminInbox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -73,7 +75,7 @@ export default function AdminDashboard() {
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const [activeTab, setActiveTab] = useState<"bookings" | "tutors" | "partners" | "enquiries">("bookings");
+  const [activeTab, setActiveTab] = useState<"bookings" | "tutors" | "partners" | "enquiries" | "inbox">("bookings");
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [applications, setApplications] = useState<TutorApplicationListItem[]>([]);
   const [enquiries, setEnquiries] = useState<BusinessInquiry[]>([]);
@@ -101,6 +103,8 @@ export default function AdminDashboard() {
   const [pendingPartnerActionId, setPendingPartnerActionId] = useState<string | null>(null);
   const [deletingPartner, setDeletingPartner] = useState<PartnerManagementListItem | null>(null);
   const [viewingTutorAccount, setViewingTutorAccount] = useState<TutorManagementListItem | null>(null);
+  const [messageTarget, setMessageTarget] = useState<{ name: string; email: string; type: "tutor" | "partner" } | null>(null);
+  const [sendingMessage, setSendingMessage] = useState(false);
 
   const refreshBookings = useCallback(async () => {
     const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
@@ -817,6 +821,44 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleSendAdminMessage = async (content: string) => {
+    if (!messageTarget) return;
+    setSendingMessage(true);
+    try {
+      const { error } = await supabase.from("admin_messages" as any).insert({
+        recipient_type: messageTarget.type,
+        recipient_name: messageTarget.name,
+        recipient_email: messageTarget.email,
+        sender_type: "admin",
+        sender_name: "LearnEazy Admin",
+        content,
+      } as any);
+
+      if (error) throw error;
+
+      // Send email notification
+      try {
+        await supabase.functions.invoke("notify-admin-message", {
+          body: {
+            recipientEmail: messageTarget.email,
+            recipientName: messageTarget.name,
+            senderName: "LearnEazy Admin",
+            messageContent: content,
+          },
+        });
+      } catch (emailErr) {
+        console.error("Email notification failed:", emailErr);
+      }
+
+      toast({ title: "Message sent", description: `Message sent to ${messageTarget.name}` });
+      setMessageTarget(null);
+    } catch (err: any) {
+      toast({ title: "Error", description: err?.message || "Failed to send message", variant: "destructive" });
+    } finally {
+      setSendingMessage(false);
+    }
+  };
+
   const filteredBookings = useMemo(() => {
     const query = search.toLowerCase();
     return bookings.filter((booking) =>
@@ -1037,6 +1079,13 @@ export default function AdminDashboard() {
               <Building2 className="h-4 w-4" />
               Enquiries ({enquiries.length})
             </button>
+            <button
+              onClick={() => setActiveTab("inbox")}
+              className={`flex items-center gap-2 border-b-2 py-3 text-sm font-medium transition-colors ${activeTab === "inbox" ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+            >
+              <Inbox className="h-4 w-4" />
+              Inbox
+            </button>
           </div>
 
           {activeTab === "bookings" && (
@@ -1167,6 +1216,7 @@ export default function AdminDashboard() {
                   onViewBookings={setBookingsTutor}
                   onViewAccount={setViewingTutorAccount}
                   onArchive={handleArchiveTutor}
+                  onSendMessage={(tutor) => setMessageTarget({ name: getTutorFullName(tutor), email: tutor.email ?? "", type: "tutor" })}
                 />
               </section>
 
@@ -1267,6 +1317,7 @@ export default function AdminDashboard() {
                   onSuspend={(partner) => void handleSetPartnerLiveState(partner, !partner.is_published)}
                   onDelete={setDeletingPartner}
                   onArchive={handleArchivePartner}
+                  onSendMessage={(partner) => setMessageTarget({ name: `${partner.first_name} ${partner.last_name}`.trim(), email: partner.email ?? "", type: "partner" })}
                 />
               </section>
 
@@ -1361,6 +1412,10 @@ export default function AdminDashboard() {
                 </div>
               )}
             </>
+          )}
+
+          {activeTab === "inbox" && (
+            <AdminInbox />
           )}
         </motion.div>
       </div>
@@ -1503,6 +1558,16 @@ export default function AdminDashboard() {
         tutor={viewingTutorAccount}
         open={!!viewingTutorAccount}
         onOpenChange={(open) => !open && setViewingTutorAccount(null)}
+      />
+
+      <AdminSendMessageDialog
+        open={!!messageTarget}
+        recipientName={messageTarget?.name ?? ""}
+        recipientEmail={messageTarget?.email ?? ""}
+        recipientType={messageTarget?.type ?? "tutor"}
+        sending={sendingMessage}
+        onOpenChange={(open) => !open && setMessageTarget(null)}
+        onSend={handleSendAdminMessage}
       />
     </Layout>
   );
