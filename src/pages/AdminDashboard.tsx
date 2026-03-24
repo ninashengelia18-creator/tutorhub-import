@@ -7,6 +7,7 @@ import { TutorApplicationList, type TutorApplicationListItem } from "@/component
 import { PartnerApplicationList, type PartnerApplicationListItem } from "@/components/admin/PartnerApplicationList";
 import { ManualTutorDialog, type ManualTutorFormValues } from "@/components/admin/ManualTutorDialog";
 import { TutorManagementList, type TutorManagementListItem } from "@/components/admin/TutorManagementList";
+import { PartnerManagementList, type PartnerManagementListItem } from "@/components/admin/PartnerManagementList";
 import { TutorProfileEditorDialog, type TutorProfileEditorValues } from "@/components/admin/TutorProfileEditorDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
