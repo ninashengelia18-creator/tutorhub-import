@@ -294,6 +294,13 @@ export function Header() {
                       transition={{ duration: 0.15 }}
                       className="absolute left-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border/70 bg-popover p-5 shadow-xl"
                     >
+                      <Link
+                        to="/search"
+                        className="block rounded-lg px-3 py-2 text-sm font-semibold text-primary transition-colors hover:bg-accent mb-3"
+                      >
+                        Browse All Tutors →
+                      </Link>
+                      <div className="border-t border-border/50 mb-3" />
                       <MegaMenuColumn title="" items={forStudentsMenu} />
                     </motion.div>
                   )}
