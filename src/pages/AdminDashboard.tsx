@@ -134,6 +134,15 @@ export default function AdminDashboard() {
     setPartnerApplications((data as PartnerApplicationListItem[] | null) ?? []);
   }, [toast]);
 
+  const refreshPartnerProfiles = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("public_partner_profiles" as never)
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    setPartners((data as PublicPartnerProfile[] | null) ?? []);
+  }, []);
+
   const refreshAdminData = useCallback(async () => {
     const [bookingResult, applicationResult, tutorResult, enquiryResult, partnerResult] = await Promise.all([
       supabase.from("bookings").select("*").order("created_at", { ascending: false }),
