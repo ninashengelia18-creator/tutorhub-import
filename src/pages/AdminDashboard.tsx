@@ -558,6 +558,40 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleArchiveTutor = async (tutor: TutorManagementListItem) => {
+    setPendingTutorActionId(tutor.id);
+    try {
+      await invokeManageTutor(tutor.id, "archive");
+      toast({ title: "Tutor archived", description: `${getTutorFullName(tutor)} has been archived.` });
+      await Promise.all([refreshApplications(), refreshTutorProfiles()]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to archive tutor.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingTutorActionId(null);
+    }
+  };
+
+  const handleUnarchiveTutor = async (tutor: TutorManagementListItem) => {
+    setPendingTutorActionId(tutor.id);
+    try {
+      await invokeManageTutor(tutor.id, "unarchive");
+      toast({ title: "Tutor restored", description: `${getTutorFullName(tutor)} has been restored and is now live.` });
+      await Promise.all([refreshApplications(), refreshTutorProfiles()]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to restore tutor.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingTutorActionId(null);
+    }
+  };
+
   const handleSaveTutorProfile = async (values: TutorProfileEditorValues) => {
     if (!editingTutor) return;
 
