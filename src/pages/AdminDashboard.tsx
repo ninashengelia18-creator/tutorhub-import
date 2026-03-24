@@ -462,6 +462,21 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteTutorApplication = async (application: TutorApplicationListItem) => {
+    if (application.status !== "rejected") return;
+    setPendingTutorActionId(application.id);
+    try {
+      const { error } = await supabase.from("tutor_applications").delete().eq("id", application.id);
+      if (error) throw error;
+      toast({ title: "Application deleted", description: `${application.first_name} ${application.last_name}'s application has been removed.` });
+      await refreshApplications();
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to delete application.", variant: "destructive" });
+    } finally {
+      setPendingTutorActionId(null);
+    }
+  };
+
   const sendPartnerDecisionNotification = async (application: PartnerApplicationListItem, decision: "approved" | "rejected") => {
     try {
       await supabase.functions.invoke("notify-partner-decision", {
@@ -528,6 +543,21 @@ export default function AdminDashboard() {
         description: error instanceof Error ? error.message : "Unable to reject.",
         variant: "destructive",
       });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleDeletePartnerApplication = async (application: PartnerApplicationListItem) => {
+    if (application.status !== "rejected") return;
+    setPendingPartnerActionId(application.id);
+    try {
+      const { error } = await supabase.from("conversation_partner_applications").delete().eq("id", application.id);
+      if (error) throw error;
+      toast({ title: "Application deleted", description: `${application.first_name} ${application.last_name}'s application has been removed.` });
+      await refreshPartnerApplications();
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to delete application.", variant: "destructive" });
     } finally {
       setPendingPartnerActionId(null);
     }
@@ -1188,6 +1218,7 @@ export default function AdminDashboard() {
                   rejectLabel={t("admin.rejectTutor")}
                   onApprove={handleApproveTutor}
                   onReject={handleRejectTutor}
+                  onDelete={handleDeleteTutorApplication}
                   pendingActionId={pendingTutorActionId}
                 />
               </section>
@@ -1281,6 +1312,7 @@ export default function AdminDashboard() {
                   emptyLabel="No reviewed applications yet"
                   onApprove={handleApprovePartner}
                   onReject={handleRejectPartner}
+                  onDelete={handleDeletePartnerApplication}
                   pendingActionId={pendingPartnerActionId}
                 />
               </section>

@@ -42,6 +42,7 @@ interface TutorApplicationListProps {
   rejectLabel: string;
   onApprove: (application: TutorApplicationListItem) => void;
   onReject: (application: TutorApplicationListItem) => void;
+  onDelete?: (application: TutorApplicationListItem) => void;
   pendingActionId?: string | null;
 }
 
@@ -62,6 +63,7 @@ export function TutorApplicationList({
   rejectLabel,
   onApprove,
   onReject,
+  onDelete,
   pendingActionId,
 }: TutorApplicationListProps) {
   const [viewingApp, setViewingApp] = useState<TutorApplicationListItem | null>(null);
@@ -122,7 +124,14 @@ export function TutorApplicationList({
                   ) : app.status === "approved" ? (
                     <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30">✓ Approved</Badge>
                   ) : (
-                    <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/30">✗ Rejected</Badge>
+                    <>
+                      <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/30">✗ Rejected</Badge>
+                      {onDelete && (
+                        <Button size="sm" variant="destructive" onClick={() => onDelete(app)} disabled={isPendingAction}>
+                          Delete
+                        </Button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
