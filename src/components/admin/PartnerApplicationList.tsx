@@ -105,7 +105,14 @@ export function PartnerApplicationList({
                   ) : app.status === "approved" ? (
                     <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30">✓ Approved</Badge>
                   ) : (
-                    <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/30">✗ Rejected</Badge>
+                    <>
+                      <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/30">✗ Rejected</Badge>
+                      {onDelete && (
+                        <Button size="sm" variant="destructive" onClick={() => onDelete(app)} disabled={isPendingAction}>
+                          Delete
+                        </Button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
