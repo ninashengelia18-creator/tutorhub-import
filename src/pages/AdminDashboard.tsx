@@ -1472,6 +1472,12 @@ export default function AdminDashboard() {
         onOpenChange={(open) => !open && setEditingTutor(null)}
         onSubmit={handleSaveTutorProfile}
       />
+
+      <TutorAccountDetailDialog
+        tutor={viewingTutorAccount}
+        open={!!viewingTutorAccount}
+        onOpenChange={(open) => !open && setViewingTutorAccount(null)}
+      />
     </Layout>
   );
 }
