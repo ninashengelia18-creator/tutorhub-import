@@ -132,6 +132,11 @@ export function TutorManagementList({
                   <Button size="sm" variant="destructive" onClick={() => onDelete(tutor)} disabled={isPendingAction}>
                     <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete Permanently
                   </Button>
+                  {onViewAccount && (
+                    <Button size="sm" variant="ghost" onClick={() => onViewAccount(tutor)}>
+                      <User className="mr-1 h-3.5 w-3.5" /> View Account
+                    </Button>
+                  )}
                 </>
               ) : (
                 <>
