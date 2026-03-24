@@ -1317,6 +1317,7 @@ export default function AdminDashboard() {
                   onSuspend={(partner) => void handleSetPartnerLiveState(partner, !partner.is_published)}
                   onDelete={setDeletingPartner}
                   onArchive={handleArchivePartner}
+                  onSendMessage={(partner) => setMessageTarget({ name: `${partner.first_name} ${partner.last_name}`.trim(), email: partner.email ?? "", type: "partner" })}
                 />
               </section>
 
