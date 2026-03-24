@@ -100,14 +100,6 @@ export function HeroSection() {
               ))}
             </div>
 
-            <a
-              href="https://aiwhisper.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline pt-2"
-            >
-              Learn more <ArrowRight className="h-3.5 w-3.5" />
-            </a>
           </div>
         </div>
       </motion.div>
