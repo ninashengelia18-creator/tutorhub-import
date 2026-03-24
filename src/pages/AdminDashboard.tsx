@@ -1218,6 +1218,7 @@ export default function AdminDashboard() {
                   rejectLabel={t("admin.rejectTutor")}
                   onApprove={handleApproveTutor}
                   onReject={handleRejectTutor}
+                  onDelete={handleDeleteTutorApplication}
                   pendingActionId={pendingTutorActionId}
                 />
               </section>
