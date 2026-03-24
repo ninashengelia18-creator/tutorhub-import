@@ -40,6 +40,7 @@ export function TutorManagementList({
   onViewAccount,
   onArchive,
   onUnarchive,
+  onSendMessage,
 }: TutorManagementListProps) {
   if (tutors.length === 0) {
     return <div className="py-12 text-center text-muted-foreground">{emptyLabel}</div>;
