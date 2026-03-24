@@ -1,4 +1,4 @@
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Archive, ArchiveRestore, Eye, Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,28 +8,35 @@ export interface TutorManagementListItem extends PublicTutorProfile {
   bookingsCount: number;
   completedLessonsCount: number;
   totalEarnings: number;
+  is_archived?: boolean;
 }
 
 interface TutorManagementListProps {
   tutors: TutorManagementListItem[];
   emptyLabel: string;
   pendingActionId?: string | null;
+  isArchiveView?: boolean;
   onApprove: (tutor: TutorManagementListItem) => void;
   onSuspend: (tutor: TutorManagementListItem) => void;
   onDelete: (tutor: TutorManagementListItem) => void;
   onEdit: (tutor: TutorManagementListItem) => void;
   onViewBookings: (tutor: TutorManagementListItem) => void;
+  onArchive?: (tutor: TutorManagementListItem) => void;
+  onUnarchive?: (tutor: TutorManagementListItem) => void;
 }
 
 export function TutorManagementList({
   tutors,
   emptyLabel,
   pendingActionId,
+  isArchiveView,
   onApprove,
   onSuspend,
   onDelete,
   onEdit,
   onViewBookings,
+  onArchive,
+  onUnarchive,
 }: TutorManagementListProps) {
   if (tutors.length === 0) {
     return <div className="py-12 text-center text-muted-foreground">{emptyLabel}</div>;
@@ -40,11 +47,12 @@ export function TutorManagementList({
       {tutors.map((tutor) => {
         const isPendingAction = pendingActionId === tutor.id;
         const fullName = getTutorFullName(tutor);
-        const isSuspended = !tutor.is_published;
-        const statusLabel = tutor.is_published ? "Live" : "Suspended";
+        const isArchived = tutor.is_archived;
+        const isSuspended = !tutor.is_published && !isArchived;
+        const statusLabel = isArchived ? "Archived" : tutor.is_published ? "Live" : "Suspended";
 
         return (
-          <div key={tutor.id} className="rounded-xl border bg-card p-4">
+          <div key={tutor.id} className={`rounded-xl border bg-card p-4 ${isArchived ? "opacity-75" : ""}`}>
             <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
               <div className="flex min-w-0 flex-1 gap-4">
                 <img
@@ -59,13 +67,24 @@ export function TutorManagementList({
                     <p className="text-sm font-semibold text-foreground">{fullName}</p>
                     <Badge
                       variant="outline"
-                      className={tutor.is_published ? "border-success/30 bg-success/10 text-success" : "border-destructive/30 bg-destructive/10 text-destructive"}
+                      className={
+                        isArchived
+                          ? "border-muted-foreground/30 bg-muted/50 text-muted-foreground"
+                          : tutor.is_published
+                            ? "border-success/30 bg-success/10 text-success"
+                            : "border-destructive/30 bg-destructive/10 text-destructive"
+                      }
                     >
                       {statusLabel}
                     </Badge>
                     {isSuspended && (
                       <Badge variant="outline" className="border-destructive/40 bg-destructive/15 text-destructive font-bold">
                         ⛔ Suspended
+                      </Badge>
+                    )}
+                    {isArchived && (
+                      <Badge variant="outline" className="border-muted-foreground/40 bg-muted/30 text-muted-foreground font-bold">
+                        📦 Archived
                       </Badge>
                     )}
                     {tutor.application_id ? <Badge variant="secondary">Application</Badge> : <Badge variant="secondary">Manual</Badge>}
@@ -96,34 +115,65 @@ export function TutorManagementList({
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              {!tutor.is_published && (
-                <Button
-                  size="sm"
-                  onClick={() => onApprove(tutor)}
-                  disabled={isPendingAction}
-                  className="bg-success text-primary-foreground hover:bg-success/90"
-                >
-                  Approve
-                </Button>
+              {isArchiveView ? (
+                <>
+                  {onUnarchive && (
+                    <Button
+                      size="sm"
+                      onClick={() => onUnarchive(tutor)}
+                      disabled={isPendingAction}
+                      className="bg-success text-primary-foreground hover:bg-success/90"
+                    >
+                      <ArchiveRestore className="mr-1 h-3.5 w-3.5" /> Restore
+                    </Button>
+                  )}
+                  <Button size="sm" variant="destructive" onClick={() => onDelete(tutor)} disabled={isPendingAction}>
+                    <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete Permanently
+                  </Button>
+                </>
+              ) : (
+                <>
+                  {!tutor.is_published && (
+                    <Button
+                      size="sm"
+                      onClick={() => onApprove(tutor)}
+                      disabled={isPendingAction}
+                      className="bg-success text-primary-foreground hover:bg-success/90"
+                    >
+                      Approve
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => onSuspend(tutor)}
+                    disabled={isPendingAction}
+                    className="border-warning/30 bg-warning/10 text-warning hover:bg-warning/20 hover:text-warning"
+                  >
+                    {tutor.is_published ? "Suspend" : "Unsuspend"}
+                  </Button>
+                  {onArchive && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onArchive(tutor)}
+                      disabled={isPendingAction}
+                      className="border-muted-foreground/30 bg-muted/10 text-muted-foreground hover:bg-muted/20"
+                    >
+                      <Archive className="mr-1 h-3.5 w-3.5" /> Archive
+                    </Button>
+                  )}
+                  <Button size="sm" variant="destructive" onClick={() => onDelete(tutor)} disabled={isPendingAction}>
+                    <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => onEdit(tutor)}>
+                    <Pencil className="mr-1 h-3.5 w-3.5" /> Edit
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => onViewBookings(tutor)}>
+                    <Eye className="mr-1 h-3.5 w-3.5" /> View bookings
+                  </Button>
+                </>
               )}
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onSuspend(tutor)}
-                disabled={isPendingAction}
-                className="border-warning/30 bg-warning/10 text-warning hover:bg-warning/20 hover:text-warning"
-              >
-                {tutor.is_published ? "Suspend" : "Unsuspend"}
-              </Button>
-              <Button size="sm" variant="destructive" onClick={() => onDelete(tutor)} disabled={isPendingAction}>
-                <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete
-              </Button>
-              <Button size="sm" variant="outline" onClick={() => onEdit(tutor)}>
-                <Pencil className="mr-1 h-3.5 w-3.5" /> Edit
-              </Button>
-              <Button size="sm" variant="ghost" onClick={() => onViewBookings(tutor)}>
-                <Eye className="mr-1 h-3.5 w-3.5" /> View bookings
-              </Button>
             </div>
           </div>
         );
