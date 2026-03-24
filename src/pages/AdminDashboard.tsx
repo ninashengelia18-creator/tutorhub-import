@@ -100,6 +100,7 @@ export default function AdminDashboard() {
   const [hasAutoFocusedPendingApplications, setHasAutoFocusedPendingApplications] = useState(false);
   const [pendingPartnerActionId, setPendingPartnerActionId] = useState<string | null>(null);
   const [deletingPartner, setDeletingPartner] = useState<PartnerManagementListItem | null>(null);
+  const [viewingTutorAccount, setViewingTutorAccount] = useState<TutorManagementListItem | null>(null);
 
   const refreshBookings = useCallback(async () => {
     const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
