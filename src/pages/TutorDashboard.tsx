@@ -238,18 +238,24 @@ export default function TutorDashboard() {
                     <CardTitle className="text-xl text-foreground">{t("tutorDashboard.quickActions")}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <Button variant="outline" className="h-14 w-full justify-start rounded-2xl" asChild>
-                      <Link to="/tutor-schedule">
-                        <CalendarDays className="mr-2 h-4 w-4" />
-                        {t("tutorDashboard.manageSchedule")}
-                      </Link>
-                    </Button>
-                    <Button variant="outline" className="h-14 w-full justify-start rounded-2xl" asChild>
-                      <Link to="/lesson-planner">
-                        <BookOpen className="mr-2 h-4 w-4" />
-                        {t("tutorDashboard.buildLessonPlans")}
-                      </Link>
-                    </Button>
+                     <Button variant="outline" className="h-14 w-full justify-start rounded-2xl" asChild>
+                       <Link to="/tutor-schedule">
+                         <CalendarDays className="mr-2 h-4 w-4" />
+                         {t("tutorDashboard.manageSchedule")}
+                       </Link>
+                     </Button>
+                     <Button variant="outline" className="h-14 w-full justify-start rounded-2xl" asChild>
+                       <Link to="/tutor-schedule#add-availability">
+                         <Clock3 className="mr-2 h-4 w-4" />
+                         Add Availability
+                       </Link>
+                     </Button>
+                     <Button variant="outline" className="h-14 w-full justify-start rounded-2xl" asChild>
+                       <Link to="/lesson-planner">
+                         <BookOpen className="mr-2 h-4 w-4" />
+                         {t("tutorDashboard.buildLessonPlans")}
+                       </Link>
+                     </Button>
                   </CardContent>
                 </Card>
               </section>
