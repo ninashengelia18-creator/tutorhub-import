@@ -688,19 +688,41 @@ export default function AdminDashboard() {
   }, [applications, search]);
 
   const managedTutors = useMemo<TutorManagementListItem[]>(() => {
-    return tutors.map((tutor) => {
-      const tutorName = getTutorFullName(tutor);
-      const tutorBookings = bookings.filter((booking) => booking.tutor_name === tutorName);
-      const completedLessons = tutorBookings.filter((booking) => booking.status === "completed");
-      const totalEarnings = completedLessons.reduce((sum, booking) => sum + booking.price_amount, 0);
+    return tutors
+      .filter((tutor) => !(tutor as any).is_archived)
+      .map((tutor) => {
+        const tutorName = getTutorFullName(tutor);
+        const tutorBookings = bookings.filter((booking) => booking.tutor_name === tutorName);
+        const completedLessons = tutorBookings.filter((booking) => booking.status === "completed");
+        const totalEarnings = completedLessons.reduce((sum, booking) => sum + booking.price_amount, 0);
 
-      return {
-        ...tutor,
-        bookingsCount: tutorBookings.length,
-        completedLessonsCount: completedLessons.length,
-        totalEarnings,
-      };
-    });
+        return {
+          ...tutor,
+          is_archived: false,
+          bookingsCount: tutorBookings.length,
+          completedLessonsCount: completedLessons.length,
+          totalEarnings,
+        };
+      });
+  }, [bookings, tutors]);
+
+  const archivedTutors = useMemo<TutorManagementListItem[]>(() => {
+    return tutors
+      .filter((tutor) => (tutor as any).is_archived)
+      .map((tutor) => {
+        const tutorName = getTutorFullName(tutor);
+        const tutorBookings = bookings.filter((booking) => booking.tutor_name === tutorName);
+        const completedLessons = tutorBookings.filter((booking) => booking.status === "completed");
+        const totalEarnings = completedLessons.reduce((sum, booking) => sum + booking.price_amount, 0);
+
+        return {
+          ...tutor,
+          is_archived: true,
+          bookingsCount: tutorBookings.length,
+          completedLessonsCount: completedLessons.length,
+          totalEarnings,
+        };
+      });
   }, [bookings, tutors]);
 
   const filteredManagedTutors = useMemo(() => {
@@ -712,6 +734,16 @@ export default function AdminDashboard() {
         .includes(query),
     );
   }, [managedTutors, search]);
+
+  const filteredArchivedTutors = useMemo(() => {
+    const query = search.toLowerCase();
+    return archivedTutors.filter((tutor) =>
+      [getTutorFullName(tutor), tutor.email ?? "", tutor.primary_subject, tutor.subjects.join(" "), tutor.experience, tutor.country ?? ""]
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [archivedTutors, search]);
 
   const pendingApplications = filteredApplications.filter((application) => application.status === "pending");
   const filteredPartnerApplications = useMemo(() => {
