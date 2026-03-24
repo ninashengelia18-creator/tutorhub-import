@@ -34,6 +34,7 @@ interface PartnerApplicationListProps {
   emptyLabel: string;
   onApprove: (application: PartnerApplicationListItem) => void;
   onReject: (application: PartnerApplicationListItem) => void;
+  onDelete?: (application: PartnerApplicationListItem) => void;
   pendingActionId?: string | null;
 }
 
