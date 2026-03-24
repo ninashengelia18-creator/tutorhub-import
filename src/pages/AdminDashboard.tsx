@@ -462,6 +462,21 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteTutorApplication = async (application: TutorApplicationListItem) => {
+    if (application.status !== "rejected") return;
+    setPendingTutorActionId(application.id);
+    try {
+      const { error } = await supabase.from("tutor_applications").delete().eq("id", application.id);
+      if (error) throw error;
+      toast({ title: "Application deleted", description: `${application.first_name} ${application.last_name}'s application has been removed.` });
+      await refreshApplications();
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to delete application.", variant: "destructive" });
+    } finally {
+      setPendingTutorActionId(null);
+    }
+  };
+
   const sendPartnerDecisionNotification = async (application: PartnerApplicationListItem, decision: "approved" | "rejected") => {
     try {
       await supabase.functions.invoke("notify-partner-decision", {
