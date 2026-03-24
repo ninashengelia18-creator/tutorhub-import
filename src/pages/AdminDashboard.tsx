@@ -987,7 +987,7 @@ export default function AdminDashboard() {
 
           {activeTab === "tutors" && (
             <>
-              <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+              <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
                 <div className="rounded-xl border bg-card p-4">
                   <p className="text-2xl font-bold text-foreground">{tutorStats.total}</p>
                   <p className="text-xs text-muted-foreground">Tutors</p>
@@ -1004,6 +1004,10 @@ export default function AdminDashboard() {
                   <p className="text-2xl font-bold text-info">{tutorStats.pending}</p>
                   <p className="text-xs text-muted-foreground">Pending applications</p>
                 </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-muted-foreground">{tutorStats.archived}</p>
+                  <p className="text-xs text-muted-foreground">Archived</p>
+                </div>
               </div>
 
               <div className="relative mb-6">
@@ -1014,7 +1018,7 @@ export default function AdminDashboard() {
               <section className="mb-8 space-y-4">
                 <div>
                   <h2 className="text-lg font-semibold">Live & suspended tutors</h2>
-                  <p className="text-sm text-muted-foreground">Approve, suspend, delete, edit, and inspect tutor bookings and earnings.</p>
+                  <p className="text-sm text-muted-foreground">Approve, suspend, archive, edit, and inspect tutor bookings and earnings.</p>
                 </div>
                 <TutorManagementList
                   tutors={filteredManagedTutors}
@@ -1025,8 +1029,30 @@ export default function AdminDashboard() {
                   onDelete={setDeletingTutor}
                   onEdit={setEditingTutor}
                   onViewBookings={setBookingsTutor}
+                  onArchive={handleArchiveTutor}
                 />
               </section>
+
+              {filteredArchivedTutors.length > 0 && (
+                <section className="mb-8 space-y-4">
+                  <div>
+                    <h2 className="text-lg font-semibold">📦 Archived tutors</h2>
+                    <p className="text-sm text-muted-foreground">Tutors that are no longer live. Restore them or delete permanently.</p>
+                  </div>
+                  <TutorManagementList
+                    tutors={filteredArchivedTutors}
+                    emptyLabel="No archived tutors"
+                    pendingActionId={pendingTutorActionId}
+                    isArchiveView
+                    onApprove={(tutor) => void handleSetTutorLiveState(tutor, true)}
+                    onSuspend={(tutor) => void handleSetTutorLiveState(tutor, !tutor.is_published)}
+                    onDelete={setDeletingTutor}
+                    onEdit={setEditingTutor}
+                    onViewBookings={setBookingsTutor}
+                    onUnarchive={handleUnarchiveTutor}
+                  />
+                </section>
+              )}
 
               <section className="mb-8 space-y-4">
                 <div>
