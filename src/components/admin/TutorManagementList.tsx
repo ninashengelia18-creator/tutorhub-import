@@ -36,6 +36,7 @@ export function TutorManagementList({
   onDelete,
   onEdit,
   onViewBookings,
+  onViewAccount,
   onArchive,
   onUnarchive,
 }: TutorManagementListProps) {
