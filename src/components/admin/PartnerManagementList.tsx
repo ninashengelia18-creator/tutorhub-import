@@ -17,6 +17,7 @@ interface PartnerManagementListProps {
   onDelete: (partner: PartnerManagementListItem) => void;
   onArchive?: (partner: PartnerManagementListItem) => void;
   onUnarchive?: (partner: PartnerManagementListItem) => void;
+  onSendMessage?: (partner: PartnerManagementListItem) => void;
 }
 
 export function PartnerManagementList({
