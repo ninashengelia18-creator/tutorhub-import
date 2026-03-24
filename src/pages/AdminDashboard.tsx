@@ -182,6 +182,12 @@ export default function AdminDashboard() {
     } else {
       setPartnerApplications((partnerResult.data as PartnerApplicationListItem[] | null) ?? []);
     }
+
+    if (partnerProfileResult.error) {
+      toast({ title: "Error", description: partnerProfileResult.error.message, variant: "destructive" });
+    } else {
+      setPartners((partnerProfileResult.data as PublicPartnerProfile[] | null) ?? []);
+    }
   }, [toast]);
 
   useEffect(() => {
