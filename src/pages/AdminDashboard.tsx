@@ -7,6 +7,7 @@ import { TutorApplicationList, type TutorApplicationListItem } from "@/component
 import { PartnerApplicationList, type PartnerApplicationListItem } from "@/components/admin/PartnerApplicationList";
 import { ManualTutorDialog, type ManualTutorFormValues } from "@/components/admin/ManualTutorDialog";
 import { TutorManagementList, type TutorManagementListItem } from "@/components/admin/TutorManagementList";
+import { PartnerManagementList, type PartnerManagementListItem } from "@/components/admin/PartnerManagementList";
 import { TutorProfileEditorDialog, type TutorProfileEditorValues } from "@/components/admin/TutorProfileEditorDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { submitFormspree } from "@/lib/formspree";
 import { getTutorFullName, type PublicTutorProfile } from "@/lib/publicTutors";
+import { type PublicPartnerProfile } from "@/lib/publicPartners";
 import { cn } from "@/lib/utils";
 
 interface AdminBooking {
@@ -76,6 +78,7 @@ export default function AdminDashboard() {
   const [enquiries, setEnquiries] = useState<BusinessInquiry[]>([]);
   const [partnerApplications, setPartnerApplications] = useState<PartnerApplicationListItem[]>([]);
   const [tutors, setTutors] = useState<PublicTutorProfile[]>([]);
+  const [partners, setPartners] = useState<PublicPartnerProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [search, setSearch] = useState("");
@@ -95,6 +98,7 @@ export default function AdminDashboard() {
   const [sendingPaymentLink, setSendingPaymentLink] = useState(false);
   const [hasAutoFocusedPendingApplications, setHasAutoFocusedPendingApplications] = useState(false);
   const [pendingPartnerActionId, setPendingPartnerActionId] = useState<string | null>(null);
+  const [deletingPartner, setDeletingPartner] = useState<PartnerManagementListItem | null>(null);
 
   const refreshBookings = useCallback(async () => {
     const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
@@ -130,13 +134,23 @@ export default function AdminDashboard() {
     setPartnerApplications((data as PartnerApplicationListItem[] | null) ?? []);
   }, [toast]);
 
+  const refreshPartnerProfiles = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("public_partner_profiles" as never)
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    setPartners((data as PublicPartnerProfile[] | null) ?? []);
+  }, []);
+
   const refreshAdminData = useCallback(async () => {
-    const [bookingResult, applicationResult, tutorResult, enquiryResult, partnerResult] = await Promise.all([
+    const [bookingResult, applicationResult, tutorResult, enquiryResult, partnerResult, partnerProfileResult] = await Promise.all([
       supabase.from("bookings").select("*").order("created_at", { ascending: false }),
       supabase.from("tutor_applications").select("*").order("created_at", { ascending: false }),
       supabase.from("public_tutor_profiles" as never).select("*").order("created_at", { ascending: false }),
       supabase.from("business_inquiries").select("*").order("created_at", { ascending: false }),
       supabase.from("conversation_partner_applications").select("*").order("created_at", { ascending: false }),
+      supabase.from("public_partner_profiles" as never).select("*").order("created_at", { ascending: false }),
     ]);
 
     if (bookingResult.error) {
@@ -167,6 +181,12 @@ export default function AdminDashboard() {
       toast({ title: "Error", description: partnerResult.error.message, variant: "destructive" });
     } else {
       setPartnerApplications((partnerResult.data as PartnerApplicationListItem[] | null) ?? []);
+    }
+
+    if (partnerProfileResult.error) {
+      toast({ title: "Error", description: partnerProfileResult.error.message, variant: "destructive" });
+    } else {
+      setPartners((partnerProfileResult.data as PublicPartnerProfile[] | null) ?? []);
     }
   }, [toast]);
 
@@ -291,6 +311,13 @@ export default function AdminDashboard() {
   const invokeManageTutor = async (tutorId: string, action: "suspend" | "unsuspend" | "delete" | "archive" | "unarchive") => {
     const { error } = await supabase.functions.invoke("admin-manage-tutor", {
       body: { tutorProfileId: tutorId, action },
+    });
+    if (error) throw error;
+  };
+
+  const invokeManagePartner = async (partnerId: string, action: "suspend" | "unsuspend" | "delete" | "archive" | "unarchive") => {
+    const { error } = await supabase.functions.invoke("admin-manage-partner", {
+      body: { partnerProfileId: partnerId, action },
     });
     if (error) throw error;
   };
@@ -499,6 +526,60 @@ export default function AdminDashboard() {
         description: error instanceof Error ? error.message : "Unable to reject.",
         variant: "destructive",
       });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleSetPartnerLiveState = async (partner: PartnerManagementListItem, makeLive: boolean) => {
+    setPendingPartnerActionId(partner.id);
+    try {
+      await invokeManagePartner(partner.id, makeLive ? "unsuspend" : "suspend");
+      toast({ title: makeLive ? "Language Buddy is live" : "Language Buddy suspended" });
+      await Promise.all([refreshPartnerApplications(), refreshPartnerProfiles()]);
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to update status.", variant: "destructive" });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleArchivePartner = async (partner: PartnerManagementListItem) => {
+    setPendingPartnerActionId(partner.id);
+    try {
+      await invokeManagePartner(partner.id, "archive");
+      toast({ title: "Language Buddy archived", description: `${partner.first_name} ${partner.last_name} has been archived.` });
+      await Promise.all([refreshPartnerApplications(), refreshPartnerProfiles()]);
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to archive.", variant: "destructive" });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleUnarchivePartner = async (partner: PartnerManagementListItem) => {
+    setPendingPartnerActionId(partner.id);
+    try {
+      await invokeManagePartner(partner.id, "unarchive");
+      toast({ title: "Language Buddy restored", description: `${partner.first_name} ${partner.last_name} has been restored.` });
+      await Promise.all([refreshPartnerApplications(), refreshPartnerProfiles()]);
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to restore.", variant: "destructive" });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleDeletePartner = async () => {
+    if (!deletingPartner) return;
+    setPendingPartnerActionId(deletingPartner.id);
+    try {
+      await invokeManagePartner(deletingPartner.id, "delete");
+      toast({ title: "Language Buddy deleted permanently" });
+      setDeletingPartner(null);
+      await Promise.all([refreshPartnerApplications(), refreshPartnerProfiles()]);
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to delete.", variant: "destructive" });
     } finally {
       setPendingPartnerActionId(null);
     }
@@ -791,6 +872,32 @@ export default function AdminDashboard() {
   }, [partnerApplications, search]);
 
   const pendingPartnerApps = filteredPartnerApplications.filter((a) => a.status === "pending");
+  const managedPartners = useMemo<PartnerManagementListItem[]>(() => {
+    return partners
+      .filter((p) => !(p as any).is_archived)
+      .map((p) => ({ ...p, is_archived: false }));
+  }, [partners]);
+
+  const archivedPartners = useMemo<PartnerManagementListItem[]>(() => {
+    return partners
+      .filter((p) => (p as any).is_archived)
+      .map((p) => ({ ...p, is_archived: true }));
+  }, [partners]);
+
+  const filteredManagedPartners = useMemo(() => {
+    const query = search.toLowerCase();
+    return managedPartners.filter((p) =>
+      [`${p.first_name} ${p.last_name}`, p.email ?? "", p.country ?? "", p.bio].join(" ").toLowerCase().includes(query),
+    );
+  }, [managedPartners, search]);
+
+  const filteredArchivedPartners = useMemo(() => {
+    const query = search.toLowerCase();
+    return archivedPartners.filter((p) =>
+      [`${p.first_name} ${p.last_name}`, p.email ?? "", p.country ?? "", p.bio].join(" ").toLowerCase().includes(query),
+    );
+  }, [archivedPartners, search]);
+
   const reviewedPartnerApps = filteredPartnerApplications.filter((a) => a.status !== "pending");
 
   const reviewedApplications = filteredApplications.filter((application) => application.status !== "pending");
@@ -826,10 +933,11 @@ export default function AdminDashboard() {
   };
 
   const partnerStats = {
-    total: partnerApplications.length,
+    total: managedPartners.length,
+    live: managedPartners.filter((p) => p.is_published).length,
+    suspended: managedPartners.filter((p) => !p.is_published).length,
     pending: partnerApplications.filter((a) => a.status === "pending").length,
-    approved: partnerApplications.filter((a) => a.status === "approved").length,
-    rejected: partnerApplications.filter((a) => a.status === "rejected").length,
+    archived: archivedPartners.length,
   };
 
   if (!isAdmin) {
@@ -1090,18 +1198,26 @@ export default function AdminDashboard() {
 
           {activeTab === "partners" && (
             <>
-              <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-3">
+              <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
                 <div className="rounded-xl border bg-card p-4">
                   <p className="text-2xl font-bold text-foreground">{partnerStats.total}</p>
-                  <p className="text-xs text-muted-foreground">Total applications</p>
+                  <p className="text-xs text-muted-foreground">Buddies</p>
                 </div>
                 <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-warning">{partnerStats.pending}</p>
-                  <p className="text-xs text-muted-foreground">Pending</p>
+                  <p className="text-2xl font-bold text-success">{partnerStats.live}</p>
+                  <p className="text-xs text-muted-foreground">Live</p>
                 </div>
                 <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-success">{partnerStats.approved}</p>
-                  <p className="text-xs text-muted-foreground">Approved</p>
+                  <p className="text-2xl font-bold text-warning">{partnerStats.suspended}</p>
+                  <p className="text-xs text-muted-foreground">Suspended</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-info">{partnerStats.pending}</p>
+                  <p className="text-xs text-muted-foreground">Pending applications</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-muted-foreground">{partnerStats.archived}</p>
+                  <p className="text-xs text-muted-foreground">Archived</p>
                 </div>
               </div>
 
@@ -1109,6 +1225,39 @@ export default function AdminDashboard() {
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by name, email, country..." className="pl-9" />
               </div>
+
+              <section className="mb-8 space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold">Live & suspended Language Buddies</h2>
+                  <p className="text-sm text-muted-foreground">Suspend, archive, or delete Language Buddy profiles.</p>
+                </div>
+                <PartnerManagementList
+                  partners={filteredManagedPartners}
+                  emptyLabel="No Language Buddy profiles found"
+                  pendingActionId={pendingPartnerActionId}
+                  onSuspend={(partner) => void handleSetPartnerLiveState(partner, !partner.is_published)}
+                  onDelete={setDeletingPartner}
+                  onArchive={handleArchivePartner}
+                />
+              </section>
+
+              {filteredArchivedPartners.length > 0 && (
+                <section className="mb-8 space-y-4">
+                  <div>
+                    <h2 className="text-lg font-semibold">📦 Archived Language Buddies</h2>
+                    <p className="text-sm text-muted-foreground">Buddies that are no longer live. Restore them or delete permanently.</p>
+                  </div>
+                  <PartnerManagementList
+                    partners={filteredArchivedPartners}
+                    emptyLabel="No archived buddies"
+                    pendingActionId={pendingPartnerActionId}
+                    isArchiveView
+                    onSuspend={(partner) => void handleSetPartnerLiveState(partner, !partner.is_published)}
+                    onDelete={setDeletingPartner}
+                    onUnarchive={handleUnarchivePartner}
+                  />
+                </section>
+              )}
 
               <section className="mb-8 space-y-4">
                 <div>
@@ -1259,6 +1408,19 @@ export default function AdminDashboard() {
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setDeletingTutor(null)}>Cancel</Button>
             <Button variant="destructive" onClick={handleDeleteTutor} disabled={!deletingTutor || pendingTutorActionId === deletingTutor?.id}>Delete tutor</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!deletingPartner} onOpenChange={(open) => !open && setDeletingPartner(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Language Buddy</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">Are you sure you want to delete this Language Buddy? This cannot be undone.</p>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setDeletingPartner(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleDeletePartner} disabled={!deletingPartner || pendingPartnerActionId === deletingPartner?.id}>Delete</Button>
           </div>
         </DialogContent>
       </Dialog>
