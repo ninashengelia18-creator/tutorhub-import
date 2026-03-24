@@ -21,6 +21,7 @@ interface TutorManagementListProps {
   onDelete: (tutor: TutorManagementListItem) => void;
   onEdit: (tutor: TutorManagementListItem) => void;
   onViewBookings: (tutor: TutorManagementListItem) => void;
+  onViewAccount?: (tutor: TutorManagementListItem) => void;
   onArchive?: (tutor: TutorManagementListItem) => void;
   onUnarchive?: (tutor: TutorManagementListItem) => void;
 }
