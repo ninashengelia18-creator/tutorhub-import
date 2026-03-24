@@ -63,6 +63,7 @@ export function TutorApplicationList({
   rejectLabel,
   onApprove,
   onReject,
+  onDelete,
   pendingActionId,
 }: TutorApplicationListProps) {
   const [viewingApp, setViewingApp] = useState<TutorApplicationListItem | null>(null);
