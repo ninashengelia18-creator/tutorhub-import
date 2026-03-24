@@ -1121,7 +1121,7 @@ export default function AdminDashboard() {
                 <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tutors, subjects, or bookings" className="pl-9" />
               </div>
 
-              <section className="mb-8 space-y-4">
+              <section id="tutor-live-section" className="mb-8 space-y-4">
                 <div>
                   <h2 className="text-lg font-semibold">Live & suspended tutors</h2>
                   <p className="text-sm text-muted-foreground">Approve, suspend, archive, edit, and inspect tutor bookings and earnings.</p>
