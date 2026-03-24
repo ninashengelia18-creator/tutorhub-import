@@ -134,6 +134,11 @@ export function PartnerManagementList({
                   <Button size="sm" variant="destructive" onClick={() => onDelete(partner)} disabled={isPendingAction}>
                     <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete
                   </Button>
+                  {onSendMessage && (
+                    <Button size="sm" variant="ghost" onClick={() => onSendMessage(partner)}>
+                      <MessageSquare className="mr-1 h-3.5 w-3.5" /> Send Message
+                    </Button>
+                  )}
                 </>
               )}
             </div>
