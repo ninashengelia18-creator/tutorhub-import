@@ -1559,6 +1559,16 @@ export default function AdminDashboard() {
         open={!!viewingTutorAccount}
         onOpenChange={(open) => !open && setViewingTutorAccount(null)}
       />
+
+      <AdminSendMessageDialog
+        open={!!messageTarget}
+        recipientName={messageTarget?.name ?? ""}
+        recipientEmail={messageTarget?.email ?? ""}
+        recipientType={messageTarget?.type ?? "tutor"}
+        sending={sendingMessage}
+        onOpenChange={(open) => !open && setMessageTarget(null)}
+        onSend={handleSendAdminMessage}
+      />
     </Layout>
   );
 }
