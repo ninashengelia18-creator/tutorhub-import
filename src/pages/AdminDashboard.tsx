@@ -548,6 +548,21 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeletePartnerApplication = async (application: PartnerApplicationListItem) => {
+    if (application.status !== "rejected") return;
+    setPendingPartnerActionId(application.id);
+    try {
+      const { error } = await supabase.from("conversation_partner_applications").delete().eq("id", application.id);
+      if (error) throw error;
+      toast({ title: "Application deleted", description: `${application.first_name} ${application.last_name}'s application has been removed.` });
+      await refreshPartnerApplications();
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to delete application.", variant: "destructive" });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
   const handleSetPartnerLiveState = async (partner: PartnerManagementListItem, makeLive: boolean) => {
     setPendingPartnerActionId(partner.id);
     try {
