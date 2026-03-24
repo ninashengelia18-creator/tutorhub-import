@@ -361,6 +361,45 @@ export default function TutorMessages() {
     setSending(true);
 
     try {
+      // Handle admin conversation reply
+      if (isAdminConversation) {
+        const userEmail = user.email ?? "";
+        const { error } = await supabase.from("admin_messages" as any).insert({
+          recipient_type: "tutor",
+          recipient_name: tutorName,
+          recipient_email: userEmail,
+          sender_type: "tutor",
+          sender_name: tutorName,
+          content: message.trim(),
+        } as any);
+
+        if (error) {
+          toast({ title: t("msg.messageFailed"), variant: "destructive" });
+          setSending(false);
+          return;
+        }
+
+        // Notify admin via email
+        try {
+          await supabase.functions.invoke("notify-admin-message", {
+            body: {
+              recipientEmail: "info@learneazy.org",
+              recipientName: "LearnEazy Admin",
+              senderName: tutorName,
+              messageContent: message.trim(),
+              notifyAdmin: true,
+            },
+          });
+        } catch (emailErr) {
+          console.error("Admin email notification failed:", emailErr);
+        }
+
+        setMessage("");
+        setAttachedFile(null);
+        setSending(false);
+        return;
+      }
+
       const attachment = await uploadAttachment();
       if (attachedFile && !attachment) {
         setSending(false);
