@@ -53,6 +53,7 @@ export function PartnerApplicationList({
   emptyLabel,
   onApprove,
   onReject,
+  onDelete,
   pendingActionId,
 }: PartnerApplicationListProps) {
   const [viewingApp, setViewingApp] = useState<PartnerApplicationListItem | null>(null);
