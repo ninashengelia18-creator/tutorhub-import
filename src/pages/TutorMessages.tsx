@@ -170,6 +170,22 @@ export default function TutorMessages() {
 
     const conversationMap = new Map<string, ConversationListItem>();
 
+    // Add admin conversation if there are admin messages
+    if (adminMessages.length > 0) {
+      const lastAdminMsg = adminMessages[adminMessages.length - 1];
+      const unreadAdmin = adminMessages.filter((m: any) => m.sender_type === "admin" && !m.read_at).length;
+      conversationMap.set(ADMIN_CONVERSATION_ID, {
+        id: ADMIN_CONVERSATION_ID,
+        name: "LearnEazy Admin",
+        avatar_url: null,
+        subject: "Admin",
+        lastMessage: lastAdminMsg?.content || "No messages yet",
+        unread: unreadAdmin,
+        archived: false,
+        updatedAt: lastAdminMsg?.created_at || new Date().toISOString(),
+      });
+    }
+
     contactMap.forEach((contact, studentId) => {
       const conversation = conversations.find((item) => item.student_id === studentId);
       const relatedMessages = messages.filter((item) => item.student_id === studentId);
@@ -220,7 +236,7 @@ export default function TutorMessages() {
         return true;
       })
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-  }, [contacts, conversations, messages, msgFilter, searchQuery, subjectFilter]);
+  }, [contacts, conversations, messages, adminMessages, msgFilter, searchQuery, subjectFilter]);
 
   useEffect(() => {
     if (!selectedStudentId && conversationItems.length > 0) {
