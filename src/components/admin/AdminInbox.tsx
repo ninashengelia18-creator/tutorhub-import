@@ -44,7 +44,7 @@ export function AdminInbox() {
       console.error("Error loading admin messages:", error);
       return;
     }
-    setMessages((data as AdminMessage[]) ?? []);
+    setMessages((data as unknown as AdminMessage[]) ?? []);
   };
 
   useEffect(() => {
