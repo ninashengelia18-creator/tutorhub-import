@@ -1198,18 +1198,26 @@ export default function AdminDashboard() {
 
           {activeTab === "partners" && (
             <>
-              <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-3">
+              <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
                 <div className="rounded-xl border bg-card p-4">
                   <p className="text-2xl font-bold text-foreground">{partnerStats.total}</p>
-                  <p className="text-xs text-muted-foreground">Total applications</p>
+                  <p className="text-xs text-muted-foreground">Buddies</p>
                 </div>
                 <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-warning">{partnerStats.pending}</p>
-                  <p className="text-xs text-muted-foreground">Pending</p>
+                  <p className="text-2xl font-bold text-success">{partnerStats.live}</p>
+                  <p className="text-xs text-muted-foreground">Live</p>
                 </div>
                 <div className="rounded-xl border bg-card p-4">
-                  <p className="text-2xl font-bold text-success">{partnerStats.approved}</p>
-                  <p className="text-xs text-muted-foreground">Approved</p>
+                  <p className="text-2xl font-bold text-warning">{partnerStats.suspended}</p>
+                  <p className="text-xs text-muted-foreground">Suspended</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-info">{partnerStats.pending}</p>
+                  <p className="text-xs text-muted-foreground">Pending applications</p>
+                </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-muted-foreground">{partnerStats.archived}</p>
+                  <p className="text-xs text-muted-foreground">Archived</p>
                 </div>
               </div>
 
@@ -1217,6 +1225,39 @@ export default function AdminDashboard() {
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by name, email, country..." className="pl-9" />
               </div>
+
+              <section className="mb-8 space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold">Live & suspended Language Buddies</h2>
+                  <p className="text-sm text-muted-foreground">Suspend, archive, or delete Language Buddy profiles.</p>
+                </div>
+                <PartnerManagementList
+                  partners={filteredManagedPartners}
+                  emptyLabel="No Language Buddy profiles found"
+                  pendingActionId={pendingPartnerActionId}
+                  onSuspend={(partner) => void handleSetPartnerLiveState(partner, !partner.is_published)}
+                  onDelete={setDeletingPartner}
+                  onArchive={handleArchivePartner}
+                />
+              </section>
+
+              {filteredArchivedPartners.length > 0 && (
+                <section className="mb-8 space-y-4">
+                  <div>
+                    <h2 className="text-lg font-semibold">📦 Archived Language Buddies</h2>
+                    <p className="text-sm text-muted-foreground">Buddies that are no longer live. Restore them or delete permanently.</p>
+                  </div>
+                  <PartnerManagementList
+                    partners={filteredArchivedPartners}
+                    emptyLabel="No archived buddies"
+                    pendingActionId={pendingPartnerActionId}
+                    isArchiveView
+                    onSuspend={(partner) => void handleSetPartnerLiveState(partner, !partner.is_published)}
+                    onDelete={setDeletingPartner}
+                    onUnarchive={handleUnarchivePartner}
+                  />
+                </section>
+              )}
 
               <section className="mb-8 space-y-4">
                 <div>
