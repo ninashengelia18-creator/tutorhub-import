@@ -9,6 +9,7 @@ import { ManualTutorDialog, type ManualTutorFormValues } from "@/components/admi
 import { TutorManagementList, type TutorManagementListItem } from "@/components/admin/TutorManagementList";
 import { PartnerManagementList, type PartnerManagementListItem } from "@/components/admin/PartnerManagementList";
 import { TutorProfileEditorDialog, type TutorProfileEditorValues } from "@/components/admin/TutorProfileEditorDialog";
+import { TutorAccountDetailDialog } from "@/components/admin/TutorAccountDetailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
