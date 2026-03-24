@@ -75,7 +75,7 @@ serve(async (req) => {
 
     const { action, tutorProfileId } = await req.json();
 
-    if (!tutorProfileId || !["suspend", "unsuspend", "delete"].includes(action)) {
+    if (!tutorProfileId || !["suspend", "unsuspend", "delete", "archive", "unarchive"].includes(action)) {
       return new Response(JSON.stringify({ error: "Invalid action or missing tutor profile id." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -173,6 +173,42 @@ serve(async (req) => {
             <p style="color: #999; font-size: 12px;">— The LearnEazy Team</p>
           </div>`,
         );
+      }
+
+      return new Response(JSON.stringify({ success: true }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "archive") {
+      // Archive tutor: unpublish and mark as archived
+      await adminClient
+        .from("public_tutor_profiles")
+        .update({ is_published: false, is_archived: true, updated_at: new Date().toISOString() })
+        .eq("id", tutorProfileId);
+
+      // Suspend auth account if exists
+      if (authUserId) {
+        await adminClient.from("profiles").update({ is_suspended: true }).eq("id", authUserId);
+      }
+
+      return new Response(JSON.stringify({ success: true }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "unarchive") {
+      // Restore from archive: republish and remove archived flag
+      await adminClient
+        .from("public_tutor_profiles")
+        .update({ is_published: true, is_archived: false, updated_at: new Date().toISOString() })
+        .eq("id", tutorProfileId);
+
+      // Unsuspend auth account if exists
+      if (authUserId) {
+        await adminClient.from("profiles").update({ is_suspended: false }).eq("id", authUserId);
       }
 
       return new Response(JSON.stringify({ success: true }), {

@@ -288,7 +288,7 @@ export default function AdminDashboard() {
     });
   };
 
-  const invokeManageTutor = async (tutorId: string, action: "suspend" | "unsuspend" | "delete") => {
+  const invokeManageTutor = async (tutorId: string, action: "suspend" | "unsuspend" | "delete" | "archive" | "unarchive") => {
     const { error } = await supabase.functions.invoke("admin-manage-tutor", {
       body: { tutorProfileId: tutorId, action },
     });
@@ -558,6 +558,40 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleArchiveTutor = async (tutor: TutorManagementListItem) => {
+    setPendingTutorActionId(tutor.id);
+    try {
+      await invokeManageTutor(tutor.id, "archive");
+      toast({ title: "Tutor archived", description: `${getTutorFullName(tutor)} has been archived.` });
+      await Promise.all([refreshApplications(), refreshTutorProfiles()]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to archive tutor.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingTutorActionId(null);
+    }
+  };
+
+  const handleUnarchiveTutor = async (tutor: TutorManagementListItem) => {
+    setPendingTutorActionId(tutor.id);
+    try {
+      await invokeManageTutor(tutor.id, "unarchive");
+      toast({ title: "Tutor restored", description: `${getTutorFullName(tutor)} has been restored and is now live.` });
+      await Promise.all([refreshApplications(), refreshTutorProfiles()]);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Unable to restore tutor.",
+        variant: "destructive",
+      });
+    } finally {
+      setPendingTutorActionId(null);
+    }
+  };
+
   const handleSaveTutorProfile = async (values: TutorProfileEditorValues) => {
     if (!editingTutor) return;
 
@@ -688,19 +722,41 @@ export default function AdminDashboard() {
   }, [applications, search]);
 
   const managedTutors = useMemo<TutorManagementListItem[]>(() => {
-    return tutors.map((tutor) => {
-      const tutorName = getTutorFullName(tutor);
-      const tutorBookings = bookings.filter((booking) => booking.tutor_name === tutorName);
-      const completedLessons = tutorBookings.filter((booking) => booking.status === "completed");
-      const totalEarnings = completedLessons.reduce((sum, booking) => sum + booking.price_amount, 0);
+    return tutors
+      .filter((tutor) => !(tutor as any).is_archived)
+      .map((tutor) => {
+        const tutorName = getTutorFullName(tutor);
+        const tutorBookings = bookings.filter((booking) => booking.tutor_name === tutorName);
+        const completedLessons = tutorBookings.filter((booking) => booking.status === "completed");
+        const totalEarnings = completedLessons.reduce((sum, booking) => sum + booking.price_amount, 0);
 
-      return {
-        ...tutor,
-        bookingsCount: tutorBookings.length,
-        completedLessonsCount: completedLessons.length,
-        totalEarnings,
-      };
-    });
+        return {
+          ...tutor,
+          is_archived: false,
+          bookingsCount: tutorBookings.length,
+          completedLessonsCount: completedLessons.length,
+          totalEarnings,
+        };
+      });
+  }, [bookings, tutors]);
+
+  const archivedTutors = useMemo<TutorManagementListItem[]>(() => {
+    return tutors
+      .filter((tutor) => (tutor as any).is_archived)
+      .map((tutor) => {
+        const tutorName = getTutorFullName(tutor);
+        const tutorBookings = bookings.filter((booking) => booking.tutor_name === tutorName);
+        const completedLessons = tutorBookings.filter((booking) => booking.status === "completed");
+        const totalEarnings = completedLessons.reduce((sum, booking) => sum + booking.price_amount, 0);
+
+        return {
+          ...tutor,
+          is_archived: true,
+          bookingsCount: tutorBookings.length,
+          completedLessonsCount: completedLessons.length,
+          totalEarnings,
+        };
+      });
   }, [bookings, tutors]);
 
   const filteredManagedTutors = useMemo(() => {
@@ -712,6 +768,16 @@ export default function AdminDashboard() {
         .includes(query),
     );
   }, [managedTutors, search]);
+
+  const filteredArchivedTutors = useMemo(() => {
+    const query = search.toLowerCase();
+    return archivedTutors.filter((tutor) =>
+      [getTutorFullName(tutor), tutor.email ?? "", tutor.primary_subject, tutor.subjects.join(" "), tutor.experience, tutor.country ?? ""]
+        .join(" ")
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [archivedTutors, search]);
 
   const pendingApplications = filteredApplications.filter((application) => application.status === "pending");
   const filteredPartnerApplications = useMemo(() => {
@@ -756,6 +822,7 @@ export default function AdminDashboard() {
     live: managedTutors.filter((tutor) => tutor.is_published).length,
     suspended: managedTutors.filter((tutor) => !tutor.is_published).length,
     pending: applications.filter((application) => application.status === "pending").length,
+    archived: archivedTutors.length,
   };
 
   const partnerStats = {
@@ -920,7 +987,7 @@ export default function AdminDashboard() {
 
           {activeTab === "tutors" && (
             <>
-              <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+              <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
                 <div className="rounded-xl border bg-card p-4">
                   <p className="text-2xl font-bold text-foreground">{tutorStats.total}</p>
                   <p className="text-xs text-muted-foreground">Tutors</p>
@@ -937,6 +1004,10 @@ export default function AdminDashboard() {
                   <p className="text-2xl font-bold text-info">{tutorStats.pending}</p>
                   <p className="text-xs text-muted-foreground">Pending applications</p>
                 </div>
+                <div className="rounded-xl border bg-card p-4">
+                  <p className="text-2xl font-bold text-muted-foreground">{tutorStats.archived}</p>
+                  <p className="text-xs text-muted-foreground">Archived</p>
+                </div>
               </div>
 
               <div className="relative mb-6">
@@ -947,7 +1018,7 @@ export default function AdminDashboard() {
               <section className="mb-8 space-y-4">
                 <div>
                   <h2 className="text-lg font-semibold">Live & suspended tutors</h2>
-                  <p className="text-sm text-muted-foreground">Approve, suspend, delete, edit, and inspect tutor bookings and earnings.</p>
+                  <p className="text-sm text-muted-foreground">Approve, suspend, archive, edit, and inspect tutor bookings and earnings.</p>
                 </div>
                 <TutorManagementList
                   tutors={filteredManagedTutors}
@@ -958,8 +1029,30 @@ export default function AdminDashboard() {
                   onDelete={setDeletingTutor}
                   onEdit={setEditingTutor}
                   onViewBookings={setBookingsTutor}
+                  onArchive={handleArchiveTutor}
                 />
               </section>
+
+              {filteredArchivedTutors.length > 0 && (
+                <section className="mb-8 space-y-4">
+                  <div>
+                    <h2 className="text-lg font-semibold">📦 Archived tutors</h2>
+                    <p className="text-sm text-muted-foreground">Tutors that are no longer live. Restore them or delete permanently.</p>
+                  </div>
+                  <TutorManagementList
+                    tutors={filteredArchivedTutors}
+                    emptyLabel="No archived tutors"
+                    pendingActionId={pendingTutorActionId}
+                    isArchiveView
+                    onApprove={(tutor) => void handleSetTutorLiveState(tutor, true)}
+                    onSuspend={(tutor) => void handleSetTutorLiveState(tutor, !tutor.is_published)}
+                    onDelete={setDeletingTutor}
+                    onEdit={setEditingTutor}
+                    onViewBookings={setBookingsTutor}
+                    onUnarchive={handleUnarchiveTutor}
+                  />
+                </section>
+              )}
 
               <section className="mb-8 space-y-4">
                 <div>
