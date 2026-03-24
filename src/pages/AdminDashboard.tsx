@@ -288,7 +288,7 @@ export default function AdminDashboard() {
     });
   };
 
-  const invokeManageTutor = async (tutorId: string, action: "suspend" | "unsuspend" | "delete") => {
+  const invokeManageTutor = async (tutorId: string, action: "suspend" | "unsuspend" | "delete" | "archive" | "unarchive") => {
     const { error } = await supabase.functions.invoke("admin-manage-tutor", {
       body: { tutorProfileId: tutorId, action },
     });
