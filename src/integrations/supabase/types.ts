@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          read_at: string | null
+          recipient_email: string
+          recipient_name: string
+          recipient_type: string
+          sender_name: string
+          sender_type: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          recipient_email: string
+          recipient_name: string
+          recipient_type: string
+          sender_name?: string
+          sender_type: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          recipient_email?: string
+          recipient_name?: string
+          recipient_type?: string
+          sender_name?: string
+          sender_type?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           availability_slot_id: string | null
