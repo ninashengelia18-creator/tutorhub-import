@@ -1412,6 +1412,19 @@ export default function AdminDashboard() {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={!!deletingPartner} onOpenChange={(open) => !open && setDeletingPartner(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Language Buddy</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">Are you sure you want to delete this Language Buddy? This cannot be undone.</p>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setDeletingPartner(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleDeletePartner} disabled={!deletingPartner || pendingPartnerActionId === deletingPartner?.id}>Delete</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={!!paymentLinkModal} onOpenChange={(open) => { if (!open) { setPaymentLinkModal(null); setPaymentLink(""); setPaymentAmount(""); } }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
