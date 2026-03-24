@@ -1162,7 +1162,7 @@ export default function AdminDashboard() {
                 </section>
               )}
 
-              <section className="mb-8 space-y-4">
+              <section id="tutor-pending-section" className="mb-8 space-y-4">
                 <div>
                   <h2 className="text-lg font-semibold">Pending tutor applications</h2>
                   <p className="text-sm text-muted-foreground">Review new tutor submissions before they go live.</p>
