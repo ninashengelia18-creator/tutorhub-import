@@ -1216,6 +1216,7 @@ export default function AdminDashboard() {
                   onViewBookings={setBookingsTutor}
                   onViewAccount={setViewingTutorAccount}
                   onArchive={handleArchiveTutor}
+                  onSendMessage={(tutor) => setMessageTarget({ name: getTutorFullName(tutor), email: tutor.email ?? "", type: "tutor" })}
                 />
               </section>
 
