@@ -106,10 +106,10 @@ export function TutorAccountDetailDialog({ tutor, open, onOpenChange }: TutorAcc
       });
       if (error) throw error;
       if (data?.url) {
-        window.open(data.url, "_blank");
+        await navigator.clipboard.writeText(data.url);
         toast({
-          title: "Login link opened",
-          description: "A new tab will open as the tutor. Note: this will sign you out of your admin session in that tab.",
+          title: "Login link copied!",
+          description: "Open an incognito/private window and paste the link to log in as this tutor. This keeps your admin session safe.",
         });
       }
     } catch (err) {
