@@ -933,10 +933,11 @@ export default function AdminDashboard() {
   };
 
   const partnerStats = {
-    total: partnerApplications.length,
+    total: managedPartners.length,
+    live: managedPartners.filter((p) => p.is_published).length,
+    suspended: managedPartners.filter((p) => !p.is_published).length,
     pending: partnerApplications.filter((a) => a.status === "pending").length,
-    approved: partnerApplications.filter((a) => a.status === "approved").length,
-    rejected: partnerApplications.filter((a) => a.status === "rejected").length,
+    archived: archivedPartners.length,
   };
 
   if (!isAdmin) {
