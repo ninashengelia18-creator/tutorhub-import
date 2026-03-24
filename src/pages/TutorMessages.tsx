@@ -254,10 +254,27 @@ export default function TutorMessages() {
     [conversationItems, selectedStudentId],
   );
 
-  const selectedMessages = useMemo(
-    () => messages.filter((item) => item.student_id === selectedStudentId),
-    [messages, selectedStudentId],
-  );
+  const isAdminConversation = selectedStudentId === ADMIN_CONVERSATION_ID;
+
+  const selectedMessages = useMemo(() => {
+    if (isAdminConversation) {
+      return adminMessages.map((m: any) => ({
+        id: m.id,
+        student_id: ADMIN_CONVERSATION_ID,
+        tutor_name: m.recipient_name,
+        content: m.content,
+        created_at: m.created_at,
+        sender_type: m.sender_type === "admin" ? "student" : "tutor",
+        sender_display_name: m.sender_name,
+        read_at: m.read_at,
+        attachment_url: null,
+        attachment_name: null,
+        attachment_type: null,
+        attachment_size: null,
+      } as MessageRecord));
+    }
+    return messages.filter((item) => item.student_id === selectedStudentId);
+  }, [messages, adminMessages, selectedStudentId, isAdminConversation]);
 
   useEffect(() => {
     if (!user || !selectedStudentId) return;
