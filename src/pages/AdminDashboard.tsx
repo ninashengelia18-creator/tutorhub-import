@@ -103,6 +103,8 @@ export default function AdminDashboard() {
   const [pendingPartnerActionId, setPendingPartnerActionId] = useState<string | null>(null);
   const [deletingPartner, setDeletingPartner] = useState<PartnerManagementListItem | null>(null);
   const [viewingTutorAccount, setViewingTutorAccount] = useState<TutorManagementListItem | null>(null);
+  const [messageTarget, setMessageTarget] = useState<{ name: string; email: string; type: "tutor" | "partner" } | null>(null);
+  const [sendingMessage, setSendingMessage] = useState(false);
 
   const refreshBookings = useCallback(async () => {
     const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
