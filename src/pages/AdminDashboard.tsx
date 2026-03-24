@@ -1413,6 +1413,10 @@ export default function AdminDashboard() {
               )}
             </>
           )}
+
+          {activeTab === "inbox" && (
+            <AdminInbox />
+          )}
         </motion.div>
       </div>
 
