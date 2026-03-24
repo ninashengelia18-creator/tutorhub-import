@@ -1,4 +1,4 @@
-import { Archive, ArchiveRestore, Eye, Trash2 } from "lucide-react";
+import { Archive, ArchiveRestore, Eye, MessageSquare, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
