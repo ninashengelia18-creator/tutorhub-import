@@ -531,6 +531,60 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleSetPartnerLiveState = async (partner: PartnerManagementListItem, makeLive: boolean) => {
+    setPendingPartnerActionId(partner.id);
+    try {
+      await invokeManagePartner(partner.id, makeLive ? "unsuspend" : "suspend");
+      toast({ title: makeLive ? "Language Buddy is live" : "Language Buddy suspended" });
+      await Promise.all([refreshPartnerApplications(), refreshPartnerProfiles()]);
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to update status.", variant: "destructive" });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleArchivePartner = async (partner: PartnerManagementListItem) => {
+    setPendingPartnerActionId(partner.id);
+    try {
+      await invokeManagePartner(partner.id, "archive");
+      toast({ title: "Language Buddy archived", description: `${partner.first_name} ${partner.last_name} has been archived.` });
+      await Promise.all([refreshPartnerApplications(), refreshPartnerProfiles()]);
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to archive.", variant: "destructive" });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleUnarchivePartner = async (partner: PartnerManagementListItem) => {
+    setPendingPartnerActionId(partner.id);
+    try {
+      await invokeManagePartner(partner.id, "unarchive");
+      toast({ title: "Language Buddy restored", description: `${partner.first_name} ${partner.last_name} has been restored.` });
+      await Promise.all([refreshPartnerApplications(), refreshPartnerProfiles()]);
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to restore.", variant: "destructive" });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
+  const handleDeletePartner = async () => {
+    if (!deletingPartner) return;
+    setPendingPartnerActionId(deletingPartner.id);
+    try {
+      await invokeManagePartner(deletingPartner.id, "delete");
+      toast({ title: "Language Buddy deleted permanently" });
+      setDeletingPartner(null);
+      await Promise.all([refreshPartnerApplications(), refreshPartnerProfiles()]);
+    } catch (error) {
+      toast({ title: "Error", description: error instanceof Error ? error.message : "Unable to delete.", variant: "destructive" });
+    } finally {
+      setPendingPartnerActionId(null);
+    }
+  };
+
   const handleSetTutorLiveState = async (tutor: TutorManagementListItem, makeLive: boolean) => {
     setPendingTutorActionId(tutor.id);
 
