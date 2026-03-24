@@ -29,6 +29,7 @@ export function PartnerManagementList({
   onDelete,
   onArchive,
   onUnarchive,
+  onSendMessage,
 }: PartnerManagementListProps) {
   if (partners.length === 0) {
     return <div className="py-12 text-center text-muted-foreground">{emptyLabel}</div>;
