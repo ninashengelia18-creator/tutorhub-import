@@ -31,29 +31,31 @@ serve(async (req) => {
     });
     if (!isAdmin) throw new Error("Admin access required");
 
-    const { email } = await req.json();
+    const { email, redirectTo } = await req.json();
     if (!email) throw new Error("Email is required");
 
+    // Use the origin from the request or fall back to learneazy.org
+    const origin = req.headers.get("origin") || "https://www.learneazy.org";
+    const targetRedirect = redirectTo || `${origin}/tutor-dashboard`;
+
     // Generate a magic link for the target user
-    const siteUrl = "https://www.learneazy.org";
     const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: "magiclink",
       email,
       options: {
-        redirectTo: `${siteUrl}/tutor-dashboard`,
+        redirectTo: targetRedirect,
       },
     });
 
     if (linkError) throw new Error(`Failed to generate link: ${linkError.message}`);
 
-    // Build the URL that goes through the Supabase auth flow
-    let loginUrl = `${siteUrl}/tutor-dashboard`;
-    if (linkData?.properties?.hashed_token) {
-      const tokenHash = linkData.properties.hashed_token;
-      loginUrl = `${supabaseUrl}/auth/v1/verify?token=${tokenHash}&type=magiclink&redirect_to=${encodeURIComponent(siteUrl + "/tutor-dashboard")}`;
-    } else if (linkData?.properties?.action_link) {
-      loginUrl = linkData.properties.action_link;
-    }
+    // Use the action_link directly — it contains the correct verification URL
+    const loginUrl = linkData?.properties?.action_link
+      ? linkData.properties.action_link.replace(
+          /redirect_to=[^&]*/,
+          `redirect_to=${encodeURIComponent(targetRedirect)}`
+        )
+      : `${supabaseUrl}/auth/v1/verify?token=${linkData?.properties?.hashed_token}&type=magiclink&redirect_to=${encodeURIComponent(targetRedirect)}`;
 
     return new Response(JSON.stringify({ success: true, url: loginUrl }), {
       status: 200,
